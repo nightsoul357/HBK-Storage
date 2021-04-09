@@ -1,0 +1,796 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HBK.Storage.Adapter</name>
+    </assembly>
+    <members>
+        <member name="T:HBK.Storage.Adapter.Enums.FileAccessTokenStatusEnum">
+            <summary>
+            檔案存取權杖狀態列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileAccessTokenStatusEnum.None">
+            <summary>
+            無
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileAccessTokenStatusEnum.Revoke">
+            <summary>
+            撤銷
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.FileEntityStatusEnum">
+            <summary>
+            檔案實體狀態列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStatusEnum.None">
+            <summary>
+            無
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStatusEnum.Uploading">
+            <summary>
+            上傳中
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.FileEntityStorageStatusEnum">
+            <summary>
+             檔案位於儲存個體上的橋接資訊狀態列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageStatusEnum.None">
+            <summary>
+            無
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.StorageGroupStatus">
+            <summary>
+            儲存個體群組狀態列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageGroupStatus.None">
+            <summary>
+            無
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageGroupStatus.Main">
+            <summary>
+            是否為主要的儲存區
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageGroupStatus.Disable">
+            <summary>
+            已停用
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.StorageProviderStatusEnum">
+            <summary>
+            儲存服務狀態列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageProviderStatusEnum.None">
+            <summary>
+            無
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageProviderStatusEnum.Disable">
+            <summary>
+            已停用
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.StorageStatusEnum">
+            <summary>
+            儲存個體狀態列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageStatusEnum.None">
+            <summary>
+            無
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageStatusEnum.Disable">
+            <summary>
+            已停用
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.StorageTypeEnum">
+            <summary>
+            儲存個體類型列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageTypeEnum.FTP">
+            <summary>
+            FTP 協議所定義的儲存個體
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageTypeEnum.AmazonS3">
+            <summary>
+            Amazon S3 的儲存個體
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageTypeEnum.Local">
+            <summary>
+            本地儲存空間的儲存個體
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.EnumExtension">
+            <summary>
+            列舉的擴充方法
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Enums.EnumExtension.UnflattenFlags``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            轉換旗標形式陣列為複合的旗標列舉值
+            </summary>
+            <typeparam name="TEnum">列舉類型</typeparam>
+            <param name="values">旗標列舉值陣列</param>
+            <returns>複合的旗標列舉值</returns>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Enums.EnumExtension.FlattenFlags``1(``0)">
+            <summary>
+            轉換旗標形式複合的旗標列舉值為陣列
+            </summary>
+            <typeparam name="TEnum">列舉類型</typeparam>
+            <param name="value">複合的旗標列舉值</param>
+            <returns>單一旗標列舉的陣列</returns>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Enums.EnumExtension.SetFlag``1(``0,``0,System.Boolean)">
+            <summary>
+            設定或取消設定指定旗標
+            </summary>
+            <typeparam name="TEnum">列舉類型</typeparam>
+            <param name="value">複合的旗標列舉值</param>
+            <param name="flag">要設定的旗標</param>
+            <param name="set">是否設定的旗標</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.DbContextExtension">
+            <summary>
+            <see cref="T:Microsoft.EntityFrameworkCore.DbContext"/> 的擴充方法
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.DbContextExtension.Sync``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Object})">
+            <summary>
+            同步關聯表中項目
+            </summary>
+            <typeparam name="T">模型類型</typeparam>
+            <param name="collection">資料庫關聯集合</param>
+            <param name="data">新的資料集合</param>
+            <param name="compareSelector">比較選擇函數</param>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.DbContextExtension.Set(Microsoft.EntityFrameworkCore.DbContext,System.Type)">
+            <summary>
+            取得指定類型的資料集
+            </summary>
+            <param name="context"><see cref="T:Microsoft.EntityFrameworkCore.DbContext"/> 實體</param>
+            <param name="type">資料集類型</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.DbContextExtension.ExecuteSqlRawCount(Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade,System.String,System.Object[])">
+            <summary>
+            執行 SQL 語法並回傳單一整數結果
+            </summary>
+            <param name="database"><see cref="T:Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade"/> 實體</param>
+            <param name="sql">SQL 語法</param>
+            <param name="parameters">SQL 參數</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.HBKStorageContext">
+            <summary>
+            HBK Stroage 資料庫實體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions{HBK.Storage.Adapter.Storages.HBKStorageContext})">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="options">資料庫選項</param>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.FileAccessToken">
+            <summary>
+            取得或設定檔案存取權杖資料集
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.FileEntity">
+            <summary>
+            取得或設定檔案實體資料集
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.FileEntityStroage">
+            <summary>
+            取得或設定檔案位於儲存個體上的橋接資訊資料集
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.Storage">
+            <summary>
+            取得或設定儲存個體資料集
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.StorageGroup">
+            <summary>
+            取得或設定儲存個體群組資料集
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.StorageProvider">
+            <summary>
+            取得或設定儲存服務資料集
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)">
+            <summary>
+            設定資料庫實體
+            </summary>
+            <param name="optionsBuilder"></param>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <summary>
+            建立資料庫實體
+            </summary>
+            <param name="modelBuilder"></param>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.SaveChanges(System.Boolean)">
+            <summary>
+            儲存變更
+            </summary>
+            <param name="acceptAllChangesOnSuccess"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.SaveChangesAsync(System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            以非同步方式儲存變更
+            </summary>
+            <param name="acceptAllChangesOnSuccess"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.ApplySaveChangesPolicies">
+            <summary>
+            套用儲存變更政策
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.FileAccessToken">
+            <summary>
+            檔案存取權杖
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.FileAccessTokenId">
+            <summary>
+            取得或設定檔案存取權杖 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.FileAccessTokenNo">
+            <summary>
+            取得或設定檔案存取權杖流水號
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.StorageProviderId">
+            <summary>
+            取得或設定存取對象的儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.StorageGroupId">
+            <summary>
+            取得或設定強制指定的存取對象的儲存個體集合 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.FileEntityId">
+            <summary>
+            取得或設定檔案實體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.Token">
+            <summary>
+            取得或設定權杖
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.AccessTimesLimit">
+            <summary>
+            取得或設定存取次數限制
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.AccessTimes">
+            <summary>
+            取得或設定存取次數
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.ExpireDateTime">
+            <summary>
+            取得或設定過期時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.DeleteDateTime">
+            <summary>
+            取得刪除時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.Status">
+            <summary>
+            取得或設定狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.FileEntity">
+            <summary>
+            取得或設定檔案實體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.StorageGroup">
+            <summary>
+            取得或設定儲存個體群組
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileAccessToken.StorageProvider">
+            <summary>
+            取得或設定儲存服務
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.FileEntity">
+            <summary>
+            檔案實體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.FileEntity.#ctor">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.FileEntityId">
+            <summary>
+            取得或設定檔案實體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.FileEntityNo">
+            <summary>
+            取得或設定檔案實體流水號
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.Name">
+            <summary>
+            取得或設定檔案名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.Size">
+            <summary>
+            取得或設定檔案大小(單位 Bytes)
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.Tags">
+            <summary>
+            取得或設定檔案標籤列表
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.ExtendProperty">
+            <summary>
+            取得或設定檔案擴充描述
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.MimeType">
+            <summary>
+            取得或設定檔案的網際網路媒體型式
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.DeleteDateTime">
+            <summary>
+            取得刪除時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.Status">
+            <summary>
+            取得或設定狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.FileEntityStroage">
+            <summary>
+            取得檔案位於儲存個體的集合
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.FileAccessToken">
+            <summary>
+            取得或設定檔案存取權杖集合
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.FileEntityStroage">
+            <summary>
+            檔案位於儲存個體上的橋接資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.FileEntityStroageId">
+            <summary>
+            設定或取得檔案位於儲存個體上的橋接資訊 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.FileEntityStroageNo">
+            <summary>
+            設定或取得檔案位於儲存個體上的橋接資訊流水號
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.FileEntityId">
+            <summary>
+            設定或取得檔案實體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.StorageId">
+            <summary>
+            設定或取得儲存個體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.Value">
+            <summary>
+            設定或取得存取檔案識別值
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.CreatorIdentity">
+            <summary>
+            設定或取得建立者識別名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.Status">
+            <summary>
+            設定或取得狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.FileEntity">
+            <summary>
+            設定或取得對應的檔案實體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.Storage">
+            <summary>
+            設定或取得對應的儲存個體
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.Storage">
+            <summary>
+            儲存個體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.Storage.#ctor">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.StorageId">
+            <summary>
+            設定或取得儲存個體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.StorageNo">
+            <summary>
+            設定或取得儲存個體流水號
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.StorageGroupId">
+            <summary>
+            取得或設定所屬的儲存個體群組 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.Name">
+            <summary>
+            取得或設定名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.Type">
+            <summary>
+            取得或設定類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.SizeLimit">
+            <summary>
+            取得或設定檔案大小限制(單位 Bytes)
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.Credentials">
+            <summary>
+            取得或設定存取儲存個體的驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.DeleteDateTime">
+            <summary>
+            取得刪除時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.Status">
+            <summary>
+            取得或設定狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.StorageGroup">
+            <summary>
+            取得或設定對應的儲存個體群組
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.FileEntityStroage">
+            <summary>
+            取得或設定檔案位於儲存個體上的橋接資訊集合
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.StorageGroup">
+            <summary>
+            儲存個體群組
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.StorageGroup.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.StorageGroupId">
+            <summary>
+            取得或設定儲存個體群組 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.StorageGroupNo">
+            <summary>
+            取得或設定儲存個體群組流水號
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.StorageProviderId">
+            <summary>
+            取得或設定所屬儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.Name">
+            <summary>
+            取得或設定名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.Type">
+            <summary>
+            取得或設定類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.DeleteDateTime">
+            <summary>
+            取得刪除時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.Status">
+            <summary>
+            取得或設定狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.StorageProvider">
+            <summary>
+            取得或設定所屬儲存服務
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.Storage">
+            <summary>
+            取得或設定擁有的儲存個體群組
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.FileAccessToken">
+            <summary>
+            取得或設定檔案存取權杖集合
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.StorageProvider">
+            <summary>
+            儲存服務
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.StorageProvider.#ctor">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.StorageProviderId">
+            <summary>
+            取得或設定儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.StorageProviderNo">
+            <summary>
+            取得或設定儲存服務流水號
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.Name">
+            <summary>
+            取得或設定名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.DeleteDateTime">
+            <summary>
+            取得刪除時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.Status">
+            <summary>
+            取得或設定狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.StorageGroup">
+            <summary>
+            取得或設定擁有儲存群組集合
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.FileAccessToken">
+            <summary>
+            取得或設定檔案存取權杖集合
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Interfaces.ICreatedDateModel">
+            <summary>
+            支援建立時間模型介面
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Interfaces.ICreatedDateModel.CreateDateTime">
+            <summary>
+            取得或設定建立時間
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Interfaces.ISoftDeleteModel">
+            <summary>
+            支援軟刪除的模型介面
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Interfaces.ISoftDeleteModel.DeleteDateTime">
+            <summary>
+            取得或設定建立刪除時間
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Interfaces.ITimeStampModel">
+            <summary>
+            支援建立時間及更新時間的模型介面
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Interfaces.ITimeStampModel.UpdateDateTime">
+            <summary>
+            取得或設定更新時間
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials">
+            <summary>
+            Amazon S3 使用的驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials.AccessKey">
+            <summary>
+            取得或設定存取金鑰
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials.SecretKey">
+            <summary>
+            取得或設定存取密鑰
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials.BucketName">
+            <summary>
+            取得或設定Bucket 名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials.Region">
+            <summary>
+            取得或設定地區
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials.ServiceURL">
+            <summary>
+            取得或設定位置
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials.ForcePathStyle">
+            <summary>
+            取得或設定 ForcePathStyle
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.StorageCredentials.FTPStorageCredentials">
+            <summary>
+            FTP 類型的存取儲存個體的驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.FTPStorageCredentials.Url">
+            <summary>
+            取得或設定 Url
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.FTPStorageCredentials.Username">
+            <summary>
+            取得或設定使用者名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.FTPStorageCredentials.Password">
+            <summary>
+            取得或設定密碼
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.StorageCredentials.StorageCredentialsBase">
+            <summary>
+            存取儲存個體的驗證資訊基底型別
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.StorageCredentialsBase.StorageType">
+            <summary>
+            取得或設定儲存個體類型
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.ValueConversions.JsonParseConverter`1">
+            <summary>
+            Json 字串與強行別的轉換器
+            </summary>
+            <typeparam name="TTarget">指定的強型別</typeparam>
+        </member>
+        <member name="M:HBK.Storage.Adapter.ValueConversions.JsonParseConverter`1.#ctor(Microsoft.EntityFrameworkCore.Storage.ValueConversion.ConverterMappingHints)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="mappingHints"></param>
+        </member>
+        <member name="T:HBK.Storage.Adapter.ValueConversions.StorageCredentialsConverter">
+            <summary>
+            存取儲存個體的驗證資訊轉換器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.ValueConversions.StorageCredentialsConverter.#ctor(Microsoft.EntityFrameworkCore.Storage.ValueConversion.ConverterMappingHints)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="mappingHints"></param>
+        </member>
+    </members>
+</doc>

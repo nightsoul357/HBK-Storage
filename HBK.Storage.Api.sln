@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBK.Storage.Api", "HBK.Storage.Api\HBK.Storage.Api.csproj", "{DD0152A6-4891-4C34-832D-6926E3DDF395}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBK.Storage.Core", "HBK.Storage.Core\HBK.Storage.Core.csproj", "{4CE32FEC-3E9D-4B46-95D2-35764CA49C6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBK.Storage.Adapter", "HBK.Storage.Adapter\HBK.Storage.Adapter.csproj", "{8B9868C9-FAFA-4842-B23B-D354F37E977F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Entry", "Entry", "{E9BD9A05-3A21-4F58-B53E-79058EB0D3E1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD0152A6-4891-4C34-832D-6926E3DDF395}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD0152A6-4891-4C34-832D-6926E3DDF395}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD0152A6-4891-4C34-832D-6926E3DDF395}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD0152A6-4891-4C34-832D-6926E3DDF395}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CE32FEC-3E9D-4B46-95D2-35764CA49C6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CE32FEC-3E9D-4B46-95D2-35764CA49C6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CE32FEC-3E9D-4B46-95D2-35764CA49C6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CE32FEC-3E9D-4B46-95D2-35764CA49C6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B9868C9-FAFA-4842-B23B-D354F37E977F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B9868C9-FAFA-4842-B23B-D354F37E977F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B9868C9-FAFA-4842-B23B-D354F37E977F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B9868C9-FAFA-4842-B23B-D354F37E977F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DD0152A6-4891-4C34-832D-6926E3DDF395} = {E9BD9A05-3A21-4F58-B53E-79058EB0D3E1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E1D11872-B4FA-4F2E-AE42-F226CC13D991}
+	EndGlobalSection
+EndGlobal
