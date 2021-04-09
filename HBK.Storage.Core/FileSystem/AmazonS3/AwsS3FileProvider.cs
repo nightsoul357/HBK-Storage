@@ -31,6 +31,16 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
         public TimeSpan DefaultExipreTime => TimeSpan.FromMinutes(10);
 
         /// <summary>
+        /// 取得緩衝區大小
+        /// </summary>
+        public int BufferSize { get; } = 5 * 1024 * 1024;
+
+        /// <summary>
+        /// 取得緩衝區數量
+        /// </summary>
+        public int BufferCount { get; } = 100;
+
+        /// <summary>
         /// 建立一個新的執行個體
         /// </summary>
         /// <param name="name">提供者名稱</param>
@@ -134,61 +144,60 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
 
             InitiateMultipartUploadResponse initResponse = await _client.InitiateMultipartUploadAsync(initiateRequest);
             List<UploadPartResponse> uploadResponses = new List<UploadPartResponse>();
-            //byte[] buffer = new byte[1024 * 1024 * 5];
-            //int read;
-            //int part = 1;
-            //MemoryStream memoryStream = new MemoryStream();
 
-            //while ((read = await fileStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-            //{
-            //    memoryStream.Write(buffer, 0, read);
-            //    if (memoryStream.Length < buffer.Length)
-            //    {
-            //        continue;
-            //    }
-
-            //    memoryStream.Seek(0, SeekOrigin.Begin);
-            //    UploadPartRequest uploadRequest = new UploadPartRequest
-            //    {
-            //        BucketName = this.BucketName,
-            //        Key = subpath,
-            //        UploadId = initResponse.UploadId,
-            //        PartNumber = part,
-            //        PartSize = memoryStream.Length,
-            //        InputStream = memoryStream
-            //    };
-            //    uploadResponses.Add(await _client.UploadPartAsync(uploadRequest));
-            //    memoryStream.Close();
-            //    memoryStream = new MemoryStream();
-            //    part++;
-            //}
-
-            //if(memoryStream.Length != 0)
-            //{
-            //    memoryStream.Seek(0, SeekOrigin.Begin);
-            //    UploadPartRequest uploadRequest = new UploadPartRequest
-            //    {
-            //        BucketName = this.BucketName,
-            //        Key = subpath,
-            //        UploadId = initResponse.UploadId,
-            //        PartNumber = part,
-            //        PartSize = memoryStream.Length,
-            //        InputStream = memoryStream
-            //    };
-            //    uploadResponses.Add(await _client.UploadPartAsync(uploadRequest));
-            //    memoryStream.Close();
-            //}
-
-            BlockingCollection<byte> commonBuffer = new BlockingCollection<byte>(new ConcurrentQueue<byte>(), 100);
-            byte[] buffer = new byte[1024 * 1024 * 5];
-            int read;
-            while ((read = await fileStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+            BlockingCollection<byte[]> commonBuffer = new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>(), this.BufferCount);
+            Task readTask = new Task(() =>
             {
-                for (int i = 0; i < read; i++)
+                byte[] buffer = new byte[this.BufferSize];
+                int read;
+                int position = 0;
+                while ((read = fileStream.ReadAsync(buffer, position, buffer.Length - position).Result) != 0)
                 {
-                    commonBuffer.Add(buffer[i]);
+                    position += read;
+                    if (position == buffer.Length)
+                    {
+                        commonBuffer.Add(buffer);
+                        buffer = new byte[this.BufferSize];
+                        position = 0;
+                    }
                 }
-            }
+
+                if (position != 0)
+                {
+                    commonBuffer.Add(buffer.Take(position).ToArray());
+                }
+                commonBuffer.CompleteAdding();
+            });
+
+            Task writeTask = new Task(() =>
+            {
+                int partNum = 1;
+                while (!commonBuffer.IsAddingCompleted || commonBuffer.Count != 0)
+                {
+                    var takeResult = commonBuffer.TryTake(out byte[] buffer);
+                    if (!takeResult)
+                    {
+                        continue;
+                    }
+
+                    using MemoryStream memoryStream = new MemoryStream(buffer);
+                    UploadPartRequest uploadRequest = new UploadPartRequest
+                    {
+                        BucketName = this.BucketName,
+                        Key = subpath,
+                        UploadId = initResponse.UploadId,
+                        PartNumber = partNum,
+                        PartSize = memoryStream.Length,
+                        InputStream = memoryStream
+                    };
+                    uploadResponses.Add(_client.UploadPartAsync(uploadRequest).Result);
+                    partNum++;
+                }
+            });
+
+            readTask.Start();
+            writeTask.Start();
+            Task.WaitAll(readTask, writeTask);
 
             CompleteMultipartUploadRequest completeRequest = new CompleteMultipartUploadRequest
             {
