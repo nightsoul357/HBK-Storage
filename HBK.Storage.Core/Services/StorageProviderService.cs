@@ -85,7 +85,7 @@ namespace HBK.Storage.Core.Services
             else if (storageGroupId == null)
             {
                 var sg = storageProvider.StorageGroup
-                    .Where(x => !x.Status.HasFlag(StorageGroupStatus.Disable))
+                    .Where(x => !x.Status.HasFlag(StorageGroupStatusEnum.Disable))
                     .Select(x =>
                         new
                         {
@@ -95,7 +95,7 @@ namespace HBK.Storage.Core.Services
                     .OrderByDescending(x => x.StoragExtendProperty?.RemainSize)
                     .ToList();
 
-                var sgMain = sg.Where(x => x.StorageGroup.Status.HasFlag(StorageGroupStatus.Main)).FirstOrDefault();
+                var sgMain = sg.Where(x => x.StorageGroup.Status.HasFlag(StorageGroupStatusEnum.Main)).FirstOrDefault();
 
                 if (sgMain != null && sgMain.StoragExtendProperty?.RemainSize > fileEntity.Size)
                 {
@@ -110,7 +110,7 @@ namespace HBK.Storage.Core.Services
                 }
             }
 
-            if (storageGroup.Status.HasFlag(StorageGroupStatus.Disable))
+            if (storageGroup.Status.HasFlag(StorageGroupStatusEnum.Disable))
             {
                 throw new InvalidOperationException($"Storage Group { storageGroup.Name } is disabled.");
             }

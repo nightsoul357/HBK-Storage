@@ -64,7 +64,7 @@ namespace HBK.Storage.Adapter.Storages
         /// <summary>
         /// 取得或設定狀態
         /// </summary>
-        public StorageGroupStatus Status { get; set; }
+        public StorageGroupStatusEnum Status { get; set; }
 
         /// <summary>
         /// 取得或設定所屬儲存服務

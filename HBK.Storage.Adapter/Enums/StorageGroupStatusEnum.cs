@@ -10,7 +10,7 @@ namespace HBK.Storage.Adapter.Enums
     /// 儲存個體群組狀態列舉
     /// </summary>
     [Flags]
-    public enum StorageGroupStatus : long
+    public enum StorageGroupStatusEnum : long
     {
         /// <summary>
         /// 無
