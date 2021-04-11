@@ -23,6 +23,7 @@ namespace HBK.Storage.Adapter.Storages
         {
             this.FileEntityStroage = new HashSet<FileEntityStroage>();
             this.FileAccessToken = new HashSet<FileAccessToken>();
+            this.IsMarkDelete = false;
         }
 
         /// <summary>
@@ -53,8 +54,12 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得或設定檔案的網際網路媒體型式
         /// </summary>
         [Required]
-        [StringLength(31)]
+        [StringLength(255)]
         public string MimeType { get; set; }
+        /// <summary>
+        /// 取得或設定是否標記刪除
+        /// </summary>
+        public bool IsMarkDelete { get; set; }
         /// <summary>
         /// 取得建立時間
         /// </summary>

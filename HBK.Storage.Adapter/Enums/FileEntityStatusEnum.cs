@@ -19,6 +19,6 @@ namespace HBK.Storage.Adapter.Enums
         /// <summary>
         /// 上傳中
         /// </summary>
-        Uploading = 1 << 0,
+        Uploading = 1 << 0
     }
 }

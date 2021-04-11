@@ -2,6 +2,7 @@
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using HBK.Storage.Adapter.Interfaces;
 using HBK.Storage.Adapter.Storages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,6 +53,12 @@ namespace HBK.Storage.Api.DataAnnotations
             var entitySchema = dbContext.Model.FindEntityType(this.ModelType);
             string table = entitySchema.GetTableName();
 
+            string softDeleteQuery = string.Empty;
+            if (typeof(ISoftDeleteModel).IsAssignableFrom(this.ModelType))
+            {
+                softDeleteQuery = " and DeleteDateTime is null";
+            }
+
             this.Column ??= entitySchema.FindPrimaryKey().Properties
                 .Select(p => p.Name).Single();
 
@@ -64,13 +71,13 @@ namespace HBK.Storage.Api.DataAnnotations
                 expectedCount = values.Length;
                 if (expectedCount > 0)
                 {
-                    count = dbContext.Database.ExecuteSqlRawCount($"SELECT COUNT(*) FROM {table} WHERE {this.Column} IN ({parameters})", values);
+                    count = dbContext.Database.ExecuteSqlRawCount($"SELECT COUNT(*) FROM {table} WHERE {this.Column} IN ({parameters}) {softDeleteQuery}", values);
                 }
             }
             else
             {
                 expectedCount = 1;
-                count = dbContext.Database.ExecuteSqlRawCount($"SELECT COUNT(*) FROM {table} WHERE {this.Column} = {{0}}", value);
+                count = dbContext.Database.ExecuteSqlRawCount($"SELECT COUNT(*) FROM {table} WHERE {this.Column} = {{0}} {softDeleteQuery}", value);
             }
 
             if (expectedCount != count)

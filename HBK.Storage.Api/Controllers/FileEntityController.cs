@@ -1,6 +1,8 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Api.Models.FileEntity;
+using HBK.Storage.Core.Services;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +31,7 @@ namespace HBK.Storage.Api.Controllers
                 Name = fileEntity.Name,
                 Size = fileEntity.Size,
                 Status = fileEntity.Status.FlattenFlags(),
-                Tags = fileEntity.Tags,
+                Tags = fileEntity.FileEntityTag.Select(x => x.Value).ToList(),
                 UpdateDateTime = fileEntity.UpdateDateTime?.LocalDateTime
             };
         }

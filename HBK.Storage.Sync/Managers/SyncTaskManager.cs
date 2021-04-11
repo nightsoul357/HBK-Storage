@@ -14,24 +14,22 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HBK.Storage.Sync
+namespace HBK.Storage.Sync.Managers
 {
     /// <summary>
     /// 同步任務管理者
     /// </summary>
     public sealed class SyncTaskManager
     {
-
         private readonly ILogger<SyncTaskManager> _logger;
-        private readonly SyncTaskManagerOption _option;
-        private readonly StorageProviderService _storageProviderService;
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScope _serviceScope;
+        private readonly SyncTaskManagerOption _option;
+        private readonly StorageProviderService _storageProviderService;
         private readonly FileSystemFactory _fileSystemFactory;
         private readonly StorageGroupService _storageGroupService;
         private readonly StorageService _storageService;
 
-        private Task _internalTask;
         private ConcurrentQueue<SyncTaskModel> _pendingQueue;
         private CancellationToken _cancellationToken;
         private object _syncObj = new object();
@@ -40,13 +38,13 @@ namespace HBK.Storage.Sync
         /// 建立一個新的執行個體
         /// </summary>
         /// <param name="logger"></param>
-        /// <param name="option"></param>
-        /// <param name="storageProviderService"></param>
+        /// <param name="serviceProvider"></param>
         public SyncTaskManager(ILogger<SyncTaskManager> logger, IServiceProvider serviceProvider)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
             _serviceScope = _serviceProvider.CreateScope();
+
             _option = _serviceScope.ServiceProvider.GetRequiredService<SyncTaskManagerOption>();
             _fileSystemFactory = _serviceScope.ServiceProvider.GetRequiredService<FileSystemFactory>();
             _storageProviderService = _serviceScope.ServiceProvider.GetRequiredService<StorageProviderService>();
@@ -64,7 +62,7 @@ namespace HBK.Storage.Sync
                         _cancellationToken = cancellationToken;
                         _cancellationToken.Register(this.Cancel);
                         _pendingQueue = new ConcurrentQueue<SyncTaskModel>();
-                        _internalTask = Task.Factory.StartNew(this.StartInternal, TaskCreationOptions.LongRunning);
+                        Task.Factory.StartNew(this.StartInternal, TaskCreationOptions.LongRunning);
                         this.IsRunning = true;
                     }
                 }
@@ -78,12 +76,19 @@ namespace HBK.Storage.Sync
             {
                 this.FetchTask();
 
-                for (int i = 0; i < _option.TaskLimit; i++)
+                if (_pendingQueue.Count != 0)
                 {
-                    tasks.Add(Task.Factory.StartNew(this.ExecuteTask, TaskCreationOptions.LongRunning));
-                }
+                    for (int i = 0; i < _option.TaskLimit; i++)
+                    {
+                        tasks.Add(Task.Factory.StartNew(this.ExecuteTask, TaskCreationOptions.LongRunning));
+                    }
 
-                Task.WaitAll(tasks.ToArray());
+                    Task.WaitAll(tasks.ToArray());
+                }
+                else
+                {
+                    SpinWait.SpinUntil(() => true, 1000);
+                }
             }
         }
 
@@ -116,7 +121,7 @@ namespace HBK.Storage.Sync
                     FromStorageGroup = x.FromStorageGroup
                 }));
 
-                if(_pendingQueue.Count >= _option.FetchLimit)
+                if (_pendingQueue.Count >= _option.FetchLimit)
                 {
                     break;
                 }
@@ -125,44 +130,67 @@ namespace HBK.Storage.Sync
 
         private void ExecuteTask()
         {
-            while (_pendingQueue.TryDequeue(out SyncTaskModel syncTaskModel))
+            while (!_cancellationToken.IsCancellationRequested && _pendingQueue.TryDequeue(out SyncTaskModel syncTaskModel))
             {
-                var desStorage = _storageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(syncTaskModel.DestinationStorageGroup.StorageGroupId).Result;
-                if (desStorage.RemainSize < syncTaskModel.FileEntity.Size)
+                try
                 {
-                    _ = _storageService.AddFileEntityInStorageAsync(new FileEntityStroage()
+                    var desStorage = _storageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(syncTaskModel.DestinationStorageGroup.StorageGroupId).Result;
+                    if (desStorage.RemainSize < syncTaskModel.FileEntity.Size)
+                    {
+                        _ = _storageService.AddFileEntityInStorageAsync(new FileEntityStroage()
+                        {
+                            CreatorIdentity = _option.Identity,
+                            FileEntityId = syncTaskModel.FileEntity.FileEntityId,
+                            Status = FileEntityStorageStatusEnum.SyncFail,
+                            StorageId = desStorage.Storage.StorageId,
+                            Value = "Sync Fail - Remain space not enough"
+                        }).Result;
+                        continue;
+                    }
+
+                    var fromProvider = _fileSystemFactory.GetAsyncFileProvider(syncTaskModel.FromFileEntityStorage.Storage);
+                    var desProvider = _fileSystemFactory.GetAsyncFileProvider(desStorage.Storage);
+                    var fileInfo = fromProvider.GetFileInfo(syncTaskModel.FromFileEntityStorage.Value);
+                    Guid taskId = Guid.NewGuid();
+
+                    var desFileEntityStorage = _storageService.AddFileEntityInStorageAsync(new FileEntityStroage()
                     {
                         CreatorIdentity = _option.Identity,
                         FileEntityId = syncTaskModel.FileEntity.FileEntityId,
-                        Status = FileEntityStorageStatusEnum.SyncFail,
+                        Status = FileEntityStorageStatusEnum.Syncing,
                         StorageId = desStorage.Storage.StorageId,
-                        Value = "Sync Fail - Remain space not enough"
+                        Value = taskId.ToString()
                     }).Result;
-                    continue;
+
+                    _logger.LogInformation("[正在同步] 正在將檔案 ID 為 { 0 } 的 { 1 } 從 { 2 } 檔案群組中的 { 3 } 檔案儲存個體 同步至 ---> { 4 } 檔案儲存群組中的 { 5 } 檔案儲存個體",
+                        syncTaskModel.FileEntity.FileEntityId,
+                        syncTaskModel.FileEntity.Name,
+                        syncTaskModel.FromStorageGroup.Name,
+                        syncTaskModel.FromFileEntityStorage.Storage.Name,
+                        syncTaskModel.DestinationStorageGroup.Name,
+                        desStorage.Storage.Name);
+
+                    var desFileIno = desProvider.PutAsync(desFileEntityStorage.Value, fileInfo.CreateReadStream()).Result;
+                    _storageService.CompleteSyncAsync(desFileEntityStorage.FileEntityStroageId).Wait();
+
+                    _logger.LogInformation("[同步完成] 檔案 ID 為 { 0 } 的 { 1 } 從 { 2 } 檔案群組中的 { 3 } 檔案儲存個體 同步至 ---> { 4 } 檔案儲存群組中的 { 5 } 檔案儲存個體 作業完成",
+                        syncTaskModel.FileEntity.FileEntityId,
+                        syncTaskModel.FileEntity.Name,
+                        syncTaskModel.FromStorageGroup.Name,
+                        syncTaskModel.FromFileEntityStorage.Storage.Name,
+                        syncTaskModel.DestinationStorageGroup.Name,
+                        desStorage.Storage.Name);
                 }
-
-                var fromProvider = _fileSystemFactory.GetAsyncFileProvider(syncTaskModel.FromFileEntityStorage.Storage);
-                var desProvider = _fileSystemFactory.GetAsyncFileProvider(desStorage.Storage);
-                var fileInfo = fromProvider.GetFileInfo(syncTaskModel.FromFileEntityStorage.Value);
-                Guid taskId = Guid.NewGuid();
-
-                var desFileEntityStorage = _storageService.AddFileEntityInStorageAsync(new FileEntityStroage()
+                catch (Exception ex)
                 {
-                    CreatorIdentity = _option.Identity,
-                    FileEntityId = syncTaskModel.FileEntity.FileEntityId,
-                    Status = FileEntityStorageStatusEnum.Syncing,
-                    StorageId = desStorage.Storage.StorageId,
-                    Value = taskId.ToString()
-                }).Result;
-
-                var desFileIno = desProvider.PutAsync(desFileEntityStorage.Value, fileInfo.CreateReadStream()).Result;
-                _storageService.CompleteSyncAsync(desFileEntityStorage.FileEntityStroageId).Wait();
+                    _logger.LogError(ex, "Uncatch Error");
+                }
             }
         }
 
         private void Cancel()
         {
-            int r = 10;
+            _serviceScope.Dispose();
         }
         public bool IsRunning { get; set; }
     }

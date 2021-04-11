@@ -14,7 +14,7 @@ namespace HBK.Storage.Adapter.Storages
     /// <summary>
     /// 檔案位於儲存個體上的橋接資訊
     /// </summary>
-    public partial class FileEntityStroage : ITimeStampModel
+    public partial class FileEntityStroage : ITimeStampModel, ISoftDeleteModel
     {
         /// <summary>
         /// 設定或取得檔案位於儲存個體上的橋接資訊 ID
@@ -49,6 +49,10 @@ namespace HBK.Storage.Adapter.Storages
         [StringLength(255)]
         public string CreatorIdentity { get; set; }
         /// <summary>
+        /// 取得或設定是否標記刪除
+        /// </summary>
+        public bool IsMarkDelete { get; set; }
+        /// <summary>
         /// 取得建立時間
         /// </summary>
         public DateTimeOffset CreateDateTime { get; internal set; }
@@ -56,6 +60,10 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得最後更新時間
         /// </summary>
         public DateTimeOffset? UpdateDateTime { get; internal set; }
+        /// <summary>
+        /// 取得刪除時間時間
+        /// </summary>
+        public DateTimeOffset? DeleteDateTime { get; internal set; }
         /// <summary>
         /// 設定或取得狀態
         /// </summary>
@@ -75,5 +83,6 @@ namespace HBK.Storage.Adapter.Storages
         public virtual Storage Storage { get; set; }
         DateTimeOffset? ITimeStampModel.UpdateDateTime { get => this.UpdateDateTime; set => this.UpdateDateTime = value; }
         DateTimeOffset ICreatedDateModel.CreateDateTime { get => this.CreateDateTime; set => this.CreateDateTime = value; }
+        DateTimeOffset? ISoftDeleteModel.DeleteDateTime { get => this.DeleteDateTime; set => this.DeleteDateTime = value; }
     }
 }

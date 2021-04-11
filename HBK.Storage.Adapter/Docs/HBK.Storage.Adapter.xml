@@ -49,6 +49,11 @@
             正在同步
             </summary>
         </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageStatusEnum.SyncFail">
+            <summary>
+            同步失敗
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Enums.StorageGroupStatusEnum">
             <summary>
             儲存個體群組狀態列舉
@@ -419,6 +424,11 @@
             取得或設定檔案的網際網路媒體型式
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.IsMarkDelete">
+            <summary>
+            取得或設定是否標記刪除
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.FileEntity.CreateDateTime">
             <summary>
             取得建立時間
@@ -489,6 +499,11 @@
             設定或取得建立者識別名稱
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.IsMarkDelete">
+            <summary>
+            取得或設定是否標記刪除
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.CreateDateTime">
             <summary>
             取得建立時間
@@ -497,6 +512,11 @@
         <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.UpdateDateTime">
             <summary>
             取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.DeleteDateTime">
+            <summary>
+            取得刪除時間時間
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.Status">

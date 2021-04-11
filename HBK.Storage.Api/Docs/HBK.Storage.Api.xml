@@ -55,6 +55,13 @@
             <param name="request">產生檔案直接下載位置請求內容</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.Delete(System.Guid)">
+            <summary>
+            將檔案實體標記為刪除
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Api.Controllers.FileServiceController.DirectDownload(System.String)">
             <summary>
             下載檔案

@@ -172,6 +172,9 @@ namespace HBK.Storage.Adapter.Storages
                     .WithMany(p => p.FileEntityStroage)
                     .HasForeignKey(d => d.StorageId)
                     .HasConstraintName("FK_FileEntityStroage_Storage");
+
+                // SoftDelete
+                entity.HasQueryFilter(model => model.DeleteDateTime == null);
             });
 
             modelBuilder.Entity<Storage>(entity =>

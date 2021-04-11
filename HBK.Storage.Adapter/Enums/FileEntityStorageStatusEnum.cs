@@ -23,6 +23,6 @@ namespace HBK.Storage.Adapter.Enums
         /// <summary>
         /// 同步失敗
         /// </summary>
-        SyncFail = 1 << 1,
+        SyncFail = 1 << 1
     }
 }

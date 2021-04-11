@@ -709,6 +709,45 @@
             <param name="fileEntityId">檔案實體 ID</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.UpdateAsync(HBK.Storage.Adapter.Storages.FileEntity)">
+            <summary>
+            更新檔案實體
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.MarkFileEntityDeleteAsync(System.Guid)">
+            <summary>
+            將檔案實體註記為刪除
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetMarkDeleteFileEntityStoragiesAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            取得需要被刪除的檔案位於儲存個體上的橋接資訊清單
+            </summary>
+            <param name="takeCount">取得數量</param>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.UpdateFileEntityDeleteInfoAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            更新移除完成的檔案實體
+            </summary>
+            <param name="updateCount">更新數量</param>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.DeleteFileEntityStroageAsync(System.Guid)">
+            <summary>
+            刪除檔案位於儲存個體上的橋接資訊
+            </summary>
+            <param name="fileEntityStorageId">儲存個體上的橋接資訊 ID</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Core.Services.StorageGroupService">
             <summary>
             儲存個體群組服務

@@ -2,6 +2,7 @@ using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
+using HBK.Storage.Sync.Managers;
 using HBK.Storage.Sync.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,19 +51,26 @@ namespace HBK.Storage.Sync
 
                     services.AddHBKStorageService();
 
-                    services.AddSingleton(sp => new SyncTaskManagerOption()
+                    var configForSyncTaskManagerOption = configuration.GetSection("SyncTaskManagerOption");
+                    services.AddSingleton(sp =>
                     {
-                        FetchLimit = 100,
-                        FileEntityNoDivisor = 1,
-                        FileEntityNoRemainder = 0,
-                        IsExecutOnAllStoragProvider = false,
-                        StorageProviderIds = new List<Guid>() { Guid.Parse("59b50410-e86a-4341-8973-ae325e354210") },
-                        TaskLimit = 1
+                        var option = new SyncTaskManagerOption();
+                        configForSyncTaskManagerOption.Bind(option);
+                        return option;
+                    });
+
+                    var configForDeleteFileEntityTaskManagerOption = configuration.GetSection("DeleteFileEntityTaskManagerOption");
+                    services.AddSingleton(sp =>
+                    {
+                        var option = new DeleteFileEntityTaskManagerOption();
+                        configForDeleteFileEntityTaskManagerOption.Bind(option);
+                        return option;
                     });
 
                     services.AddSingleton<SyncTaskManager>();
+                    services.AddSingleton<DeleteFileEntityTaskManager>();
 
-                    services.AddHostedService<SyncWorker>();
+                    services.AddHostedService<TaskWorker>();
                 });
     }
 }

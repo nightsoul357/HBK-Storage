@@ -135,6 +135,21 @@ namespace HBK.Storage.Api.Controllers
         }
 
         /// <summary>
+        /// 將檔案實體標記為刪除
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <returns></returns>
+        [HttpDelete("fileEntity/{fileEntityId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> Delete(
+            [ExistInDatabase(typeof(FileEntity))]
+            [ExampleParameter("cfa83790-007c-4ba2-91b2-5b18dfe08735")]Guid fileEntityId)
+        {
+            await _fileEntityService.MarkFileEntityDeleteAsync(fileEntityId);
+            return base.NoContent();
+        }
+
+        /// <summary>
         /// 下載檔案
         /// </summary>
         /// <param name="esic">存取權杖</param>

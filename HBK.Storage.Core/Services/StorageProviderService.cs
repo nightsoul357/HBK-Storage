@@ -215,9 +215,12 @@ namespace HBK.Storage.Core.Services
                         .Include(x => x.FileEntityStroage)
                         .ThenInclude(x => x.Storage)
                         .ThenInclude(x => x.FileEntityStroage)
+                        .Where(x => !x.IsMarkDelete)
                         .Where(x => x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder)
                         .Where(x => x.FileEntityStroage.Select(fs => fs.Storage.StorageGroup).Any(sg => sg.StorageGroupId == sourceStorageGroup.StorageGroupId) &&
-                                    x.FileEntityStroage.Select(fs => fs.Storage.StorageGroup).All(sg => sg.StorageGroupId != targetStorageGroup.StorageGroupId));
+                                    x.FileEntityStroage.Select(fs => fs.Storage.StorageGroup).All(sg => sg.StorageGroupId != targetStorageGroup.StorageGroupId))
+                        .Where(x => x.FileEntityStroage.First().Status == FileEntityStorageStatusEnum.None) // 已經限制 Storage Group 了，所以 FileEntityStroage 必定唯一
+                        .Where(x => !x.FileEntityStroage.First().IsMarkDelete);
 
                     if (targetStorageGroup.SyncPolicy.TagMatchMode == TagMatchModeEnum.All)
                     {
