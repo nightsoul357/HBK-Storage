@@ -25,7 +25,7 @@ namespace HBK.Storage.Core
             services.AddScoped<StorageProviderService>();
             services.AddScoped<StorageGroupService>();
             services.AddScoped<FileEntityService>();
-            services.AddSingleton<FileSystemFactory>();
+            services.AddScoped<FileSystemFactory>();
             return services;
         }
     }

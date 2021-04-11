@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.7.0.9" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.51.0.2265" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="5.0.0" />
   </ItemGroup>
 

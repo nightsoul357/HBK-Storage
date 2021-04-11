@@ -20,10 +20,14 @@ namespace HBK.Storage.Adapter.ValueConversions
         /// <param name="mappingHints"></param>
         public StorageCredentialsConverter(ConverterMappingHints mappingHints = null)
             : base(
-                  target => JsonConvert.SerializeObject(target),
+                  target => StorageCredentialsConverter.ConvertFromStorageCredentialsBase(target),
                   str => StorageCredentialsConverter.ConvertFromString(str),
                   mappingHints)
         {
+        }
+        private static string ConvertFromStorageCredentialsBase(StorageCredentialsBase storageCredentialsBase)
+        {
+            return JsonConvert.SerializeObject(storageCredentialsBase);
         }
         private static StorageCredentialsBase ConvertFromString(string source)
         {
@@ -35,6 +39,12 @@ namespace HBK.Storage.Adapter.ValueConversions
                     break;
                 case Enums.StorageTypeEnum.AmazonS3:
                     obj = JsonConvert.DeserializeObject<AmazonS3StorageCredentials>(source);
+                    break;
+                case Enums.StorageTypeEnum.Local:
+                    obj = JsonConvert.DeserializeObject<LocalStorageCredentials>(source);
+                    break;
+                case Enums.StorageTypeEnum.GoogleDrive:
+                    obj = JsonConvert.DeserializeObject<GoogleDriveCredentials>(source);
                     break;
                 default:
                     throw new NotImplementedException($"尚未實作轉換至 { obj.StorageType } 的方式");

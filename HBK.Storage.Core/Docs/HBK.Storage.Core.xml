@@ -287,6 +287,12 @@
             檔案系統工廠
             </summary>
         </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FileSystemFactory.#ctor(HBK.Storage.Core.Services.StorageService)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="storageService">儲存個體服務</param>
+        </member>
         <member name="M:HBK.Storage.Core.FileSystem.FileSystemFactory.GetAsyncFileProvider(HBK.Storage.Adapter.Storages.Storage)">
             <summary>
             取得指定儲存個體之儲存服務提供者
@@ -425,6 +431,166 @@
         <member name="P:HBK.Storage.Core.FileSystem.FTP.FTPOption.UploadBufferSize">
             <summary>
             取得或設定上傳時使用的緩衝區大小
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore">
+            <summary>
+            Google Drive Token 儲存方式
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore.#ctor(HBK.Storage.Adapter.Storages.Storage,HBK.Storage.Core.Services.StorageService)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="storage">儲存個體</param>
+            <param name="storageService">儲存個體服務</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore.ClearAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore.DeleteAsync``1(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore.GetAsync``1(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore.StoreAsync``1(System.String,``0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveDirectoryContents">
+            <summary>
+            Google Drive 目錄內容
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveDirectoryContents.#ctor(System.Boolean,System.Collections.Generic.IEnumerable{HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileInfo})">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="isExist">資料夾是否存在</param>
+            <param name="files">檔案清單</param>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveDirectoryContents.Exists">
+            <summary>
+            取得檔案室否存在
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveDirectoryContents.GetEnumerator">
+            <summary>
+            取得列舉器
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileInfo">
+            <summary>
+            Google Drive 的檔案資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileInfo.#ctor(Google.Apis.Drive.v3.DriveService,Google.Apis.Drive.v3.Data.File)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="driveService">Google Drive 服務</param>
+            <param name="file">Google Drive 檔案</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileInfo.CreateReadStreamAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider">
+            <summary>
+            Google Drive 儲存服務提供者
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.BufferSize">
+            <summary>
+            取得緩衝區大小
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.Parent">
+            <summary>
+            取得父資料夾 ID
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.#ctor(System.String,System.String,System.String,System.String,System.String,Google.Apis.Util.Store.IDataStore)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="name">名稱</param>
+            <param name="parent">父資料夾 ID</param>
+            <param name="clientId">存取金鑰</param>
+            <param name="clientSecret">存取密鑰</param>
+            <param name="user">使用者名稱</param>
+            <param name="dataStore">Token 存取方式</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.DeleteAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.GetDirectoryContentsAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.GetFileInfoAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.IsFileExistAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.PutAsync(System.String,System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.Watch(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream">
+            <summary>
+            Google Drive 檔案使用的流
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.#ctor(Google.Apis.Drive.v3.DriveService,Google.Apis.Drive.v3.Data.File,System.Int32,System.Int32)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="driveService"></param>
+            <param name="file"></param>
+            <param name="bufferCount"></param>
+            <param name="bufferSize"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Position">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.BufferSize">
+            <summary>
+            取得緩衝區大小
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.BufferCount">
+            <summary>
+            取得緩衝區數量
             </summary>
         </member>
         <member name="T:HBK.Storage.Core.FileSystem.IAsyncFileInfo">
@@ -886,11 +1052,20 @@
             <param name="fileEntityStroage">檔案位於儲存個體上的橋接資訊</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.StorageService.CompleteSyncAsync(System.Guid)">
+        <member name="M:HBK.Storage.Core.Services.StorageService.CompleteSyncAsync(System.Guid,System.String)">
             <summary>
             完成同步
             </summary>
             <param name="fileEntityStroageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="value">檔案儲存個體更新值</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.UpdateCredentialsAsync(System.Guid,HBK.Storage.Adapter.StorageCredentials.StorageCredentialsBase)">
+            <summary>
+            更新儲存個體驗證資訊
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
+            <param name="storageCredentialsBase">儲存個體驗證資訊</param>
             <returns></returns>
         </member>
     </members>

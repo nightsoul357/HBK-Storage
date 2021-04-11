@@ -87,7 +87,7 @@ namespace HBK.Storage.Sync.Managers
                 }
                 else
                 {
-                    SpinWait.SpinUntil(() => true, 1000);
+                    SpinWait.SpinUntil(() => false, 1000);
                 }
             }
         }
@@ -171,7 +171,8 @@ namespace HBK.Storage.Sync.Managers
                         desStorage.Storage.Name);
 
                     var desFileIno = desProvider.PutAsync(desFileEntityStorage.Value, fileInfo.CreateReadStream()).Result;
-                    _storageService.CompleteSyncAsync(desFileEntityStorage.FileEntityStroageId).Wait();
+
+                    _storageService.CompleteSyncAsync(desFileEntityStorage.FileEntityStroageId, desFileIno.Name).Wait();
 
                     _logger.LogInformation("[同步完成] 檔案 ID 為 { 0 } 的 { 1 } 從 { 2 } 檔案群組中的 { 3 } 檔案儲存個體 同步至 ---> { 4 } 檔案儲存群組中的 { 5 } 檔案儲存個體 作業完成",
                         syncTaskModel.FileEntity.FileEntityId,

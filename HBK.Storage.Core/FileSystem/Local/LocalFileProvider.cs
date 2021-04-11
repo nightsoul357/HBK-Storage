@@ -77,7 +77,7 @@ namespace HBK.Storage.Core.FileSystem.Local
             byte[] buffer = new byte[this.BufferSize];
             var writeStream = File.Create(Path.Combine(this.Directory, subpath));
             int read;
-            while ((read = fileStream.Read(buffer, 0, buffer.Length)) != 0)
+            while ((read = await fileStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
             {
                 writeStream.Write(buffer, 0, read);
             }

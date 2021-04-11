@@ -36,7 +36,7 @@
         </member>
         <member name="T:HBK.Storage.Adapter.Enums.FileEntityStorageStatusEnum">
             <summary>
-             檔案位於儲存個體上的橋接資訊狀態列舉
+            檔案位於儲存個體上的橋接資訊狀態列舉
             </summary>
         </member>
         <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageStatusEnum.None">
@@ -122,6 +122,11 @@
         <member name="F:HBK.Storage.Adapter.Enums.StorageTypeEnum.Local">
             <summary>
             本地儲存空間的儲存個體
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageTypeEnum.GoogleDrive">
+            <summary>
+            Google Drive 的儲存個體
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.Enums.SyncModeEnum">
@@ -874,6 +879,46 @@
             取得或設定密碼
             </summary>
         </member>
+        <member name="T:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials">
+            <summary>
+            Google Drive 使用的驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials.Parent">
+            <summary>
+            取得或設定父資料夾 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials.ClientId">
+            <summary>
+            取得或設定存取金鑰
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials.ClientSecret">
+            <summary>
+            取得或設定存取密鑰
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials.User">
+            <summary>
+            取得或設定使用者名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials.Tokens">
+            <summary>
+            取得或設定 Token 資訊
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.StorageCredentials.LocalStorageCredentials">
+            <summary>
+            本地類型的存取儲存個體的驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.LocalStorageCredentials.Directory">
+            <summary>
+            取得或設定目錄
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.StorageCredentials.StorageCredentialsBase">
             <summary>
             存取儲存個體的驗證資訊基底型別
@@ -906,6 +951,16 @@
             建立一個新的執行個體
             </summary>
             <param name="mappingHints"></param>
+        </member>
+        <member name="T:HBK.Storage.Adapter.ValueConversions.StorageCredentialsValueComparer">
+            <summary>
+            存取儲存個體的驗證資訊比較方法
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.ValueConversions.StorageCredentialsValueComparer.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
         </member>
     </members>
 </doc>

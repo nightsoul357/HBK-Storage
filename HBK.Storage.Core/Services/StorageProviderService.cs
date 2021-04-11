@@ -140,18 +140,24 @@ namespace HBK.Storage.Core.Services
             #endregion
             Guid taskId = Guid.NewGuid();
             fileEntity.Status = FileEntityStatusEnum.Uploading | fileEntity.Status;
-            fileEntity.FileEntityStroage.Add(new FileEntityStroage()
+            var fileEntityStorage = new FileEntityStroage()
             {
                 CreatorIdentity = "Upload Service",
                 Status = FileEntityStorageStatusEnum.None,
                 StorageId = storageExtendProperty.Storage.StorageId,
                 Value = taskId.ToString()
-            });
+            };
+            fileEntity.FileEntityStroage.Add(fileEntityStorage);
             _dbContext.FileEntity.Add(fileEntity);
             await _dbContext.SaveChangesAsync();
 
             var fileProvider = _fileSystemFactory.GetAsyncFileProvider(storageExtendProperty.Storage);
             var fileInfoResult = await fileProvider.PutAsync(taskId.ToString(), fileStream);
+            if (storageGroup.Type == StorageTypeEnum.GoogleDrive)
+            {
+                fileEntityStorage.Value = fileInfoResult.Name;
+            }
+
             fileEntity.Status = fileEntity.Status & ~FileEntityStatusEnum.Uploading;
             fileEntity.Size = fileInfoResult.Length;
             await _dbContext.SaveChangesAsync();
@@ -206,8 +212,13 @@ namespace HBK.Storage.Core.Services
 
             for (int i = 0; i < storageGroups.Count; i++)
             {
-                for (int j = i + 1; j < storageGroups.Count; j++)
+                for (int j = 0; j < storageGroups.Count; j++)
                 {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+
                     var sourceStorageGroup = storageGroups[i];
                     var targetStorageGroup = storageGroups[j];
 
@@ -219,18 +230,21 @@ namespace HBK.Storage.Core.Services
                         .Where(x => x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder)
                         .Where(x => x.FileEntityStroage.Select(fs => fs.Storage.StorageGroup).Any(sg => sg.StorageGroupId == sourceStorageGroup.StorageGroupId) &&
                                     x.FileEntityStroage.Select(fs => fs.Storage.StorageGroup).All(sg => sg.StorageGroupId != targetStorageGroup.StorageGroupId))
-                        .Where(x => x.FileEntityStroage.First().Status == FileEntityStorageStatusEnum.None) // 已經限制 Storage Group 了，所以 FileEntityStroage 必定唯一
-                        .Where(x => !x.FileEntityStroage.First().IsMarkDelete);
+                        .Where(x => x.FileEntityStroage.First(t => t.Storage.StorageGroupId == sourceStorageGroup.StorageGroupId).Status == FileEntityStorageStatusEnum.None) // 已經限制 Storage Group 了，所以 FileEntityStroage 必定唯一
+                        .Where(x => !x.FileEntityStroage.First(t => t.Storage.StorageGroupId == sourceStorageGroup.StorageGroupId).IsMarkDelete);
 
-                    if (targetStorageGroup.SyncPolicy.TagMatchMode == TagMatchModeEnum.All)
+                    if (targetStorageGroup.SyncMode == SyncModeEnum.Policy)
                     {
-                        fileEntitiesQuery = fileEntitiesQuery
-                            .Where(f => f.FileEntityTag.All(st => EF.Functions.Like(st.Value, targetStorageGroup.SyncPolicy.TagRule)));
-                    }
-                    else
-                    {
-                        fileEntitiesQuery = fileEntitiesQuery
-                            .Where(f => f.FileEntityTag.Any(st => EF.Functions.Like(st.Value, targetStorageGroup.SyncPolicy.TagRule)));
+                        if (targetStorageGroup.SyncPolicy.TagMatchMode == TagMatchModeEnum.All)
+                        {
+                            fileEntitiesQuery = fileEntitiesQuery
+                                .Where(f => f.FileEntityTag.All(st => EF.Functions.Like(st.Value, targetStorageGroup.SyncPolicy.TagRule)));
+                        }
+                        else
+                        {
+                            fileEntitiesQuery = fileEntitiesQuery
+                                .Where(f => f.FileEntityTag.Any(st => EF.Functions.Like(st.Value, targetStorageGroup.SyncPolicy.TagRule)));
+                        }
                     }
 
                     var fileEntities = await fileEntitiesQuery.Take(takeCount - result.Count).ToListAsync();

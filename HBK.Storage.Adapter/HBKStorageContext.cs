@@ -189,7 +189,8 @@ namespace HBK.Storage.Adapter.Storages
                 entity.Property(e => e.StorageId).ValueGeneratedNever();
 
                 entity.Property(e => e.Credentials)
-                    .HasConversion(new StorageCredentialsConverter());
+                    .HasConversion(new StorageCredentialsConverter())
+                    .Metadata.SetValueComparer(new StorageCredentialsValueComparer());
 
                 entity.HasOne(d => d.StorageGroup)
                     .WithMany(p => p.Storage)

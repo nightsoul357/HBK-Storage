@@ -80,7 +80,7 @@ namespace HBK.Storage.Sync.Managers
                 }
                 else
                 {
-                    SpinWait.SpinUntil(() => true, 1000);
+                    SpinWait.SpinUntil(() => false, 1000);
                 }
 
                 _ = _fileEntityService.UpdateFileEntityDeleteInfoAsync(_option.FetchLimit, _option.FileEntityNoDivisor, _option.FileEntityNoRemainder).Result;

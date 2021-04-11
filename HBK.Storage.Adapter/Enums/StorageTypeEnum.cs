@@ -22,6 +22,10 @@ namespace HBK.Storage.Adapter.Enums
         /// <summary>
         /// 本地儲存空間的儲存個體
         /// </summary>
-        Local = 3
+        Local = 3,
+        /// <summary>
+        /// Google Drive 的儲存個體
+        /// </summary>
+        GoogleDrive = 4,
     }
 }

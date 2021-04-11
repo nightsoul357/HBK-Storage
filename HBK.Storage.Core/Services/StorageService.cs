@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Adapter.Storages;
+﻿using HBK.Storage.Adapter.StorageCredentials;
+using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -75,12 +76,27 @@ namespace HBK.Storage.Core.Services
         /// 完成同步
         /// </summary>
         /// <param name="fileEntityStroageId">檔案位於儲存個體上的橋接資訊 ID</param>
+        /// <param name="value">檔案儲存個體更新值</param>
         /// <returns></returns>
-        public async Task CompleteSyncAsync(Guid fileEntityStroageId)
+        public async Task CompleteSyncAsync(Guid fileEntityStroageId, string value)
         {
             var fileEntityStorage = await _dbContext.FileEntityStroage.FirstOrDefaultAsync(x => x.FileEntityStroageId == fileEntityStroageId);
+            fileEntityStorage.Value = value;
             fileEntityStorage.Status = fileEntityStorage.Status & ~Adapter.Enums.FileEntityStorageStatusEnum.Syncing;
             await _dbContext.SaveChangesAsync();
+        }
+        /// <summary>
+        /// 更新儲存個體驗證資訊
+        /// </summary>
+        /// <param name="storageId">儲存個體 ID</param>
+        /// <param name="storageCredentialsBase">儲存個體驗證資訊</param>
+        /// <returns></returns>
+        public async Task<Adapter.Storages.Storage> UpdateCredentialsAsync(Guid storageId, StorageCredentialsBase storageCredentialsBase)
+        {
+            var storage = await _dbContext.Storage.FirstAsync(x => x.StorageId == storageId);
+            storage.Credentials = storageCredentialsBase;
+            await _dbContext.SaveChangesAsync();
+            return storage;
         }
         #endregion
     }
