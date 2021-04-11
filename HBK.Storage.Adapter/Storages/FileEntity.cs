@@ -46,12 +46,6 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         public long Size { get; set; }
         /// <summary>
-        /// 取得或設定檔案標籤列表
-        /// </summary>
-        [Required]
-        [StringLength(511)]
-        public List<string> Tags { get; set; }
-        /// <summary>
         /// 取得或設定檔案擴充描述
         /// </summary>
         public string ExtendProperty { get; set; }
@@ -88,6 +82,11 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         [InverseProperty("FileEntity")]
         public virtual ICollection<FileAccessToken> FileAccessToken { get; set; }
+        /// <summary>
+        /// 取得或設定檔案實體標籤集合
+        /// </summary>
+        [InverseProperty("FileEntity")]
+        public virtual ICollection<FileEntityTag> FileEntityTag { get; set; }
 
         DateTimeOffset? ITimeStampModel.UpdateDateTime { get => this.UpdateDateTime; set => this.UpdateDateTime = value; }
         DateTimeOffset ICreatedDateModel.CreateDateTime { get => this.CreateDateTime; set => this.CreateDateTime = value; }

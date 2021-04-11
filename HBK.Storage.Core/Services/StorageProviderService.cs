@@ -3,15 +3,18 @@ using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HBK.Storage.Core.Services
@@ -58,7 +61,23 @@ namespace HBK.Storage.Core.Services
             return this.ListQuery()
                 .FirstOrDefaultAsync(x => x.StorageProviderId == storageProviderId);
         }
-
+        /// <summary>
+        /// 取得所有儲存服務
+        /// </summary>
+        /// <returns></returns>
+        public Task<List<StorageProvider>> GetAllStorageProviderAsync()
+        {
+            return this.ListQuery().ToListAsync();
+        }
+        /// <summary>
+        /// 取得指定儲存服務 ID 清單的所有儲存服務
+        /// </summary>
+        /// <param name="storageProviderIds">儲存服務 ID 清單</param>
+        /// <returns></returns>
+        public Task<List<StorageProvider>> GetStorageProviderByIdsAsync(List<Guid> storageProviderIds)
+        {
+            return this.ListQuery().Where(x => storageProviderIds.Contains(x.StorageProviderId)).ToListAsync();
+        }
         #endregion
 
         #region BAL
@@ -116,7 +135,7 @@ namespace HBK.Storage.Core.Services
             }
             if (storageExtendProperty == null || storageExtendProperty.RemainSize <= fileEntity.Size)
             {
-                throw new InvalidOperationException("Remain size not enough.");
+                throw new InvalidOperationException("Remain space not enough.");
             }
             #endregion
             Guid taskId = Guid.NewGuid();
@@ -169,6 +188,65 @@ namespace HBK.Storage.Core.Services
 
             var fileProvider = _fileSystemFactory.GetAsyncFileProvider(fileStorage.Storage);
             return await fileProvider.GetFileInfoAsync(fileStorage.Value);
+        }
+
+        /// <summary>
+        /// 取得需同步的同步任務資訊
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="takeCount">取得數量上限</param>
+        /// <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+        /// <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+        /// <returns></returns>
+        public async Task<List<SyncFileEntity>> GetSyncFileEntitiesAsync(Guid storageProviderId, int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
+        {
+            List<SyncFileEntity> result = new List<SyncFileEntity>();
+            var storageProvider = await this.FindByIdAsync(storageProviderId);
+            var storageGroups = storageProvider.StorageGroup.Where(x => x.SyncMode != SyncModeEnum.Never && !x.Status.HasFlag(StorageGroupStatusEnum.Disable)).ToList();
+
+            for (int i = 0; i < storageGroups.Count; i++)
+            {
+                for (int j = i + 1; j < storageGroups.Count; j++)
+                {
+                    var sourceStorageGroup = storageGroups[i];
+                    var targetStorageGroup = storageGroups[j];
+
+                    var fileEntitiesQuery = _dbContext.FileEntity
+                        .Include(x => x.FileEntityStroage)
+                        .ThenInclude(x => x.Storage)
+                        .ThenInclude(x => x.FileEntityStroage)
+                        .Where(x => x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder)
+                        .Where(x => x.FileEntityStroage.Select(fs => fs.Storage.StorageGroup).Any(sg => sg.StorageGroupId == sourceStorageGroup.StorageGroupId) &&
+                                    x.FileEntityStroage.Select(fs => fs.Storage.StorageGroup).All(sg => sg.StorageGroupId != targetStorageGroup.StorageGroupId));
+
+                    if (targetStorageGroup.SyncPolicy.TagMatchMode == TagMatchModeEnum.All)
+                    {
+                        fileEntitiesQuery = fileEntitiesQuery
+                            .Where(f => f.FileEntityTag.All(st => EF.Functions.Like(st.Value, targetStorageGroup.SyncPolicy.TagRule)));
+                    }
+                    else
+                    {
+                        fileEntitiesQuery = fileEntitiesQuery
+                            .Where(f => f.FileEntityTag.Any(st => EF.Functions.Like(st.Value, targetStorageGroup.SyncPolicy.TagRule)));
+                    }
+
+                    var fileEntities = await fileEntitiesQuery.Take(takeCount - result.Count).ToListAsync();
+                    result.AddRange(fileEntities.Select(x => new SyncFileEntity()
+                    {
+                        FileEntity = x,
+                        FromStorageGroup = sourceStorageGroup,
+                        DestinationStorageGroup = targetStorageGroup,
+                        FromFileEntityStorage = x.FileEntityStroage.First(t => t.Storage.StorageGroupId == sourceStorageGroup.StorageGroupId)
+                    }));
+
+                    if (result.Count >= takeCount)
+                    {
+                        return result;
+                    }
+                }
+            }
+
+            return result;
         }
         #endregion
     }

@@ -74,7 +74,7 @@ namespace HBK.Storage.Core.FileSystem.FTP
         /// </summary>
         /// <param name="subpath">相對路徑</param>
         /// <returns></returns>
-        public override async Task<IDirectoryContents> GetDirectoryContentsAsync(string subpath)
+        public override Task<IDirectoryContents> GetDirectoryContentsAsync(string subpath)
         {
             throw new NotImplementedException();
         }

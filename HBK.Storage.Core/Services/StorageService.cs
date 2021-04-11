@@ -60,6 +60,28 @@ namespace HBK.Storage.Core.Services
                 RemainSize = x.SizeLimit - x.FileEntityStroage.Sum(f => f.FileEntity.Size)
             }).FirstOrDefaultAsync();
         }
+        /// <summary>
+        /// 於儲存個體內新增檔案實體
+        /// </summary>
+        /// <param name="fileEntityStroage">檔案位於儲存個體上的橋接資訊</param>
+        /// <returns></returns>
+        public async Task<FileEntityStroage> AddFileEntityInStorageAsync(FileEntityStroage fileEntityStroage)
+        {
+            _dbContext.FileEntityStroage.Add(fileEntityStroage);
+            await _dbContext.SaveChangesAsync();
+            return fileEntityStroage;
+        }
+        /// <summary>
+        /// 完成同步
+        /// </summary>
+        /// <param name="fileEntityStroageId">檔案位於儲存個體上的橋接資訊 ID</param>
+        /// <returns></returns>
+        public async Task CompleteSyncAsync(Guid fileEntityStroageId)
+        {
+            var fileEntityStorage = await _dbContext.FileEntityStroage.FirstOrDefaultAsync(x => x.FileEntityStroageId == fileEntityStroageId);
+            fileEntityStorage.Status = fileEntityStorage.Status & ~Adapter.Enums.FileEntityStorageStatusEnum.Syncing;
+            await _dbContext.SaveChangesAsync();
+        }
         #endregion
     }
 }

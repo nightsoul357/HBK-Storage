@@ -69,7 +69,7 @@ namespace HBK.Storage.Api.Controllers
                         Name = request.Filename,
                         Size = base.HttpContext.Request.ContentLength.Value,
                         Status = FileEntityStatusEnum.None,
-                        Tags = request.Tags
+                        FileEntityTag = request.Tags.Select(x => new FileEntityTag() { Value = x }).ToList()
                     },
                     request.FileStream);
             return FileEntityController.BuildFileEntityResponse(fileEntity);

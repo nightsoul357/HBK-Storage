@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Http.Features;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Models;
+using HBK.Storage.Core;
 
 namespace HBK.Storage.Api
 {
@@ -144,12 +145,8 @@ namespace HBK.Storage.Api
                 options.UseSqlServer(this.Configuration["Database:ConnectionString"]));
 
             // ®Ö¤ßÅÞ¿è
-            services.AddScoped<StorageService>();
             services.AddScoped<FileAccessTokenService>();
-            services.AddScoped<StorageProviderService>();
-            services.AddScoped<StorageGroupService>();
-            services.AddScoped<FileEntityService>();
-            services.AddSingleton<FileSystemFactory>();
+            services.AddHBKStorageService();
 
         }
 

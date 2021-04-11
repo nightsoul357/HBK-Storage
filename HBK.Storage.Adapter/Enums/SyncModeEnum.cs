@@ -7,22 +7,21 @@ using System.Threading.Tasks;
 namespace HBK.Storage.Adapter.Enums
 {
     /// <summary>
-    ///  檔案位於儲存個體上的橋接資訊狀態列舉
+    /// 同步策略列舉
     /// </summary>
-    [Flags]
-    public enum FileEntityStorageStatusEnum : long
+    public enum SyncModeEnum : int
     {
         /// <summary>
-        /// 無
+        /// 總是同步
         /// </summary>
-        None = 0,
+        Always = 1,
         /// <summary>
-        /// 正在同步
+        /// 永不同步
         /// </summary>
-        Syncing = 1 << 0,
+        Never = 2,
         /// <summary>
-        /// 同步失敗
+        /// 根據策略決定是否同步
         /// </summary>
-        SyncFail = 1 << 1,
+        Policy = 3
     }
 }

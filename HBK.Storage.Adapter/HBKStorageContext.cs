@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HBK.Storage.Adapter.Interfaces;
+using HBK.Storage.Adapter.Models;
 using HBK.Storage.Adapter.StorageCredentials;
 using HBK.Storage.Adapter.ValueConversions;
 using Microsoft.EntityFrameworkCore;
@@ -119,6 +120,19 @@ namespace HBK.Storage.Adapter.Storages
                     .HasConstraintName("FK_FileAccessToken_StorageProvider");
             });
 
+            modelBuilder.Entity<FileEntityTag>(entity => 
+            {
+                entity.HasKey(e => e.FileEntityTagNo)
+                    .IsClustered();
+
+                entity.Property(e => e.FileEntityTagNo).ValueGeneratedOnAdd();
+
+                entity.HasOne(d => d.FileEntity)
+                    .WithMany(p => p.FileEntityTag)
+                    .HasForeignKey(d => d.FileEntityId)
+                    .HasConstraintName("FK_FileEntityTag_FileEntity");
+            });
+
             modelBuilder.Entity<FileEntity>(entity =>
             {
                 entity.HasKey(e => e.FileEntityId)
@@ -127,9 +141,6 @@ namespace HBK.Storage.Adapter.Storages
                 entity.HasIndex(e => e.FileEntityNo, "IX_FileEntity")
                     .IsUnique()
                     .IsClustered();
-
-                entity.Property(e => e.Tags)
-                    .HasConversion(new JsonParseConverter<List<string>>());
 
                 entity.Property(e => e.FileEntityId).HasDefaultValueSql("(newid())");
 
@@ -203,6 +214,9 @@ namespace HBK.Storage.Adapter.Storages
                 entity.Property(e => e.StorageGroupId).HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.StorageGroupNo).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.SyncPolicy)
+                    .HasConversion(new JsonParseConverter<SyncPolicy>());
 
                 entity.HasOne(d => d.StorageProvider)
                     .WithMany(p => p.StorageGroup)
