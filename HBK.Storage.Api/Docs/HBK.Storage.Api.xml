@@ -329,6 +329,25 @@
             <param name="contentDisposition"></param>
             <returns></returns>
         </member>
+        <member name="T:HBK.Storage.Api.Middlewares.GlobalExceptionMiddleware">
+            <summary>
+            處理全域例外的中介層
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Middlewares.GlobalExceptionMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="next"></param>
+            <param name="loggerFactory"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Middlewares.GlobalExceptionMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            執行
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Api.Middlewares.RequestResponseLoggingMiddleware">
             <summary>
             紀錄請求和回應內容的中介層
