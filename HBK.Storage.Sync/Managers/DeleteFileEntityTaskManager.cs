@@ -23,8 +23,6 @@ namespace HBK.Storage.Sync.Managers
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScope _serviceScope;
         private readonly DeleteFileEntityTaskManagerOption _option;
-        private readonly FileEntityService _fileEntityService;
-        private readonly FileSystemFactory _fileSystemFactory;
 
         private ConcurrentQueue<FileEntityStroage> _pendingQueue;
         private object _syncObj = new object();
@@ -42,8 +40,6 @@ namespace HBK.Storage.Sync.Managers
             _serviceScope = _serviceProvider.CreateScope();
 
             _option = _serviceScope.ServiceProvider.GetRequiredService<DeleteFileEntityTaskManagerOption>();
-            _fileEntityService = _serviceScope.ServiceProvider.GetRequiredService<FileEntityService>();
-            _fileSystemFactory = _serviceScope.ServiceProvider.GetRequiredService<FileSystemFactory>();
         }
         public void Start(CancellationToken cancellationToken)
         {
@@ -65,6 +61,9 @@ namespace HBK.Storage.Sync.Managers
         private void StartInternal()
         {
             List<Task> tasks = new List<Task>();
+            using var scope = _serviceProvider.CreateScope();
+            var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
+
             while (!_cancellationToken.IsCancellationRequested)
             {
                 this.FetchTask();
@@ -83,38 +82,51 @@ namespace HBK.Storage.Sync.Managers
                     SpinWait.SpinUntil(() => false, 1000);
                 }
 
-                _ = _fileEntityService.UpdateFileEntityDeleteInfoAsync(_option.FetchLimit, _option.FileEntityNoDivisor, _option.FileEntityNoRemainder).Result;
+                _ = fileEntityService.UpdateFileEntityDeleteInfoAsync(_option.FetchLimit, _option.FileEntityNoDivisor, _option.FileEntityNoRemainder).Result;
             }
         }
         private void FetchTask()
         {
-            var fileEntityStroagies = _fileEntityService
-                .GetMarkDeleteFileEntityStoragiesAsync(_option.FetchLimit, _option.FileEntityNoDivisor, _option.FileEntityNoRemainder).Result;
-            fileEntityStroagies.ForEach(x => _pendingQueue.Enqueue(x));
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
+                var fileEntityStroagies = fileEntityService
+                    .GetMarkDeleteFileEntityStoragiesAsync(_option.FetchLimit, _option.FileEntityNoDivisor, _option.FileEntityNoRemainder).Result;
+                fileEntityStroagies.ForEach(x => _pendingQueue.Enqueue(x));
+            }
         }
         private void ExecuteTask()
         {
             while (!_cancellationToken.IsCancellationRequested && _pendingQueue.TryDequeue(out FileEntityStroage fileEntityStroage))
             {
+                Guid deleteTaskId = Guid.NewGuid();
                 try
                 {
-                    _logger.LogInformation("[正在刪除] 正在將檔案 ID 為 {0} 的 {1} 從 {2} 檔案群組中的 {3} 檔案儲存個體中刪除",
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var fileSystemFactory = scope.ServiceProvider.GetRequiredService<FileSystemFactory>();
+                        var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
+
+                        _logger.LogInformation(_option.Identity,"刪除開始", deleteTaskId, "正在將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體中刪除",
                         fileEntityStroage.FileEntityId,
                         fileEntityStroage.FileEntity.Name,
                         fileEntityStroage.Storage.StorageGroup.Name,
                         fileEntityStroage.Storage.Name);
-                    var fileProvider = _fileSystemFactory.GetAsyncFileProvider(fileEntityStroage.Storage);
-                    fileProvider.DeleteAsync(fileEntityStroage.Value).Wait();
-                    _fileEntityService.DeleteFileEntityStroageAsync(fileEntityStroage.FileEntityStroageId).Wait();
-                    _logger.LogInformation("[刪除完成] 檔案 ID 為 {0} 的 {1} 從 {2} 檔案群組中的 {3} 檔案儲存個體中刪除 作業完成",
+
+                        var fileProvider = fileSystemFactory.GetAsyncFileProvider(fileEntityStroage.Storage);
+                        fileProvider.DeleteAsync(fileEntityStroage.Value).Wait();
+                        fileEntityService.DeleteFileEntityStroageAsync(fileEntityStroage.FileEntityStroageId).Wait();
+
+                        _logger.LogInformation(_option.Identity, "刪除完成", deleteTaskId, "檔案 ID 為 {0} 的 {1} 從 {2} 檔案群組中的 {3} 檔案儲存個體中刪除",
                         fileEntityStroage.FileEntityId,
                         fileEntityStroage.FileEntity.Name,
                         fileEntityStroage.Storage.StorageGroup.Name,
                         fileEntityStroage.Storage.Name);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Uncatch Error");
+                    LoggerExtensions.LogError(_logger, _option.Identity, "刪除失敗", deleteTaskId, ex, "發生未預期的例外");
                 }
             }
         }

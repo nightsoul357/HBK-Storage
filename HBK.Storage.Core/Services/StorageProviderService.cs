@@ -140,26 +140,24 @@ namespace HBK.Storage.Core.Services
             #endregion
             Guid taskId = Guid.NewGuid();
             fileEntity.Status = FileEntityStatusEnum.Uploading | fileEntity.Status;
-            var fileEntityStorage = new FileEntityStroage()
-            {
-                CreatorIdentity = "Upload Service",
-                Status = FileEntityStorageStatusEnum.None,
-                StorageId = storageExtendProperty.Storage.StorageId,
-                Value = taskId.ToString()
-            };
-            fileEntity.FileEntityStroage.Add(fileEntityStorage);
+            
             _dbContext.FileEntity.Add(fileEntity);
             await _dbContext.SaveChangesAsync();
 
             var fileProvider = _fileSystemFactory.GetAsyncFileProvider(storageExtendProperty.Storage);
             var fileInfoResult = await fileProvider.PutAsync(taskId.ToString(), fileStream);
-            if (storageGroup.Type == StorageTypeEnum.GoogleDrive)
-            {
-                fileEntityStorage.Value = fileInfoResult.Name;
-            }
 
+            var fileEntityStorage = new FileEntityStroage()
+            {
+                CreatorIdentity = "Upload Service",
+                Status = FileEntityStorageStatusEnum.None,
+                StorageId = storageExtendProperty.Storage.StorageId,
+                Value = fileInfoResult.Name
+            };
+            fileEntity.FileEntityStroage.Add(fileEntityStorage);
             fileEntity.Status = fileEntity.Status & ~FileEntityStatusEnum.Uploading;
             fileEntity.Size = fileInfoResult.Length;
+
             await _dbContext.SaveChangesAsync();
             return fileEntity;
         }
@@ -189,7 +187,7 @@ namespace HBK.Storage.Core.Services
 
             if (fileStorage == null)
             {
-                throw new InvalidOperationException("Could't find valud storage.");
+                throw new InvalidOperationException("Could't find valid storage.");
             }
 
             var fileProvider = _fileSystemFactory.GetAsyncFileProvider(fileStorage.Storage);

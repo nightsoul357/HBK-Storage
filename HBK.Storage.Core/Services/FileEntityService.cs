@@ -31,7 +31,8 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public IQueryable<FileEntity> ListQuery()
         {
-            return _dbContext.FileEntity;
+            return _dbContext.FileEntity
+                .Include(x => x.FileEntityTag);
         }
         /// <summary>
         /// 以 ID 取得檔案實體

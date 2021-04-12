@@ -4,6 +4,31 @@
         <name>HBK.Storage.Core</name>
     </assembly>
     <members>
+        <member name="T:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum">
+            <summary>
+            存取檔案權杖類型
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum.Normal">
+            <summary>
+            一般
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum.NormalNoLimit">
+            <summary>
+            無限制的一般
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum.AllowTag">
+            <summary>
+            允許指定的 Tag
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum.AllowTagNoLimit">
+            <summary>
+            無限制的允許指定的 Tag
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3DirectoryContents">
             <summary>
             AWS S3 目錄內容
@@ -830,14 +855,56 @@
             <param name="fileAccessTokenId">檔案存取權杖 ID</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateFileAccessTokenAsync(HBK.Storage.Adapter.Storages.FileAccessToken)">
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.BuildFileAccessToken(System.IdentityModel.Tokens.Jwt.JwtSecurityToken)">
             <summary>
-            產生存取檔案使用的權杖
+            產生檔案存取權杖模型
             </summary>
-            <param name="fileAccessToken">檔案存取權杖</param>
+            <param name="jwtSecurityToken"></param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.ValidateFileAccessToken(System.String)">
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateNormalFileAccessTokenAsync(System.Guid,System.Nullable{System.Guid},System.Guid,System.DateTime,System.Int32)">
+            <summary>
+            產生一般存取檔案使用的權杖
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="expireDateTime">過期時間</param>
+            <param name="accessTimeLimit">存取次數限制</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateNormalNoLimitFileAccessToken(System.Guid,System.Nullable{System.Guid},System.Guid,System.DateTime)">
+            <summary>
+            產生無限制的一般存取檔案使用的權杖
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="expireDateTime">過期時間</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateAllowTagFileAccessTokenAsync(System.Guid,System.Nullable{System.Guid},System.String,System.DateTime,System.Int32)">
+            <summary>
+            產生允許指定 Tag 通過的檔案存取權杖
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
+            <param name="allowTagPattern"></param>
+            <param name="expireDateTime">過期時間</param>
+            <param name="accessTimeLimit">存取次數限制</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateAllowTagNoLimitFileAccessToken(System.Guid,System.Nullable{System.Guid},System.String,System.DateTime)">
+            <summary>
+            產生無限制的允許指定 Tag 通過的檔案存取權杖
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
+            <param name="allowTagPattern"></param>
+            <param name="expireDateTime">過期時間</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.ValidateFileAccessTokenAsync(System.String)">
             <summary>
             驗證存取檔案使用的權杖是否有效
             </summary>
@@ -849,6 +916,14 @@
             嘗試增加檔案存取次數
             </summary>
             <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateJWTToken(System.Collections.Generic.List{System.Security.Claims.Claim},System.DateTime)">
+            <summary>
+            產生 JWT Token
+            </summary>
+            <param name="claims">宣告式內容</param>
+            <param name="expireDateTime">過期時間</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Core.Services.FileEntityService">

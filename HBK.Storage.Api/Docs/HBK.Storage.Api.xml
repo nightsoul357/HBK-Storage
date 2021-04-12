@@ -37,6 +37,14 @@
             <param name="request">上傳檔案的請求內容</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.PostFileAccessToken(System.Guid,HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest)">
+            <summary>
+            產生檔案存取權杖
+            </summary>
+            <param name="storageProviderId"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Api.Controllers.FileServiceController.Get(System.Guid,System.Guid,System.Nullable{System.Guid})">
             <summary>
             從指定的儲存服務下載檔案
@@ -46,15 +54,6 @@
             <param name="storageGroupId">強制指定儲存個體群組 ID</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.PostExternalDirectLink(System.Guid,System.Guid,HBK.Storage.Api.Models.FileService.PostExternalDirectLinkRequest)">
-            <summary>
-            產生檔案直接下載位置
-            </summary>
-            <param name="storageProviderId">儲存服務 ID</param>
-            <param name="fileEntityId">檔案實體 ID</param>
-            <param name="request">產生檔案直接下載位置請求內容</param>
-            <returns></returns>
-        </member>
         <member name="M:HBK.Storage.Api.Controllers.FileServiceController.Delete(System.Guid)">
             <summary>
             將檔案實體標記為刪除
@@ -62,11 +61,36 @@
             <param name="fileEntityId">檔案實體 ID</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.DirectDownload(System.Guid,System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="esic">存取權杖</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.DirectDownload(System.Guid,System.String,System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="fileName">檔案名稱</param>
+            <param name="esic">存取權杖</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Api.Controllers.FileServiceController.DirectDownload(System.String)">
             <summary>
             下載檔案
             </summary>
             <param name="esic">存取權杖</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.DirectDownload(System.String,System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="esic">存取權杖</param>
+            <param name="fileName">檔案名稱</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Api.Controllers.HBKControllerBase">
@@ -339,6 +363,11 @@
             取得或設定檔案直連位置
             </summary>
         </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.GetExternalDirectLinkResponse.Token">
+            <summary>
+            取得或設定 Token
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Api.Models.FileService.GetExternalDirectLinkResponse.ExpireDateTime">
             <summary>
             取得或設定過期時間
@@ -366,6 +395,68 @@
             存取次數限制
             </summary>
             <example>10</example>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest">
+            <summary>
+            產生檔案存取權杖請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.StorageGroupId">
+            <summary>
+            強制指定檔案群組 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.FileEntityId">
+            <summary>
+            檔案實體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.AllowTagPattern">
+            <summary>
+            允許 Tag 通過的格式
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.FileAccessTokenType">
+            <summary>
+            存取檔案權杖類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.ExpireAfterMinutes">
+            <summary>
+            過期分鐘
+            </summary>
+            <example>60</example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.AccessTimesLimit">
+            <summary>
+            存取次數限制
+            </summary>
+            <example>10</example>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse">
+            <summary>
+            產生檔案存取權杖回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse.Token">
+            <summary>
+            取得或設定權杖
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse.ExpireDateTime">
+            <summary>
+            取得或設定過期時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse.UrlParrtenA">
+            <summary>
+            取得或設定 URL 格式 A
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse.UrlParrtenB">
+            <summary>
+            取得或設定 URL 格式 B
+            </summary>
         </member>
         <member name="T:HBK.Storage.Api.Models.FileService.PutFileRequest">
             <summary>

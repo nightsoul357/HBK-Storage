@@ -25,10 +25,6 @@ namespace HBK.Storage.Sync.Managers
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScope _serviceScope;
         private readonly SyncTaskManagerOption _option;
-        private readonly StorageProviderService _storageProviderService;
-        private readonly FileSystemFactory _fileSystemFactory;
-        private readonly StorageGroupService _storageGroupService;
-        private readonly StorageService _storageService;
 
         private ConcurrentQueue<SyncTaskModel> _pendingQueue;
         private CancellationToken _cancellationToken;
@@ -46,10 +42,6 @@ namespace HBK.Storage.Sync.Managers
             _serviceScope = _serviceProvider.CreateScope();
 
             _option = _serviceScope.ServiceProvider.GetRequiredService<SyncTaskManagerOption>();
-            _fileSystemFactory = _serviceScope.ServiceProvider.GetRequiredService<FileSystemFactory>();
-            _storageProviderService = _serviceScope.ServiceProvider.GetRequiredService<StorageProviderService>();
-            _storageGroupService = _serviceScope.ServiceProvider.GetRequiredService<StorageGroupService>();
-            _storageService = _serviceScope.ServiceProvider.GetRequiredService<StorageService>();
         }
         public void Start(CancellationToken cancellationToken)
         {
@@ -94,36 +86,40 @@ namespace HBK.Storage.Sync.Managers
 
         private void FetchTask()
         {
-            List<StorageProvider> storageProviders = new List<StorageProvider>();
-
-            if (_option.IsExecutOnAllStoragProvider)
+            using (var scope = _serviceProvider.CreateScope())
             {
-                storageProviders.AddRange(_storageProviderService.GetAllStorageProviderAsync().Result);
-            }
-            else
-            {
-                storageProviders.AddRange(_storageProviderService.GetStorageProviderByIdsAsync(_option.StorageProviderIds).Result);
-            }
+                var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
+                List<StorageProvider> storageProviders = new List<StorageProvider>();
 
-            foreach (var storageProvider in storageProviders)
-            {
-                var tasks = _storageProviderService.GetSyncFileEntitiesAsync(storageProvider.StorageProviderId,
-                    _option.FetchLimit - _pendingQueue.Count,
-                    _option.FileEntityNoDivisor,
-                    _option.FileEntityNoRemainder).Result;
-
-                tasks.ForEach(x => _pendingQueue.Enqueue(new SyncTaskModel()
+                if (_option.IsExecutOnAllStoragProvider)
                 {
-                    CreateDateTime = DateTimeOffset.Now,
-                    DestinationStorageGroup = x.DestinationStorageGroup,
-                    FileEntity = x.FileEntity,
-                    FromFileEntityStorage = x.FromFileEntityStorage,
-                    FromStorageGroup = x.FromStorageGroup
-                }));
-
-                if (_pendingQueue.Count >= _option.FetchLimit)
+                    storageProviders.AddRange(storageProviderService.GetAllStorageProviderAsync().Result);
+                }
+                else
                 {
-                    break;
+                    storageProviders.AddRange(storageProviderService.GetStorageProviderByIdsAsync(_option.StorageProviderIds).Result);
+                }
+
+                foreach (var storageProvider in storageProviders)
+                {
+                    var tasks = storageProviderService.GetSyncFileEntitiesAsync(storageProvider.StorageProviderId,
+                        _option.FetchLimit - _pendingQueue.Count,
+                        _option.FileEntityNoDivisor,
+                        _option.FileEntityNoRemainder).Result;
+
+                    tasks.ForEach(x => _pendingQueue.Enqueue(new SyncTaskModel()
+                    {
+                        CreateDateTime = DateTimeOffset.Now,
+                        DestinationStorageGroup = x.DestinationStorageGroup,
+                        FileEntity = x.FileEntity,
+                        FromFileEntityStorage = x.FromFileEntityStorage,
+                        FromStorageGroup = x.FromStorageGroup
+                    }));
+
+                    if (_pendingQueue.Count >= _option.FetchLimit)
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -132,59 +128,70 @@ namespace HBK.Storage.Sync.Managers
         {
             while (!_cancellationToken.IsCancellationRequested && _pendingQueue.TryDequeue(out SyncTaskModel syncTaskModel))
             {
+                Guid sysncTaskIdentity = Guid.NewGuid();
                 try
                 {
-                    var desStorage = _storageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(syncTaskModel.DestinationStorageGroup.StorageGroupId).Result;
-                    if (desStorage.RemainSize < syncTaskModel.FileEntity.Size)
+                    using (var scope = _serviceProvider.CreateScope())
                     {
-                        _ = _storageService.AddFileEntityInStorageAsync(new FileEntityStroage()
+                        var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
+                        var storageGroupService = scope.ServiceProvider.GetRequiredService<StorageGroupService>();
+                        var storgaeService = scope.ServiceProvider.GetRequiredService<StorageService>();
+                        var fileSystemFacotry = scope.ServiceProvider.GetRequiredService<FileSystemFactory>();
+
+                        var desStorage = storageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(syncTaskModel.DestinationStorageGroup.StorageGroupId).Result;
+                        if (desStorage.RemainSize < syncTaskModel.FileEntity.Size)
+                        {
+                            _ = storgaeService.AddFileEntityInStorageAsync(new FileEntityStroage()
+                            {
+                                CreatorIdentity = _option.Identity,
+                                FileEntityId = syncTaskModel.FileEntity.FileEntityId,
+                                Status = FileEntityStorageStatusEnum.SyncFail,
+                                StorageId = desStorage.Storage.StorageId,
+                                Value = "Sync Fail - Remain space not enough"
+                            }).Result;
+                            continue;
+                        }
+
+                        var fromProvider = fileSystemFacotry.GetAsyncFileProvider(syncTaskModel.FromFileEntityStorage.Storage);
+                        var desProvider = fileSystemFacotry.GetAsyncFileProvider(desStorage.Storage);
+                        var fileInfo = fromProvider.GetFileInfo(syncTaskModel.FromFileEntityStorage.Value);
+                        Guid taskId = Guid.NewGuid();
+
+                        var desFileEntityStorage = storgaeService.AddFileEntityInStorageAsync(new FileEntityStroage()
                         {
                             CreatorIdentity = _option.Identity,
                             FileEntityId = syncTaskModel.FileEntity.FileEntityId,
-                            Status = FileEntityStorageStatusEnum.SyncFail,
+                            Status = FileEntityStorageStatusEnum.Syncing,
                             StorageId = desStorage.Storage.StorageId,
-                            Value = "Sync Fail - Remain space not enough"
+                            Value = taskId.ToString()
                         }).Result;
-                        continue;
+
+                        _logger.LogInformation(_option.Identity, "同步開始", sysncTaskIdentity
+                            , "正在將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體",
+                            syncTaskModel.FileEntity.FileEntityId,
+                            syncTaskModel.FileEntity.Name,
+                            syncTaskModel.FromStorageGroup.Name,
+                            syncTaskModel.FromFileEntityStorage.Storage.Name,
+                            syncTaskModel.DestinationStorageGroup.Name,
+                            desStorage.Storage.Name);
+
+                        var desFileIno = desProvider.PutAsync(desFileEntityStorage.Value, fileInfo.CreateReadStream()).Result;
+
+                        storgaeService.CompleteSyncAsync(desFileEntityStorage.FileEntityStroageId, desFileIno.Name).Wait();
+
+                        _logger.LogInformation(_option.Identity, "同步完成", sysncTaskIdentity
+                            , "檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體",
+                            syncTaskModel.FileEntity.FileEntityId,
+                            syncTaskModel.FileEntity.Name,
+                            syncTaskModel.FromStorageGroup.Name,
+                            syncTaskModel.FromFileEntityStorage.Storage.Name,
+                            syncTaskModel.DestinationStorageGroup.Name,
+                            desStorage.Storage.Name);
                     }
-
-                    var fromProvider = _fileSystemFactory.GetAsyncFileProvider(syncTaskModel.FromFileEntityStorage.Storage);
-                    var desProvider = _fileSystemFactory.GetAsyncFileProvider(desStorage.Storage);
-                    var fileInfo = fromProvider.GetFileInfo(syncTaskModel.FromFileEntityStorage.Value);
-                    Guid taskId = Guid.NewGuid();
-
-                    var desFileEntityStorage = _storageService.AddFileEntityInStorageAsync(new FileEntityStroage()
-                    {
-                        CreatorIdentity = _option.Identity,
-                        FileEntityId = syncTaskModel.FileEntity.FileEntityId,
-                        Status = FileEntityStorageStatusEnum.Syncing,
-                        StorageId = desStorage.Storage.StorageId,
-                        Value = taskId.ToString()
-                    }).Result;
-
-                    _logger.LogInformation("[正在同步] 正在將檔案 ID 為 { 0 } 的 { 1 } 從 { 2 } 檔案群組中的 { 3 } 檔案儲存個體 同步至 ---> { 4 } 檔案儲存群組中的 { 5 } 檔案儲存個體",
-                        syncTaskModel.FileEntity.FileEntityId,
-                        syncTaskModel.FileEntity.Name,
-                        syncTaskModel.FromStorageGroup.Name,
-                        syncTaskModel.FromFileEntityStorage.Storage.Name,
-                        syncTaskModel.DestinationStorageGroup.Name,
-                        desStorage.Storage.Name);
-
-                    var desFileIno = desProvider.PutAsync(desFileEntityStorage.Value, fileInfo.CreateReadStream()).Result;
-
-                    _storageService.CompleteSyncAsync(desFileEntityStorage.FileEntityStroageId, desFileIno.Name).Wait();
-
-                    _logger.LogInformation("[同步完成] 檔案 ID 為 { 0 } 的 { 1 } 從 { 2 } 檔案群組中的 { 3 } 檔案儲存個體 同步至 ---> { 4 } 檔案儲存群組中的 { 5 } 檔案儲存個體 作業完成",
-                        syncTaskModel.FileEntity.FileEntityId,
-                        syncTaskModel.FileEntity.Name,
-                        syncTaskModel.FromStorageGroup.Name,
-                        syncTaskModel.FromFileEntityStorage.Storage.Name,
-                        syncTaskModel.DestinationStorageGroup.Name,
-                        desStorage.Storage.Name);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Uncatch Error");
+                    LoggerExtensions.LogError(_logger, _option.Identity, "同步失敗", sysncTaskIdentity, ex, "發生未預期的例外");
                 }
             }
         }

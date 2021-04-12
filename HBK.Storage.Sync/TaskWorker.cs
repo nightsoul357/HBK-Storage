@@ -34,6 +34,8 @@ namespace HBK.Storage.Sync
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation("服務執行(ExecuteAsync)");
+
             try
             {
                 this.SyncTaskManager.Start(stoppingToken);
@@ -41,9 +43,27 @@ namespace HBK.Storage.Sync
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Uncath Error");
+                _logger.LogError(ex, "服務發生未預期的例外");
             }
             return Task.CompletedTask;
+        }
+
+        public override Task StartAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("服務啟動(StartAsync)");
+            return base.StartAsync(cancellationToken);
+        }
+
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("服務暫停(StopAsync)");
+            return base.StopAsync(cancellationToken);
+        }
+
+        public override void Dispose()
+        {
+            _logger.LogInformation("服務釋放(Dispose)");
+            base.Dispose();
         }
 
         public SyncTaskManager SyncTaskManager { get; private set; }

@@ -39,7 +39,7 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得或設定檔案實體 ID
         /// </summary>
         [Column("FileEntityID")]
-        public Guid FileEntityId { get; set; }
+        public Guid? FileEntityId { get; set; }
         /// <summary>
         /// 取得或設定權杖
         /// </summary>

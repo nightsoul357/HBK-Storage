@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,10 +38,6 @@ namespace HBK.Storage.Sync
         /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureLogging(logging =>
-                {
-                    logging.SetMinimumLevel(LogLevel.Debug);
-                })
                 .ConfigureServices((hostContext, services) =>
                 {
                     var scope = services.BuildServiceProvider().CreateScope();
@@ -71,6 +68,7 @@ namespace HBK.Storage.Sync
                     services.AddSingleton<DeleteFileEntityTaskManager>();
 
                     services.AddHostedService<TaskWorker>();
-                });
+                })
+                .UseNLog();
     }
 }
