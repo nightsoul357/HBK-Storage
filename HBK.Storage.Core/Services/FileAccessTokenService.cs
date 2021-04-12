@@ -87,7 +87,7 @@ namespace HBK.Storage.Core.Services
         {
             FileAccessToken fileAccessToken = new FileAccessToken()
             {
-                AccessTimes = accessTimeLimit,
+                AccessTimesLimit = accessTimeLimit,
                 StorageProviderId = storageProviderId,
                 StorageGroupId = strogaeGroupId,
                 FileEntityId = fileEntityId,
@@ -137,7 +137,7 @@ namespace HBK.Storage.Core.Services
         {
             FileAccessToken fileAccessToken = new FileAccessToken()
             {
-                AccessTimes = accessTimeLimit,
+                AccessTimesLimit = accessTimeLimit,
                 StorageProviderId = storageProviderId,
                 StorageGroupId = strogaeGroupId,
                 FileAccessTokenId = Guid.NewGuid(),
@@ -194,7 +194,7 @@ namespace HBK.Storage.Core.Services
 
             JwtSecurityToken jwtSecurityToken = (JwtSecurityToken)validatedToken;
             var fileAccessToken = this.BuildFileAccessToken(jwtSecurityToken);
-            FileAccessTokenTypeEnum tokenType = (FileAccessTokenTypeEnum)Convert.ToInt32(jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "tokenType").Value);
+            FileAccessTokenTypeEnum tokenType = Enum.Parse<FileAccessTokenTypeEnum>(jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "tokenType").Value);
 
             if (tokenType == FileAccessTokenTypeEnum.AllowTag || tokenType == FileAccessTokenTypeEnum.Normal)
             {

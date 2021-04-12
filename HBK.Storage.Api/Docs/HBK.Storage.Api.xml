@@ -4,6 +4,72 @@
         <name>HBK.Storage.Api</name>
     </assembly>
     <members>
+        <member name="T:HBK.Storage.Api.Controllers.ExternalFileAccessController">
+            <summary>
+            外部檔案存取控制器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="storageProviderService"></param>
+            <param name="fileEntityService"></param>
+            <param name="fileAccessTokenService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.Guid,System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="esic">存取權杖</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.Guid,System.String,System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="fileName">檔案名稱</param>
+            <param name="esic">存取權杖</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="esic">存取權杖</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.String,System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="esic">存取權杖</param>
+            <param name="fileName">檔案名稱</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Controllers.FileAccessTokenController">
+            <summary>
+            檔案存取權帳控制器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileAccessTokenController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="storageProviderService"></param>
+            <param name="fileEntityService"></param>
+            <param name="fileAccessTokenService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileAccessTokenController.PostFileAccessToken(System.Guid,HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest)">
+            <summary>
+            產生檔案存取權杖
+            </summary>
+            <param name="storageProviderId"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Api.Controllers.FileEntityController">
             <summary>
             檔案實體控制器
@@ -37,14 +103,6 @@
             <param name="request">上傳檔案的請求內容</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.PostFileAccessToken(System.Guid,HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest)">
-            <summary>
-            產生檔案存取權杖
-            </summary>
-            <param name="storageProviderId"></param>
-            <param name="request"></param>
-            <returns></returns>
-        </member>
         <member name="M:HBK.Storage.Api.Controllers.FileServiceController.Get(System.Guid,System.Guid,System.Nullable{System.Guid})">
             <summary>
             從指定的儲存服務下載檔案
@@ -59,38 +117,6 @@
             將檔案實體標記為刪除
             </summary>
             <param name="fileEntityId">檔案實體 ID</param>
-            <returns></returns>
-        </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.DirectDownload(System.Guid,System.String)">
-            <summary>
-            下載檔案
-            </summary>
-            <param name="fileEntityId">檔案實體 ID</param>
-            <param name="esic">存取權杖</param>
-            <returns></returns>
-        </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.DirectDownload(System.Guid,System.String,System.String)">
-            <summary>
-            下載檔案
-            </summary>
-            <param name="fileEntityId">檔案實體 ID</param>
-            <param name="fileName">檔案名稱</param>
-            <param name="esic">存取權杖</param>
-            <returns></returns>
-        </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.DirectDownload(System.String)">
-            <summary>
-            下載檔案
-            </summary>
-            <param name="esic">存取權杖</param>
-            <returns></returns>
-        </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.DirectDownload(System.String,System.String)">
-            <summary>
-            下載檔案
-            </summary>
-            <param name="esic">存取權杖</param>
-            <param name="fileName">檔案名稱</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Api.Controllers.HBKControllerBase">
@@ -303,6 +329,25 @@
             <param name="contentDisposition"></param>
             <returns></returns>
         </member>
+        <member name="T:HBK.Storage.Api.Middlewares.RequestResponseLoggingMiddleware">
+            <summary>
+            紀錄請求和回應內容的中介層
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Middlewares.RequestResponseLoggingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="next"></param>
+            <param name="loggerFactory"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Middlewares.RequestResponseLoggingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            執行
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Api.Models.FileEntity.FileEntityResponse">
             <summary>
             檔案實體回應內容
@@ -405,6 +450,7 @@
             <summary>
             強制指定檔案群組 ID
             </summary>
+            <example></example>
         </member>
         <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.FileEntityId">
             <summary>

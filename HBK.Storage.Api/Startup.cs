@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Http.Features;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Models;
 using HBK.Storage.Core;
+using HBK.Storage.Api.Middlewares;
 
 namespace HBK.Storage.Api
 {
@@ -163,12 +164,18 @@ namespace HBK.Storage.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HBK Storage Api v1"));
             }
+            else
+            {
+                app.UseMiddleware<GlobalExceptionMiddleware>();
+            }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

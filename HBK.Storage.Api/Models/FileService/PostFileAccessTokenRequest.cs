@@ -14,6 +14,7 @@ namespace HBK.Storage.Api.Models.FileService
         /// <summary>
         /// 強制指定檔案群組 ID
         /// </summary>
+        /// <example></example>
         public Guid? StorageGroupId { get; set; }
         /// <summary>
         /// 檔案實體 ID
