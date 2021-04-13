@@ -31,19 +31,16 @@ namespace HBK.Storage.Api.Controllers
     {
         private readonly StorageProviderService _storageProviderService;
         private readonly FileEntityService _fileEntityService;
-        private readonly FileAccessTokenService _fileAccessTokenService;
 
         /// <summary>
         /// 建構一個新的執行個體
         /// </summary>
         /// <param name="storageProviderService"></param>
         /// <param name="fileEntityService"></param>
-        /// <param name="fileAccessTokenService"></param>
-        public FileServiceController(StorageProviderService storageProviderService, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService)
+        public FileServiceController(StorageProviderService storageProviderService, FileEntityService fileEntityService)
         {
             _storageProviderService = storageProviderService;
             _fileEntityService = fileEntityService;
-            _fileAccessTokenService = fileAccessTokenService;
         }
 
         /// <summary>

@@ -87,13 +87,12 @@
             檔案服務提供者控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService)">
+        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService)">
             <summary>
             建構一個新的執行個體
             </summary>
             <param name="storageProviderService"></param>
             <param name="fileEntityService"></param>
-            <param name="fileAccessTokenService"></param>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.FileServiceController.Put(System.Guid,HBK.Storage.Api.Models.FileService.PutFileRequest)">
             <summary>
