@@ -16,6 +16,11 @@ namespace HBK.Storage.Sync
         {
             logger.LogInformation($"[{identity}][{taskName}][{taskIdentity.ToString()}]{message}", args);
         }
+
+        public static void LogWarning(this ILogger logger, string identity, string taskName, Guid taskIdentity, string message, params object[] args)
+        {
+            logger.LogWarning($"[{identity}][{taskName}][{taskIdentity.ToString()}]{message}", args);
+        }
         public static void LogError(this ILogger logger, string identity, string taskName, Guid taskIdentity, Exception ex, string message, params object[] args)
         {
             logger.LogError(ex, $"[{identity}][{taskName}][{taskIdentity.ToString()}]{message}", args);

@@ -14,36 +14,43 @@ namespace HBK.Storage.Adapter.Storages
     /// <summary>
     /// 檔案位於儲存個體上的橋接資訊
     /// </summary>
-    public partial class FileEntityStroage : ITimeStampModel, ISoftDeleteModel
+    public partial class FileEntityStorage : ITimeStampModel, ISoftDeleteModel
     {
         /// <summary>
-        /// 設定或取得檔案位於儲存個體上的橋接資訊 ID
+        /// 建立一個新的執行個體
+        /// </summary>
+        public FileEntityStorage()
+        {
+            this.FileEntityStroageOperation = new HashSet<FileEntityStroageOperation>();
+        }
+        /// <summary>
+        /// 取得或設定檔案位於儲存個體上的橋接資訊 ID
         /// </summary>
         [Key]
-        [Column("FileEntityStroageID")]
-        public Guid FileEntityStroageId { get; set; }
+        [Column("FileEntityStorageID")]
+        public Guid FileEntityStorageId { get; set; }
         /// <summary>
-        /// 設定或取得檔案位於儲存個體上的橋接資訊流水號
+        /// 取得或設定檔案位於儲存個體上的橋接資訊流水號
         /// </summary>
-        public long FileEntityStroageNo { get; set; }
+        public long FileEntityStorageNo { get; set; }
         /// <summary>
-        /// 設定或取得檔案實體 ID
+        /// 取得或設定檔案實體 ID
         /// </summary>
         [Column("FileEntityID")]
         public Guid FileEntityId { get; set; }
         /// <summary>
-        /// 設定或取得儲存個體 ID
+        /// 取得或設定儲存個體 ID
         /// </summary>
         [Column("StorageID")]
         public Guid StorageId { get; set; }
         /// <summary>
-        /// 設定或取得存取檔案識別值
+        /// 取得或設定存取檔案識別值
         /// </summary>
         [Required]
         [StringLength(1023)]
         public string Value { get; set; }
         /// <summary>
-        /// 設定或取得建立者識別名稱
+        /// 取得或設定建立者識別名稱
         /// </summary>
         [Required]
         [StringLength(255)]
@@ -65,22 +72,29 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         public DateTimeOffset? DeleteDateTime { get; internal set; }
         /// <summary>
-        /// 設定或取得狀態
+        /// 取得或設定狀態
         /// </summary>
         public FileEntityStorageStatusEnum Status { get; set; }
 
         /// <summary>
-        /// 設定或取得對應的檔案實體
+        /// 取得或設定對應的檔案實體
         /// </summary>
         [ForeignKey(nameof(FileEntityId))]
         [InverseProperty("FileEntityStroage")]
         public virtual FileEntity FileEntity { get; set; }
         /// <summary>
-        /// 設定或取得對應的儲存個體
+        /// 取得或設定對應的儲存個體
         /// </summary>
         [ForeignKey(nameof(StorageId))]
         [InverseProperty("FileEntityStroage")]
         public virtual Storage Storage { get; set; }
+
+        /// <summary>
+        /// 取得或設定檔案實體標籤集合
+        /// </summary>
+        [InverseProperty("FileEntityStroage")]
+        public virtual ICollection<FileEntityStroageOperation> FileEntityStroageOperation { get; set; }
+
         DateTimeOffset? ITimeStampModel.UpdateDateTime { get => this.UpdateDateTime; set => this.UpdateDateTime = value; }
         DateTimeOffset ICreatedDateModel.CreateDateTime { get => this.CreateDateTime; set => this.CreateDateTime = value; }
         DateTimeOffset? ISoftDeleteModel.DeleteDateTime { get => this.DeleteDateTime; set => this.DeleteDateTime = value; }

@@ -24,7 +24,7 @@ namespace HBK.Storage.Sync.Managers
         private readonly IServiceScope _serviceScope;
         private readonly DeleteFileEntityTaskManagerOption _option;
 
-        private ConcurrentQueue<FileEntityStroage> _pendingQueue;
+        private ConcurrentQueue<FileEntityStorage> _pendingQueue;
         private object _syncObj = new object();
         private CancellationToken _cancellationToken;
 
@@ -51,7 +51,7 @@ namespace HBK.Storage.Sync.Managers
                     {
                         _cancellationToken = cancellationToken;
                         _cancellationToken.Register(this.Cancel);
-                        _pendingQueue = new ConcurrentQueue<FileEntityStroage>();
+                        _pendingQueue = new ConcurrentQueue<FileEntityStorage>();
                         Task.Factory.StartNew(this.StartInternal, TaskCreationOptions.LongRunning);
                         this.IsRunning = true;
                     }
@@ -97,7 +97,7 @@ namespace HBK.Storage.Sync.Managers
         }
         private void ExecuteTask()
         {
-            while (!_cancellationToken.IsCancellationRequested && _pendingQueue.TryDequeue(out FileEntityStroage fileEntityStroage))
+            while (!_cancellationToken.IsCancellationRequested && _pendingQueue.TryDequeue(out FileEntityStorage fileEntityStroage))
             {
                 Guid deleteTaskId = Guid.NewGuid();
                 try
@@ -115,7 +115,7 @@ namespace HBK.Storage.Sync.Managers
 
                         var fileProvider = fileSystemFactory.GetAsyncFileProvider(fileEntityStroage.Storage);
                         fileProvider.DeleteAsync(fileEntityStroage.Value).Wait();
-                        fileEntityService.DeleteFileEntityStroageAsync(fileEntityStroage.FileEntityStroageId).Wait();
+                        fileEntityService.DeleteFileEntityStroageAsync(fileEntityStroage.FileEntityStorageId).Wait();
 
                         _logger.LogInformation(_option.Identity, "刪除完成", deleteTaskId, "檔案 ID 為 {0} 的 {1} 從 {2} 檔案群組中的 {3} 檔案儲存個體中刪除",
                         fileEntityStroage.FileEntityId,

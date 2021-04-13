@@ -23,7 +23,7 @@ namespace HBK.Storage.Core.Models
         /// <summary>
         /// 取得或設定來源檔案位於儲存個體上的橋接資訊
         /// </summary>
-        public FileEntityStroage FromFileEntityStorage { get; set; }
+        public FileEntityStorage FromFileEntityStorage { get; set; }
         /// <summary>
         /// 取得或設定檔案目的之檔案群組
         /// </summary>

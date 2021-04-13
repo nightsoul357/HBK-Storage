@@ -129,19 +129,29 @@ namespace HBK.Storage.Sync.Managers
             while (!_cancellationToken.IsCancellationRequested && _pendingQueue.TryDequeue(out SyncTaskModel syncTaskModel))
             {
                 Guid sysncTaskIdentity = Guid.NewGuid();
-                try
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
-                        var storageGroupService = scope.ServiceProvider.GetRequiredService<StorageGroupService>();
-                        var storgaeService = scope.ServiceProvider.GetRequiredService<StorageService>();
-                        var fileSystemFacotry = scope.ServiceProvider.GetRequiredService<FileSystemFactory>();
+                    var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
+                    var storageGroupService = scope.ServiceProvider.GetRequiredService<StorageGroupService>();
+                    var storgaeService = scope.ServiceProvider.GetRequiredService<StorageService>();
+                    var fileSystemFacotry = scope.ServiceProvider.GetRequiredService<FileSystemFactory>();
+                    var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
 
+                    try
+                    {
                         var desStorage = storageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(syncTaskModel.DestinationStorageGroup.StorageGroupId).Result;
+                        if (desStorage == null)
+                        {
+                            storageGroupService.DisableStorageGroupAsync(syncTaskModel.DestinationStorageGroup.StorageGroupId).Wait();
+
+                            _logger.LogWarning(_option.Identity, "不存在有效的儲存個體", sysncTaskIdentity
+                            , "{0} 儲存群組中不存在有效的儲存個體，故該儲存群組已被關閉",
+                            syncTaskModel.DestinationStorageGroup.Name);
+                            continue;
+                        }
                         if (desStorage.RemainSize < syncTaskModel.FileEntity.Size)
                         {
-                            _ = storgaeService.AddFileEntityInStorageAsync(new FileEntityStroage()
+                            _ = storgaeService.AddFileEntityInStorageAsync(new FileEntityStorage()
                             {
                                 CreatorIdentity = _option.Identity,
                                 FileEntityId = syncTaskModel.FileEntity.FileEntityId,
@@ -149,7 +159,30 @@ namespace HBK.Storage.Sync.Managers
                                 StorageId = desStorage.Storage.StorageId,
                                 Value = "Sync Fail - Remain space not enough"
                             }).Result;
+
+                            _logger.LogWarning(_option.Identity, "儲存個體剩餘空間不足", sysncTaskIdentity
+                            , "嘗試將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體 但空間不足",
+                            syncTaskModel.FileEntity.FileEntityId,
+                            syncTaskModel.FileEntity.Name,
+                            syncTaskModel.FromStorageGroup.Name,
+                            syncTaskModel.FromFileEntityStorage.Storage.Name,
+                            syncTaskModel.DestinationStorageGroup.Name,
+                            desStorage.Storage.Name);
                             continue;
+                        }
+
+
+                        if (!fileEntityStorageService.ValidateFileEntityStorageAsync(syncTaskModel.FromFileEntityStorage.FileEntityStorageId).Result)
+                        {
+                            _logger.LogWarning(_option.Identity, "檔案無效", sysncTaskIdentity
+                            , "嘗試將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體 但該檔案無法正確存取",
+                            syncTaskModel.FileEntity.FileEntityId,
+                            syncTaskModel.FileEntity.Name,
+                            syncTaskModel.FromStorageGroup.Name,
+                            syncTaskModel.FromFileEntityStorage.Storage.Name,
+                            syncTaskModel.DestinationStorageGroup.Name,
+                            desStorage.Storage.Name);
+                            continue; // 檔案無效，執行下一筆
                         }
 
                         var fromProvider = fileSystemFacotry.GetAsyncFileProvider(syncTaskModel.FromFileEntityStorage.Storage);
@@ -157,7 +190,7 @@ namespace HBK.Storage.Sync.Managers
                         var fileInfo = fromProvider.GetFileInfo(syncTaskModel.FromFileEntityStorage.Value);
                         Guid taskId = Guid.NewGuid();
 
-                        var desFileEntityStorage = storgaeService.AddFileEntityInStorageAsync(new FileEntityStroage()
+                        var desFileEntityStorage = storgaeService.AddFileEntityInStorageAsync(new FileEntityStorage()
                         {
                             CreatorIdentity = _option.Identity,
                             FileEntityId = syncTaskModel.FileEntity.FileEntityId,
@@ -165,6 +198,8 @@ namespace HBK.Storage.Sync.Managers
                             StorageId = desStorage.Storage.StorageId,
                             Value = taskId.ToString()
                         }).Result;
+
+                        syncTaskModel.DestinationFileEntityStorage = desFileEntityStorage;
 
                         _logger.LogInformation(_option.Identity, "同步開始", sysncTaskIdentity
                             , "正在將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體",
@@ -177,7 +212,7 @@ namespace HBK.Storage.Sync.Managers
 
                         var desFileIno = desProvider.PutAsync(desFileEntityStorage.Value, fileInfo.CreateReadStream()).Result;
 
-                        storgaeService.CompleteSyncAsync(desFileEntityStorage.FileEntityStroageId, desFileIno.Name).Wait();
+                        storgaeService.CompleteSyncAsync(desFileEntityStorage.FileEntityStorageId, desFileIno.Name).Wait();
 
                         _logger.LogInformation(_option.Identity, "同步完成", sysncTaskIdentity
                             , "檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體",
@@ -187,11 +222,15 @@ namespace HBK.Storage.Sync.Managers
                             syncTaskModel.FromFileEntityStorage.Storage.Name,
                             syncTaskModel.DestinationStorageGroup.Name,
                             desStorage.Storage.Name);
+
+                        fileEntityStorageService.AddSyncSuccessfullyRecordAsync(syncTaskModel.FromFileEntityStorage.FileEntityStorageId, String.Empty, syncTaskModel.DestinationFileEntityStorage.StorageId).Wait();
                     }
-                }
-                catch (Exception ex)
-                {
-                    LoggerExtensions.LogError(_logger, _option.Identity, "同步失敗", sysncTaskIdentity, ex, "發生未預期的例外");
+                    catch (Exception ex)
+                    {
+                        LoggerExtensions.LogError(_logger, _option.Identity, "同步失敗", sysncTaskIdentity, ex, "發生未預期的例外");
+                        fileEntityStorageService.AddSyncFailRecordAsync(syncTaskModel.FromFileEntityStorage.FileEntityStorageId, ex.Message, syncTaskModel.DestinationFileEntityStorage.StorageId).Wait();
+                        storgaeService.RevorkSyncAsync(syncTaskModel.DestinationFileEntityStorage.FileEntityStorageId).Wait();
+                    }
                 }
             }
         }

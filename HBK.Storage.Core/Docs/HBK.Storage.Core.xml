@@ -770,6 +770,26 @@
             <param name="services"></param>
             <returns></returns>
         </member>
+        <member name="T:HBK.Storage.Core.Models.FileEntityStorageServiceOption">
+            <summary>
+            檔案位於儲存個體上的資訊服務選項
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.FileEntityStorageServiceOption.FetchFailToCloseFileCount">
+            <summary>
+            Fetch 檔案失敗導致檔案關閉的嘗試次數
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.FileEntityStorageServiceOption.FetchFailToCloseStorgeCount">
+            <summary>
+            Fetch 檔案失敗導致關閉儲存個體的嘗試次數
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.FileEntityStorageServiceOption.SyncTargetFailtToCloseStorageCount">
+            <summary>
+            同步至目標儲存個體失敗導致關閉目標儲存個體的嘗試次數
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Core.Models.JWTOption">
             <summary>
             JWT 設定檔
@@ -777,17 +797,17 @@
         </member>
         <member name="P:HBK.Storage.Core.Models.JWTOption.Issuer">
             <summary>
-            設定或取得發行者
+            取得或設定發行者
             </summary>
         </member>
         <member name="P:HBK.Storage.Core.Models.JWTOption.X509Certificate2Location">
             <summary>
-            設定或取得 X509Certificate2 檔案位置
+            取得或設定 X509Certificate2 檔案位置
             </summary>
         </member>
         <member name="P:HBK.Storage.Core.Models.JWTOption.X509Certificate2Password">
             <summary>
-            設定或取得 X509Certificate2 使用的密碼
+            取得或設定 X509Certificate2 使用的密碼
             </summary>
         </member>
         <member name="T:HBK.Storage.Core.Models.StorageExtendProperty">
@@ -989,6 +1009,91 @@
             <param name="fileEntityStorageId">儲存個體上的橋接資訊 ID</param>
             <returns></returns>
         </member>
+        <member name="T:HBK.Storage.Core.Services.FileEntityStorageService">
+            <summary>
+            檔案位於儲存個體上的資訊服務
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext,HBK.Storage.Core.FileSystem.FileSystemFactory,Microsoft.Extensions.Logging.ILogger{HBK.Storage.Core.Services.FileEntityStorageService},HBK.Storage.Core.Models.FileEntityStorageServiceOption)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="dbContext">資料庫實體</param>
+            <param name="fileSystemFactory">檔案系統工廠</param>
+            <param name="logger"></param>
+            <param name="option"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.ListQuery">
+            <summary>
+            取得檔案位於儲存個體上的資訊列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.FindByIdAsync(System.Guid)">
+            <summary>
+            以 ID 取得檔案位於儲存個體上的資訊
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的資訊 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.UpdateAsync(HBK.Storage.Adapter.Storages.FileEntityStorage)">
+            <summary>
+            更新檔案位於儲存個體上的資訊
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.ValidateFileEntityStorageAsync(System.Guid)">
+            <summary>
+            驗證檔案位於儲存個體上是否有效
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的資訊 ID</param>
+            <returns>是否有效</returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddFetchFailRecordAsync(System.Guid,System.String)">
+            <summary>
+            新增檔案位於儲存個體上的實體取得資訊失敗紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddFetchSuccessfullyRecordAsync(System.Guid,System.String)">
+            <summary>
+            新增檔案位於儲存個體上的實體取得資訊成功紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddSyncFailRecordAsync(System.Guid,System.String,System.Guid)">
+            <summary>
+            新增檔案位於儲存個體上的實體同步失敗紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+            <param name="syncTargeStorageId">同步目標儲存個體 ID</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddSyncSuccessfullyRecordAsync(System.Guid,System.String,System.Guid)">
+            <summary>
+            新增檔案位於儲存個體上的實體同步成功紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+            <param name="syncTargeStorageId">同步目標儲存個體 ID</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddSyncAccessFailRecordAsync(System.Guid,System.String)">
+            <summary>
+            新增檔案位於儲存個體上的實體存取失敗紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddAccessSuccessfullyRecordAsync(System.Guid,System.String)">
+            <summary>
+            新增檔案位於儲存個體上的實體存取成功紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+        </member>
         <member name="T:HBK.Storage.Core.Services.StorageGroupService">
             <summary>
             儲存個體群組服務
@@ -1012,6 +1117,13 @@
             以 ID 取得儲存個體群組
             </summary>
             <param name="storageGroupId">儲存個體群組 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.DisableStorageGroupAsync(System.Guid)">
+            <summary>
+            停用指定的儲存個體集合
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.StorageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(System.Guid)">
@@ -1120,7 +1232,7 @@
             <param name="storageId">儲存個體 ID</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.StorageService.AddFileEntityInStorageAsync(HBK.Storage.Adapter.Storages.FileEntityStroage)">
+        <member name="M:HBK.Storage.Core.Services.StorageService.AddFileEntityInStorageAsync(HBK.Storage.Adapter.Storages.FileEntityStorage)">
             <summary>
             於儲存個體內新增檔案實體
             </summary>
@@ -1133,6 +1245,13 @@
             </summary>
             <param name="fileEntityStroageId">檔案位於儲存個體上的橋接資訊 ID</param>
             <param name="value">檔案儲存個體更新值</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.RevorkSyncAsync(System.Guid)">
+            <summary>
+            撤銷同步(同步失敗)
+            </summary>
+            <param name="fileEntityStroageId">檔案位於儲存個體上的橋接資訊 ID</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.StorageService.UpdateCredentialsAsync(System.Guid,HBK.Storage.Adapter.StorageCredentials.StorageCredentialsBase)">

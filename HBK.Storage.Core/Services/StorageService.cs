@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Adapter.StorageCredentials;
+﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Adapter.StorageCredentials;
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.Models;
 using Microsoft.EntityFrameworkCore;
@@ -66,9 +67,9 @@ namespace HBK.Storage.Core.Services
         /// </summary>
         /// <param name="fileEntityStroage">檔案位於儲存個體上的橋接資訊</param>
         /// <returns></returns>
-        public async Task<FileEntityStroage> AddFileEntityInStorageAsync(FileEntityStroage fileEntityStroage)
+        public async Task<FileEntityStorage> AddFileEntityInStorageAsync(FileEntityStorage fileEntityStroage)
         {
-            _dbContext.FileEntityStroage.Add(fileEntityStroage);
+            _dbContext.FileEntityStorage.Add(fileEntityStroage);
             await _dbContext.SaveChangesAsync();
             return fileEntityStroage;
         }
@@ -80,9 +81,23 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public async Task CompleteSyncAsync(Guid fileEntityStroageId, string value)
         {
-            var fileEntityStorage = await _dbContext.FileEntityStroage.FirstOrDefaultAsync(x => x.FileEntityStroageId == fileEntityStroageId);
+            var fileEntityStorage = await _dbContext.FileEntityStorage.FirstOrDefaultAsync(x => x.FileEntityStorageId == fileEntityStroageId);
             fileEntityStorage.Value = value;
             fileEntityStorage.Status = fileEntityStorage.Status & ~Adapter.Enums.FileEntityStorageStatusEnum.Syncing;
+            await _dbContext.SaveChangesAsync();
+        }
+        /// <summary>
+        /// 撤銷同步(同步失敗)
+        /// </summary>
+        /// <param name="fileEntityStroageId">檔案位於儲存個體上的橋接資訊 ID</param>
+        /// <returns></returns>
+        public async Task RevorkSyncAsync(Guid fileEntityStroageId)
+        {
+            var fileEntityStorage = await _dbContext.FileEntityStorage.FirstOrDefaultAsync(x => x.FileEntityStorageId == fileEntityStroageId);
+            fileEntityStorage.Status = FileEntityStorageStatusEnum.SyncFail;
+            await _dbContext.SaveChangesAsync();
+            
+            _dbContext.FileEntityStorage.Remove(fileEntityStorage);
             await _dbContext.SaveChangesAsync();
         }
         /// <summary>

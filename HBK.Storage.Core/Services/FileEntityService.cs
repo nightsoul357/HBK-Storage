@@ -84,9 +84,9 @@ namespace HBK.Storage.Core.Services
         /// <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
         /// <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
         /// <returns></returns>
-        public Task<List<FileEntityStroage>> GetMarkDeleteFileEntityStoragiesAsync(int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
+        public Task<List<FileEntityStorage>> GetMarkDeleteFileEntityStoragiesAsync(int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
         {
-            return _dbContext.FileEntityStroage
+            return _dbContext.FileEntityStorage
                 .Include(x => x.FileEntity)
                 .Include(x => x.Storage)
                 .ThenInclude(x => x.StorageGroup)
@@ -118,8 +118,8 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public async Task DeleteFileEntityStroageAsync(Guid fileEntityStorageId)
         {
-            _dbContext.FileEntityStroage
-                .Remove(await _dbContext.FileEntityStroage.FirstAsync(x => x.FileEntityStroageId == fileEntityStorageId));
+            _dbContext.FileEntityStorage
+                .Remove(await _dbContext.FileEntityStorage.FirstAsync(x => x.FileEntityStorageId == fileEntityStorageId));
             await _dbContext.SaveChangesAsync();
         }
         #endregion

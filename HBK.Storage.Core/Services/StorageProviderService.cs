@@ -147,7 +147,7 @@ namespace HBK.Storage.Core.Services
             var fileProvider = _fileSystemFactory.GetAsyncFileProvider(storageExtendProperty.Storage);
             var fileInfoResult = await fileProvider.PutAsync(taskId.ToString(), fileStream);
 
-            var fileEntityStorage = new FileEntityStroage()
+            var fileEntityStorage = new FileEntityStorage()
             {
                 CreatorIdentity = "Upload Service",
                 Status = FileEntityStorageStatusEnum.None,
@@ -171,7 +171,7 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public async Task<IAsyncFileInfo> GetAsyncFileInfoAsync(Guid storageProviderId, Guid? storageGroupId, Guid fileEntityId)
         {
-            var query = _dbContext.FileEntityStroage
+            var query = _dbContext.FileEntityStorage
                 .Include(x => x.Storage)
                 .Where(x => x.Storage.StorageGroup.StorageProviderId == storageProviderId && x.FileEntityId == fileEntityId);
 

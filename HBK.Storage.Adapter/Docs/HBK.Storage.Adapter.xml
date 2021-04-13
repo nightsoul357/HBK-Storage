@@ -34,6 +34,51 @@
             上傳中
             </summary>
         </member>
+        <member name="T:HBK.Storage.Adapter.Enums.FileEntityStorageOperationStatusEnum">
+            <summary>
+            檔案位於儲存個體上的操作紀錄狀態列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageOperationStatusEnum.None">
+            <summary>
+            無
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.FileEntityStorageOperationTypeEnum">
+            <summary>
+            檔案位於儲存個體上的操作紀錄類型
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageOperationTypeEnum.SyncFail">
+            <summary>
+            同步失敗
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageOperationTypeEnum.SyncSuccessfully">
+            <summary>
+            同步成功
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageOperationTypeEnum.FetchFail">
+            <summary>
+            取得資料失敗
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageOperationTypeEnum.FetchSuccessfully">
+            <summary>
+            取得資料成功
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageOperationTypeEnum.AccessFail">
+            <summary>
+            存取失敗
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageOperationTypeEnum.AccessSuccessfully">
+            <summary>
+            存取成功
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Enums.FileEntityStorageStatusEnum">
             <summary>
             檔案位於儲存個體上的橋接資訊狀態列舉
@@ -52,6 +97,11 @@
         <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageStatusEnum.SyncFail">
             <summary>
             同步失敗
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStorageStatusEnum.Disable">
+            <summary>
+            停用
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.Enums.StorageGroupStatusEnum">
@@ -242,6 +292,11 @@
             </summary>
             <param name="options">資料庫選項</param>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.FileEntityStroageOperation">
+            <summary>
+            取得或設定檔案位於儲存個體上的操作紀錄資料集
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.FileAccessToken">
             <summary>
             取得或設定檔案存取權杖資料集
@@ -252,7 +307,7 @@
             取得或設定檔案實體資料集
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.FileEntityStroage">
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.FileEntityStorage">
             <summary>
             取得或設定檔案位於儲存個體上的橋接資訊資料集
             </summary>
@@ -469,74 +524,149 @@
             取得或設定檔案實體標籤集合
             </summary>
         </member>
-        <member name="T:HBK.Storage.Adapter.Storages.FileEntityStroage">
+        <member name="T:HBK.Storage.Adapter.Storages.FileEntityStorage">
             <summary>
             檔案位於儲存個體上的橋接資訊
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.FileEntityStroageId">
+        <member name="M:HBK.Storage.Adapter.Storages.FileEntityStorage.#ctor">
             <summary>
-            設定或取得檔案位於儲存個體上的橋接資訊 ID
+            建立一個新的執行個體
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.FileEntityStroageNo">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.FileEntityStorageId">
             <summary>
-            設定或取得檔案位於儲存個體上的橋接資訊流水號
+            取得或設定檔案位於儲存個體上的橋接資訊 ID
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.FileEntityId">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.FileEntityStorageNo">
             <summary>
-            設定或取得檔案實體 ID
+            取得或設定檔案位於儲存個體上的橋接資訊流水號
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.StorageId">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.FileEntityId">
             <summary>
-            設定或取得儲存個體 ID
+            取得或設定檔案實體 ID
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.Value">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.StorageId">
             <summary>
-            設定或取得存取檔案識別值
+            取得或設定儲存個體 ID
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.CreatorIdentity">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.Value">
             <summary>
-            設定或取得建立者識別名稱
+            取得或設定存取檔案識別值
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.IsMarkDelete">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.CreatorIdentity">
+            <summary>
+            取得或設定建立者識別名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.IsMarkDelete">
             <summary>
             取得或設定是否標記刪除
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.CreateDateTime">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.CreateDateTime">
             <summary>
             取得建立時間
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.UpdateDateTime">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.UpdateDateTime">
             <summary>
             取得最後更新時間
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.DeleteDateTime">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.DeleteDateTime">
             <summary>
             取得刪除時間時間
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.Status">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.Status">
             <summary>
-            設定或取得狀態
+            取得或設定狀態
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.FileEntity">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.FileEntity">
             <summary>
-            設定或取得對應的檔案實體
+            取得或設定對應的檔案實體
             </summary>
         </member>
-        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroage.Storage">
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.Storage">
             <summary>
-            設定或取得對應的儲存個體
+            取得或設定對應的儲存個體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStorage.FileEntityStroageOperation">
+            <summary>
+            取得或設定檔案實體標籤集合
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.FileEntityStroageOperation">
+            <summary>
+            檔案位於儲存個體上的操作紀錄
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.FileEntityStroageOperationNo">
+            <summary>
+            取得或設定流水號
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.FileEntityStroageId">
+            <summary>
+            取得或設定檔案位於儲存個體上的橋接資訊 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.Type">
+            <summary>
+            取得或設定類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.SyncTargetStorageId">
+            <summary>
+            取得或設定同步對象儲存個體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.Message">
+            <summary>
+            取得或設定訊息
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.ExtendProperty">
+            <summary>
+            取得或設定擴充訊息
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.Status">
+            <summary>
+            取得或設定狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.FileEntityStroage">
+            <summary>
+            取得或設定對應的檔案位於儲存個體上的橋接資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntityStroageOperation.Storage">
+            <summary>
+            取得或設定對應的同步對象儲存個體
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.Storages.FileEntityTag">
@@ -576,12 +706,12 @@
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.Storage.StorageId">
             <summary>
-            設定或取得儲存個體 ID
+            取得或設定儲存個體 ID
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.Storage.StorageNo">
             <summary>
-            設定或取得儲存個體流水號
+            取得或設定儲存個體流水號
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.Storage.StorageGroupId">
@@ -637,6 +767,11 @@
         <member name="P:HBK.Storage.Adapter.Storages.Storage.FileEntityStroage">
             <summary>
             取得或設定檔案位於儲存個體上的橋接資訊集合
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.Storage.FileEntityStroageOperation">
+            <summary>
+            取得或設定檔案位於儲存個體上的操作紀錄
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.Storages.StorageGroup">

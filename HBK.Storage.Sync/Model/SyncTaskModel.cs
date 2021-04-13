@@ -23,7 +23,7 @@ namespace HBK.Storage.Sync.Model
         /// <summary>
         /// 取得或設定來源檔案位於儲存個體上的橋接資訊
         /// </summary>
-        public FileEntityStroage FromFileEntityStorage { get; set; }
+        public FileEntityStorage FromFileEntityStorage { get; set; }
         /// <summary>
         /// 取得或設定檔案目的之檔案群組
         /// </summary>
@@ -31,7 +31,7 @@ namespace HBK.Storage.Sync.Model
         /// <summary>
         /// 取得或設定目標檔案位於儲存個體上的橋接資訊
         /// </summary>
-        public FileEntityStroage DestinationFileEntityStorage { get; set; }
+        public FileEntityStorage DestinationFileEntityStorage { get; set; }
         /// <summary>
         /// 取得或設定建立時間
         /// </summary>

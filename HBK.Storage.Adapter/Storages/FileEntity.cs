@@ -21,7 +21,7 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         public FileEntity()
         {
-            this.FileEntityStroage = new HashSet<FileEntityStroage>();
+            this.FileEntityStroage = new HashSet<FileEntityStorage>();
             this.FileAccessToken = new HashSet<FileAccessToken>();
             this.IsMarkDelete = false;
         }
@@ -81,7 +81,7 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得檔案位於儲存個體的集合
         /// </summary>
         [InverseProperty("FileEntity")]
-        public virtual ICollection<FileEntityStroage> FileEntityStroage { get; set; }
+        public virtual ICollection<FileEntityStorage> FileEntityStroage { get; set; }
         /// <summary>
         /// 取得或設定檔案存取權杖集合
         /// </summary>

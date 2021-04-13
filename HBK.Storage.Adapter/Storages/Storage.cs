@@ -22,16 +22,17 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         public Storage()
         {
-            this.FileEntityStroage = new HashSet<FileEntityStroage>();
+            this.FileEntityStroage = new HashSet<FileEntityStorage>();
+            this.FileEntityStroageOperation = new HashSet<FileEntityStroageOperation>();
         }
         /// <summary>
-        /// 設定或取得儲存個體 ID
+        /// 取得或設定儲存個體 ID
         /// </summary>
         [Key]
         [Column("StorageID")]
         public Guid StorageId { get; set; }
         /// <summary>
-        /// 設定或取得儲存個體流水號
+        /// 取得或設定儲存個體流水號
         /// </summary>
         public long StorageNo { get; set; }
         /// <summary>
@@ -86,7 +87,12 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得或設定檔案位於儲存個體上的橋接資訊集合
         /// </summary>
         [InverseProperty("Storage")]
-        public virtual ICollection<FileEntityStroage> FileEntityStroage { get; set; }
+        public virtual ICollection<FileEntityStorage> FileEntityStroage { get; set; }
+        /// <summary>
+        /// 取得或設定檔案位於儲存個體上的操作紀錄
+        /// </summary>
+        [InverseProperty("Storage")]
+        public virtual ICollection<FileEntityStroageOperation> FileEntityStroageOperation { get; set; }
 
         DateTimeOffset? ITimeStampModel.UpdateDateTime { get => this.UpdateDateTime; set => this.UpdateDateTime = value; }
         DateTimeOffset ICreatedDateModel.CreateDateTime { get => this.CreateDateTime; set => this.CreateDateTime = value; }

@@ -1,4 +1,5 @@
 ﻿using HBK.Storage.Core.FileSystem;
+using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -25,7 +26,9 @@ namespace HBK.Storage.Core
             services.AddScoped<StorageProviderService>();
             services.AddScoped<StorageGroupService>();
             services.AddScoped<FileEntityService>();
+            services.AddScoped<FileEntityStorageService>();
             services.AddScoped<FileSystemFactory>();
+            services.AddScoped<FileEntityStorageServiceOption>();
             return services;
         }
     }

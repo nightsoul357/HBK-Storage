@@ -53,6 +53,17 @@ namespace HBK.Storage.Core.Services
 
         #region BAL
         /// <summary>
+        /// 停用指定的儲存個體集合
+        /// </summary>
+        /// <param name="storageGroupId">儲存個體集合 ID</param>
+        /// <returns></returns>
+        public async Task DisableStorageGroupAsync(Guid storageGroupId)
+        {
+            var storageGroup = await this.FindByIdAsync(storageGroupId);
+            storageGroup.Status = storageGroup.Status | StorageGroupStatusEnum.Disable;
+            await _dbContext.SaveChangesAsync();
+        }
+        /// <summary>
         /// 取得儲存個體群組內剩餘容量最多的儲存個體延展資訊
         /// </summary>
         /// <param name="storageGroupId">儲存個體群組 ID</param>

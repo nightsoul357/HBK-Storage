@@ -50,15 +50,20 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
         /// <inheritdoc/>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (_commonBuffer.IsAddingCompleted && _currentBuffer.Position == _currentBuffer.Length && _commonBuffer.Count == 0)
+            if (_commonBuffer.IsAddingCompleted && _currentBuffer == null && _commonBuffer.Count == 0) // 特殊狀況，目標檔案為 0Bytes 時
             {
-                if (_currentBuffer != null)
-                {
-                    _currentBuffer.Close();
-                    _currentBuffer = null;
-                }
                 return 0;
             }
+
+            if (_commonBuffer.IsAddingCompleted &&
+                _currentBuffer != null &&
+                _currentBuffer.Position == _currentBuffer.Length &&
+                _commonBuffer.Count == 0)
+            {
+                _currentBuffer.Close();
+                _currentBuffer = null;
+                return 0;
+            }   
 
             if (_currentBuffer == null || _currentBuffer.Position == _currentBuffer.Length)
             {

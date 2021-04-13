@@ -35,6 +35,10 @@ namespace HBK.Storage.Adapter.Storages
         {
         }
         /// <summary>
+        /// 取得或設定檔案位於儲存個體上的操作紀錄資料集
+        /// </summary>
+        public virtual DbSet<FileEntityStroageOperation> FileEntityStroageOperation { get; set; }
+        /// <summary>
         /// 取得或設定檔案存取權杖資料集
         /// </summary>
         public virtual DbSet<FileAccessToken> FileAccessToken { get; set; }
@@ -45,7 +49,7 @@ namespace HBK.Storage.Adapter.Storages
         /// <summary>
         /// 取得或設定檔案位於儲存個體上的橋接資訊資料集
         /// </summary>
-        public virtual DbSet<FileEntityStroage> FileEntityStroage { get; set; }
+        public virtual DbSet<FileEntityStorage> FileEntityStorage { get; set; }
         /// <summary>
         /// 取得或設定儲存個體資料集
         /// </summary>
@@ -78,6 +82,26 @@ namespace HBK.Storage.Adapter.Storages
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Chinese_Taiwan_Stroke_CI_AS");
+
+            modelBuilder.Entity<FileEntityStroageOperation>(entity => 
+            {
+                entity.HasKey(e => e.FileEntityStroageOperationNo)
+                    .IsClustered();
+
+                entity.Property(e => e.FileEntityStroageOperationNo).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.FileEntityStroageId);
+
+                entity.HasOne(d => d.FileEntityStroage)
+                    .WithMany(p => p.FileEntityStroageOperation)
+                    .HasForeignKey(d => d.FileEntityStroageId)
+                    .HasConstraintName("FK_FileEntityStroageOperation_FileEntityStroage");
+
+                entity.HasOne(d => d.Storage)
+                   .WithMany(p => p.FileEntityStroageOperation)
+                   .HasForeignKey(d => d.SyncTargetStorageId)
+                   .HasConstraintName("FK_FileEntityStroageOperation_Storage");
+            });
 
             modelBuilder.Entity<FileAccessToken>(entity =>
             {
@@ -150,18 +174,18 @@ namespace HBK.Storage.Adapter.Storages
                 entity.HasQueryFilter(model => model.DeleteDateTime == null);
             });
 
-            modelBuilder.Entity<FileEntityStroage>(entity =>
+            modelBuilder.Entity<FileEntityStorage>(entity =>
             {
-                entity.HasKey(e => e.FileEntityStroageId)
+                entity.HasKey(e => e.FileEntityStorageId)
                     .IsClustered(false);
 
-                entity.HasIndex(e => e.FileEntityStroageNo, "IX_FileEntityStroage")
+                entity.HasIndex(e => e.FileEntityStorageNo, "IX_FileEntityStroage")
                     .IsUnique()
                     .IsClustered();
 
-                entity.Property(e => e.FileEntityStroageId).HasDefaultValueSql("(newid())");
+                entity.Property(e => e.FileEntityStorageId).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.FileEntityStroageNo).ValueGeneratedOnAdd();
+                entity.Property(e => e.FileEntityStorageNo).ValueGeneratedOnAdd();
 
                 entity.HasOne(d => d.FileEntity)
                     .WithMany(p => p.FileEntityStroage)
