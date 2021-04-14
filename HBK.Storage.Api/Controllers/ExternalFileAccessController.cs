@@ -26,6 +26,7 @@ namespace HBK.Storage.Api.Controllers
         private readonly StorageProviderService _storageProviderService;
         private readonly FileEntityService _fileEntityService;
         private readonly FileAccessTokenService _fileAccessTokenService;
+        private readonly FileEntityStorageService _fileEntityStorageService;
 
         /// <summary>
         /// 建構一個新的執行個體
@@ -33,11 +34,13 @@ namespace HBK.Storage.Api.Controllers
         /// <param name="storageProviderService"></param>
         /// <param name="fileEntityService"></param>
         /// <param name="fileAccessTokenService"></param>
-        public ExternalFileAccessController(StorageProviderService storageProviderService, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService)
+        /// <param name="fileEntityStorageService"></param>
+        public ExternalFileAccessController(StorageProviderService storageProviderService, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService,FileEntityStorageService fileEntityStorageService)
         {
             _storageProviderService = storageProviderService;
             _fileEntityService = fileEntityService;
             _fileAccessTokenService = fileAccessTokenService;
+            _fileEntityStorageService = fileEntityStorageService;
         }
 
         /// <summary>
@@ -130,6 +133,7 @@ namespace HBK.Storage.Api.Controllers
             {
                 fileName = fileEntity.Name;
             }
+
             return new FileStreamResult(fileInfo.CreateReadStream(), new MediaTypeHeaderValue(fileEntity.MimeType))
             {
                 FileDownloadName = fileName
@@ -156,8 +160,7 @@ namespace HBK.Storage.Api.Controllers
             {
                 return base.BadRequest("沒有檔案存取權限");
             }
-
-            IAsyncFileInfo fileInfo = await _storageProviderService.GetAsyncFileInfoAsync(fileAccessToken.StorageProviderId, fileAccessToken.StorageGroupId, fileEntityId);
+            IAsyncFileInfo fileInfo = fileInfo = await _storageProviderService.GetAsyncFileInfoAsync(fileAccessToken.StorageProviderId, fileAccessToken.StorageGroupId, fileEntityId);
             if (tokenType == FileAccessTokenTypeEnum.AllowTag)
             {
                 await _fileAccessTokenService.TryAddAccessTimesAsync(fileAccessToken.FileAccessTokenId);

@@ -95,6 +95,7 @@ namespace HBK.Storage.Adapter.Storages
                 entity.HasOne(d => d.FileEntityStroage)
                     .WithMany(p => p.FileEntityStroageOperation)
                     .HasForeignKey(d => d.FileEntityStroageId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_FileEntityStroageOperation_FileEntityStroage");
 
                 entity.HasOne(d => d.Storage)

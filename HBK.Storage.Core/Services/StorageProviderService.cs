@@ -140,7 +140,7 @@ namespace HBK.Storage.Core.Services
             #endregion
             Guid taskId = Guid.NewGuid();
             fileEntity.Status = FileEntityStatusEnum.Uploading | fileEntity.Status;
-            
+
             _dbContext.FileEntity.Add(fileEntity);
             await _dbContext.SaveChangesAsync();
 
@@ -178,6 +178,12 @@ namespace HBK.Storage.Core.Services
             if (storageGroupId != null)
             {
                 query = query.Where(x => x.Storage.StorageGroupId == storageGroupId);
+
+                var stroageGroup = (await _dbContext.StorageGroup.FirstAsync(x => x.StorageGroupId == storageGroupId));
+                if (stroageGroup.Status.HasFlag(StorageGroupStatusEnum.Disable))
+                {
+                    throw new InvalidOperationException($"{ stroageGroup.Name } 無效");
+                }
             }
 
             var fileStorage = (await query.ToListAsync())

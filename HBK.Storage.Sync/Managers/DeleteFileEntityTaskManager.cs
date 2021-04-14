@@ -100,18 +100,28 @@ namespace HBK.Storage.Sync.Managers
             while (!_cancellationToken.IsCancellationRequested && _pendingQueue.TryDequeue(out FileEntityStorage fileEntityStroage))
             {
                 Guid deleteTaskId = Guid.NewGuid();
-                try
+                using (var scope = _serviceProvider.CreateScope())
                 {
-                    using (var scope = _serviceProvider.CreateScope())
+                    var fileSystemFactory = scope.ServiceProvider.GetRequiredService<FileSystemFactory>();
+                    var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
+                    var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
+                    try
                     {
-                        var fileSystemFactory = scope.ServiceProvider.GetRequiredService<FileSystemFactory>();
-                        var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-
-                        _logger.LogInformation(_option.Identity,"刪除開始", deleteTaskId, "正在將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體中刪除",
+                        _logger.LogInformation(_option.Identity, "刪除開始", deleteTaskId, "正在將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體中刪除",
                         fileEntityStroage.FileEntityId,
                         fileEntityStroage.FileEntity.Name,
                         fileEntityStroage.Storage.StorageGroup.Name,
                         fileEntityStroage.Storage.Name);
+
+                        if (!fileEntityStorageService.ValidateFileEntityStorageAsync(fileEntityStroage.FileEntityStorageId).Result)
+                        {
+                            _logger.LogInformation(_option.Identity, "刪除完成", deleteTaskId, "檔案 ID 為 {0} 的 {1} 在 {2} 群組中的 {3} 儲存個體中無法找到，故直接刪除其相關資訊",
+                            fileEntityStroage.FileEntityId,
+                            fileEntityStroage.FileEntity.Name,
+                            fileEntityStroage.Storage.StorageGroup.Name,
+                            fileEntityStroage.Storage.Name);
+                            continue;
+                        }
 
                         var fileProvider = fileSystemFactory.GetAsyncFileProvider(fileEntityStroage.Storage);
                         fileProvider.DeleteAsync(fileEntityStroage.Value).Wait();
@@ -123,10 +133,10 @@ namespace HBK.Storage.Sync.Managers
                         fileEntityStroage.Storage.StorageGroup.Name,
                         fileEntityStroage.Storage.Name);
                     }
-                }
-                catch (Exception ex)
-                {
-                    LoggerExtensions.LogError(_logger, _option.Identity, "刪除失敗", deleteTaskId, ex, "發生未預期的例外");
+                    catch (Exception ex)
+                    {
+                        LoggerExtensions.LogError(_logger, _option.Identity, "刪除失敗", deleteTaskId, ex, "發生未預期的例外");
+                    }
                 }
             }
         }

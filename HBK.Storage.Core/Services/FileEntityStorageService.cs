@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -88,7 +89,12 @@ namespace HBK.Storage.Core.Services
             var fileProvider = _fileSystemFactory.GetAsyncFileProvider(fileEntityStorage.Storage);
             try
             {
-                _ = await fileProvider.GetFileInfoAsync(fileEntityStorage.Value);
+                var fileInfo = await fileProvider.GetFileInfoAsync(fileEntityStorage.Value);
+                if (!fileInfo.Exists)
+                {
+                    throw new FileNotFoundException();
+                }
+
                 await this.AddFetchSuccessfullyRecordAsync(fileEntityStorageId, String.Empty);
                 return true;
             }
