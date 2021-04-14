@@ -1043,12 +1043,12 @@
             <param name="data"></param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.ValidateFileEntityStorageAsync(System.Guid)">
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.TryFetchFileInfoAsync(System.Guid)">
             <summary>
-            驗證檔案位於儲存個體上是否有效
+            嘗試取得檔案資訊
             </summary>
             <param name="fileEntityStorageId">檔案位於儲存個體上的資訊 ID</param>
-            <returns>是否有效</returns>
+            <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddFetchFailRecordAsync(System.Guid,System.String)">
             <summary>
@@ -1182,9 +1182,9 @@
             <param name="fileStream">檔案流</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetAsyncFileInfoAsync(System.Guid,System.Nullable{System.Guid},System.Guid)">
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityStorageAsync(System.Guid,System.Nullable{System.Guid},System.Guid)">
             <summary>
-            取得指定儲存服務內的指定檔案實體的檔案資訊
+            取得指定儲存服務內的指定檔案實體的橋接資訊
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="storageGroupId">強制指定儲存個體群組 ID</param>

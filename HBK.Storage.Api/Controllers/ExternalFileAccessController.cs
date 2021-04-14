@@ -35,7 +35,7 @@ namespace HBK.Storage.Api.Controllers
         /// <param name="fileEntityService"></param>
         /// <param name="fileAccessTokenService"></param>
         /// <param name="fileEntityStorageService"></param>
-        public ExternalFileAccessController(StorageProviderService storageProviderService, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService,FileEntityStorageService fileEntityStorageService)
+        public ExternalFileAccessController(StorageProviderService storageProviderService, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService, FileEntityStorageService fileEntityStorageService)
         {
             _storageProviderService = storageProviderService;
             _fileEntityService = fileEntityService;
@@ -124,7 +124,13 @@ namespace HBK.Storage.Api.Controllers
 
             var fileAccessToken = _fileAccessTokenService.BuildFileAccessToken(jwtSecurityToken);
             var fileEntity = await _fileEntityService.FindByIdAsync(fileAccessToken.FileEntityId.Value);
-            IAsyncFileInfo fileInfo = await _storageProviderService.GetAsyncFileInfoAsync(fileAccessToken.StorageProviderId, fileAccessToken.StorageGroupId, fileAccessToken.FileEntityId.Value);
+            var fileEntityStorage = await _storageProviderService.GetFileEntityStorageAsync(fileAccessToken.StorageProviderId, fileAccessToken.StorageGroupId, fileAccessToken.FileEntityId.Value);
+            IAsyncFileInfo fileInfo = await _fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId);
+            if (fileInfo == null)
+            {
+                return base.BadRequest("找不到有效的檔案");
+            }
+
             if (tokenType == FileAccessTokenTypeEnum.Normal)
             {
                 await _fileAccessTokenService.TryAddAccessTimesAsync(fileAccessToken.FileAccessTokenId);
@@ -160,10 +166,11 @@ namespace HBK.Storage.Api.Controllers
             {
                 return base.BadRequest("沒有檔案存取權限");
             }
-            IAsyncFileInfo fileInfo = fileInfo = await _storageProviderService.GetAsyncFileInfoAsync(fileAccessToken.StorageProviderId, fileAccessToken.StorageGroupId, fileEntityId);
-            if (tokenType == FileAccessTokenTypeEnum.AllowTag)
+            var fileEntityStorage = await _storageProviderService.GetFileEntityStorageAsync(fileAccessToken.StorageProviderId, fileAccessToken.StorageGroupId, fileAccessToken.FileEntityId.Value);
+            IAsyncFileInfo fileInfo = await _fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId);
+            if (fileInfo == null)
             {
-                await _fileAccessTokenService.TryAddAccessTimesAsync(fileAccessToken.FileAccessTokenId);
+                return base.BadRequest("找不到有效的檔案");
             }
 
             if (string.IsNullOrWhiteSpace(fileName))

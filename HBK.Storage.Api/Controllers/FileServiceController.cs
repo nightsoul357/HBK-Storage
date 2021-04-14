@@ -31,16 +31,19 @@ namespace HBK.Storage.Api.Controllers
     {
         private readonly StorageProviderService _storageProviderService;
         private readonly FileEntityService _fileEntityService;
+        private readonly FileEntityStorageService _fileEntityStorageService;
 
         /// <summary>
         /// 建構一個新的執行個體
         /// </summary>
         /// <param name="storageProviderService"></param>
         /// <param name="fileEntityService"></param>
-        public FileServiceController(StorageProviderService storageProviderService, FileEntityService fileEntityService)
+        /// <param name="fileEntityStorageService"></param>
+        public FileServiceController(StorageProviderService storageProviderService, FileEntityService fileEntityService, FileEntityStorageService fileEntityStorageService)
         {
             _storageProviderService = storageProviderService;
             _fileEntityService = fileEntityService;
+            _fileEntityStorageService = fileEntityStorageService;
         }
 
         /// <summary>
@@ -75,7 +78,7 @@ namespace HBK.Storage.Api.Controllers
             return FileEntityController.BuildFileEntityResponse(fileEntity);
         }
 
-        
+
 
         /// <summary>
         /// 從指定的儲存服務下載檔案
@@ -95,7 +98,8 @@ namespace HBK.Storage.Api.Controllers
             [FromQuery] Guid? storageGroupId)
         {
             var fileEntity = await _fileEntityService.FindByIdAsync(fileEntityId);
-            var fileInfo = await _storageProviderService.GetAsyncFileInfoAsync(storageProviderId, storageGroupId, fileEntityId);
+            var fileEntityStorage = await _storageProviderService.GetFileEntityStorageAsync(storageProviderId, storageGroupId, fileEntityId);
+            var fileInfo = await _fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId);
 
             return new FileStreamResult(fileInfo.CreateReadStream(), new MediaTypeHeaderValue(fileEntity.MimeType))
             {

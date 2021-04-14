@@ -163,13 +163,13 @@ namespace HBK.Storage.Core.Services
         }
 
         /// <summary>
-        /// 取得指定儲存服務內的指定檔案實體的檔案資訊
+        /// 取得指定儲存服務內的指定檔案實體的橋接資訊
         /// </summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="storageGroupId">強制指定儲存個體群組 ID</param>
         /// <param name="fileEntityId">檔案實體 ID</param>
         /// <returns></returns>
-        public async Task<IAsyncFileInfo> GetAsyncFileInfoAsync(Guid storageProviderId, Guid? storageGroupId, Guid fileEntityId)
+        public async Task<FileEntityStorage> GetFileEntityStorageAsync(Guid storageProviderId, Guid? storageGroupId, Guid fileEntityId)
         {
             var query = _dbContext.FileEntityStorage
                 .Include(x => x.Storage)
@@ -196,9 +196,7 @@ namespace HBK.Storage.Core.Services
             {
                 throw new InvalidOperationException("Could't find valid storage.");
             }
-
-            var fileProvider = _fileSystemFactory.GetAsyncFileProvider(fileStorage.Storage);
-            return await fileProvider.GetFileInfoAsync(fileStorage.Value);
+            return fileStorage;
         }
 
         /// <summary>
