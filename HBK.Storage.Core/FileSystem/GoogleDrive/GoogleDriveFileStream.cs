@@ -63,7 +63,7 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
                 _currentBuffer.Close();
                 _currentBuffer = null;
                 return 0;
-            }   
+            }
 
             if (_currentBuffer == null || _currentBuffer.Position == _currentBuffer.Length)
             {

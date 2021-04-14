@@ -173,6 +173,7 @@ namespace HBK.Storage.Core.Services
         {
             var query = _dbContext.FileEntityStorage
                 .Include(x => x.Storage)
+                .Include(x => x.FileEntity)
                 .Where(x => x.Storage.StorageGroup.StorageProviderId == storageProviderId && x.FileEntityId == fileEntityId);
 
             if (storageGroupId != null)

@@ -120,6 +120,7 @@ namespace HBK.Storage.Sync.Managers
                             fileEntityStroage.FileEntity.Name,
                             fileEntityStroage.Storage.StorageGroup.Name,
                             fileEntityStroage.Storage.Name);
+                            fileEntityService.DeleteFileEntityStroageAsync(fileEntityStroage.FileEntityStorageId).Wait();
                             continue;
                         }
 

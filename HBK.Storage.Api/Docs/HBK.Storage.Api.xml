@@ -9,13 +9,14 @@
             外部檔案存取控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService)">
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService,HBK.Storage.Core.Services.FileEntityStorageService)">
             <summary>
             建構一個新的執行個體
             </summary>
             <param name="storageProviderService"></param>
             <param name="fileEntityService"></param>
             <param name="fileAccessTokenService"></param>
+            <param name="fileEntityStorageService"></param>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.Guid,System.String)">
             <summary>
