@@ -3,6 +3,8 @@ using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
+using HBK.Storage.Sync.Extensions;
+using HBK.Storage.Sync.Handlers;
 using HBK.Storage.Sync.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -25,6 +27,7 @@ namespace HBK.Storage.Sync.Managers
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScope _serviceScope;
         private readonly SyncTaskManagerOption _option;
+        private readonly CommonExceptionHandler _commonExceptionhandler;
 
         private ConcurrentQueue<SyncTaskModel> _pendingQueue;
         private CancellationToken _cancellationToken;
@@ -42,6 +45,7 @@ namespace HBK.Storage.Sync.Managers
             _serviceScope = _serviceProvider.CreateScope();
 
             _option = _serviceScope.ServiceProvider.GetRequiredService<SyncTaskManagerOption>();
+            _commonExceptionhandler = _serviceScope.ServiceProvider.GetRequiredService<CommonExceptionHandler>();
         }
         public void Start(CancellationToken cancellationToken)
         {
@@ -54,7 +58,9 @@ namespace HBK.Storage.Sync.Managers
                         _cancellationToken = cancellationToken;
                         _cancellationToken.Register(this.Cancel);
                         _pendingQueue = new ConcurrentQueue<SyncTaskModel>();
-                        Task.Factory.StartNew(this.StartInternal, TaskCreationOptions.LongRunning);
+                        Task.Factory.StartNewSafety(this.StartInternal, 
+                            TaskCreationOptions.LongRunning,
+                            _commonExceptionhandler.Handle);
                         this.IsRunning = true;
                     }
                 }
@@ -72,7 +78,7 @@ namespace HBK.Storage.Sync.Managers
                 {
                     for (int i = 0; i < _option.TaskLimit; i++)
                     {
-                        tasks.Add(Task.Factory.StartNew(this.ExecuteTask, TaskCreationOptions.LongRunning));
+                        tasks.Add(Task.Factory.StartNewSafety(this.ExecuteTask, TaskCreationOptions.LongRunning, _commonExceptionhandler.Handle));
                     }
 
                     Task.WaitAll(tasks.ToArray());
@@ -144,7 +150,7 @@ namespace HBK.Storage.Sync.Managers
                         {
                             storageGroupService.DisableStorageGroupAsync(syncTaskModel.DestinationStorageGroup.StorageGroupId).Wait();
 
-                            _logger.LogWarning(_option.Identity, "不存在有效的儲存個體", sysncTaskIdentity
+                            _logger.LogCustomWarning(_option.Identity, "不存在有效的儲存個體", sysncTaskIdentity
                             , "{0} 儲存群組中不存在有效的儲存個體，故該儲存群組已被關閉",
                             syncTaskModel.DestinationStorageGroup.Name);
                             continue;
@@ -160,7 +166,7 @@ namespace HBK.Storage.Sync.Managers
                                 Value = "Sync Fail - Remain space not enough"
                             }).Result;
 
-                            _logger.LogWarning(_option.Identity, "儲存個體剩餘空間不足", sysncTaskIdentity
+                            _logger.LogCustomWarning(_option.Identity, "儲存個體剩餘空間不足", sysncTaskIdentity
                             , "嘗試將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體 但空間不足",
                             syncTaskModel.FileEntity.FileEntityId,
                             syncTaskModel.FileEntity.Name,
@@ -174,7 +180,7 @@ namespace HBK.Storage.Sync.Managers
                         IAsyncFileInfo fileInfo;
                         if ((fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(syncTaskModel.FromFileEntityStorage.FileEntityStorageId).Result) == null)
                         {
-                            _logger.LogWarning(_option.Identity, "檔案無效", sysncTaskIdentity
+                            _logger.LogCustomWarning(_option.Identity, "檔案無效", sysncTaskIdentity
                             , "嘗試將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體 但該檔案無法正確存取",
                             syncTaskModel.FileEntity.FileEntityId,
                             syncTaskModel.FileEntity.Name,
@@ -199,7 +205,7 @@ namespace HBK.Storage.Sync.Managers
 
                         syncTaskModel.DestinationFileEntityStorage = desFileEntityStorage;
 
-                        _logger.LogInformation(_option.Identity, "同步開始", sysncTaskIdentity
+                        _logger.LogCustomInformation(_option.Identity, "同步開始", sysncTaskIdentity
                             , "正在將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體",
                             syncTaskModel.FileEntity.FileEntityId,
                             syncTaskModel.FileEntity.Name,
@@ -212,7 +218,7 @@ namespace HBK.Storage.Sync.Managers
 
                         storgaeService.CompleteSyncAsync(desFileEntityStorage.FileEntityStorageId, desFileIno.Name).Wait();
 
-                        _logger.LogInformation(_option.Identity, "同步完成", sysncTaskIdentity
+                        _logger.LogCustomInformation(_option.Identity, "同步完成", sysncTaskIdentity
                             , "檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體",
                             syncTaskModel.FileEntity.FileEntityId,
                             syncTaskModel.FileEntity.Name,
@@ -225,7 +231,7 @@ namespace HBK.Storage.Sync.Managers
                     }
                     catch (Exception ex)
                     {
-                        LoggerExtensions.LogError(_logger, _option.Identity, "同步失敗", sysncTaskIdentity, ex, "發生未預期的例外");
+                        _logger.LogCustomError(_option.Identity, "同步失敗", sysncTaskIdentity, ex, "發生未預期的例外");
                         fileEntityStorageService.AddSyncFailRecordAsync(syncTaskModel.FromFileEntityStorage.FileEntityStorageId, ex.Message, syncTaskModel.DestinationFileEntityStorage.StorageId).Wait();
                         storgaeService.RevorkSyncAsync(syncTaskModel.DestinationFileEntityStorage.FileEntityStorageId).Wait();
                     }

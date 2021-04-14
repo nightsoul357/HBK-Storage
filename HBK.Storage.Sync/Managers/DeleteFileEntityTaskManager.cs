@@ -1,6 +1,8 @@
 ﻿using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
+using HBK.Storage.Sync.Extensions;
+using HBK.Storage.Sync.Handlers;
 using HBK.Storage.Sync.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,6 +25,7 @@ namespace HBK.Storage.Sync.Managers
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScope _serviceScope;
         private readonly DeleteFileEntityTaskManagerOption _option;
+        private readonly CommonExceptionHandler _commonExceptionHandler;
 
         private ConcurrentQueue<FileEntityStorage> _pendingQueue;
         private object _syncObj = new object();
@@ -40,6 +43,7 @@ namespace HBK.Storage.Sync.Managers
             _serviceScope = _serviceProvider.CreateScope();
 
             _option = _serviceScope.ServiceProvider.GetRequiredService<DeleteFileEntityTaskManagerOption>();
+            _commonExceptionHandler = _serviceScope.ServiceProvider.GetRequiredService<CommonExceptionHandler>();
         }
         public void Start(CancellationToken cancellationToken)
         {
@@ -52,7 +56,9 @@ namespace HBK.Storage.Sync.Managers
                         _cancellationToken = cancellationToken;
                         _cancellationToken.Register(this.Cancel);
                         _pendingQueue = new ConcurrentQueue<FileEntityStorage>();
-                        Task.Factory.StartNew(this.StartInternal, TaskCreationOptions.LongRunning);
+                        Task.Factory.StartNewSafety(this.StartInternal,
+                            TaskCreationOptions.LongRunning,
+                            _commonExceptionHandler.Handle);
                         this.IsRunning = true;
                     }
                 }
@@ -107,7 +113,7 @@ namespace HBK.Storage.Sync.Managers
                     var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                     try
                     {
-                        _logger.LogInformation(_option.Identity, "刪除開始", deleteTaskId, "正在將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體中刪除",
+                        _logger.LogCustomInformation(_option.Identity, "刪除開始", deleteTaskId, "正在將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體中刪除",
                         fileEntityStroage.FileEntityId,
                         fileEntityStroage.FileEntity.Name,
                         fileEntityStroage.Storage.StorageGroup.Name,
@@ -115,7 +121,7 @@ namespace HBK.Storage.Sync.Managers
 
                         if (fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStroage.FileEntityStorageId).Result == null)
                         {
-                            _logger.LogInformation(_option.Identity, "刪除完成", deleteTaskId, "檔案 ID 為 {0} 的 {1} 在 {2} 群組中的 {3} 儲存個體中無法找到，故直接刪除其相關資訊",
+                            _logger.LogCustomInformation(_option.Identity, "刪除完成", deleteTaskId, "檔案 ID 為 {0} 的 {1} 在 {2} 群組中的 {3} 儲存個體中無法找到，故直接刪除其相關資訊",
                             fileEntityStroage.FileEntityId,
                             fileEntityStroage.FileEntity.Name,
                             fileEntityStroage.Storage.StorageGroup.Name,
@@ -128,7 +134,7 @@ namespace HBK.Storage.Sync.Managers
                         fileProvider.DeleteAsync(fileEntityStroage.Value).Wait();
                         fileEntityService.DeleteFileEntityStroageAsync(fileEntityStroage.FileEntityStorageId).Wait();
 
-                        _logger.LogInformation(_option.Identity, "刪除完成", deleteTaskId, "檔案 ID 為 {0} 的 {1} 從 {2} 檔案群組中的 {3} 檔案儲存個體中刪除",
+                        _logger.LogCustomInformation(_option.Identity, "刪除完成", deleteTaskId, "檔案 ID 為 {0} 的 {1} 從 {2} 檔案群組中的 {3} 檔案儲存個體中刪除",
                         fileEntityStroage.FileEntityId,
                         fileEntityStroage.FileEntity.Name,
                         fileEntityStroage.Storage.StorageGroup.Name,
@@ -136,7 +142,7 @@ namespace HBK.Storage.Sync.Managers
                     }
                     catch (Exception ex)
                     {
-                        LoggerExtensions.LogError(_logger, _option.Identity, "刪除失敗", deleteTaskId, ex, "發生未預期的例外");
+                        _logger.LogCustomError(_option.Identity, "刪除失敗", deleteTaskId, ex, "發生未預期的例外");
                     }
                 }
             }

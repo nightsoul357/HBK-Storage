@@ -2,6 +2,7 @@ using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
+using HBK.Storage.Sync.Handlers;
 using HBK.Storage.Sync.Managers;
 using HBK.Storage.Sync.Model;
 using Microsoft.EntityFrameworkCore;
@@ -66,6 +67,7 @@ namespace HBK.Storage.Sync
 
                     services.AddSingleton<SyncTaskManager>();
                     services.AddSingleton<DeleteFileEntityTaskManager>();
+                    services.AddScoped<CommonExceptionHandler>();
 
                     services.AddHostedService<TaskWorker>();
                 })
