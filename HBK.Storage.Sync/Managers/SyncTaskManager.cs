@@ -171,8 +171,8 @@ namespace HBK.Storage.Sync.Managers
                             continue;
                         }
 
-
-                        if (!fileEntityStorageService.ValidateFileEntityStorageAsync(syncTaskModel.FromFileEntityStorage.FileEntityStorageId).Result)
+                        IAsyncFileInfo fileInfo;
+                        if ((fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(syncTaskModel.FromFileEntityStorage.FileEntityStorageId).Result) == null)
                         {
                             _logger.LogWarning(_option.Identity, "檔案無效", sysncTaskIdentity
                             , "嘗試將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體 同步至 ---> {4} 儲存群組中的 {5} 儲存個體 但該檔案無法正確存取",
@@ -185,9 +185,7 @@ namespace HBK.Storage.Sync.Managers
                             continue; // 檔案無效，執行下一筆
                         }
 
-                        var fromProvider = fileSystemFacotry.GetAsyncFileProvider(syncTaskModel.FromFileEntityStorage.Storage);
                         var desProvider = fileSystemFacotry.GetAsyncFileProvider(desStorage.Storage);
-                        var fileInfo = fromProvider.GetFileInfo(syncTaskModel.FromFileEntityStorage.Value);
                         Guid taskId = Guid.NewGuid();
 
                         var desFileEntityStorage = storgaeService.AddFileEntityInStorageAsync(new FileEntityStorage()

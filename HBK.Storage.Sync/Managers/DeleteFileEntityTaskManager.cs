@@ -113,7 +113,7 @@ namespace HBK.Storage.Sync.Managers
                         fileEntityStroage.Storage.StorageGroup.Name,
                         fileEntityStroage.Storage.Name);
 
-                        if (!fileEntityStorageService.ValidateFileEntityStorageAsync(fileEntityStroage.FileEntityStorageId).Result)
+                        if (fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStroage.FileEntityStorageId).Result == null)
                         {
                             _logger.LogInformation(_option.Identity, "刪除完成", deleteTaskId, "檔案 ID 為 {0} 的 {1} 在 {2} 群組中的 {3} 儲存個體中無法找到，故直接刪除其相關資訊",
                             fileEntityStroage.FileEntityId,

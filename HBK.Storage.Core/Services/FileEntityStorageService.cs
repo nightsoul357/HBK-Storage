@@ -79,11 +79,11 @@ namespace HBK.Storage.Core.Services
         #region BAL
 
         /// <summary>
-        /// 驗證檔案位於儲存個體上是否有效
+        /// 嘗試取得檔案資訊
         /// </summary>
         /// <param name="fileEntityStorageId">檔案位於儲存個體上的資訊 ID</param>
-        /// <returns>是否有效</returns>
-        public async Task<bool> ValidateFileEntityStorageAsync(Guid fileEntityStorageId)
+        /// <returns></returns>
+        public async Task<IAsyncFileInfo> TryFetchFileInfoAsync(Guid fileEntityStorageId)
         {
             var fileEntityStorage = await this.FindByIdAsync(fileEntityStorageId);
             var fileProvider = _fileSystemFactory.GetAsyncFileProvider(fileEntityStorage.Storage);
@@ -96,15 +96,14 @@ namespace HBK.Storage.Core.Services
                 }
 
                 await this.AddFetchSuccessfullyRecordAsync(fileEntityStorageId, String.Empty);
-                return true;
+                return fileInfo;
             }
             catch (Exception ex)
             {
                 await this.AddFetchFailRecordAsync(fileEntityStorageId, ex.Message);
-                return false;
+                return default;
             }
         }
-
         /// <summary>
         /// 新增檔案位於儲存個體上的實體取得資訊失敗紀錄
         /// </summary>
