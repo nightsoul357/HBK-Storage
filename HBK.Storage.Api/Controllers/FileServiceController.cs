@@ -75,7 +75,7 @@ namespace HBK.Storage.Api.Controllers
                         FileEntityTag = request.Tags.Select(x => new FileEntityTag() { Value = x }).ToList()
                     },
                     request.FileStream);
-            return FileEntityController.BuildFileEntityResponse(fileEntity);
+            return FileEntityController.BuildFileEntityResponse(fileEntity, _fileEntityService);
         }
 
 

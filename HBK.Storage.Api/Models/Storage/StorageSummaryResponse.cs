@@ -1,5 +1,4 @@
 ﻿using HBK.Storage.Adapter.Enums;
-using HBK.Storage.Adapter.StorageCredentials;
 using HBK.Storage.Api.Models.StorageGroup;
 using System;
 using System.Collections.Generic;
@@ -9,9 +8,9 @@ using System.Threading.Tasks;
 namespace HBK.Storage.Api.Models.Storage
 {
     /// <summary>
-    /// 儲存個體回應內容
+    /// 儲存個體基本資訊回應內容
     /// </summary>
-    public class StorageResponse
+    public class StorageSummaryResponse
     {
         /// <summary>
         /// 儲存個體 ID
@@ -29,10 +28,6 @@ namespace HBK.Storage.Api.Models.Storage
         /// 檔案大小限制(單位 Bytes)
         /// </summary>
         public long SizeLimit { get; set; }
-        /// <summary>
-        /// 存取儲存個體的驗證資訊
-        /// </summary>
-        public StorageCredentialsBase Credentials { get; set; }
         /// <summary>
         /// 建立時間
         /// </summary>

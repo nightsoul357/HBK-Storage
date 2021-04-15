@@ -2,6 +2,7 @@
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Api.DataAnnotations;
 using HBK.Storage.Api.Models;
+using HBK.Storage.Api.Models.FileEntity;
 using HBK.Storage.Api.Models.StorageGroup;
 using HBK.Storage.Api.Models.StorageProvider;
 using HBK.Storage.Api.OData;
@@ -26,17 +27,20 @@ namespace HBK.Storage.Api.Controllers
         private readonly ILogger<StorageProviderController> _logger;
         private readonly StorageProviderService _storageProviderService;
         private readonly StorageGroupService _storageGroupService;
+        private readonly FileEntityService _fileEntityService;
         /// <summary>
         /// 建構一個新的執行個體
         /// </summary>
         /// <param name="storageProviderService"></param>
         /// <param name="storageGroupService"></param>
+        /// <param name="fileEntityService"></param>
         /// <param name="logger"></param>
-        public StorageProviderController(StorageProviderService storageProviderService, StorageGroupService storageGroupService, ILogger<StorageProviderController> logger)
+        public StorageProviderController(StorageProviderService storageProviderService, StorageGroupService storageGroupService, FileEntityService fileEntityService, ILogger<StorageProviderController> logger)
         {
             _logger = logger;
             _storageProviderService = storageProviderService;
             _storageGroupService = storageGroupService;
+            _fileEntityService = fileEntityService;
         }
         /// <summary>
         /// 取得指定 ID 之儲存服務
@@ -150,6 +154,34 @@ namespace HBK.Storage.Api.Controllers
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storgaeGroup => StorageGroupController.BuildStorageGroupResponse(storgaeGroup)),
+                100
+            );
+        }
+        /// <summary>
+        /// 取得儲存服務內的檔案實體集合
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="queryOptions">OData 查詢參數</param>
+        /// <returns></returns>
+        [HttpGet("{storageProviderId}/fileEntities")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [EnableODataQuery(AllowedQueryOptions =
+            AllowedQueryOptions.Filter |
+            AllowedQueryOptions.Skip |
+            AllowedQueryOptions.Top |
+            AllowedQueryOptions.OrderBy,
+            MaxTop = 100)]
+        public async Task<PagedResponse<FileEntityResponse>> GetFileEntityResponses(
+            [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
+            [ExistInDatabase(typeof(StorageProvider))] Guid storageProviderId,
+            [FromServices] ODataQueryOptions<FileEntity> queryOptions)
+        {
+            var query = _fileEntityService.ListQuery()
+                .Where(x => x.FileEntityStroage.Any(f => f.Storage.StorageGroup.StorageProviderId == storageProviderId));
+
+            return await base.PagedResultAsync(queryOptions, query, (data) =>
+                data.Select(fileEntity => FileEntityController.BuildFileEntityResponse(fileEntity, _fileEntityService)),
                 100
             );
         }

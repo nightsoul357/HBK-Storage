@@ -35,7 +35,7 @@ namespace HBK.Storage.Api.JsonConverters
             }
             else
             {
-                JObject obj = JObject.Load(reader);
+                JObject obj = JObject.Load(reader); // TODO : 使用反射取代
                 string source = obj.ToString();
                 var settings = serializer.CopySettings();
                 StorageCredentialsBase result = JsonConvert.DeserializeObject<FTPStorageCredentials>(source, settings);

@@ -132,6 +132,18 @@ namespace HBK.Storage.Core.Services
                .Remove(await _dbContext.FileEntityStorage.FirstAsync(x => x.FileEntityStorageId == fileEntityStorageId));
             await _dbContext.SaveChangesAsync();
         }
+        /// <summary>
+        /// 取得檔案存在的儲存個體集合
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <returns></returns>
+        public Task<List<Adapter.Storages.Storage>> GetStoragesAsync(Guid fileEntityId)
+        {
+            return _dbContext.Storage
+                .Include(x => x.StorageGroup)
+                .Where(x => x.FileEntityStroage.Any(f => f.FileEntityId == fileEntityId))
+                .ToListAsync();
+        }
         #endregion
     }
 }

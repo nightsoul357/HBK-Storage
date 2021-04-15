@@ -34,7 +34,8 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public IQueryable<Adapter.Storages.Storage> ListQuery()
         {
-            return _dbContext.Storage;
+            return _dbContext.Storage
+                .Include(x => x.StorageGroup);
         }
         /// <summary>
         /// 以 ID 取得儲存個體

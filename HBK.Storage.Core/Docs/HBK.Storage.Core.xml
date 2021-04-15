@@ -1084,6 +1084,13 @@
             <param name="fileEntityStorageId">儲存個體上的橋接資訊 ID</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetStoragesAsync(System.Guid)">
+            <summary>
+            取得檔案存在的儲存個體集合
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Core.Services.FileEntityStorageService">
             <summary>
             檔案位於儲存個體上的資訊服務

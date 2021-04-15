@@ -123,10 +123,29 @@ namespace HBK.Storage.Api.Controllers
                 Name = storage.Name,
                 SizeLimit = storage.SizeLimit,
                 Status = storage.Status.FlattenFlags(),
-                StorageGroupId = storage.StorageGroupId,
                 StorageId = storage.StorageId,
                 Type = storage.Type,
-                UpdateDateTime = storage.UpdateDateTime?.LocalDateTime
+                UpdateDateTime = storage.UpdateDateTime?.LocalDateTime,
+                StorageGroupResponse = StorageGroupController.BuildStorageGroupResponse(storage.StorageGroup)
+            };
+        }
+        /// <summary>
+        /// 產生儲存個體基本資訊回應內容
+        /// </summary>
+        /// <param name="storage">儲存個體</param>
+        /// <returns></returns>
+        internal static StorageSummaryResponse BuildStorageSummaryResponse(Adapter.Storages.Storage storage)
+        {
+            return new StorageSummaryResponse()
+            {
+                CreateDateTime = storage.CreateDateTime.LocalDateTime,
+                Name = storage.Name,
+                SizeLimit = storage.SizeLimit,
+                Status = storage.Status.FlattenFlags(),
+                StorageId = storage.StorageId,
+                Type = storage.Type,
+                UpdateDateTime = storage.UpdateDateTime?.LocalDateTime,
+                StorageGroupResponse = StorageGroupController.BuildStorageGroupResponse(storage.StorageGroup)
             };
         }
     }

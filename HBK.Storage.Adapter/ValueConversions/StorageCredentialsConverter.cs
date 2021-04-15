@@ -31,8 +31,8 @@ namespace HBK.Storage.Adapter.ValueConversions
         }
         private static StorageCredentialsBase ConvertFromString(string source)
         {
-            StorageCredentialsBase obj = JsonConvert.DeserializeObject<FTPStorageCredentials>(source);
-            switch (obj.StorageType)
+            StorageCredentialsBase obj = JsonConvert.DeserializeObject<FTPStorageCredentials>(source); 
+            switch (obj.StorageType) // TODO : 使用反射取代
             {
                 case Enums.StorageTypeEnum.FTP:
                     obj = JsonConvert.DeserializeObject<FTPStorageCredentials>(source);

@@ -1,4 +1,6 @@
 ﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Api.Models.Storage;
+using HBK.Storage.Api.Models.StorageGroup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,5 +49,9 @@ namespace HBK.Storage.Api.Models.FileEntity
         /// 狀態
         /// </summary>
         public FileEntityStatusEnum[] Status { get; set; }
+        /// <summary>
+        /// 取得或設定存在的儲存集合清單
+        /// </summary>
+        public List<StorageSummaryResponse> StorageSummaryResponses { get; set; }
     }
 }
