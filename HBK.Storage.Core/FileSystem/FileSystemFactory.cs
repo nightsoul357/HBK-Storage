@@ -70,7 +70,7 @@ namespace HBK.Storage.Core.FileSystem
                 case Adapter.Enums.StorageTypeEnum.Mega:
                     {
                         MegaStorageCredentials credentials = (MegaStorageCredentials)storage.Credentials;
-                        return new MegaFileProvider(storage.Name, credentials.Username, credentials.ParentId, credentials.ParentId);
+                        return new MegaFileProvider(storage.Name, credentials.Username, credentials.Password, credentials.ParentId);
                     }
                 default:
                     throw new NotImplementedException($"尚未實作取得 { storage.Type } 儲存服務提供者的方式");
