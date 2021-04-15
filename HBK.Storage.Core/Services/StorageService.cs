@@ -46,7 +46,34 @@ namespace HBK.Storage.Core.Services
             return this.ListQuery()
                 .FirstOrDefaultAsync(x => x.StorageId == storageId);
         }
-
+        /// <summary>
+        /// 新增儲存個體
+        /// </summary>
+        /// <param name="storage"></param>
+        /// <returns></returns>
+        public async Task<Adapter.Storages.Storage> AddAsync(Adapter.Storages.Storage storage)
+        {
+            _dbContext.Storage.Add(storage);
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(storage.StorageId);
+        }
+        /// <summary>
+        /// 更新儲存個體
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public async Task<Adapter.Storages.Storage> UpdateAsync(Adapter.Storages.Storage data)
+        {
+            var original = await _dbContext.Storage.FirstAsync(x => x.StorageId == data.StorageId);
+            original.Credentials = data.Credentials;
+            original.Name = data.Name;
+            original.SizeLimit = data.SizeLimit;
+            original.Status = data.Status;
+            original.StorageGroupId = data.StorageGroupId;
+            original.Type = data.Type;
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(original.StorageId);
+        }
         #endregion
         #region BAL
         /// <summary>
@@ -96,7 +123,7 @@ namespace HBK.Storage.Core.Services
             var fileEntityStorage = await _dbContext.FileEntityStorage.FirstOrDefaultAsync(x => x.FileEntityStorageId == fileEntityStroageId);
             fileEntityStorage.Status = FileEntityStorageStatusEnum.SyncFail;
             await _dbContext.SaveChangesAsync();
-            
+
             _dbContext.FileEntityStorage.Remove(fileEntityStorage);
             await _dbContext.SaveChangesAsync();
         }

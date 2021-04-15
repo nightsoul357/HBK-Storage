@@ -97,7 +97,7 @@ namespace HBK.Storage.Api
             services.AddControllers(options =>
             {
                 options.OutputFormatters.RemoveType<StringOutputFormatter>();
-                options.EnableEndpointRouting = false;
+                //options.EnableEndpointRouting = false;
             })
             .AddNewtonsoftJson(options =>
             {

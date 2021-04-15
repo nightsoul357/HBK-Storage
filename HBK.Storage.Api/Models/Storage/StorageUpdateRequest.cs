@@ -1,0 +1,38 @@
+﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Adapter.StorageCredentials;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace HBK.Storage.Api.Models.Storage
+{
+    /// <summary>
+    /// 更新儲存個體請求內容
+    /// </summary>
+    public class StorageUpdateRequest
+    {
+        /// <summary>
+        /// 名稱
+        /// </summary>
+        [Required]
+        public string Name { get; set; }
+        /// <summary>
+        /// 類型
+        /// </summary>
+        public StorageTypeEnum Type { get; set; }
+        /// <summary>
+        /// 檔案大小限制(單位 Bytes)
+        /// </summary>
+        public long SizeLimit { get; set; }
+        /// <summary>
+        /// 儲存個體的驗證資訊
+        /// </summary>
+        public StorageCredentialsBase Credentials { get; set; }
+        /// <summary>
+        /// 狀態
+        /// </summary>
+        public StorageStatusEnum[] Status { get; set; }
+    }
+}

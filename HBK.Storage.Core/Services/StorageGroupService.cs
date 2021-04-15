@@ -49,6 +49,34 @@ namespace HBK.Storage.Core.Services
             return this.ListQuery()
                 .FirstOrDefaultAsync(x => x.StorageGroupId == storageGroupId);
         }
+        /// <summary>
+        /// 新增儲存個體集合
+        /// </summary>
+        /// <param name="storageGroup"></param>
+        /// <returns></returns>
+        public async Task<StorageGroup> AddAsync(StorageGroup storageGroup)
+        {
+            _dbContext.StorageGroup.Add(storageGroup);
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(storageGroup.StorageGroupId);
+        }
+        /// <summary>
+        /// 更新儲存個體集合
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public async Task<StorageGroup> UpdateAsync(StorageGroup data)
+        {
+            var original = await _dbContext.StorageGroup.FirstAsync(x => x.StorageGroupId == data.StorageGroupId);
+            original.Name = data.Name;
+            original.Status = data.Status;
+            original.StorageProviderId = data.StorageProviderId;
+            original.SyncMode = data.SyncMode;
+            original.SyncPolicy = data.SyncPolicy;
+            original.Type = data.Type;
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(original.StorageGroupId);
+        }
         #endregion
 
         #region BAL

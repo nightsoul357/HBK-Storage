@@ -1194,6 +1194,20 @@
             <param name="storageGroupId">儲存個體群組 ID</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.AddAsync(HBK.Storage.Adapter.Storages.StorageGroup)">
+            <summary>
+            新增儲存個體集合
+            </summary>
+            <param name="storageGroup"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.UpdateAsync(HBK.Storage.Adapter.Storages.StorageGroup)">
+            <summary>
+            更新儲存個體集合
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Core.Services.StorageGroupService.DisableStorageGroupAsync(System.Guid)">
             <summary>
             停用指定的儲存個體集合
@@ -1247,6 +1261,27 @@
             <param name="storageProviderIds">儲存服務 ID 清單</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.AddAsync(HBK.Storage.Adapter.Storages.StorageProvider)">
+            <summary>
+            加入儲存服務
+            </summary>
+            <param name="storageProvider"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.UpdateAsync(HBK.Storage.Adapter.Storages.StorageProvider)">
+            <summary>
+            更新儲存服務
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.DeleteAsync(System.Guid)">
+            <summary>
+            刪除儲存服務
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Core.Services.StorageProviderService.UploadFileEntityAsync(System.Guid,System.Nullable{System.Guid},HBK.Storage.Adapter.Storages.FileEntity,System.IO.Stream)">
             <summary>
             上傳檔案至指定的儲存服務
@@ -1298,6 +1333,20 @@
             以 ID 取得儲存個體
             </summary>
             <param name="storageId">儲存個體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.AddAsync(HBK.Storage.Adapter.Storages.Storage)">
+            <summary>
+            新增儲存個體
+            </summary>
+            <param name="storage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.UpdateAsync(HBK.Storage.Adapter.Storages.Storage)">
+            <summary>
+            更新儲存個體
+            </summary>
+            <param name="data"></param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.StorageService.GetStorageExtendPropertyAsync(System.Guid)">

@@ -149,11 +149,26 @@
             <param name="storageService"></param>
             <param name="logger"></param>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.StorageController.GET(System.Guid)">
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.Get(System.Guid)">
             <summary>
             取得指定 ID 之儲存個體
             </summary>
             <param name="storageId">儲存個體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.Post(HBK.Storage.Api.Models.Storage.StorageAddRequest)">
+            <summary>
+            新增儲存個體
+            </summary>
+            <param name="request">新增儲存個體請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.Put(System.Guid,HBK.Storage.Api.Models.Storage.StorageUpdateRequest)">
+            <summary>
+            更新儲存個體
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
+            <param name="request">更新儲存個體請求內容</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageController.BuildStorageResponse(HBK.Storage.Adapter.Storages.Storage)">
@@ -163,16 +178,66 @@
             <param name="storage">儲存個體</param>
             <returns></returns>
         </member>
+        <member name="T:HBK.Storage.Api.Controllers.StorageGroupController">
+            <summary>
+            儲存個體集合控制器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.#ctor(HBK.Storage.Core.Services.StorageGroupService,HBK.Storage.Core.Services.StorageService)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="storageGroupService"></param>
+            <param name="storageService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Get(System.Guid)">
+            <summary>
+            取得指定 ID 之儲存個體集合
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Post(HBK.Storage.Api.Models.StorageGroup.StorageGroupAddRequest)">
+            <summary>
+            新增儲存個體集合
+            </summary>
+            <param name="request">新增儲存個體集合請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Put(System.Guid,HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest)">
+            <summary>
+            更新儲存個體集合
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <param name="request">更新儲存個體集合請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.GetStorages(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.Storage})">
+            <summary>
+            取得儲存個體集合內的儲存個體集合
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <param name="queryOptions">OData 查詢選項</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.BuildStorageGroupResponse(HBK.Storage.Adapter.Storages.StorageGroup)">
+            <summary>
+            產生儲存個體集合回應內容
+            </summary>
+            <param name="storageGroup"></param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Api.Controllers.StorageProviderController">
             <summary>
             儲存服務控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.#ctor(HBK.Storage.Core.Services.StorageProviderService,Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.Controllers.StorageProviderController})">
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.StorageGroupService,Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.Controllers.StorageProviderController})">
             <summary>
             建構一個新的執行個體
             </summary>
             <param name="storageProviderService"></param>
+            <param name="storageGroupService"></param>
             <param name="logger"></param>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GET(System.Guid)">
@@ -188,6 +253,29 @@
             </summary>
             <param name="queryOptions">OData 查詢參數</param>
             <returns>儲存服務資訊集合</returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Post(HBK.Storage.Api.Models.StorageProvider.StorageProviderAddRequest)">
+            <summary>
+            加入儲存服務
+            </summary>
+            <param name="request">加入儲存服務請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Put(System.Guid,HBK.Storage.Api.Models.StorageProvider.StorageProviderUpdateRequest)">
+            <summary>
+            更新儲存服務內容
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="request">更新儲存服務內容請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetStorageGroups(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.StorageGroup})">
+            <summary>
+            取得儲存服務內的所有儲存個體集合
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="queryOptions">OData 查詢選項</param>
+            <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.BuildStorageProviderResponse(HBK.Storage.Adapter.Storages.StorageProvider)">
             <summary>
@@ -613,6 +701,102 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:HBK.Storage.Api.Models.StorageGroup.StorageGroupAddRequest">
+            <summary>
+            新增儲存個體集合請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupAddRequest.StorageProviderId">
+            <summary>
+            所屬儲存服務 ID
+            </summary>
+            <example>59b50410-e86a-4341-8973-ae325e354210</example>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse">
+            <summary>
+            儲存個體集合回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.StorageGroupId">
+            <summary>
+            儲存個體群組 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.StorageProviderId">
+            <summary>
+            所屬儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.Type">
+            <summary>
+            類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.SyncMode">
+            <summary>
+            同步模式
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.SyncPolicy">
+            <summary>
+            同步策略
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.CreateDateTime">
+            <summary>
+            建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.UpdateDateTime">
+            <summary>
+            更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest">
+            <summary>
+            更新儲存個體集合請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.Type">
+            <summary>
+            類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.SyncMode">
+            <summary>
+            同步模式
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.SyncPolicy">
+            <summary>
+            同步策略
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageProvider.StorageProviderAddRequest">
+            <summary>
+            加入儲存服務請求內容
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Api.Models.StorageProvider.StorageProviderResponse">
             <summary>
             儲存服務回應內容
@@ -642,6 +826,32 @@
             <summary>
             狀態
             </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageProvider.StorageProviderUpdateRequest">
+            <summary>
+            更新儲存服務請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageProvider.StorageProviderUpdateRequest.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageProvider.StorageProviderUpdateRequest.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.Storage.StorageAddRequest">
+            <summary>
+            新增儲存個體請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageAddRequest.StorageGroupId">
+            <summary>
+            儲存個體集合 ID
+            </summary>
+            <example>8acdbf86-cb7b-4d1a-8745-44115f656287</example>
         </member>
         <member name="T:HBK.Storage.Api.Models.Storage.StorageResponse">
             <summary>
@@ -689,6 +899,36 @@
             </summary>
         </member>
         <member name="P:HBK.Storage.Api.Models.Storage.StorageResponse.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.Storage.StorageUpdateRequest">
+            <summary>
+            更新儲存個體請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageUpdateRequest.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageUpdateRequest.Type">
+            <summary>
+            類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageUpdateRequest.SizeLimit">
+            <summary>
+            檔案大小限制(單位 Bytes)
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageUpdateRequest.Credentials">
+            <summary>
+            儲存個體的驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageUpdateRequest.Status">
             <summary>
             狀態
             </summary>

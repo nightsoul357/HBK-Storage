@@ -78,6 +78,42 @@ namespace HBK.Storage.Core.Services
         {
             return this.ListQuery().Where(x => storageProviderIds.Contains(x.StorageProviderId)).ToListAsync();
         }
+        /// <summary>
+        /// 加入儲存服務
+        /// </summary>
+        /// <param name="storageProvider"></param>
+        /// <returns></returns>
+        public async Task<StorageProvider> AddAsync(StorageProvider storageProvider)
+        {
+            _dbContext.StorageProvider.Add(storageProvider);
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(storageProvider.StorageProviderId);
+        }
+        /// <summary>
+        /// 更新儲存服務
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public async Task<StorageProvider> UpdateAsync(StorageProvider data)
+        {
+            var original = await this.FindByIdAsync(data.StorageProviderId);
+            original.Name = data.Name;
+            original.Status = data.Status;
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(data.StorageProviderId);
+        }
+        /// <summary>
+        /// 刪除儲存服務
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <returns></returns>
+        public async Task DeleteAsync(Guid storageProviderId)
+        {
+            var sotrageProvider = await _dbContext.StorageProvider.FirstAsync(x => x.StorageProviderId == storageProviderId);
+            _dbContext.StorageProvider.Remove(sotrageProvider);
+
+            await _dbContext.SaveChangesAsync();
+        }
         #endregion
 
         #region BAL

@@ -43,11 +43,55 @@ namespace HBK.Storage.Api.Controllers
         [HttpGet("{storageId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<StorageResponse> GET(
+        public async Task<StorageResponse> Get(
             [ExampleParameter("00d89a53-107a-4666-ab46-03fc13fc9a93")]
             [ExistInDatabase(typeof(Adapter.Storages.Storage))] Guid storageId)
         {
             return StorageController.BuildStorageResponse(await _storageService.FindByIdAsync(storageId));
+        }
+        /// <summary>
+        /// 新增儲存個體
+        /// </summary>
+        /// <param name="request">新增儲存個體請求內容</param>
+        /// <returns></returns>
+        [HttpPost("")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<StorageResponse> Post(StorageAddRequest request)
+        {
+            var result = await _storageService.AddAsync(new Adapter.Storages.Storage()
+            {
+                Credentials = request.Credentials,
+                Name = request.Name,
+                SizeLimit = request.SizeLimit,
+                Status = request.Status.UnflattenFlags(),
+                StorageGroupId = request.StorageGroupId,
+                Type = request.Type
+            });
+            return StorageController.BuildStorageResponse(result);
+        }
+        /// <summary>
+        /// 更新儲存個體
+        /// </summary>
+        /// <param name="storageId">儲存個體 ID</param>
+        /// <param name="request">更新儲存個體請求內容</param>
+        /// <returns></returns>
+        [HttpPut("{storageId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<StorageResponse> Put(
+            [ExampleParameter("00d89a53-107a-4666-ab46-03fc13fc9a93")]
+            [ExistInDatabase(typeof(Adapter.Storages.Storage))] Guid storageId,
+            StorageUpdateRequest request)
+        {
+            var storage = await _storageService.FindByIdAsync(storageId);
+            storage.Credentials = request.Credentials;
+            storage.Name = request.Name;
+            storage.SizeLimit = request.SizeLimit;
+            storage.Status = request.Status.UnflattenFlags();
+            storage.Type = request.Type;
+            var result = await _storageService.UpdateAsync(storage);
+            return StorageController.BuildStorageResponse(result);
         }
 
         /// <summary>
