@@ -5,6 +5,7 @@ using HBK.Storage.Core.FileSystem.AmazonS3;
 using HBK.Storage.Core.FileSystem.FTP;
 using HBK.Storage.Core.FileSystem.GoogleDrive;
 using HBK.Storage.Core.FileSystem.Local;
+using HBK.Storage.Core.FileSystem.Mega;
 using HBK.Storage.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -65,6 +66,11 @@ namespace HBK.Storage.Core.FileSystem
                     {
                         GoogleDriveCredentials credentials = (GoogleDriveCredentials)storage.Credentials;
                         return new GoogleDriveFileProvider(storage.Name, credentials.Parent, credentials.ClientId, credentials.ClientSecret, credentials.User, new CredentialsDataStore(storage, _storageService));
+                    }
+                case Adapter.Enums.StorageTypeEnum.Mega:
+                    {
+                        MegaStorageCredentials credentials = (MegaStorageCredentials)storage.Credentials;
+                        return new MegaFileProvider(storage.Name, credentials.Username, credentials.ParentId, credentials.ParentId);
                     }
                 default:
                     throw new NotImplementedException($"尚未實作取得 { storage.Type } 儲存服務提供者的方式");

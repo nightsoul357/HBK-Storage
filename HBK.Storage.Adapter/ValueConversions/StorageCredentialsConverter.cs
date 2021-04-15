@@ -46,6 +46,9 @@ namespace HBK.Storage.Adapter.ValueConversions
                 case Enums.StorageTypeEnum.GoogleDrive:
                     obj = JsonConvert.DeserializeObject<GoogleDriveCredentials>(source);
                     break;
+                case Enums.StorageTypeEnum.Mega:
+                    obj = JsonConvert.DeserializeObject<MegaStorageCredentials>(source);
+                    break;
                 default:
                     throw new NotImplementedException($"尚未實作轉換至 { obj.StorageType } 的方式");
             }

@@ -27,5 +27,9 @@ namespace HBK.Storage.Adapter.Enums
         /// Google Drive 的儲存個體
         /// </summary>
         GoogleDrive = 4,
+        /// <summary>
+        /// Mega 的儲存個體
+        /// </summary>
+        Mega = 5
     }
 }
