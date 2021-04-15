@@ -88,12 +88,13 @@
             檔案服務提供者控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService)">
+        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileEntityStorageService)">
             <summary>
             建構一個新的執行個體
             </summary>
             <param name="storageProviderService"></param>
             <param name="fileEntityService"></param>
+            <param name="fileEntityStorageService"></param>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.FileServiceController.Put(System.Guid,HBK.Storage.Api.Models.FileService.PutFileRequest)">
             <summary>
@@ -123,6 +124,18 @@
             <summary>
             HBK Storage 使用的基底控制器
             </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.HBKControllerBase.PagedResultAsync``2(Microsoft.AspNet.OData.Query.ODataQueryOptions{``0},System.Linq.IQueryable{``0},System.Func{System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1}},System.Nullable{System.Int32})">
+            <summary>
+            回傳 <see cref="T:HBK.Storage.Api.Models.PagedResponse`1"/> 結果
+            </summary>
+            <typeparam name="TModel">模型型別</typeparam>
+            <typeparam name="TReponse">回應型別</typeparam>
+            <param name="queryOptions">OData 查詢參數</param>
+            <param name="query">查詢式</param>
+            <param name="selector">選擇器</param>
+            <param name="defaultTake">預設回傳資料數量</param>
+            <returns></returns>
         </member>
         <member name="T:HBK.Storage.Api.Controllers.StorageController">
             <summary>
@@ -168,6 +181,13 @@
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.List(Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.StorageProvider})">
+            <summary>
+            取得所有儲存服務資訊，單次資料上限為 100 筆
+            </summary>
+            <param name="queryOptions">OData 查詢參數</param>
+            <returns>儲存服務資訊集合</returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.BuildStorageProviderResponse(HBK.Storage.Adapter.Storages.StorageProvider)">
             <summary>
@@ -571,6 +591,28 @@
         <member name="M:HBK.Storage.Api.Models.FileService.PutFileRequestBinder.BindModelAsync(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext)">
             <inheritdoc/>
         </member>
+        <member name="T:HBK.Storage.Api.Models.PagedResponse`1">
+            <summary>
+            分頁後的回應結果
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.PagedResponse`1.Value">
+            <summary>
+            取得或設定資料
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.PagedResponse`1.TotalCount">
+            <summary>
+            取得或設定資料總數
+            </summary>
+            <example>100</example>
+        </member>
+        <member name="M:HBK.Storage.Api.Models.PagedResponse`1.GetEnumerator">
+            <summary>
+            傳回逐一查看集合的列舉值。
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Api.Models.StorageProvider.StorageProviderResponse">
             <summary>
             儲存服務回應內容
@@ -651,6 +693,63 @@
             狀態
             </summary>
         </member>
+        <member name="T:HBK.Storage.Api.OData.EnableODataQueryAttribute">
+            <summary>
+            啟用 OData 參數查詢
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.EnableODataQueryAttribute.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.EnableODataQueryAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.EnableODataQueryAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.OData.SnakeCaseFilterBinder">
+            <summary>
+            小寫命名的 <see cref="T:Microsoft.AspNet.OData.Query.Expressions.FilterBinder"/>
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseFilterBinder.#ctor(System.IServiceProvider)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="requestContainer"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseFilterBinder.BindCollectionConstantNode(Microsoft.OData.UriParser.CollectionConstantNode)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseFilterBinder.ConvertToPascalCase(System.String)">
+            <summary>
+            轉換 Snake case 為 Pascal case
+            </summary>
+            <param name="snakeCase">要轉換的字串</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.OData.SnakeCaseODataUriResolver">
+            <summary>
+            小寫底線命名的 URL 剖析器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseODataUriResolver.#ctor">
+            <summary>
+            建立一個 新的執行個體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseODataUriResolver.ResolveProperty(Microsoft.OData.Edm.IEdmStructuredType,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseODataUriResolver.ConvertToPascalCase(System.String)">
+            <summary>
+            轉換 Snake case 為 Pascal case
+            </summary>
+            <param name="snakeCase">要轉換的字串</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Api.Program">
             <summary>
             程式主類別
@@ -679,11 +778,17 @@
             取得設定檔
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="P:HBK.Storage.Api.Startup.HostingEnvironment">
+            <summary>
+            取得環境資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
             <summary>
             網站進入點建構函式
             </summary>
             <param name="configuration"></param>
+            <param name="environment"></param>
         </member>
         <member name="M:HBK.Storage.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
@@ -697,6 +802,13 @@
             </summary>
             <param name="app"></param>
             <param name="env"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Startup.GetEdmModel(System.IServiceProvider)">
+            <summary>
+            建立 OData 的 EDM 模型
+            </summary>
+            <param name="serviceProvider">服務提供者</param>
+            <returns></returns>
         </member>
         <member name="T:HBK.Storage.Api.Swagger.EnumDescriptorSchemaFilter">
             <summary>
@@ -782,6 +894,25 @@
             </summary>
             <param name="operation"></param>
             <param name="context"></param>
+        </member>
+        <member name="T:HBK.Storage.Api.Swagger.ODataOperationFilter">
+            <summary>
+            提供 Swagger 支援 OData 相關參數
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.ODataOperationFilter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            套用過濾器
+            </summary>
+            <param name="operation"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.ODataOperationFilter.IsEnumerableType(System.Type)">
+            <summary>
+            檢查回傳類型是否為集合
+            </summary>
+            <param name="type">要檢查的類型</param>
+            <returns></returns>
         </member>
         <member name="T:HBK.Storage.Api.Swagger.SecurityRequirementsOperationFilter">
             <summary>

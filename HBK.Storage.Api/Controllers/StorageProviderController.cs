@@ -1,8 +1,11 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Api.DataAnnotations;
+using HBK.Storage.Api.Models;
 using HBK.Storage.Api.Models.StorageProvider;
+using HBK.Storage.Api.OData;
 using HBK.Storage.Core.Services;
+using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -45,6 +48,29 @@ namespace HBK.Storage.Api.Controllers
             [ExistInDatabase(typeof(StorageProvider))] Guid storageProviderId)
         {
             return StorageProviderController.BuildStorageProviderResponse(await _storageProviderService.FindByIdAsync(storageProviderId));
+        }
+
+        /// <summary>
+        /// 取得所有儲存服務資訊，單次資料上限為 100 筆
+        /// </summary>
+        /// <param name="queryOptions">OData 查詢參數</param>
+        /// <returns>儲存服務資訊集合</returns>
+        [HttpGet("")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [EnableODataQuery(AllowedQueryOptions =
+            AllowedQueryOptions.Filter |
+            AllowedQueryOptions.Skip |
+            AllowedQueryOptions.Top |
+            AllowedQueryOptions.OrderBy,
+            MaxTop = 100)]
+        public async Task<ActionResult<PagedResponse<StorageProviderResponse>>> List([FromServices] ODataQueryOptions<StorageProvider> queryOptions)
+        {
+            var query = _storageProviderService.ListQuery();
+
+            return await base.PagedResultAsync(queryOptions, query, (data) =>
+                data.Select(storageProvider => StorageProviderController.BuildStorageProviderResponse(storageProvider)),
+                100
+            );
         }
 
         /// <summary>

@@ -26,6 +26,17 @@ using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Models;
 using HBK.Storage.Core;
 using HBK.Storage.Api.Middlewares;
+using Microsoft.AspNet.OData.Extensions;
+using Microsoft.AspNet.OData.Formatter;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OData.Edm;
+using Microsoft.AspNet.OData.Builder;
+using System.Reflection;
+using HBK.Storage.Adapter.DataAnnotations;
+using Microsoft.OData.UriParser;
+using Microsoft.OData;
+using Microsoft.AspNet.OData.Query.Expressions;
+using HBK.Storage.Api.OData;
 
 namespace HBK.Storage.Api
 {
@@ -34,18 +45,26 @@ namespace HBK.Storage.Api
     /// </summary>
     public class Startup
     {
+        private readonly string _corsPolicyName = "_corsPolicy";
         /// <summary>
         /// 取得設定檔
         /// </summary>
         public IConfiguration Configuration { get; }
+        /// <summary>
+        /// 取得環境資訊
+        /// </summary>
+        public IWebHostEnvironment HostingEnvironment { get; }
 
         /// <summary>
         /// 網站進入點建構函式
         /// </summary>
         /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration)
+        /// <param name="environment"></param>
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
+            this.HostingEnvironment = environment;
+
         }
 
         /// <summary>
@@ -54,6 +73,27 @@ namespace HBK.Storage.Api
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            // CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy(_corsPolicyName, builder =>
+                {
+                    builder.WithOrigins(this.Configuration.GetSection("CorsOrigins").Get<string[]>())
+                        .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                        .WithHeaders("Content-Type", "Authorization", "Cache-Control", "X-Requested-With", "Accept");
+                });
+            });
+            // HSTS
+            if (!this.HostingEnvironment.IsDevelopment())
+            {
+                services.AddHsts(options =>
+                {
+                    options.Preload = true;
+                    options.IncludeSubDomains = true;
+                    options.MaxAge = TimeSpan.FromDays(60);
+                });
+            }
+
             services.AddControllers(options =>
             {
                 options.OutputFormatters.RemoveType<StringOutputFormatter>();
@@ -89,6 +129,21 @@ namespace HBK.Storage.Api
             // 路由
             services.AddRouting(options => options.LowercaseUrls = true);
 
+            // ODATA
+            services.AddOData();
+            services.AddMvcCore(options =>
+            {
+                // Swagger workaround https://github.com/OData/WebApi/issues/1177#issuecomment-358659774
+                foreach (var outputFormatter in options.OutputFormatters.OfType<ODataOutputFormatter>().Where(formatter => formatter.SupportedMediaTypes.Count == 0))
+                {
+                    outputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+                foreach (var inputFormatter in options.InputFormatters.OfType<ODataInputFormatter>().Where(formatter => formatter.SupportedMediaTypes.Count == 0))
+                {
+                    inputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/prs.odatatestxx-odata"));
+                }
+            });
+
             // IIS 設定
             services.Configure<IISServerOptions>(options =>
             {
@@ -119,6 +174,7 @@ namespace HBK.Storage.Api
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
                 options.OperationFilter<ModelValidationOperationFilter>();
                 options.OperationFilter<ExampleParameterOperationFilter>();
+                options.OperationFilter<ODataOperationFilter>();
                 options.SchemaFilter<FlagEnumSchemaFilter>();
                 options.SchemaFilter<EnumDescriptorSchemaFilter>();
                 options.SchemaFilter<ExampleValueSchemaFilter>();
@@ -166,6 +222,7 @@ namespace HBK.Storage.Api
             }
             else
             {
+                app.UseHsts();
                 app.UseMiddleware<GlobalExceptionMiddleware>();
             }
 
@@ -179,8 +236,65 @@ namespace HBK.Storage.Api
 
             app.UseEndpoints(endpoints =>
             {
+                var edmModel = this.GetEdmModel(app.ApplicationServices);
                 endpoints.MapControllers();
+                // OData
+                endpoints.Filter().OrderBy().MaxTop(100);
+                endpoints.EnableDependencyInjection(action =>
+                {
+                    action.AddService<IEdmModel>(Microsoft.OData.ServiceLifetime.Singleton, sp => edmModel);
+                    action.AddService<ODataUriResolver>(Microsoft.OData.ServiceLifetime.Singleton, sp => new SnakeCaseODataUriResolver());
+                    action.AddService<FilterBinder>(Microsoft.OData.ServiceLifetime.Transient, sp => new SnakeCaseFilterBinder(sp));
+                });
+                if (env.IsDevelopment() || env.IsStaging())
+                {
+                    endpoints.MapODataRoute("odata", "odata", edmModel);
+                }
             });
+        }
+
+        /// <summary>
+        /// 建立 OData 的 EDM 模型
+        /// </summary>
+        /// <param name="serviceProvider">服務提供者</param>
+        /// <returns></returns>
+        private IEdmModel GetEdmModel(IServiceProvider serviceProvider)
+        {
+            SnakeCaseNamingStrategy snakeCaseNamingStrategy = new SnakeCaseNamingStrategy();
+            var builder = new ODataConventionModelBuilder(serviceProvider, true);
+
+            // Models
+            builder.EntitySet<StorageProvider>("StorageProviders");
+
+            // ODataConventionModelBuilder 會自動加入相關聯的模型
+            builder.OnModelCreating = builder =>
+            {
+                foreach (var type in builder.EnumTypes.Where(type => type.Namespace == "HBK.Storage.Adapter.Enums" || type.Namespace == "HBK.Storage.Core.Enums"))
+                {
+                    type.Namespace = "Enums";
+                    // 移除 Enum 結尾
+                    if (type.Name.EndsWith("Enum"))
+                    {
+                        type.Name = type.Name[0..^4];
+                    }
+                    // 改為小寫底線命名
+                    foreach (var member in type.Members)
+                    {
+                        member.Name = snakeCaseNamingStrategy.GetPropertyName(member.Name, false);
+                    }
+                }
+
+                foreach (var property in builder.StructuralTypes.SelectMany(type => type.Properties))
+                {
+                    property.NotCountable = true;
+                    property.NotExpandable = true;
+                    property.NotNavigable = true;
+                    property.NotSortable = (property.PropertyInfo.GetCustomAttribute<SortableAttribute>() == null);
+                    property.NotFilterable = (property.PropertyInfo.GetCustomAttribute<FilterableAttribute>() == null);
+                }
+            };
+
+            return builder.GetEdmModel();
         }
     }
 }

@@ -4,6 +4,16 @@
         <name>HBK.Storage.Adapter</name>
     </assembly>
     <members>
+        <member name="T:HBK.Storage.Adapter.DataAnnotations.FilterableAttribute">
+            <summary>
+            允許欄位可被篩選
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.DataAnnotations.SortableAttribute">
+            <summary>
+            允許欄位可被排序
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Enums.FileAccessTokenStatusEnum">
             <summary>
             檔案存取權杖狀態列舉
@@ -177,6 +187,11 @@
         <member name="F:HBK.Storage.Adapter.Enums.StorageTypeEnum.GoogleDrive">
             <summary>
             Google Drive 的儲存個體
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageTypeEnum.Mega">
+            <summary>
+            Mega 的儲存個體
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.Enums.SyncModeEnum">
@@ -1052,6 +1067,26 @@
         <member name="P:HBK.Storage.Adapter.StorageCredentials.LocalStorageCredentials.Directory">
             <summary>
             取得或設定目錄
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.StorageCredentials.MegaStorageCredentials">
+            <summary>
+            Mega 使用的驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.MegaStorageCredentials.Username">
+            <summary>
+            取得或設定使用者名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.MegaStorageCredentials.Password">
+            <summary>
+            取得或設定密碼
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.MegaStorageCredentials.ParentId">
+            <summary>
+            取得或設定父系資料夾 ID
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.StorageCredentials.StorageCredentialsBase">

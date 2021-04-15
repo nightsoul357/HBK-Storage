@@ -758,6 +758,81 @@
         <member name="M:HBK.Storage.Core.FileSystem.Local.LocalFileProvider.Watch(System.String)">
             <inheritdoc/>
         </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Mega.MegaDirectoryContents">
+            <summary>
+            Mega 目錄內容
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaDirectoryContents.#ctor(System.Boolean,System.Collections.Generic.IEnumerable{HBK.Storage.Core.FileSystem.Mega.MegaFileInfo})">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="isExist">資料夾是否存在</param>
+            <param name="files">檔案清單</param>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.Mega.MegaDirectoryContents.Exists">
+            <summary>
+            取得檔案室否存在
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaDirectoryContents.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaDirectoryContents.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Mega.MegaFileInfo">
+            <summary>
+            Mega 的檔案資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileInfo.#ctor(CG.Web.MegaApiClient.MegaApiClient,CG.Web.MegaApiClient.INode)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="megaApiClient"></param>
+            <param name="node"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileInfo.CreateReadStreamAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider">
+            <summary>
+            Mega 儲存服務提供者
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.ParentId">
+            <summary>
+            取得父系資料夾 ID
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="name">提供者名稱</param>
+            <param name="username">帳號</param>
+            <param name="password">密碼</param>
+            <param name="parentId"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.DeleteAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.GetDirectoryContentsAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.GetFileInfoAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.IsFileExistAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.PutAsync(System.String,System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.Watch(System.String)">
+            <inheritdoc/>
+        </member>
         <member name="T:HBK.Storage.Core.HBKStorageCoreDependencyInjectionExtensions">
             <summary>
             HBK 儲存服務核心相依性注入輔助類別
