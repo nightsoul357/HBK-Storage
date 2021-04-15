@@ -74,6 +74,18 @@ namespace HBK.Storage.Core.Services
             await _dbContext.SaveChangesAsync();
             return await this.FindByIdAsync(original.StorageId);
         }
+        /// <summary>
+        /// 刪除儲存個體(同時會刪除所有儲存個體內的檔案)
+        /// </summary>
+        /// <param name="storageId">儲存個體 ID</param>
+        /// <returns></returns>
+        public async Task DeleteAsync(Guid storageId)
+        {
+            _ = await _dbContext.Database
+                .ExecuteSqlRawAsync($"Update FileEntityStorage Set IsMarkDelete = true Where StorgeID = '{storageId}'");
+            _dbContext.Storage.Remove(await _dbContext.Storage.FirstAsync(x => x.StorageId == storageId));
+            await _dbContext.SaveChangesAsync();
+        }
         #endregion
         #region BAL
         /// <summary>

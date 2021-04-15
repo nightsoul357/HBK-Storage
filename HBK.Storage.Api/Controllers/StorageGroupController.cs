@@ -96,7 +96,21 @@ namespace HBK.Storage.Api.Controllers
             var result = await _storageGroupService.UpdateAsync(storageGroup);
             return StorageGroupController.BuildStorageGroupResponse(storageGroup);
         }
-
+        /// <summary>
+        /// 刪除儲存個體集合(同時會刪除所有儲存個體)
+        /// </summary>
+        /// <param name="storageGroupId">儲存個體集合 ID</param>
+        /// <returns></returns>
+        [HttpDelete("{storageGroup}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Delete(
+            [ExampleParameter("8acdbf86-cb7b-4d1a-8745-44115f656287")]
+            [ExistInDatabase(typeof(StorageGroup))] Guid storageGroupId)
+        {
+            await _storageGroupService.DeleteAsync(storageGroupId);
+            return base.NoContent();
+        }
         /// <summary>
         /// 取得儲存個體集合內的儲存個體集合
         /// </summary>

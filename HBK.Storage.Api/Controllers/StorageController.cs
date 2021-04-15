@@ -93,7 +93,21 @@ namespace HBK.Storage.Api.Controllers
             var result = await _storageService.UpdateAsync(storage);
             return StorageController.BuildStorageResponse(result);
         }
-
+        /// <summary>
+        /// 刪除儲存個體(同時刪除儲存個體內的所有檔案)
+        /// </summary>
+        /// <param name="storageId">儲存個體 ID</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Delete(
+            [ExampleParameter("00d89a53-107a-4666-ab46-03fc13fc9a93")]
+            [ExistInDatabase(typeof(Adapter.Storages.Storage))] Guid storageId)
+        {
+            await _storageService.DeleteAsync(storageId);
+            return base.NoContent();
+        }
         /// <summary>
         /// 產生儲存個體回應內容
         /// </summary>

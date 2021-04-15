@@ -38,7 +38,6 @@ namespace HBK.Storage.Api.Controllers
             _storageProviderService = storageProviderService;
             _storageGroupService = storageGroupService;
         }
-
         /// <summary>
         /// 取得指定 ID 之儲存服務
         /// </summary>
@@ -53,7 +52,6 @@ namespace HBK.Storage.Api.Controllers
         {
             return StorageProviderController.BuildStorageProviderResponse(await _storageProviderService.FindByIdAsync(storageProviderId));
         }
-
         /// <summary>
         /// 取得所有儲存服務資訊，單次資料上限為 100 筆
         /// </summary>
@@ -76,7 +74,6 @@ namespace HBK.Storage.Api.Controllers
                 100
             );
         }
-
         /// <summary>
         /// 加入儲存服務
         /// </summary>
@@ -93,7 +90,6 @@ namespace HBK.Storage.Api.Controllers
             });
             return StorageProviderController.BuildStorageProviderResponse(sotrageProvider);
         }
-
         /// <summary>
         /// 更新儲存服務內容
         /// </summary>
@@ -114,7 +110,21 @@ namespace HBK.Storage.Api.Controllers
             var result = await _storageProviderService.UpdateAsync(storageProvider);
             return StorageProviderController.BuildStorageProviderResponse(result);
         }
-
+        /// <summary>
+        /// 刪除儲存服務(包含所有儲存個體集合)
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <returns></returns>
+        [HttpDelete("{storageProviderId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Delete(
+            [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
+            [ExistInDatabase(typeof(StorageProvider))] Guid storageProviderId)
+        {
+            await _storageProviderService.DeleteAsync(storageProviderId);
+            return base.NoContent();
+        }
         /// <summary>
         /// 取得儲存服務內的所有儲存個體集合
         /// </summary>

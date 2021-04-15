@@ -109,9 +109,14 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public async Task DeleteAsync(Guid storageProviderId)
         {
-            var sotrageProvider = await _dbContext.StorageProvider.FirstAsync(x => x.StorageProviderId == storageProviderId);
-            _dbContext.StorageProvider.Remove(sotrageProvider);
-
+            var storageProvider = await _dbContext.StorageProvider
+                .Include(x => x.StorageGroup)
+                .FirstAsync(x => x.StorageProviderId == storageProviderId);
+            foreach (var storageGroup in storageProvider.StorageGroup)
+            {
+                await _storageGroupService.DeleteAsync(storageGroup.StorageGroupId);
+            }
+            _dbContext.StorageProvider.Remove(storageProvider);
             await _dbContext.SaveChangesAsync();
         }
         #endregion

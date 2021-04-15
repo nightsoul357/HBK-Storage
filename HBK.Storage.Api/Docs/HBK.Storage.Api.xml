@@ -171,6 +171,13 @@
             <param name="request">更新儲存個體請求內容</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.Delete(System.Guid)">
+            <summary>
+            刪除儲存個體(同時刪除儲存個體內的所有檔案)
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageController.BuildStorageResponse(HBK.Storage.Adapter.Storages.Storage)">
             <summary>
             產生儲存個體回應內容
@@ -210,6 +217,13 @@
             </summary>
             <param name="storageGroupId">儲存個體集合 ID</param>
             <param name="request">更新儲存個體集合請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Delete(System.Guid)">
+            <summary>
+            刪除儲存個體集合(同時會刪除所有儲存個體)
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.GetStorages(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.Storage})">
@@ -267,6 +281,13 @@
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="request">更新儲存服務內容請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Delete(System.Guid)">
+            <summary>
+            刪除儲存服務(包含所有儲存個體集合)
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetStorageGroups(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.StorageGroup})">

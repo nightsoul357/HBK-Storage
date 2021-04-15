@@ -1208,6 +1208,13 @@
             <param name="data"></param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.DeleteAsync(System.Guid)">
+            <summary>
+            刪除儲存個體集合(同時會刪除所有儲存個體)
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Core.Services.StorageGroupService.DisableStorageGroupAsync(System.Guid)">
             <summary>
             停用指定的儲存個體集合
@@ -1347,6 +1354,13 @@
             更新儲存個體
             </summary>
             <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.DeleteAsync(System.Guid)">
+            <summary>
+            刪除儲存個體(同時會刪除所有儲存個體內的檔案)
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.StorageService.GetStorageExtendPropertyAsync(System.Guid)">

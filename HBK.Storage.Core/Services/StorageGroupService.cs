@@ -77,6 +77,25 @@ namespace HBK.Storage.Core.Services
             await _dbContext.SaveChangesAsync();
             return await this.FindByIdAsync(original.StorageGroupId);
         }
+        /// <summary>
+        /// 刪除儲存個體集合(同時會刪除所有儲存個體)
+        /// </summary>
+        /// <param name="storageGroupId">儲存個體集合 ID</param>
+        /// <returns></returns>
+        public async Task DeleteAsync(Guid storageGroupId)
+        {
+            var storageGroup = await _dbContext.StorageGroup
+                .Include(x => x.Storage)
+                .FirstAsync(x => x.StorageGroupId == storageGroupId);
+
+            foreach (var storage in storageGroup.Storage)
+            {
+                await _storageService.DeleteAsync(storage.StorageId);
+            }
+
+            _dbContext.Remove(storageGroup);
+            await _dbContext.SaveChangesAsync();
+        }
         #endregion
 
         #region BAL
