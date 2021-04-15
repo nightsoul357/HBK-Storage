@@ -12,7 +12,7 @@ namespace HBK.Storage.Adapter.ValueConversions
     /// <summary>
     /// 存取儲存個體的驗證資訊轉換器
     /// </summary>
-    internal class StorageCredentialsConverter : ValueConverter<StorageCredentialsBase, string>
+    public class StorageCredentialsConverter : ValueConverter<StorageCredentialsBase, string>
     {
         /// <summary>
         /// 建立一個新的執行個體

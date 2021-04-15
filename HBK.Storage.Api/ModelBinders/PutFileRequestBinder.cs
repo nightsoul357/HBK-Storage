@@ -1,4 +1,5 @@
 ﻿using HBK.Storage.Api.Helpers;
+using HBK.Storage.Api.Models.FileService;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
@@ -12,7 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBK.Storage.Api.Models.FileService
+namespace HBK.Storage.Api.ModelBinders
 {
     /// <summary>
     /// PutFileRequest 的資料綁定

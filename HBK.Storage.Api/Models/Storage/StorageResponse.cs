@@ -29,11 +29,11 @@ namespace HBK.Storage.Api.Models.Storage
         /// </summary>
         public StorageTypeEnum Type { get; set; }
         /// <summary>
-        /// 取得或設定檔案大小限制(單位 Bytes)
+        /// 檔案大小限制(單位 Bytes)
         /// </summary>
         public long SizeLimit { get; set; }
         /// <summary>
-        /// 取得或設定存取儲存個體的驗證資訊
+        /// 存取儲存個體的驗證資訊
         /// </summary>
         public StorageCredentialsBase Credentials { get; set; }
         /// <summary>

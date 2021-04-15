@@ -1,6 +1,7 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.StorageCredentials;
 using HBK.Storage.Api.DataAnnotations;
+using HBK.Storage.Api.ModelBinders;
 using HBK.Storage.Api.Models.FileService;
 using HBK.Storage.Api.Models.Storage;
 using HBK.Storage.Core.FileSystem.FTP;
@@ -57,7 +58,7 @@ namespace HBK.Storage.Api.Controllers
         [HttpPost("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<StorageResponse> Post(StorageAddRequest request)
+        public async Task<StorageResponse> Post([FromBody]StorageAddRequest request)
         {
             var result = await _storageService.AddAsync(new Adapter.Storages.Storage()
             {
@@ -82,7 +83,7 @@ namespace HBK.Storage.Api.Controllers
         public async Task<StorageResponse> Put(
             [ExampleParameter("00d89a53-107a-4666-ab46-03fc13fc9a93")]
             [ExistInDatabase(typeof(Adapter.Storages.Storage))] Guid storageId,
-            StorageUpdateRequest request)
+            [FromBody] StorageUpdateRequest request)
         {
             var storage = await _storageService.FindByIdAsync(storageId);
             storage.Credentials = request.Credentials;

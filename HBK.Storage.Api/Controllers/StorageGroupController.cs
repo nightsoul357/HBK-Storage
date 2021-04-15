@@ -41,7 +41,7 @@ namespace HBK.Storage.Api.Controllers
         /// </summary>
         /// <param name="storageGroupId">儲存個體集合 ID</param>
         /// <returns></returns>
-        [HttpGet("{storageGroup}")]
+        [HttpGet("{storageGroupId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<StorageGroupResponse> Get(

@@ -118,8 +118,18 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public async Task DeleteFileEntityStroageAsync(Guid fileEntityStorageId)
         {
+            var fileEntityStorage = await _dbContext.FileEntityStorage
+                .Include(x => x.FileEntity)
+                .ThenInclude(x => x.FileEntityStroage)
+                .FirstAsync(x => x.FileEntityStorageId == fileEntityStorageId);
+
+            if (fileEntityStorage.FileEntity.FileEntityStroage.Count <= 1)
+            {
+                _dbContext.FileEntity.Remove(fileEntityStorage.FileEntity);
+            }
+
             _dbContext.FileEntityStorage
-                .Remove(await _dbContext.FileEntityStorage.FirstAsync(x => x.FileEntityStorageId == fileEntityStorageId));
+               .Remove(await _dbContext.FileEntityStorage.FirstAsync(x => x.FileEntityStorageId == fileEntityStorageId));
             await _dbContext.SaveChangesAsync();
         }
         #endregion
