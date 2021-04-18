@@ -20,8 +20,6 @@ namespace HBK.Storage.Sync.Managers
         private readonly IServiceScope _serviceScope;
         private readonly ExpireFileEntityTaskManagerOption _option;
 
-        private object _syncObj = new object();
-
         /// <summary>
         /// 建立一個新的執行個體
         /// </summary>
