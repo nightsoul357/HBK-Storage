@@ -1091,6 +1091,15 @@
             <param name="fileEntityId">檔案實體 ID</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetExpireFileEntityWithoutMarkDeleteAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            取得已過期但未標記刪除的檔案
+            </summary>
+            <param name="takeCount">取得數量</param>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Core.Services.FileEntityStorageService">
             <summary>
             檔案位於儲存個體上的資訊服務

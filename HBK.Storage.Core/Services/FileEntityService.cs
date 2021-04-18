@@ -73,10 +73,10 @@ namespace HBK.Storage.Core.Services
             var fileEntity = await _dbContext.FileEntity
                 .Include(x => x.FileEntityStroage)
                 .FirstOrDefaultAsync(x => x.FileEntityId == fileEntityId);
-            fileEntity.IsMarkDelete = true;
-            fileEntity.FileEntityStroage.ToList().ForEach(x => x.IsMarkDelete = true);
+            await this.MarkFileEntityDeleteInternalAsync(fileEntity);
             await _dbContext.SaveChangesAsync();
         }
+
         /// <summary>
         /// 取得需要被刪除的檔案位於儲存個體上的橋接資訊清單
         /// </summary>
@@ -143,6 +143,42 @@ namespace HBK.Storage.Core.Services
                 .Include(x => x.StorageGroup)
                 .Where(x => x.FileEntityStroage.Any(f => f.FileEntityId == fileEntityId))
                 .ToListAsync();
+        }
+        /// <summary>
+        /// 取得已過期但未標記刪除的檔案
+        /// </summary>
+        /// <param name="takeCount">取得數量</param>
+        /// <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+        /// <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+        /// <returns></returns>
+        public Task<List<FileEntity>> GetExpireFileEntityWithoutMarkDeleteAsync(int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
+        {
+            return _dbContext.FileEntity
+                .Where(x => !x.IsMarkDelete &&
+                    x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder &&
+                    DateTimeOffset.Now >= x.ExpireDateTime)
+                .Take(takeCount)
+                .ToListAsync();
+        }
+        #endregion
+        #region private method
+        private async Task MarkFileEntityDeleteInternalAsync(FileEntity fileEntity)
+        {
+            var child = await _dbContext.FileEntity
+                .Include(x => x.FileEntityStroage)
+                .Where(x => x.ParentFileEntityID == fileEntity.FileEntityId)
+                .ToListAsync();
+
+            if (child.Count != 0)
+            {
+                foreach (var file in child)
+                {
+                    await this.MarkFileEntityDeleteInternalAsync(file);
+                }
+            }
+
+            fileEntity.IsMarkDelete = true;
+            fileEntity.FileEntityStroage.ToList().ForEach(x => x.IsMarkDelete = true);
         }
         #endregion
     }

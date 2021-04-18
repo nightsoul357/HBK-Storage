@@ -123,7 +123,7 @@ namespace HBK.Storage.Core.Services
         {
             var fileEntityStorage = await _dbContext.FileEntityStorage.FirstOrDefaultAsync(x => x.FileEntityStorageId == fileEntityStroageId);
             fileEntityStorage.Value = value;
-            fileEntityStorage.Status = fileEntityStorage.Status & ~Adapter.Enums.FileEntityStorageStatusEnum.Syncing;
+            fileEntityStorage.Status = fileEntityStorage.Status & ~FileEntityStorageStatusEnum.Syncing;
             await _dbContext.SaveChangesAsync();
         }
         /// <summary>

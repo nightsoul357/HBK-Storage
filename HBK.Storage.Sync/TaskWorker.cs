@@ -30,6 +30,7 @@ namespace HBK.Storage.Sync
             _scope = _serviceProvider.CreateScope();
             this.SyncTaskManager = _scope.ServiceProvider.GetRequiredService<SyncTaskManager>();
             this.DeleteFileEntityTaskManager = _scope.ServiceProvider.GetRequiredService<DeleteFileEntityTaskManager>();
+            this.ExpireFileEntityTaskManager = _scope.ServiceProvider.GetRequiredService<ExpireFileEntityTaskManager>();
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -40,6 +41,7 @@ namespace HBK.Storage.Sync
             {
                 this.SyncTaskManager.Start(stoppingToken);
                 this.DeleteFileEntityTaskManager.Start(stoppingToken);
+                this.ExpireFileEntityTaskManager.Start(stoppingToken);
             }
             catch (Exception ex)
             {
@@ -68,5 +70,6 @@ namespace HBK.Storage.Sync
 
         public SyncTaskManager SyncTaskManager { get; private set; }
         public DeleteFileEntityTaskManager DeleteFileEntityTaskManager { get; private set; }
+        public ExpireFileEntityTaskManager ExpireFileEntityTaskManager { get; private set; }
     }
 }

@@ -171,6 +171,11 @@ namespace HBK.Storage.Adapter.Storages
 
                 entity.Property(e => e.FileEntityNo).ValueGeneratedOnAdd();
 
+                entity.HasOne(d => d.ParentFileEntity)
+                    .WithMany(p => p.ChildFileEntitiy)
+                    .HasForeignKey(d => d.ParentFileEntityID)
+                    .HasConstraintName("FK_ChildFileEntity_ParentFileEntity");
+
                 // SoftDelete
                 entity.HasQueryFilter(model => model.DeleteDateTime == null);
             });

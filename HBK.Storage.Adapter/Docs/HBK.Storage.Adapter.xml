@@ -504,6 +504,16 @@
             取得或設定是否標記刪除
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.ParentFileEntityID">
+            <summary>
+            取得或設定父檔案實體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.ExpireDateTime">
+            <summary>
+            取得或設定過期時間
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.FileEntity.CreateDateTime">
             <summary>
             取得建立時間
@@ -524,9 +534,19 @@
             取得或設定狀態
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.ParentFileEntity">
+            <summary>
+            取得或設定父檔案實體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.ChildFileEntitiy">
+            <summary>
+            取得或設定子檔案實體集合
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.FileEntity.FileEntityStroage">
             <summary>
-            取得檔案位於儲存個體的集合
+            取得或設定檔案位於儲存個體的集合
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.FileEntity.FileAccessToken">

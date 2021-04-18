@@ -61,6 +61,14 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         public bool IsMarkDelete { get; set; }
         /// <summary>
+        /// 取得或設定父檔案實體 ID
+        /// </summary>
+        public Guid? ParentFileEntityID { get; set; }
+        /// <summary>
+        /// 取得或設定過期時間
+        /// </summary>
+        public DateTimeOffset? ExpireDateTime { get; set; }
+        /// <summary>
         /// 取得建立時間
         /// </summary>
         public DateTimeOffset CreateDateTime { get; internal set; }
@@ -78,7 +86,18 @@ namespace HBK.Storage.Adapter.Storages
         public FileEntityStatusEnum Status { get; set; }
 
         /// <summary>
-        /// 取得檔案位於儲存個體的集合
+        /// 取得或設定父檔案實體
+        /// </summary>
+        [ForeignKey(nameof(ParentFileEntityID))]
+        public virtual FileEntity ParentFileEntity { get; set; }
+
+        /// <summary>
+        /// 取得或設定子檔案實體集合
+        /// </summary>
+        [InverseProperty("ParentFileEntity")]
+        public virtual ICollection<FileEntity> ChildFileEntitiy { get; set; }
+        /// <summary>
+        /// 取得或設定檔案位於儲存個體的集合
         /// </summary>
         [InverseProperty("FileEntity")]
         public virtual ICollection<FileEntityStorage> FileEntityStroage { get; set; }

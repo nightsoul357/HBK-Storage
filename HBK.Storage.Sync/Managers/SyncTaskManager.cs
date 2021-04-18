@@ -4,7 +4,6 @@ using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
 using HBK.Storage.Sync.Extensions;
-using HBK.Storage.Sync.Handlers;
 using HBK.Storage.Sync.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -21,17 +20,12 @@ namespace HBK.Storage.Sync.Managers
     /// <summary>
     /// 同步任務管理者
     /// </summary>
-    public sealed class SyncTaskManager
+    public sealed class SyncTaskManager : TaskManagerBase<SyncTaskManager>
     {
-        private readonly ILogger<SyncTaskManager> _logger;
-        private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScope _serviceScope;
         private readonly SyncTaskManagerOption _option;
-        private readonly CommonExceptionHandler _commonExceptionhandler;
 
         private ConcurrentQueue<SyncTaskModel> _pendingQueue;
-        private CancellationToken _cancellationToken;
-        private object _syncObj = new object();
 
         /// <summary>
         /// 建立一個新的執行個體
@@ -39,36 +33,15 @@ namespace HBK.Storage.Sync.Managers
         /// <param name="logger"></param>
         /// <param name="serviceProvider"></param>
         public SyncTaskManager(ILogger<SyncTaskManager> logger, IServiceProvider serviceProvider)
+            : base(logger,serviceProvider)
         {
-            _logger = logger;
-            _serviceProvider = serviceProvider;
             _serviceScope = _serviceProvider.CreateScope();
-
             _option = _serviceScope.ServiceProvider.GetRequiredService<SyncTaskManagerOption>();
-            _commonExceptionhandler = _serviceScope.ServiceProvider.GetRequiredService<CommonExceptionHandler>();
         }
-        public void Start(CancellationToken cancellationToken)
+        protected override void StartInternal()
         {
-            if (!this.IsRunning)
-            {
-                lock (_syncObj)
-                {
-                    if (!this.IsRunning)
-                    {
-                        _cancellationToken = cancellationToken;
-                        _cancellationToken.Register(this.Cancel);
-                        _pendingQueue = new ConcurrentQueue<SyncTaskModel>();
-                        Task.Factory.StartNewSafety(this.StartInternal, 
-                            TaskCreationOptions.LongRunning,
-                            _commonExceptionhandler.Handle);
-                        this.IsRunning = true;
-                    }
-                }
-            }
-        }
+            _pendingQueue = new ConcurrentQueue<SyncTaskModel>();
 
-        private void StartInternal()
-        {
             List<Task> tasks = new List<Task>();
             while (!_cancellationToken.IsCancellationRequested)
             {
@@ -78,7 +51,7 @@ namespace HBK.Storage.Sync.Managers
                 {
                     for (int i = 0; i < _option.TaskLimit; i++)
                     {
-                        tasks.Add(Task.Factory.StartNewSafety(this.ExecuteTask, TaskCreationOptions.LongRunning, _commonExceptionhandler.Handle));
+                        tasks.Add(Task.Factory.StartNewSafety(this.ExecuteTask, TaskCreationOptions.LongRunning, base.ExcetpionHandle));
                     }
 
                     Task.WaitAll(tasks.ToArray());
@@ -129,7 +102,6 @@ namespace HBK.Storage.Sync.Managers
                 }
             }
         }
-
         private void ExecuteTask()
         {
             while (!_cancellationToken.IsCancellationRequested && _pendingQueue.TryDequeue(out SyncTaskModel syncTaskModel))
@@ -238,11 +210,9 @@ namespace HBK.Storage.Sync.Managers
                 }
             }
         }
-
-        private void Cancel()
+        public override void Dispose()
         {
             _serviceScope.Dispose();
         }
-        public bool IsRunning { get; set; }
     }
 }
