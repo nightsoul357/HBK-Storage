@@ -140,6 +140,7 @@ namespace HBK.Storage.Api.Controllers
                 fileName = fileEntity.Name;
             }
 
+            await _fileEntityStorageService.AddAccessSuccessfullyRecordAsync(fileEntityStorage.FileEntityStorageId, "存取成功");
             return new FileStreamResult(fileInfo.CreateReadStream(), new MediaTypeHeaderValue(fileEntity.MimeType))
             {
                 FileDownloadName = fileName
@@ -178,6 +179,7 @@ namespace HBK.Storage.Api.Controllers
                 fileName = fileEntity.Name;
             }
 
+            await _fileEntityStorageService.AddAccessSuccessfullyRecordAsync(fileEntityStorage.FileEntityStorageId, "存取成功");
             return new FileStreamResult(fileInfo.CreateReadStream(), new MediaTypeHeaderValue(fileEntity.MimeType))
             {
                 FileDownloadName = fileName

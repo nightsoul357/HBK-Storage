@@ -97,7 +97,7 @@ namespace HBK.Storage.Api
             services.AddControllers(options =>
             {
                 options.OutputFormatters.RemoveType<StringOutputFormatter>();
-                //options.EnableEndpointRouting = false;
+                options.EnableEndpointRouting = false; // AllowAnonymous 在 .Net Core 3.1 會失效 https://blog.csdn.net/elvismile/article/details/104003004
             })
             .AddNewtonsoftJson(options =>
             {
