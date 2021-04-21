@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Adapter.StorageCredentials;
+﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Adapter.StorageCredentials;
 using HBK.Storage.Api.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -35,31 +36,11 @@ namespace HBK.Storage.Api.JsonConverters
             }
             else
             {
-                JObject obj = JObject.Load(reader); // TODO : 使用反射取代
+                JObject obj = JObject.Load(reader);
                 string source = obj.ToString();
                 var settings = serializer.CopySettings();
                 StorageCredentialsBase result = JsonConvert.DeserializeObject<FTPStorageCredentials>(source, settings);
-                switch (result.StorageType)
-                {
-                    case Adapter.Enums.StorageTypeEnum.FTP:
-                        result = JsonConvert.DeserializeObject<FTPStorageCredentials>(source, settings);
-                        break;
-                    case Adapter.Enums.StorageTypeEnum.AmazonS3:
-                        result = JsonConvert.DeserializeObject<AmazonS3StorageCredentials>(source, settings);
-                        break;
-                    case Adapter.Enums.StorageTypeEnum.Local:
-                        result = JsonConvert.DeserializeObject<LocalStorageCredentials>(source, settings);
-                        break;
-                    case Adapter.Enums.StorageTypeEnum.GoogleDrive:
-                        result = JsonConvert.DeserializeObject<GoogleDriveCredentials>(source, settings);
-                        break;
-                    case Adapter.Enums.StorageTypeEnum.Mega:
-                        result = JsonConvert.DeserializeObject<MegaStorageCredentials>(source, settings);
-                        break;
-                    default:
-                        throw new NotImplementedException($"尚未實作轉換至 { result.StorageType } 的方式");
-                }
-                return result;
+                return (StorageCredentialsBase)JsonConvert.DeserializeObject(source, result.StorageType.GetConvertType());
             }
         }
 

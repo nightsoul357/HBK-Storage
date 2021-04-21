@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Adapter.StorageCredentials;
+﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Adapter.StorageCredentials;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
 using System;
@@ -31,28 +32,8 @@ namespace HBK.Storage.Adapter.ValueConversions
         }
         private static StorageCredentialsBase ConvertFromString(string source)
         {
-            StorageCredentialsBase obj = JsonConvert.DeserializeObject<FTPStorageCredentials>(source); 
-            switch (obj.StorageType) // TODO : 使用反射取代
-            {
-                case Enums.StorageTypeEnum.FTP:
-                    obj = JsonConvert.DeserializeObject<FTPStorageCredentials>(source);
-                    break;
-                case Enums.StorageTypeEnum.AmazonS3:
-                    obj = JsonConvert.DeserializeObject<AmazonS3StorageCredentials>(source);
-                    break;
-                case Enums.StorageTypeEnum.Local:
-                    obj = JsonConvert.DeserializeObject<LocalStorageCredentials>(source);
-                    break;
-                case Enums.StorageTypeEnum.GoogleDrive:
-                    obj = JsonConvert.DeserializeObject<GoogleDriveCredentials>(source);
-                    break;
-                case Enums.StorageTypeEnum.Mega:
-                    obj = JsonConvert.DeserializeObject<MegaStorageCredentials>(source);
-                    break;
-                default:
-                    throw new NotImplementedException($"尚未實作轉換至 { obj.StorageType } 的方式");
-            }
-            return obj;
+            StorageCredentialsBase obj = JsonConvert.DeserializeObject<FTPStorageCredentials>(source);
+            return (StorageCredentialsBase)JsonConvert.DeserializeObject(source, obj.StorageType.GetConvertType());
         }
     }
 }

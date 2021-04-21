@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HBK.Storage.Adapter.DataAnnotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -67,6 +68,24 @@ namespace HBK.Storage.Adapter.Enums
                 val = Convert.ToInt64(value) & ~Convert.ToInt64(flag);
             }
             return (TEnum)Enum.ToObject(typeof(TEnum), val);
+        }
+        /// <summary>
+        /// 取得 <see cref="ConvertTypeAttribute"/> 所指定的目標型別
+        /// </summary>
+        /// <typeparam name="TEnum">列舉類型</typeparam>
+        /// <param name="value">目標列舉</param>
+        /// <returns></returns>
+        public static Type GetConvertType<TEnum>(this TEnum value)
+            where TEnum : Enum
+        {
+            var type = typeof(TEnum);
+            var attribute = type.GetMember(value.ToString())
+                .First(m => m.DeclaringType == type)
+                .GetCustomAttributes(typeof(ConvertTypeAttribute), false)
+                .Cast<ConvertTypeAttribute>()
+                .FirstOrDefault();
+
+            return attribute?.TargetType ?? default;
         }
     }
 }

@@ -4,6 +4,22 @@
         <name>HBK.Storage.Adapter</name>
     </assembly>
     <members>
+        <member name="T:HBK.Storage.Adapter.DataAnnotations.ConvertTypeAttribute">
+            <summary>
+            描述列舉對應應轉換之目標
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.DataAnnotations.ConvertTypeAttribute.#ctor(System.Type)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="targetType">目標型別</param>
+        </member>
+        <member name="P:HBK.Storage.Adapter.DataAnnotations.ConvertTypeAttribute.TargetType">
+            <summary>
+            取得轉換目標型別
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.DataAnnotations.FilterableAttribute">
             <summary>
             允許欄位可被篩選
@@ -258,6 +274,14 @@
             <param name="value">複合的旗標列舉值</param>
             <param name="flag">要設定的旗標</param>
             <param name="set">是否設定的旗標</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Enums.EnumExtension.GetConvertType``1(``0)">
+            <summary>
+            取得 <see cref="T:HBK.Storage.Adapter.DataAnnotations.ConvertTypeAttribute"/> 所指定的目標型別
+            </summary>
+            <typeparam name="TEnum">列舉類型</typeparam>
+            <param name="value">目標列舉</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Adapter.Storages.DbContextExtension">

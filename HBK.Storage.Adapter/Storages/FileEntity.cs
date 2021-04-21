@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using HBK.Storage.Adapter.DataAnnotations;
 using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -49,12 +50,14 @@ namespace HBK.Storage.Adapter.Storages
         /// <summary>
         /// 取得或設定檔案擴充描述
         /// </summary>
+        [Filterable]
         public string ExtendProperty { get; set; }
         /// <summary>
         /// 取得或設定檔案的網際網路媒體型式
         /// </summary>
         [Required]
         [StringLength(255)]
+        [Filterable]
         public string MimeType { get; set; }
         /// <summary>
         /// 取得或設定是否標記刪除
@@ -63,6 +66,7 @@ namespace HBK.Storage.Adapter.Storages
         /// <summary>
         /// 取得或設定父檔案實體 ID
         /// </summary>
+        [Filterable]
         public Guid? ParentFileEntityID { get; set; }
         /// <summary>
         /// 取得或設定過期時間
