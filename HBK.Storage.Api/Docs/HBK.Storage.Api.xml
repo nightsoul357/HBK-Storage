@@ -63,6 +63,27 @@
             <param name="fileEntityService"></param>
             <param name="fileAccessTokenService"></param>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileAccessTokenController.Get(System.Guid)">
+            <summary>
+            取得指定 ID 之檔案存取權杖
+            </summary>
+            <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileAccessTokenController.Revoke(System.Guid)">
+            <summary>
+            撤銷指定 ID 的權杖
+            </summary>
+            <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileAccessTokenController.BuildFileAccessTokenResponse(HBK.Storage.Adapter.Storages.FileAccessToken)">
+            <summary>
+            產生檔案存取權杖回應內容
+            </summary>
+            <param name="fileAccessToken"></param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Api.Controllers.FileEntityController">
             <summary>
             檔案實體控制器
@@ -588,6 +609,66 @@
         </member>
         <member name="M:HBK.Storage.Api.ModelBinders.StorageCredentialsModelBinder.BindModelAsync(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext)">
             <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse">
+            <summary>
+            檔案存取權杖回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.FileAccessTokenId">
+            <summary>
+            檔案存取權杖 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.StorageProviderId">
+            <summary>
+            存取對象的儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.StorageGroupId">
+            <summary>
+            強制指定的存取對象的儲存個體集合 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.FileEntityId">
+            <summary>
+            檔案實體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.Token">
+            <summary>
+            權杖
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.AccessTimesLimit">
+            <summary>
+            存取次數限制
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.AccessTimes">
+            <summary>
+            存取次數
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.ExpireDateTime">
+            <summary>
+            過期時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.Status">
+            <summary>
+            狀態
+            </summary>
         </member>
         <member name="T:HBK.Storage.Api.Models.FileEntity.FileEntityResponse">
             <summary>

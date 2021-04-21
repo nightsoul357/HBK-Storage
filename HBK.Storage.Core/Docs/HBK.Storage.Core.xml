@@ -992,6 +992,15 @@
             <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByFileAccessTokenAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
+            <summary>
+            取得指金鑰 ID、檔案存取權杖 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Core.Services.FileAccessTokenService">
             <summary>
             檔案存取權杖服務
@@ -1013,6 +1022,13 @@
         <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.FindByIdAsync(System.Guid)">
             <summary>
             以 ID 取得檔案存取權杖
+            </summary>
+            <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.RevokeTokenAsync(System.Guid)">
+            <summary>
+            撤銷檔案存取權杖
             </summary>
             <param name="fileAccessTokenId">檔案存取權杖 ID</param>
             <returns></returns>

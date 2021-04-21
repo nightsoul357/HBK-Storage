@@ -101,7 +101,15 @@ namespace HBK.Storage.Api.Filters
                     context.Result = this.BuildForbiddenResult("Scope Incorrect;");
                     return;
                 }
-
+            }
+            if (context.RouteData.Values.ContainsKey("fileAccessTokenId"))
+            {
+                var fileAccessTokenId = Guid.Parse(context.RouteData.Values["fileAccessTokenId"].ToString());
+                if (!(await _authorizeKeyService.IsExistAuthorizeKeyScopeByFileAccessTokenAsync(authorizeKey.AuthorizeKeyId, fileAccessTokenId, operation)))
+                {
+                    context.Result = this.BuildForbiddenResult("Scope Incorrect;");
+                    return;
+                }
             }
         }
         private ContentResult BuildForbiddenResult(string message)

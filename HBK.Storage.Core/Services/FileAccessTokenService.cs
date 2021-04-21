@@ -57,6 +57,18 @@ namespace HBK.Storage.Core.Services
         #endregion
         #region BAL
         /// <summary>
+        /// 撤銷檔案存取權杖
+        /// </summary>
+        /// <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+        /// <returns></returns>
+        public async Task<FileAccessToken> RevokeTokenAsync(Guid fileAccessTokenId)
+        {
+            var fileAccessToken = await this.FindByIdAsync(fileAccessTokenId);
+            fileAccessToken.Status = fileAccessToken.Status | FileAccessTokenStatusEnum.Revoke;
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(fileAccessTokenId);
+        }
+        /// <summary>
         /// 產生檔案存取權杖模型
         /// </summary>
         /// <param name="jwtSecurityToken"></param>
