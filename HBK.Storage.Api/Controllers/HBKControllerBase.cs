@@ -24,7 +24,7 @@ namespace HBK.Storage.Api.Controllers
         /// <summary>
         /// 取得驗證用的金鑰
         /// </summary>
-        protected Lazy<Task<AuthorizeKey>> AuthorizeKey { get; } // TODO : 實作 AsyncLazy
+        protected Lazy<AuthorizeKey> AuthorizeKey { get; }
 
         /// <summary>
         /// 建立一個新的執行個體
@@ -32,11 +32,11 @@ namespace HBK.Storage.Api.Controllers
 
         public HBKControllerBase()
         {
-            this.AuthorizeKey = new Lazy<Task<AuthorizeKey>>(async () => 
+            this.AuthorizeKey = new Lazy<AuthorizeKey>(() => 
             {
                 var keyService = base.HttpContext.RequestServices.GetService<AuthorizeKeyService>();
                 var key = base.HttpContext.Request.Headers["HBKey"].First();
-                return await keyService.FindByKeyValueAsync(key);
+                return keyService.FindByKeyValueAsync(key).Result;
             });
         }
         /// <summary>
