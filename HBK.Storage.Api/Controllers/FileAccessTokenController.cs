@@ -15,7 +15,7 @@ namespace HBK.Storage.Api.Controllers
     /// <summary>
     /// 檔案存取權帳控制器
     /// </summary>
-    [Route("fileAccessToken")]
+    [Route("fileAccessTokens")]
     public class FileAccessTokenController : HBKControllerBase
     {
         private readonly StorageProviderService _storageProviderService;
@@ -41,7 +41,7 @@ namespace HBK.Storage.Api.Controllers
         /// <param name="storageProviderId"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("storageProvider/{storageProviderId}")]
+        [HttpPost("storageProviders/{storageProviderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<PostFileAccessTokenResponse>> PostFileAccessToken(
             [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]

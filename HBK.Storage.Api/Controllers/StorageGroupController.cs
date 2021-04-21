@@ -19,7 +19,7 @@ namespace HBK.Storage.Api.Controllers
     /// <summary>
     /// 儲存個體集合控制器
     /// </summary>
-    [Route("storageGroup")]
+    [Route("storageGroups")]
     public class StorageGroupController : HBKControllerBase
     {
         private readonly StorageGroupService _storageGroupService;

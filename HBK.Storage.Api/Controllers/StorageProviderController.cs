@@ -22,7 +22,7 @@ namespace HBK.Storage.Api.Controllers
     /// <summary>
     /// 儲存服務控制器
     /// </summary>
-    [Route("storageProvider")]
+    [Route("storageProviders")]
     public class StorageProviderController : HBKControllerBase
     {
         private readonly ILogger<StorageProviderController> _logger;

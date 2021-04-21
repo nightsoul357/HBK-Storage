@@ -52,7 +52,7 @@ namespace HBK.Storage.Api.Controllers
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="request">上傳檔案的請求內容</param>
         /// <returns></returns>
-        [HttpPut("storageProvider/{storageProviderId}")]
+        [HttpPut("storageProviders/{storageProviderId}")]
         [DisableRequestSizeLimit]
         [DisableFormValueModelBindingFilter]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -87,7 +87,7 @@ namespace HBK.Storage.Api.Controllers
         /// <param name="fileEntityId">檔案實體 ID</param>
         /// <param name="storageGroupId">強制指定儲存個體群組 ID</param>
         /// <returns></returns>
-        [HttpGet("storageProvider/{storageProviderId}/fileEntity/{fileEntityId}")]
+        [HttpGet("storageProviders/{storageProviderId}/fileEntities/{fileEntityId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<FileStreamResult> Get(
@@ -112,7 +112,7 @@ namespace HBK.Storage.Api.Controllers
         /// </summary>
         /// <param name="fileEntityId">檔案實體 ID</param>
         /// <returns></returns>
-        [HttpDelete("fileEntity/{fileEntityId}")]
+        [HttpDelete("fileEntities/{fileEntityId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> Delete(
             [ExistInDatabase(typeof(FileEntity))]
