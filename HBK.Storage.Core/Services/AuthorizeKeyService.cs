@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Adapter.Storages;
+﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Adapter.Storages;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -52,6 +53,70 @@ namespace HBK.Storage.Core.Services
         {
             return this.ListQuery()
                 .FirstOrDefaultAsync(x => x.KeyValue == keyValue);
+        }
+        #endregion
+        #region BAL
+        /// <summary>
+        /// 取得指金鑰 ID、儲存服務 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+        /// </summary>
+        /// <param name="authorizeKeyId">金鑰 ID</param>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+        /// <returns></returns>
+        public Task<bool> IsExistAuthorizeKeyScopeByStorageProviderAsync(Guid authorizeKeyId, Guid storageProviderId, AuthorizeKeyScopeOperationTypeEnum authorizeKeyScopeOperationType)
+        {
+            return _dbContext.AuthorizeKeyScope
+                .AnyAsync(x => x.AuthorizeKeyId == authorizeKeyId &&
+                    x.StorageProviderId == storageProviderId &&
+                    x.AllowOperationType == authorizeKeyScopeOperationType);
+        }
+        /// <summary>
+        /// 取得指金鑰 ID、儲存個體群組 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+        /// </summary>
+        /// <param name="authorizeKeyId">金鑰 ID</param>
+        /// <param name="storageGroupId">儲存個體群組 ID</param>
+        /// <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+        /// <returns></returns>
+        public async Task<bool> IsExistAuthorizeKeyScopeByStorageGroupAsync(Guid authorizeKeyId, Guid storageGroupId, AuthorizeKeyScopeOperationTypeEnum authorizeKeyScopeOperationType)
+        {
+            var storageProviderId = await _dbContext.StorageGroup
+                .Where(x => x.StorageGroupId == storageGroupId)
+                .Select(x => x.StorageProviderId)
+                .FirstAsync();
+
+            return await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId.Value, authorizeKeyScopeOperationType);
+        }
+        /// <summary>
+        /// 取得指金鑰 ID、儲存個體 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+        /// </summary>
+        /// <param name="authorizeKeyId">金鑰 ID</param>
+        /// <param name="storageId">儲存個體 ID</param>
+        /// <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+        /// <returns></returns>
+        public async Task<bool> IsExistAuthorizeKeyScopeByStorageAsync(Guid authorizeKeyId, Guid storageId, AuthorizeKeyScopeOperationTypeEnum authorizeKeyScopeOperationType)
+        {
+            var storageProviderId = await _dbContext.Storage
+                .Where(x => x.StorageId == storageId)
+                .Select(x => x.StorageGroup.StorageProviderId)
+                .FirstAsync();
+
+            return await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId.Value, authorizeKeyScopeOperationType);
+        }
+        /// <summary>
+        /// 取得指金鑰 ID、檔案實體 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+        /// </summary>
+        /// <param name="authorizeKeyId">金鑰 ID</param>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+        /// <returns></returns>
+        public async Task<bool> IsExistAuthorizeKeyScopeByFileEntityAsync(Guid authorizeKeyId, Guid fileEntityId, AuthorizeKeyScopeOperationTypeEnum authorizeKeyScopeOperationType)
+        {
+            var storageProviderId = await _dbContext.FileEntity
+                .Where(x => x.FileEntityId == fileEntityId)
+                .Select(x => x.FileEntityStroage.First().Storage.StorageGroup.StorageProviderId)
+                .FirstAsync();
+
+            return await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId.Value, authorizeKeyScopeOperationType);
         }
         #endregion
     }

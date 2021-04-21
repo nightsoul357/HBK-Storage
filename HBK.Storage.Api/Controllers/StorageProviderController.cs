@@ -1,11 +1,15 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Api.DataAnnotations;
+using HBK.Storage.Api.Factories;
+using HBK.Storage.Api.Filters;
 using HBK.Storage.Api.Models;
 using HBK.Storage.Api.Models.FileEntity;
+using HBK.Storage.Api.Models.FileService;
 using HBK.Storage.Api.Models.StorageGroup;
 using HBK.Storage.Api.Models.StorageProvider;
 using HBK.Storage.Api.OData;
+using HBK.Storage.Core.Enums;
 using HBK.Storage.Core.Services;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Authorization;
@@ -29,19 +33,26 @@ namespace HBK.Storage.Api.Controllers
         private readonly StorageProviderService _storageProviderService;
         private readonly StorageGroupService _storageGroupService;
         private readonly FileEntityService _fileEntityService;
+        private readonly FileAccessTokenService _fileAccessTokenService;
+        private readonly FileAccessTokenFactory _fileAccessTokenFactory;
+
         /// <summary>
         /// 建構一個新的執行個體
         /// </summary>
         /// <param name="storageProviderService"></param>
         /// <param name="storageGroupService"></param>
         /// <param name="fileEntityService"></param>
+        /// <param name="fileAccessTokenService"></param>
+        /// <param name="fileAccessTokenFactory"></param>
         /// <param name="logger"></param>
-        public StorageProviderController(StorageProviderService storageProviderService, StorageGroupService storageGroupService, FileEntityService fileEntityService, ILogger<StorageProviderController> logger)
+        public StorageProviderController(StorageProviderService storageProviderService, StorageGroupService storageGroupService, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService,FileAccessTokenFactory fileAccessTokenFactory, ILogger<StorageProviderController> logger)
         {
             _logger = logger;
             _storageProviderService = storageProviderService;
             _storageGroupService = storageGroupService;
             _fileEntityService = fileEntityService;
+            _fileAccessTokenService = fileAccessTokenService;
+            _fileAccessTokenFactory = fileAccessTokenFactory;
         }
         /// <summary>
         /// 取得指定 ID 之儲存服務
@@ -211,6 +222,68 @@ namespace HBK.Storage.Api.Controllers
                 data.Select(fileEntity => FileEntityController.BuildFileEntityResponse(fileEntity, _fileEntityService)),
                 100
             );
+        }
+        /// <summary>
+        /// 上傳檔案至指定的儲存服務
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="request">上傳檔案的請求內容</param>
+        /// <returns></returns>
+        [HttpPost("{storageProviderId}/fileEntities")]
+        [DisableRequestSizeLimit]
+        [DisableFormValueModelBindingFilter]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<FileEntityResponse> Put(
+            [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
+            [ExistInDatabase(typeof(StorageProvider))]Guid storageProviderId,
+            [FromForm] PutFileRequest request)
+        {
+            var fileEntity = await _storageProviderService
+                .UploadFileEntityAsync(storageProviderId,
+                    request.StorageGroupId,
+                    new FileEntity()
+                    {
+                        ExtendProperty = request.ExtendProperty,
+                        MimeType = request.MimeType,
+                        Name = request.Filename,
+                        Size = base.HttpContext.Request.ContentLength.Value,
+                        Status = FileEntityStatusEnum.None,
+                        FileEntityTag = request.Tags.Select(x => new FileEntityTag() { Value = x }).ToList()
+                    },
+                    request.FileStream);
+            return FileEntityController.BuildFileEntityResponse(fileEntity, _fileEntityService);
+        }
+
+        /// <summary>
+        /// 產生檔案存取權杖
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("{storageProviderId}/fileAccessToken")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<PostFileAccessTokenResponse>> PostFileAccessToken(
+            [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
+            [ExistInDatabase(typeof(StorageProvider))]Guid storageProviderId,
+            [FromBody] PostFileAccessTokenRequest request)
+        {
+            if ((request.FileAccessTokenType == FileAccessTokenTypeEnum.Normal || request.FileAccessTokenType == FileAccessTokenTypeEnum.NormalNoLimit) &&
+                !request.FileEntityId.HasValue)
+            {
+                return base.BadRequest($"當 Token 類型為 { FileAccessTokenTypeEnum.Normal } 或 { FileAccessTokenTypeEnum.NormalNoLimit } 時，FileEntityId 不得為空");
+            }
+            if ((request.FileAccessTokenType == FileAccessTokenTypeEnum.Normal || request.FileAccessTokenType == FileAccessTokenTypeEnum.AllowTag) &&
+                !request.AccessTimesLimit.HasValue)
+            {
+                return base.BadRequest($"當 Token 類型為 { FileAccessTokenTypeEnum.Normal } 或 { FileAccessTokenTypeEnum.AllowTag } 時，AccessTimesLimit 不得為空");
+            }
+
+            PostFileAccessTokenResponse result = new PostFileAccessTokenResponse();
+            var expireDateTime = DateTime.Now.AddMinutes(request.ExpireAfterMinutes);
+            result.ExpireDateTime = expireDateTime;
+            result.Token = await _fileAccessTokenFactory.GetFileAccessTokenAsync(storageProviderId, expireDateTime, request);
+            return result;
         }
         /// <summary>
         /// 產生儲存服務回應內容

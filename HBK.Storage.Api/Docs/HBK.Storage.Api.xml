@@ -63,33 +63,12 @@
             <param name="fileEntityService"></param>
             <param name="fileAccessTokenService"></param>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileAccessTokenController.PostFileAccessToken(System.Guid,HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest)">
-            <summary>
-            產生檔案存取權杖
-            </summary>
-            <param name="storageProviderId"></param>
-            <param name="request"></param>
-            <returns></returns>
-        </member>
         <member name="T:HBK.Storage.Api.Controllers.FileEntityController">
             <summary>
             檔案實體控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.BuildFileEntityResponse(HBK.Storage.Adapter.Storages.FileEntity,HBK.Storage.Core.Services.FileEntityService)">
-            <summary>
-            產生檔案實體回應內容
-            </summary>
-            <param name="fileEntity">檔案實體</param>
-            <param name="fileEntityService">檔案實體服務</param>
-            <returns></returns>
-        </member>
-        <member name="T:HBK.Storage.Api.Controllers.FileServiceController">
-            <summary>
-            檔案服務提供者控制器
-            </summary>
-        </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileEntityStorageService)">
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileEntityStorageService)">
             <summary>
             建構一個新的執行個體
             </summary>
@@ -97,28 +76,27 @@
             <param name="fileEntityService"></param>
             <param name="fileEntityStorageService"></param>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.Put(System.Guid,HBK.Storage.Api.Models.FileService.PutFileRequest)">
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.Get(System.Guid,System.Nullable{System.Guid})">
             <summary>
-            上傳檔案至指定的儲存服務
+            下載檔案
             </summary>
-            <param name="storageProviderId">儲存服務 ID</param>
-            <param name="request">上傳檔案的請求內容</param>
-            <returns></returns>
-        </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.Get(System.Guid,System.Guid,System.Nullable{System.Guid})">
-            <summary>
-            從指定的儲存服務下載檔案
-            </summary>
-            <param name="storageProviderId">儲存服務 ID</param>
             <param name="fileEntityId">檔案實體 ID</param>
             <param name="storageGroupId">強制指定儲存個體群組 ID</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileServiceController.Delete(System.Guid)">
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.Delete(System.Guid)">
             <summary>
             將檔案實體標記為刪除
             </summary>
             <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.BuildFileEntityResponse(HBK.Storage.Adapter.Storages.FileEntity,HBK.Storage.Core.Services.FileEntityService)">
+            <summary>
+            產生檔案實體回應內容
+            </summary>
+            <param name="fileEntity">檔案實體</param>
+            <param name="fileEntityService">檔案實體服務</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Api.Controllers.HBKControllerBase">
@@ -258,13 +236,15 @@
             儲存服務控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.StorageGroupService,HBK.Storage.Core.Services.FileEntityService,Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.Controllers.StorageProviderController})">
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.StorageGroupService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService,HBK.Storage.Api.Factories.FileAccessTokenFactory,Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.Controllers.StorageProviderController})">
             <summary>
             建構一個新的執行個體
             </summary>
             <param name="storageProviderService"></param>
             <param name="storageGroupService"></param>
             <param name="fileEntityService"></param>
+            <param name="fileAccessTokenService"></param>
+            <param name="fileAccessTokenFactory"></param>
             <param name="logger"></param>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GET(System.Guid)">
@@ -325,6 +305,22 @@
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="queryOptions">OData 查詢參數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Put(System.Guid,HBK.Storage.Api.Models.FileService.PutFileRequest)">
+            <summary>
+            上傳檔案至指定的儲存服務
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="request">上傳檔案的請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.PostFileAccessToken(System.Guid,HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest)">
+            <summary>
+            產生檔案存取權杖
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="request"></param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.BuildStorageProviderResponse(HBK.Storage.Adapter.Storages.StorageProvider)">
@@ -425,30 +421,6 @@
             <param name="validationContext"></param>
             <returns></returns>
         </member>
-        <member name="T:HBK.Storage.Api.DataAnnotations.StoragePrvoiderAuthorizeAttribute">
-            <summary>
-            儲存服務金鑰驗證
-            </summary>
-        </member>
-        <member name="M:HBK.Storage.Api.DataAnnotations.StoragePrvoiderAuthorizeAttribute.#ctor(HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum[])">
-            <summary>
-            建立新的執行個體
-            </summary>
-            <param name="authorizeKeyScopeOperationTypes"></param>
-        </member>
-        <member name="M:HBK.Storage.Api.DataAnnotations.StoragePrvoiderAuthorizeAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
-            <summary>
-            判斷是否有效
-            </summary>
-            <param name="value"></param>
-            <param name="validationContext"></param>
-            <returns></returns>
-        </member>
-        <member name="P:HBK.Storage.Api.DataAnnotations.StoragePrvoiderAuthorizeAttribute.AuthorizeKeyScopeOperationTypes">
-            <summary>
-            取得或設定操作類型
-            </summary>
-        </member>
         <member name="T:HBK.Storage.Api.Extensions.JsonSerializerExtensions">
             <summary>
             Json Serializer 輔助類別
@@ -459,6 +431,26 @@
             取得 Serializer 的設定檔副本
             </summary>
             <param name="serializer"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Factories.FileAccessTokenFactory">
+            <summary>
+            產生檔案存取權杖的工廠
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Factories.FileAccessTokenFactory.#ctor(HBK.Storage.Core.Services.FileAccessTokenService)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="fileAccessTokenService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Factories.FileAccessTokenFactory.GetFileAccessTokenAsync(System.Guid,System.DateTime,HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest)">
+            <summary>
+            取得檔案存取權杖
+            </summary>
+            <param name="storageProviderId"></param>
+            <param name="expireDateTime"></param>
+            <param name="request"></param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Api.Filters.DisableFormValueModelBindingFilter">
@@ -477,11 +469,10 @@
             HBK 驗證器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Filters.HBKAuthorizeFilter.#ctor(Microsoft.Extensions.Configuration.IConfiguration,HBK.Storage.Core.Services.AuthorizeKeyService)">
+        <member name="M:HBK.Storage.Api.Filters.HBKAuthorizeFilter.#ctor(HBK.Storage.Core.Services.AuthorizeKeyService)">
             <summary>
             建構一個新的執行個體
             </summary>
-            <param name="configuration"></param>
             <param name="authorizeKeyService"></param>
         </member>
         <member name="M:HBK.Storage.Api.Filters.HBKAuthorizeFilter.OnAuthorizationAsync(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
@@ -747,16 +738,6 @@
         <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse.ExpireDateTime">
             <summary>
             取得或設定過期時間
-            </summary>
-        </member>
-        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse.UrlParrtenA">
-            <summary>
-            取得或設定 URL 格式 A
-            </summary>
-        </member>
-        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse.UrlParrtenB">
-            <summary>
-            取得或設定 URL 格式 B
             </summary>
         </member>
         <member name="T:HBK.Storage.Api.Models.FileService.PutFileRequest">

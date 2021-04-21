@@ -956,6 +956,42 @@
             <param name="keyValue">金鑰值</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByStorageProviderAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
+            <summary>
+            取得指金鑰 ID、儲存服務 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByStorageGroupAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
+            <summary>
+            取得指金鑰 ID、儲存個體群組 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <param name="storageGroupId">儲存個體群組 ID</param>
+            <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByStorageAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
+            <summary>
+            取得指金鑰 ID、儲存個體 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <param name="storageId">儲存個體 ID</param>
+            <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByFileEntityAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
+            <summary>
+            取得指金鑰 ID、檔案實體 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Core.Services.FileAccessTokenService">
             <summary>
             檔案存取權杖服務
@@ -1129,6 +1165,13 @@
             <param name="takeCount">取得數量</param>
             <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
             <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetStorageProviderIdByFileEntityIdAsync(System.Guid)">
+            <summary>
+            取得檔案實體所屬的儲存服務 ID
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Core.Services.FileEntityStorageService">

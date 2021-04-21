@@ -391,6 +391,11 @@
             取得或設定驗證用的資料集
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.AuthorizeKeyScope">
+            <summary>
+            取得或設定金鑰使用範圍資訊的資料集
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.FileEntityStroageOperation">
             <summary>
             取得或設定檔案位於儲存個體上的操作紀錄資料集

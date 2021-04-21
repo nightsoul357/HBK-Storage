@@ -18,13 +18,5 @@ namespace HBK.Storage.Api.Models.FileService
         /// 取得或設定過期時間
         /// </summary>
         public DateTime ExpireDateTime { get; set; }
-        /// <summary>
-        /// 取得或設定 URL 格式 A
-        /// </summary>
-        public string UrlParrtenA { get; set; }
-        /// <summary>
-        /// 取得或設定 URL 格式 B
-        /// </summary>
-        public string UrlParrtenB { get; set; }
     }
 }

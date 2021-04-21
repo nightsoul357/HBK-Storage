@@ -17,16 +17,13 @@ namespace HBK.Storage.Api.Filters
     /// </summary>
     public class HBKAuthorizeFilter : IAsyncAuthorizationFilter
     {
-        private readonly IConfiguration _configuration;
         private readonly AuthorizeKeyService _authorizeKeyService;
         /// <summary>
         /// 建構一個新的執行個體
         /// </summary>
-        /// <param name="configuration"></param>
         /// <param name="authorizeKeyService"></param>
-        public HBKAuthorizeFilter(IConfiguration configuration, AuthorizeKeyService authorizeKeyService)
+        public HBKAuthorizeFilter(AuthorizeKeyService authorizeKeyService)
         {
-            _configuration = configuration;
             _authorizeKeyService = authorizeKeyService;
         }
         /// <summary>
@@ -55,22 +52,12 @@ namespace HBK.Storage.Api.Filters
             var authorizeKey = await _authorizeKeyService.FindByKeyValueAsync(key);
             if (authorizeKey == null)
             {
-                context.Result = new ContentResult()
-                {
-                    StatusCode = (int)HttpStatusCode.Forbidden,
-                    Content = "APIKey Incorrect;",
-                    ContentType = "text/plain"
-                };
+                context.Result = this.BuildForbiddenResult("APIKey Incorrect;");
                 return;
             }
             if (authorizeKey.Status.HasFlag(AuthorizeKeyStatusEnum.Disable)) // 檢查是否已停用
             {
-                context.Result = new ContentResult()
-                {
-                    StatusCode = (int)HttpStatusCode.Forbidden,
-                    Content = "APIKey was disable;",
-                    ContentType = "text/plain"
-                };
+                context.Result = this.BuildForbiddenResult("APIKey was Disable;");
                 return;
             }
 
@@ -78,26 +65,68 @@ namespace HBK.Storage.Api.Filters
             {
                 return;
             }
-            // TODO :
+            var operation = this.ConvertHTTPMethodTouthorizeKeyScopeOperationType(context.HttpContext.Request.Method);
             if (context.RouteData.Values.ContainsKey("storageProviderId"))
             {
                 var storageProviderId = Guid.Parse(context.RouteData.Values["storageProviderId"].ToString());
-                
+                if (!(await _authorizeKeyService.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKey.AuthorizeKeyId, storageProviderId, operation)))
+                {
+                    context.Result = this.BuildForbiddenResult("Scope Incorrect;");
+                    return;
+                }
             }
             if (context.RouteData.Values.ContainsKey("storageGroupId"))
             {
                 var storageGroupId = Guid.Parse(context.RouteData.Values["storageGroupId"].ToString());
-                
+                if (!(await _authorizeKeyService.IsExistAuthorizeKeyScopeByStorageGroupAsync(authorizeKey.AuthorizeKeyId, storageGroupId, operation)))
+                {
+                    context.Result = this.BuildForbiddenResult("Scope Incorrect;");
+                    return;
+                }
             }
             if (context.RouteData.Values.ContainsKey("storageId"))
             {
                 var storageId = Guid.Parse(context.RouteData.Values["storageId"].ToString());
-                
+                if (!(await _authorizeKeyService.IsExistAuthorizeKeyScopeByStorageAsync(authorizeKey.AuthorizeKeyId, storageId, operation)))
+                {
+                    context.Result = this.BuildForbiddenResult("Scope Incorrect;");
+                    return;
+                }
             }
             if (context.RouteData.Values.ContainsKey("fileEntityId"))
             {
                 var fileEntityId = Guid.Parse(context.RouteData.Values["fileEntityId"].ToString());
+                if (!(await _authorizeKeyService.IsExistAuthorizeKeyScopeByFileEntityAsync(authorizeKey.AuthorizeKeyId, fileEntityId, operation)))
+                {
+                    context.Result = this.BuildForbiddenResult("Scope Incorrect;");
+                    return;
+                }
 
+            }
+        }
+        private ContentResult BuildForbiddenResult(string message)
+        {
+            return new ContentResult()
+            {
+                StatusCode = (int)HttpStatusCode.Forbidden,
+                Content = message,
+                ContentType = "text/plain"
+            };
+        }
+        private AuthorizeKeyScopeOperationTypeEnum ConvertHTTPMethodTouthorizeKeyScopeOperationType(string httpMethod)
+        {
+            switch (httpMethod)
+            {
+                case "GET":
+                    return AuthorizeKeyScopeOperationTypeEnum.Read;
+                case "POST":
+                    return AuthorizeKeyScopeOperationTypeEnum.Insert;
+                case "PUT":
+                    return AuthorizeKeyScopeOperationTypeEnum.Update;
+                case "DELETE":
+                    return AuthorizeKeyScopeOperationTypeEnum.Delete;
+                default:
+                    throw new NotImplementedException($"尚未實作 { httpMethod } 方法所對應的驗證方法");
             }
         }
     }

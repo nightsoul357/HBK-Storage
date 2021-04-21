@@ -39,6 +39,10 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         public virtual DbSet<AuthorizeKey> AuthorizeKey { get; set; }
         /// <summary>
+        /// 取得或設定金鑰使用範圍資訊的資料集
+        /// </summary>
+        public virtual DbSet<AuthorizeKeyScope> AuthorizeKeyScope { get; set; }
+        /// <summary>
         /// 取得或設定檔案位於儲存個體上的操作紀錄資料集
         /// </summary>
         public virtual DbSet<FileEntityStroageOperation> FileEntityStroageOperation { get; set; }
@@ -106,7 +110,7 @@ namespace HBK.Storage.Adapter.Storages
 
             modelBuilder.Entity<AuthorizeKeyScope>(entity =>
             {
-                entity.Property(e => e.AuthorizeKeyScopeNo).ValueGeneratedNever();
+                entity.Property(e => e.AuthorizeKeyScopeNo).ValueGeneratedOnAdd();
 
                 entity.HasOne(d => d.AuthorizeKey)
                     .WithMany(p => p.AuthorizeKeyScope)

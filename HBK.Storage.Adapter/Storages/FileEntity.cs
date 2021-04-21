@@ -42,10 +42,14 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         [Required]
         [StringLength(511)]
+        [Filterable]
+        [Sortable]
         public string Name { get; set; }
         /// <summary>
         /// 取得或設定檔案大小(單位 Bytes)
         /// </summary>
+        [Filterable]
+        [Sortable]
         public long Size { get; set; }
         /// <summary>
         /// 取得或設定檔案擴充描述
@@ -75,6 +79,8 @@ namespace HBK.Storage.Adapter.Storages
         /// <summary>
         /// 取得建立時間
         /// </summary>
+        [Sortable]
+        [Filterable]
         public DateTimeOffset CreateDateTime { get; internal set; }
         /// <summary>
         /// 取得最後更新時間

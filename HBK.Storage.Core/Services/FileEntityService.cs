@@ -160,6 +160,18 @@ namespace HBK.Storage.Core.Services
                 .Take(takeCount)
                 .ToListAsync();
         }
+        /// <summary>
+        /// 取得檔案實體所屬的儲存服務 ID
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <returns></returns>
+        public async Task<Guid> GetStorageProviderIdByFileEntityIdAsync(Guid fileEntityId)
+        {
+            return (await _dbContext.FileEntity
+                .Where(x => x.FileEntityId == fileEntityId)
+                .Select(x => x.FileEntityStroage.First().Storage.StorageGroup.StorageProviderId)
+                .FirstAsync()).Value;
+        }
         #endregion
         #region private method
         private async Task MarkFileEntityDeleteInternalAsync(FileEntity fileEntity)

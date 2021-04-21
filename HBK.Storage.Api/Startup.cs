@@ -37,6 +37,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData;
 using Microsoft.AspNet.OData.Query.Expressions;
 using HBK.Storage.Api.OData;
+using HBK.Storage.Api.Factories;
 
 namespace HBK.Storage.Api
 {
@@ -203,6 +204,7 @@ namespace HBK.Storage.Api
 
             // ®Ö¤ßÅÞ¿è
             services.AddScoped<FileAccessTokenService>();
+            services.AddScoped<FileAccessTokenFactory>();
             services.AddHBKStorageService();
 
         }
