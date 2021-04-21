@@ -83,6 +83,38 @@ namespace HBK.Storage.Adapter.Storages
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Chinese_Taiwan_Stroke_CI_AS");
 
+            modelBuilder.Entity<AuthorizeKey>(entity =>
+            {
+                entity.HasKey(e => e.AuthorizeKeyId)
+                    .IsClustered(false);
+
+                entity.HasIndex(e => e.AuthorizeKeyId)
+                    .IsUnique()
+                    .IsClustered();
+
+                entity.Property(e => e.AuthorizeKeyId).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.AuthorizeKeyNo).ValueGeneratedOnAdd();
+
+                // SoftDelete
+                entity.HasQueryFilter(model => model.DeleteDateTime == null);
+            });
+
+            modelBuilder.Entity<AuthorizeKeyScope>(entity =>
+            {
+                entity.Property(e => e.AuthorizeKeyScopeNo).ValueGeneratedNever();
+
+                entity.HasOne(d => d.AuthorizeKey)
+                    .WithMany(p => p.AuthorizeKeyScope)
+                    .HasForeignKey(d => d.AuthorizeKeyId)
+                    .HasConstraintName("FK_AuthorizeKeyScope_AuthorizeKey");
+
+                entity.HasOne(d => d.StorageProvider)
+                    .WithMany(p => p.AuthorizeKeyScope)
+                    .HasForeignKey(d => d.StorageProviderId)
+                    .HasConstraintName("FK_AuthorizeKeyScope_StorageProvider");
+            });
+
             modelBuilder.Entity<FileEntityStroageOperation>(entity => 
             {
                 entity.HasKey(e => e.FileEntityStroageOperationNo)

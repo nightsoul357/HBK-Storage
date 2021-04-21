@@ -30,6 +30,61 @@
             允許欄位可被排序
             </summary>
         </member>
+        <member name="T:HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum">
+            <summary>
+            金鑰使用範圍之操作類型
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum.Insert">
+            <summary>
+            新增
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum.Delete">
+            <summary>
+            刪除
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum.Update">
+            <summary>
+            修改
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum.Read">
+            <summary>
+            查詢
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.AuthorizeKeyStatusEnum">
+            <summary>
+            金鑰狀態列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AuthorizeKeyStatusEnum.None">
+            <summary>
+            無
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AuthorizeKeyStatusEnum.Disable">
+            <summary>
+            已停用
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.AuthorizeKeyTypeEnum">
+            <summary>
+            金鑰類型列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AuthorizeKeyTypeEnum.Root">
+            <summary>
+            最高權限的金鑰，可以存取所有服務
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AuthorizeKeyTypeEnum.Normal">
+            <summary>
+            一般的金鑰，根據 Scope 的定義存取服務
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Enums.FileAccessTokenStatusEnum">
             <summary>
             檔案存取權杖狀態列舉
@@ -396,6 +451,111 @@
         <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.ApplySaveChangesPolicies">
             <summary>
             套用儲存變更政策
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.AuthorizeKey">
+            <summary>
+            驗證用的金鑰資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.Storages.AuthorizeKey.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.AuthorizeKeyId">
+            <summary>
+            取得或設定金鑰 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.AuthorizeKeyNo">
+            <summary>
+            取得或設定流水號
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.KeyValue">
+            <summary>
+            取得或設定金鑰值
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.DeleteDateTime">
+            <summary>
+            取得刪除時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.Type">
+            <summary>
+            取得或設定類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.ExtendProperty">
+            <summary>
+            取得或設定額為訊息
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.Status">
+            <summary>
+            取得或設定狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.AuthorizeKeyScope">
+            <summary>
+            取得或設定金鑰使用範圍集合
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.AuthorizeKeyScope">
+            <summary>
+            金鑰使用範圍資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.AuthorizeKeyScopeNo">
+            <summary>
+            取得或設定流水號
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.AuthorizeKeyId">
+            <summary>
+            取得或設定金鑰 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.StorageProviderId">
+            <summary>
+            取得或設定儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.AllowOperationType">
+            <summary>
+            取得允許的操作類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.AuthorizeKey">
+            <summary>
+            取得或設定金鑰
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.StorageProvider">
+            <summary>
+            取得或設定儲存服務
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.Storages.FileAccessToken">
@@ -956,6 +1116,11 @@
         <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.Status">
             <summary>
             取得或設定狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.AuthorizeKeyScope">
+            <summary>
+            取得或設定金鑰使用範圍集合
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.StorageProvider.StorageGroup">
