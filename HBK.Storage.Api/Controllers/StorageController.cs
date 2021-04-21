@@ -50,27 +50,7 @@ namespace HBK.Storage.Api.Controllers
         {
             return StorageController.BuildStorageResponse(await _storageService.FindByIdAsync(storageId));
         }
-        /// <summary>
-        /// 新增儲存個體
-        /// </summary>
-        /// <param name="request">新增儲存個體請求內容</param>
-        /// <returns></returns>
-        [HttpPost("")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<StorageResponse> Post([FromBody]StorageAddRequest request)
-        {
-            var result = await _storageService.AddAsync(new Adapter.Storages.Storage()
-            {
-                Credentials = request.Credentials,
-                Name = request.Name,
-                SizeLimit = request.SizeLimit,
-                Status = request.Status.UnflattenFlags(),
-                StorageGroupId = request.StorageGroupId,
-                Type = request.Type
-            });
-            return StorageController.BuildStorageResponse(result);
-        }
+        
         /// <summary>
         /// 更新儲存個體
         /// </summary>
@@ -99,7 +79,7 @@ namespace HBK.Storage.Api.Controllers
         /// </summary>
         /// <param name="storageId">儲存個體 ID</param>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpDelete("{storageId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(

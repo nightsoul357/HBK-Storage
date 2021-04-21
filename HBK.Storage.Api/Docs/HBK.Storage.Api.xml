@@ -167,13 +167,6 @@
             <param name="storageId">儲存個體 ID</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.StorageController.Post(HBK.Storage.Api.Models.Storage.StorageAddRequest)">
-            <summary>
-            新增儲存個體
-            </summary>
-            <param name="request">新增儲存個體請求內容</param>
-            <returns></returns>
-        </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageController.Put(System.Guid,HBK.Storage.Api.Models.Storage.StorageUpdateRequest)">
             <summary>
             更新儲存個體
@@ -222,13 +215,6 @@
             <param name="storageGroupId">儲存個體集合 ID</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Post(HBK.Storage.Api.Models.StorageGroup.StorageGroupAddRequest)">
-            <summary>
-            新增儲存個體集合
-            </summary>
-            <param name="request">新增儲存個體集合請求內容</param>
-            <returns></returns>
-        </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Put(System.Guid,HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest)">
             <summary>
             更新儲存個體集合
@@ -242,6 +228,14 @@
             刪除儲存個體集合(同時會刪除所有儲存個體)
             </summary>
             <param name="storageGroupId">儲存個體集合 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Post(System.Guid,HBK.Storage.Api.Models.Storage.StorageAddRequest)">
+            <summary>
+            新增儲存個體
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <param name="request">新增儲存個體請求內容</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.GetStorages(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.Storage})">
@@ -307,6 +301,14 @@
             刪除儲存服務(包含所有儲存個體集合)
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Post(System.Guid,HBK.Storage.Api.Models.StorageGroup.StorageGroupAddRequest)">
+            <summary>
+            新增儲存個體集合
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="request">新增儲存個體集合請求內容</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetStorageGroups(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.StorageGroup})">
@@ -422,6 +424,30 @@
             <param name="value"></param>
             <param name="validationContext"></param>
             <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.DataAnnotations.StoragePrvoiderAuthorizeAttribute">
+            <summary>
+            儲存服務金鑰驗證
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.StoragePrvoiderAuthorizeAttribute.#ctor(HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum[])">
+            <summary>
+            建立新的執行個體
+            </summary>
+            <param name="authorizeKeyScopeOperationTypes"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.StoragePrvoiderAuthorizeAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            判斷是否有效
+            </summary>
+            <param name="value"></param>
+            <param name="validationContext"></param>
+            <returns></returns>
+        </member>
+        <member name="P:HBK.Storage.Api.DataAnnotations.StoragePrvoiderAuthorizeAttribute.AuthorizeKeyScopeOperationTypes">
+            <summary>
+            取得或設定操作類型
+            </summary>
         </member>
         <member name="T:HBK.Storage.Api.Extensions.JsonSerializerExtensions">
             <summary>
@@ -800,12 +826,6 @@
             新增儲存個體集合請求內容
             </summary>
         </member>
-        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupAddRequest.StorageProviderId">
-            <summary>
-            所屬儲存服務 ID
-            </summary>
-            <example>59b50410-e86a-4341-8973-ae325e354210</example>
-        </member>
         <member name="T:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse">
             <summary>
             儲存個體集合回應內容
@@ -940,12 +960,6 @@
             <summary>
             新增儲存個體請求內容
             </summary>
-        </member>
-        <member name="P:HBK.Storage.Api.Models.Storage.StorageAddRequest.StorageGroupId">
-            <summary>
-            儲存個體集合 ID
-            </summary>
-            <example>8acdbf86-cb7b-4d1a-8745-44115f656287</example>
         </member>
         <member name="T:HBK.Storage.Api.Models.Storage.StorageResponse">
             <summary>

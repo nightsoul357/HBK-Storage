@@ -8,6 +8,7 @@ using HBK.Storage.Api.Models.StorageProvider;
 using HBK.Storage.Api.OData;
 using HBK.Storage.Core.Services;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -128,6 +129,32 @@ namespace HBK.Storage.Api.Controllers
         {
             await _storageProviderService.DeleteAsync(storageProviderId);
             return base.NoContent();
+        }
+
+        /// <summary>
+        /// 新增儲存個體集合
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="request">新增儲存個體集合請求內容</param>
+        /// <returns></returns>
+        [HttpPost("{storageProviderId}/storageGroups")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<StorageGroupResponse> Post(
+            [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
+            [ExistInDatabase(typeof(StorageProvider))] Guid storageProviderId,
+            StorageGroupAddRequest request)
+        {
+            var result = await _storageGroupService.AddAsync(new StorageGroup()
+            {
+                Name = request.Name,
+                Status = request.Status.UnflattenFlags(),
+                StorageProviderId = storageProviderId,
+                SyncMode = request.SyncMode,
+                SyncPolicy = request.SyncPolicy,
+                Type = request.Type
+            });
+            return StorageGroupController.BuildStorageGroupResponse(result);
         }
         /// <summary>
         /// 取得儲存服務內的所有儲存個體集合

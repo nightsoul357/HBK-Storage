@@ -63,7 +63,7 @@ namespace HBK.Storage.Api.Filters
                 };
                 return;
             }
-            if (authorizeKey.Status.HasFlag(AuthorizeKeyStatusEnum.Disable))
+            if (authorizeKey.Status.HasFlag(AuthorizeKeyStatusEnum.Disable)) // 檢查是否已停用
             {
                 context.Result = new ContentResult()
                 {
@@ -72,6 +72,32 @@ namespace HBK.Storage.Api.Filters
                     ContentType = "text/plain"
                 };
                 return;
+            }
+
+            if (authorizeKey.Type == AuthorizeKeyTypeEnum.Root) // 若為 Root 權限，不檢查 Scope
+            {
+                return;
+            }
+            // TODO :
+            if (context.RouteData.Values.ContainsKey("storageProviderId"))
+            {
+                var storageProviderId = Guid.Parse(context.RouteData.Values["storageProviderId"].ToString());
+                
+            }
+            if (context.RouteData.Values.ContainsKey("storageGroupId"))
+            {
+                var storageGroupId = Guid.Parse(context.RouteData.Values["storageGroupId"].ToString());
+                
+            }
+            if (context.RouteData.Values.ContainsKey("storageId"))
+            {
+                var storageId = Guid.Parse(context.RouteData.Values["storageId"].ToString());
+                
+            }
+            if (context.RouteData.Values.ContainsKey("fileEntityId"))
+            {
+                var fileEntityId = Guid.Parse(context.RouteData.Values["fileEntityId"].ToString());
+
             }
         }
     }

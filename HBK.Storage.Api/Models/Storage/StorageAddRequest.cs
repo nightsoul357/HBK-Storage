@@ -11,11 +11,6 @@ namespace HBK.Storage.Api.Models.Storage
     /// </summary>
     public class StorageAddRequest : StorageUpdateRequest
     {
-        /// <summary>
-        /// 儲存個體集合 ID
-        /// </summary>
-        /// <example>8acdbf86-cb7b-4d1a-8745-44115f656287</example>
-        [ExistInDatabase(typeof(Adapter.Storages.StorageGroup))]
-        public Guid StorageGroupId { get; set; }
+        
     }
 }

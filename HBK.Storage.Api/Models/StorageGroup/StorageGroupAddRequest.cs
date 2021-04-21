@@ -14,11 +14,6 @@ namespace HBK.Storage.Api.Models.StorageGroup
     /// </summary>
     public class StorageGroupAddRequest : StorageGroupUpdateRequest
     {
-        /// <summary>
-        /// 所屬儲存服務 ID
-        /// </summary>
-        /// <example>59b50410-e86a-4341-8973-ae325e354210</example>
-        [ExistInDatabase(typeof(Adapter.Storages.StorageProvider))]
-        public Guid StorageProviderId { get; set; }
+        
     }
 }
