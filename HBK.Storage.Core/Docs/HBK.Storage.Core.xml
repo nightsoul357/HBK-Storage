@@ -925,6 +925,37 @@
             取得或設定檔案目的之檔案群組
             </summary>
         </member>
+        <member name="T:HBK.Storage.Core.Services.AuthorizeKeyService">
+            <summary>
+            驗證金鑰服務
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="dbContext">資料庫實體</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.ListQuery">
+            <summary>
+            取得金鑰列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.FindByIdAsync(System.Guid)">
+            <summary>
+            以 ID 取得金鑰
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.FindByKeyValueAsync(System.String)">
+            <summary>
+            以金鑰值取得金鑰
+            </summary>
+            <param name="keyValue">金鑰值</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Core.Services.FileAccessTokenService">
             <summary>
             檔案存取權杖服務

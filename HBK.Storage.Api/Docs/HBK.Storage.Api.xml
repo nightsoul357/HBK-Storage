@@ -126,6 +126,16 @@
             HBK Storage 使用的基底控制器
             </summary>
         </member>
+        <member name="P:HBK.Storage.Api.Controllers.HBKControllerBase.AuthorizeKey">
+            <summary>
+            取得驗證用的金鑰
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.HBKControllerBase.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
         <member name="M:HBK.Storage.Api.Controllers.HBKControllerBase.PagedResultAsync``2(Microsoft.AspNet.OData.Query.ODataQueryOptions{``0},System.Linq.IQueryable{``0},System.Func{System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1}},System.Nullable{System.Int32})">
             <summary>
             回傳 <see cref="T:HBK.Storage.Api.Models.PagedResponse`1"/> 結果
@@ -441,13 +451,14 @@
             HBK 驗證器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Filters.HBKAuthorizeFilter.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:HBK.Storage.Api.Filters.HBKAuthorizeFilter.#ctor(Microsoft.Extensions.Configuration.IConfiguration,HBK.Storage.Core.Services.AuthorizeKeyService)">
             <summary>
             建構一個新的執行個體
             </summary>
             <param name="configuration"></param>
+            <param name="authorizeKeyService"></param>
         </member>
-        <member name="M:HBK.Storage.Api.Filters.HBKAuthorizeFilter.OnAuthorization(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+        <member name="M:HBK.Storage.Api.Filters.HBKAuthorizeFilter.OnAuthorizationAsync(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
             <summary>
             執行驗證
             </summary>

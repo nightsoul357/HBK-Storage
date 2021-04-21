@@ -1,5 +1,7 @@
-﻿using HBK.Storage.Api.Filters;
+﻿using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Api.Filters;
 using HBK.Storage.Api.Models;
+using HBK.Storage.Core.Services;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HBK.Storage.Api.Controllers
 {
@@ -16,8 +19,26 @@ namespace HBK.Storage.Api.Controllers
     /// </summary>
     [ApiController]
     [TypeFilter(typeof(HBKAuthorizeFilter))]
-    public class HBKControllerBase : ControllerBase
+    public abstract class HBKControllerBase : ControllerBase
     {
+        /// <summary>
+        /// 取得驗證用的金鑰
+        /// </summary>
+        protected Lazy<Task<AuthorizeKey>> AuthorizeKey { get; } // TODO : 實作 AsyncLazy
+
+        /// <summary>
+        /// 建立一個新的執行個體
+        /// </summary>
+
+        public HBKControllerBase()
+        {
+            this.AuthorizeKey = new Lazy<Task<AuthorizeKey>>(async () => 
+            {
+                var keyService = base.HttpContext.RequestServices.GetService<AuthorizeKeyService>();
+                var key = base.HttpContext.Request.Headers["HBKey"].First();
+                return await keyService.FindByKeyValueAsync(key);
+            });
+        }
         /// <summary>
         /// 回傳 <see cref="PagedResponse{T}"/> 結果
         /// </summary>

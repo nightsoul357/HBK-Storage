@@ -28,6 +28,7 @@ namespace HBK.Storage.Core
             services.AddScoped<FileEntityService>();
             services.AddScoped<FileEntityStorageService>();
             services.AddScoped<FileSystemFactory>();
+            services.AddScoped<AuthorizeKeyService>();
             services.AddScoped<FileEntityStorageServiceOption>();
             return services;
         }

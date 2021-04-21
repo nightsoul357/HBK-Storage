@@ -35,6 +35,10 @@ namespace HBK.Storage.Adapter.Storages
         {
         }
         /// <summary>
+        /// 取得或設定驗證用的資料集
+        /// </summary>
+        public virtual DbSet<AuthorizeKey> AuthorizeKey { get; set; }
+        /// <summary>
         /// 取得或設定檔案位於儲存個體上的操作紀錄資料集
         /// </summary>
         public virtual DbSet<FileEntityStroageOperation> FileEntityStroageOperation { get; set; }
