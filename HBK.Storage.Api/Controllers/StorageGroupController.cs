@@ -117,7 +117,7 @@ namespace HBK.Storage.Api.Controllers
             return StorageController.BuildStorageResponse(result);
         }
         /// <summary>
-        /// 取得儲存個體集合內的儲存個體集合
+        /// 取得儲存個體集合內的儲存個體集合，單次資料上限為 100 筆
         /// </summary>
         /// <param name="storageGroupId">儲存個體集合 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>

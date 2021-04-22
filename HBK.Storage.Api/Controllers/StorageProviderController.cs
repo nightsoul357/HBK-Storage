@@ -169,7 +169,7 @@ namespace HBK.Storage.Api.Controllers
             return StorageGroupController.BuildStorageGroupResponse(result);
         }
         /// <summary>
-        /// 取得儲存服務內的所有儲存個體集合
+        /// 取得儲存服務內的所有儲存個體集合，單次資料上限為 100 筆
         /// </summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
@@ -197,7 +197,7 @@ namespace HBK.Storage.Api.Controllers
             );
         }
         /// <summary>
-        /// 取得儲存服務內的檔案實體集合
+        /// 取得儲存服務內的檔案實體集合，單次資料上限為 100 筆
         /// </summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="queryOptions">OData 查詢參數</param>
@@ -288,7 +288,7 @@ namespace HBK.Storage.Api.Controllers
             return result;
         }
         /// <summary>
-        /// 取得檔案存取權杖清單
+        /// 取得檔案存取權杖清單，單次資料上限為 100 筆
         /// </summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="queryOptions">OData 查詢參數</param>
