@@ -344,6 +344,14 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetFileAccessTokens(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.FileAccessToken})">
+            <summary>
+            取得檔案存取權杖清單
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="queryOptions">OData 查詢參數</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.BuildStorageProviderResponse(HBK.Storage.Adapter.Storages.StorageProvider)">
             <summary>
             產生儲存服務回應內容

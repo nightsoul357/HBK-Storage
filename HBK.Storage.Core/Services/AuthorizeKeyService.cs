@@ -82,9 +82,9 @@ namespace HBK.Storage.Core.Services
             var storageProviderId = await _dbContext.StorageGroup
                 .Where(x => x.StorageGroupId == storageGroupId)
                 .Select(x => x.StorageProviderId)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
 
-            return await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId.Value, authorizeKeyScopeOperationType);
+            return storageProviderId == default ? false : await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId.Value, authorizeKeyScopeOperationType);
         }
         /// <summary>
         /// 取得指金鑰 ID、儲存個體 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
@@ -98,9 +98,9 @@ namespace HBK.Storage.Core.Services
             var storageProviderId = await _dbContext.Storage
                 .Where(x => x.StorageId == storageId)
                 .Select(x => x.StorageGroup.StorageProviderId)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
 
-            return await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId.Value, authorizeKeyScopeOperationType);
+            return storageProviderId == default ? false : await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId.Value, authorizeKeyScopeOperationType);
         }
         /// <summary>
         /// 取得指金鑰 ID、檔案實體 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
@@ -114,9 +114,9 @@ namespace HBK.Storage.Core.Services
             var storageProviderId = await _dbContext.FileEntity
                 .Where(x => x.FileEntityId == fileEntityId)
                 .Select(x => x.FileEntityStroage.First().Storage.StorageGroup.StorageProviderId)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
 
-            return await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId.Value, authorizeKeyScopeOperationType);
+            return storageProviderId == default ? false : await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId.Value, authorizeKeyScopeOperationType);
         }
         /// <summary>
         /// 取得指金鑰 ID、檔案存取權杖 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
@@ -130,9 +130,9 @@ namespace HBK.Storage.Core.Services
             var storageProviderId = await _dbContext.FileAccessToken
                 .Where(x => x.FileAccessTokenId == fileAccessTokenId)
                 .Select(x => x.StorageProviderId)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
 
-            return await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId, authorizeKeyScopeOperationType);
+            return storageProviderId == default ? false : await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId, authorizeKeyScopeOperationType);
         }
         #endregion
     }

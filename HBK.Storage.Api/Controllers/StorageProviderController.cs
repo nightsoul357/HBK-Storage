@@ -4,6 +4,7 @@ using HBK.Storage.Api.DataAnnotations;
 using HBK.Storage.Api.Factories;
 using HBK.Storage.Api.Filters;
 using HBK.Storage.Api.Models;
+using HBK.Storage.Api.Models.FileAccessToken;
 using HBK.Storage.Api.Models.FileEntity;
 using HBK.Storage.Api.Models.FileService;
 using HBK.Storage.Api.Models.StorageGroup;
@@ -45,7 +46,7 @@ namespace HBK.Storage.Api.Controllers
         /// <param name="fileAccessTokenService"></param>
         /// <param name="fileAccessTokenFactory"></param>
         /// <param name="logger"></param>
-        public StorageProviderController(StorageProviderService storageProviderService, StorageGroupService storageGroupService, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService,FileAccessTokenFactory fileAccessTokenFactory, ILogger<StorageProviderController> logger)
+        public StorageProviderController(StorageProviderService storageProviderService, StorageGroupService storageGroupService, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService, FileAccessTokenFactory fileAccessTokenFactory, ILogger<StorageProviderController> logger)
         {
             _logger = logger;
             _storageProviderService = storageProviderService;
@@ -261,8 +262,9 @@ namespace HBK.Storage.Api.Controllers
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPost("{storageProviderId}/fileAccessToken")]
+        [HttpPost("{storageProviderId}/fileAccessTokens")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PostFileAccessTokenResponse>> PostFileAccessToken(
             [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
             [ExistInDatabase(typeof(StorageProvider))]Guid storageProviderId,
@@ -284,6 +286,34 @@ namespace HBK.Storage.Api.Controllers
             result.ExpireDateTime = expireDateTime;
             result.Token = await _fileAccessTokenFactory.GetFileAccessTokenAsync(storageProviderId, expireDateTime, request);
             return result;
+        }
+        /// <summary>
+        /// 取得檔案存取權杖清單
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="queryOptions">OData 查詢參數</param>
+        /// <returns></returns>
+        [HttpGet("/{storageProviderId}/fileAccessTokens")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [EnableODataQuery(AllowedQueryOptions =
+            AllowedQueryOptions.Filter |
+            AllowedQueryOptions.Skip |
+            AllowedQueryOptions.Top |
+            AllowedQueryOptions.OrderBy,
+            MaxTop = 100)]
+        public async Task<ActionResult<PagedResponse<FileAccessTokenResponse>>> GetFileAccessTokens(
+            [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
+            [ExistInDatabase(typeof(StorageProvider))]Guid storageProviderId,
+            [FromServices] ODataQueryOptions<FileAccessToken> queryOptions)
+        {
+            var query = _fileAccessTokenService.ListQuery()
+                .Where(x => x.StorageProviderId == storageProviderId);
+
+            return await base.PagedResultAsync(queryOptions, query, (data) =>
+                data.Select(fileAccessToke => FileAccessTokenController.BuildFileAccessTokenResponse(fileAccessToke)),
+                100
+            );
         }
         /// <summary>
         /// 產生儲存服務回應內容
