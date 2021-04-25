@@ -46,7 +46,6 @@ namespace HBK.Storage.ImageCompressPlugin
                         null,
                         new FileEntity()
                         {
-                            ExtendProperty = "",
                             MimeType = "image/jpeg",
                             Name = taskModel.FileEntity.Name + $"-{ compress.Name }",
                             Size = result.Length,
