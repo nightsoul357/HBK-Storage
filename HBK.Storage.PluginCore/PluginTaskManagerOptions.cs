@@ -48,9 +48,13 @@ namespace HBK.Storage.PluginCore
         /// </summary>
         public string MimeTypePartten { get; set; } = "%";
         /// <summary>
-        /// 取得或設定完成標籤
+        /// 取得或設定取資料方式
         /// </summary>
-        public string CompleteTag { get; set; }
+        public FetchModeEnum FetchMode { get; set; } = FetchModeEnum.WithoutTag;
+        /// <summary>
+        /// 取得或設定識別標籤
+        /// </summary>
+        public string IdentityTag { get; set; }
         /// <summary>
         /// 取得或設定例外標籤
         /// </summary>

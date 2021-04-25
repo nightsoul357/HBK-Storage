@@ -336,6 +336,32 @@ namespace HBK.Storage.Core.Services
 
             return query.Take(takeCount).ToListAsync();
         }
+        /// <summary>
+        /// 取得儲存服務內包含 Tag 且 MineType 為指定格式的檔案實體
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="tag">不包含的 Tag</param>
+        /// <param name="mimeTypeParten">指定的 MineType 範本</param>
+        /// <param name="isRootFileEntity">是否為跟檔案實體</param>
+        /// <param name="takeCount">取得數量上限</param>
+        /// <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+        /// <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+        /// <returns></returns>
+        public Task<List<FileEntity>> GetFileEntityWithTagAsync(Guid storageProviderId, string tag, string mimeTypeParten, bool isRootFileEntity, int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
+        {
+            var query = _dbContext.FileEntity.Where(x =>
+                x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder &&
+                x.FileEntityStroage.Any(f => f.Storage.StorageGroup.StorageProviderId == storageProviderId) &&
+                x.FileEntityTag.Any(t => t.Value == tag) &&
+                EF.Functions.Like(x.MimeType, mimeTypeParten));
+
+            if (isRootFileEntity)
+            {
+                query = query.Where(x => x.ParentFileEntityID == null);
+            }
+
+            return query.Take(takeCount).ToListAsync();
+        }
         #endregion
     }
 }

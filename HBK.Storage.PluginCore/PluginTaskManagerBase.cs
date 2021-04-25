@@ -92,14 +92,29 @@ namespace HBK.Storage.PluginCore
 
                 foreach (var storageProvider in storageProviders)
                 {
-                    var fileEntites = storageProviderService.GetFileEntityWithoutTagAsync(
+                    List<FileEntity> fileEntites = null;
+                    if (this.Options.FetchMode == FetchModeEnum.WithoutTag)
+                    {
+                        fileEntites = storageProviderService.GetFileEntityWithoutTagAsync(
                         storageProviderId: storageProvider.StorageProviderId,
-                        tag: this.Options.CompleteTag,
+                        tag: this.Options.IdentityTag,
                         mimeTypeParten: this.Options.MimeTypePartten,
                         isRootFileEntity: this.Options.JustExecuteOnRootFileEntity,
                         takeCount: this.Options.FetchLimit - _pendingQueue.Count,
                         fileEntityNoDivisor: this.Options.FileEntityNoDivisor,
                         fileEntityNoRemainder: this.Options.FileEntityNoRemainder).Result;
+                    }
+                    else if (this.Options.FetchMode == FetchModeEnum.WithTag)
+                    {
+                        fileEntites = storageProviderService.GetFileEntityWithTagAsync(
+                        storageProviderId: storageProvider.StorageProviderId,
+                        tag: this.Options.IdentityTag,
+                        mimeTypeParten: this.Options.MimeTypePartten,
+                        isRootFileEntity: this.Options.JustExecuteOnRootFileEntity,
+                        takeCount: this.Options.FetchLimit - _pendingQueue.Count,
+                        fileEntityNoDivisor: this.Options.FileEntityNoDivisor,
+                        fileEntityNoRemainder: this.Options.FileEntityNoRemainder).Result;
+                    }
 
                     fileEntites.ForEach(x => _pendingQueue.Enqueue(new PluginTaskModel()
                     {
@@ -122,34 +137,50 @@ namespace HBK.Storage.PluginCore
                 {
                     if (!this.ExecuteInternal(task))
                     {
-                        this.AppendExcetpionTag(task.FileEntity.FileEntityId);
+                        this.ErrorFileEntity(task.FileEntity.FileEntityId);
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "[{0}] 檔案 ID -> {1} 執行時發生未預期的例外", this.Options.Identity, task.FileEntity.FileEntityId);
-                    this.AppendExcetpionTag(task.FileEntity.FileEntityId);
+                    this.ErrorFileEntity(task.FileEntity.FileEntityId);
                 }
                 finally
                 {
-                    this.AppendCompleteTag(task.FileEntity.FileEntityId);
+                    this.CompleteFileEntity(task.FileEntity.FileEntityId);
                 }
             }
         }
-        protected void AppendCompleteTag(Guid fileEntityId)
+        protected void CompleteFileEntity(Guid fileEntityId)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-                fileEntityService.AppendTagAsync(fileEntityId, this.Options.CompleteTag).Wait();
+
+                if (this.Options.FetchMode == FetchModeEnum.WithoutTag)
+                {
+                    fileEntityService.AppendTagAsync(fileEntityId, this.Options.IdentityTag).Wait();
+                }
+                else if (this.Options.FetchMode == FetchModeEnum.WithTag)
+                {
+                    fileEntityService.RemoveTagAsync(fileEntityId, this.Options.IdentityTag).Wait();
+                }
             }
         }
-        protected void AppendExcetpionTag(Guid fileEntityId)
+        protected void ErrorFileEntity(Guid fileEntityId)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-                fileEntityService.AppendTagAsync(fileEntityId, this.Options.ExceptionTag).Wait();
+
+                if (this.Options.FetchMode == FetchModeEnum.WithoutTag)
+                {
+                    fileEntityService.AppendTagAsync(fileEntityId, this.Options.ExceptionTag).Wait();
+                }
+                else if (this.Options.FetchMode == FetchModeEnum.WithTag)
+                {
+                    fileEntityService.AppendTagAsync(fileEntityId, this.Options.ExceptionTag).Wait();
+                }
             }
         }
         protected abstract bool ExecuteInternal(PluginTaskModel taskModel);

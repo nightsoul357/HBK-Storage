@@ -36,9 +36,11 @@ namespace HBK.Storage.ImageCompressPlugin
                     return false;
                 }
 
+
+                using var bmp = new Bitmap(fileInfo.CreateReadStream());
                 foreach (var compress in base.Options.CompressLevels)
                 {
-                    var result = this.CompressImage(fileInfo.CreateReadStream(), compress.Quantity);
+                    var result = this.CompressImage(bmp, compress.Quantity);
                     _ = storageProviderService
                     .UploadFileEntityAsync(taskModel.StorageProviderId,
                         null,
@@ -52,6 +54,10 @@ namespace HBK.Storage.ImageCompressPlugin
                             FileEntityTag = new List<FileEntityTag>() { new FileEntityTag()
                             {
                                 Value = this.Options.Identity
+                            },
+                            new FileEntityTag()
+                            {
+                                Value = compress.Name
                             } },
                             ParentFileEntityID = taskModel.FileEntity.FileEntityId
                         },
@@ -61,20 +67,17 @@ namespace HBK.Storage.ImageCompressPlugin
             return true;
         }
 
-        private Stream CompressImage(Stream source, long quantity)
+        private Stream CompressImage(Bitmap bmp, long quantity)
         {
-            using (Bitmap bmp = new Bitmap(source))
-            {
-                ImageCodecInfo jpgEncoder = this.GetEncoder(ImageFormat.Jpeg);
-                System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
-                EncoderParameters myEncoderParameters = new EncoderParameters(1);
-                EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, quantity);
-                myEncoderParameters.Param[0] = myEncoderParameter;
-                MemoryStream ms = new MemoryStream();
-                bmp.Save(ms, jpgEncoder, myEncoderParameters);
-                ms.Seek(0, SeekOrigin.Begin);
-                return ms;
-            }
+            ImageCodecInfo jpgEncoder = this.GetEncoder(ImageFormat.Jpeg);
+            System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
+            EncoderParameters myEncoderParameters = new EncoderParameters(1);
+            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, quantity);
+            myEncoderParameters.Param[0] = myEncoderParameter;
+            MemoryStream ms = new MemoryStream();
+            bmp.Save(ms, jpgEncoder, myEncoderParameters);
+            ms.Seek(0, SeekOrigin.Begin);
+            return ms;
         }
 
         private ImageCodecInfo GetEncoder(ImageFormat format)

@@ -187,6 +187,21 @@ namespace HBK.Storage.Core.Services
             });
             return _dbContext.SaveChangesAsync();
         }
+        /// <summary>
+        /// 移除檔案實體上的標籤
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <param name="tag">標籤</param>
+        /// <returns></returns>
+        public async Task RemoveTagAsync(Guid fileEntityId, string tag)
+        {
+            var fileEntityTag = await _dbContext.FileEntityTag.FirstOrDefaultAsync(x => x.FileEntityId == fileEntityId && x.Value == tag);
+            if (fileEntityTag != null)
+            {
+                _dbContext.FileEntityTag.Remove(fileEntityTag);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
         #endregion
         #region private method
         private async Task MarkFileEntityDeleteInternalAsync(FileEntity fileEntity)
