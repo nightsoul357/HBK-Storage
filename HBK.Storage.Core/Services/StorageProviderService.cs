@@ -129,8 +129,9 @@ namespace HBK.Storage.Core.Services
         /// <param name="storageGroupId">強制指定儲存集合 ID</param>
         /// <param name="fileEntity">檔案實體</param>
         /// <param name="fileStream">檔案流</param>
+        /// <param name="creatorIdentity">建立者識別</param>
         /// <returns></returns>
-        public async Task<FileEntity> UploadFileEntityAsync(Guid storageProviderId, Guid? storageGroupId, FileEntity fileEntity, Stream fileStream)
+        public async Task<FileEntity> UploadFileEntityAsync(Guid storageProviderId, Guid? storageGroupId, FileEntity fileEntity, Stream fileStream, string creatorIdentity)
         {
             var storageProvider = await this.FindByIdAsync(storageProviderId);
             StorageGroup storageGroup = null;
@@ -190,7 +191,7 @@ namespace HBK.Storage.Core.Services
 
             var fileEntityStorage = new FileEntityStorage()
             {
-                CreatorIdentity = "Upload Service",
+                CreatorIdentity = creatorIdentity,
                 Status = FileEntityStorageStatusEnum.None,
                 StorageId = storageExtendProperty.Storage.StorageId,
                 Value = fileInfoResult.Name
@@ -308,6 +309,32 @@ namespace HBK.Storage.Core.Services
             }
 
             return result;
+        }
+        /// <summary>
+        /// 取得儲存服務內不包含 Tag 且 MineType 為指定格式的檔案實體
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="tag">不包含的 Tag</param>
+        /// <param name="mimeTypeParten">指定的 MineType 範本</param>
+        /// <param name="isRootFileEntity">是否為跟檔案實體</param>
+        /// <param name="takeCount">取得數量上限</param>
+        /// <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+        /// <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+        /// <returns></returns>
+        public Task<List<FileEntity>> GetFileEntityWithoutTagAsync(Guid storageProviderId, string tag, string mimeTypeParten, bool isRootFileEntity, int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
+        {
+            var query = _dbContext.FileEntity.Where(x =>
+                x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder &&
+                x.FileEntityStroage.Any(f => f.Storage.StorageGroup.StorageProviderId == storageProviderId) &&
+                x.FileEntityTag.All(t => t.Value != tag) &&
+                EF.Functions.Like(x.MimeType, mimeTypeParten));
+
+            if (isRootFileEntity)
+            {
+                query = query.Where(x => x.ParentFileEntityID == null);
+            }
+
+            return query.Take(takeCount).ToListAsync();
         }
         #endregion
     }

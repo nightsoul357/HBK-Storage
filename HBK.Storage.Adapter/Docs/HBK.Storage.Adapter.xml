@@ -411,6 +411,11 @@
             取得或設定檔案實體資料集
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.FileEntityTag">
+            <summary>
+            取得或設定檔案實體標籤資料集
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.FileEntityStorage">
             <summary>
             取得或設定檔案位於儲存個體上的橋接資訊資料集

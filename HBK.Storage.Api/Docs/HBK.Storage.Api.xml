@@ -239,7 +239,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.GetStorages(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.Storage})">
             <summary>
-            取得儲存個體集合內的儲存個體集合
+            取得儲存個體集合內的儲存個體集合，單次資料上限為 100 筆
             </summary>
             <param name="storageGroupId">儲存個體集合 ID</param>
             <param name="queryOptions">OData 查詢選項</param>
@@ -314,7 +314,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetStorageGroups(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.StorageGroup})">
             <summary>
-            取得儲存服務內的所有儲存個體集合
+            取得儲存服務內的所有儲存個體集合，單次資料上限為 100 筆
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="queryOptions">OData 查詢選項</param>
@@ -322,7 +322,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetFileEntityResponses(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.FileEntity})">
             <summary>
-            取得儲存服務內的檔案實體集合
+            取得儲存服務內的檔案實體集合，單次資料上限為 100 筆
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="queryOptions">OData 查詢參數</param>
@@ -346,7 +346,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetFileAccessTokens(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.FileAccessToken})">
             <summary>
-            取得檔案存取權杖清單
+            取得檔案存取權杖清單，單次資料上限為 100 筆
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="queryOptions">OData 查詢參數</param>

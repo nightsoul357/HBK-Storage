@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBK.Storage.Adapter", "HBK.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Entry", "Entry", "{E9BD9A05-3A21-4F58-B53E-79058EB0D3E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBK.Storage.Sync", "HBK.Storage.Sync\HBK.Storage.Sync.csproj", "{6B650277-B330-4FEF-B956-765698ABE8B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBK.Storage.Sync", "HBK.Storage.Sync\HBK.Storage.Sync.csproj", "{6B650277-B330-4FEF-B956-765698ABE8B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBK.Storage.PluginCore", "HBK.Storage.PluginCore\HBK.Storage.PluginCore.csproj", "{7C6C5670-A988-45C6-92BE-D45353A032A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3AF09C2D-A4A1-4AC7-8556-AD012F094A75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBK.Storage.ImageCompressPlugin", "HBK.Storage.ImageCompressPlugin\HBK.Storage.ImageCompressPlugin.csproj", "{04845103-2C9D-48DD-9D87-09694F0DA0D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +41,14 @@ Global
 		{6B650277-B330-4FEF-B956-765698ABE8B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B650277-B330-4FEF-B956-765698ABE8B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B650277-B330-4FEF-B956-765698ABE8B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C6C5670-A988-45C6-92BE-D45353A032A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C6C5670-A988-45C6-92BE-D45353A032A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C6C5670-A988-45C6-92BE-D45353A032A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C6C5670-A988-45C6-92BE-D45353A032A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04845103-2C9D-48DD-9D87-09694F0DA0D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04845103-2C9D-48DD-9D87-09694F0DA0D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04845103-2C9D-48DD-9D87-09694F0DA0D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04845103-2C9D-48DD-9D87-09694F0DA0D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +56,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DD0152A6-4891-4C34-832D-6926E3DDF395} = {E9BD9A05-3A21-4F58-B53E-79058EB0D3E1}
 		{6B650277-B330-4FEF-B956-765698ABE8B3} = {E9BD9A05-3A21-4F58-B53E-79058EB0D3E1}
+		{04845103-2C9D-48DD-9D87-09694F0DA0D9} = {3AF09C2D-A4A1-4AC7-8556-AD012F094A75}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E1D11872-B4FA-4F2E-AE42-F226CC13D991}

@@ -51,7 +51,7 @@ namespace HBK.Storage.Sync.Managers
                 {
                     for (int i = 0; i < _option.TaskLimit; i++)
                     {
-                        tasks.Add(Task.Factory.StartNew(this.ExecuteTask, TaskCreationOptions.LongRunning));
+                        tasks.Add(Task.Factory.StartNewSafety(this.ExecuteTask, TaskCreationOptions.LongRunning, base.ExcetpionHandle));
                     }
 
                     Task.WaitAll(tasks.ToArray());

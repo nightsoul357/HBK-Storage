@@ -55,6 +55,10 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         public virtual DbSet<FileEntity> FileEntity { get; set; }
         /// <summary>
+        /// 取得或設定檔案實體標籤資料集
+        /// </summary>
+        public virtual DbSet<FileEntityTag> FileEntityTag { get; set; }
+        /// <summary>
         /// 取得或設定檔案位於儲存個體上的橋接資訊資料集
         /// </summary>
         public virtual DbSet<FileEntityStorage> FileEntityStorage { get; set; }

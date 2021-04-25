@@ -172,6 +172,21 @@ namespace HBK.Storage.Core.Services
                 .Select(x => x.FileEntityStroage.First().Storage.StorageGroup.StorageProviderId)
                 .FirstAsync()).Value;
         }
+        /// <summary>
+        /// 附加標籤到檔案實體上
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <param name="tag">標籤</param>
+        /// <returns></returns>
+        public Task AppendTagAsync(Guid fileEntityId, string tag)
+        {
+            _dbContext.FileEntityTag.Add(new FileEntityTag()
+            {
+                FileEntityId = fileEntityId,
+                Value = tag
+            });
+            return _dbContext.SaveChangesAsync();
+        }
         #endregion
         #region private method
         private async Task MarkFileEntityDeleteInternalAsync(FileEntity fileEntity)
