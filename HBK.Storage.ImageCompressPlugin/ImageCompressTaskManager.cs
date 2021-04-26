@@ -2,6 +2,7 @@
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
+using HBK.Storage.ImageCompressPlugin.Models;
 using HBK.Storage.PluginCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,6 +25,11 @@ namespace HBK.Storage.ImageCompressPlugin
         }
         protected override bool ExecuteInternal(PluginTaskModel taskModel)
         {
+            base._logger.LogInformation("[{0}] 開始壓縮圖片檔案 ID 為 {1} 的檔案 {2}",
+                base.Options.Identity,
+                taskModel.FileEntity.FileEntityId,
+                taskModel.FileEntity.Name);
+
             using (var scope = base._serviceProvider.CreateScope())
             {
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
@@ -36,7 +42,6 @@ namespace HBK.Storage.ImageCompressPlugin
                     return false;
                 }
 
-
                 using var bmp = new Bitmap(fileInfo.CreateReadStream());
                 foreach (var compress in base.Options.CompressLevels)
                 {
@@ -47,7 +52,7 @@ namespace HBK.Storage.ImageCompressPlugin
                         new FileEntity()
                         {
                             MimeType = "image/jpeg",
-                            Name = taskModel.FileEntity.Name + $"-{ compress.Name }",
+                            Name = Path.GetFileNameWithoutExtension(taskModel.FileEntity.Name) + $"-{ compress.Name }" + Path.GetExtension(taskModel.FileEntity.Name),
                             Size = result.Length,
                             Status = FileEntityStatusEnum.None,
                             FileEntityTag = new List<FileEntityTag>() { new FileEntityTag()
@@ -61,6 +66,11 @@ namespace HBK.Storage.ImageCompressPlugin
                             ParentFileEntityID = taskModel.FileEntity.FileEntityId
                         },
                         result, this.Options.Identity).Result;
+
+                    base._logger.LogInformation("[{0}] 成功將 {1} 檔案壓縮成 {2} 完成",
+                        base.Options.Identity,
+                        taskModel.FileEntity.Name,
+                        compress.Name);
                 }
             }
             return true;

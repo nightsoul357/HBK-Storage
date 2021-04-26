@@ -1,5 +1,6 @@
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core;
+using HBK.Storage.ImageCompressPlugin.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

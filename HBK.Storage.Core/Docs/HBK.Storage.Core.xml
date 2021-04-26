@@ -1198,6 +1198,14 @@
             <param name="tag">標籤</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.RemoveTagAsync(System.Guid,System.String)">
+            <summary>
+            移除檔案實體上的標籤
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="tag">標籤</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Core.Services.FileEntityStorageService">
             <summary>
             檔案位於儲存個體上的資訊服務
@@ -1436,6 +1444,19 @@
         <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityWithoutTagAsync(System.Guid,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32)">
             <summary>
             取得儲存服務內不包含 Tag 且 MineType 為指定格式的檔案實體
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="tag">不包含的 Tag</param>
+            <param name="mimeTypeParten">指定的 MineType 範本</param>
+            <param name="isRootFileEntity">是否為跟檔案實體</param>
+            <param name="takeCount">取得數量上限</param>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityWithTagAsync(System.Guid,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            取得儲存服務內包含 Tag 且 MineType 為指定格式的檔案實體
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="tag">不包含的 Tag</param>
