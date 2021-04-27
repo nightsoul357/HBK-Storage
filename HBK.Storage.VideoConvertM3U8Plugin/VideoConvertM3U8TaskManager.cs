@@ -78,6 +78,27 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
 
         private void UploadOutputDirectory(string outputDirectory, string outputVideo, Guid storageProviderId, Guid parentFileEntityId, StorageProviderService storageProviderService)
         {
+            using var fs = File.OpenRead(outputVideo);
+            var m3u8File = storageProviderService
+                    .UploadFileEntityAsync(storageProviderId,
+                        null,
+                        new FileEntity()
+                        {
+                            MimeType = "application/x-mpegURL",
+                            Name = Path.GetFileName(outputVideo),
+                            Size = fs.Length,
+                            Status = FileEntityStatusEnum.None,
+                            FileEntityTag = new List<FileEntityTag>()
+                                {
+                                    new FileEntityTag()
+                                    {
+                                        Value = this.Options.Identity
+                                    }
+                                },
+                            ParentFileEntityID = parentFileEntityId
+                        },
+                        fs, this.Options.Identity).Result;
+
             int tsnumber = 1;
             foreach (var file in Directory.GetFiles(outputDirectory, "*.ts"))
             {
@@ -102,7 +123,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                                         Value = this.Options.Identity
                                     }
                                 },
-                                ParentFileEntityID = parentFileEntityId
+                                ParentFileEntityID = m3u8File.FileEntityId
                             },
                             fsTs, this.Options.Identity).Result;
                 tsnumber++;
@@ -132,33 +153,14 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                                         Value = this.Options.Identity
                                     }
                                 },
-                                ParentFileEntityID = parentFileEntityId
+                                ParentFileEntityID = m3u8File.FileEntityId
                             },
                             fsVtt, this.Options.Identity).Result;
                 vttnumber++;
             }
 
 
-            using var fs = File.OpenRead(outputVideo);
-            _ = storageProviderService
-                    .UploadFileEntityAsync(storageProviderId,
-                        null,
-                        new FileEntity()
-                        {
-                            MimeType = "application/x-mpegURL",
-                            Name = Path.GetFileName(outputVideo),
-                            Size = fs.Length,
-                            Status = FileEntityStatusEnum.None,
-                            FileEntityTag = new List<FileEntityTag>()
-                                {
-                                    new FileEntityTag()
-                                    {
-                                        Value = this.Options.Identity
-                                    }
-                                },
-                            ParentFileEntityID = parentFileEntityId
-                        },
-                        fs, this.Options.Identity).Result;
+            
         }
     }
 }

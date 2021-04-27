@@ -43,7 +43,10 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
 
                     services.AddScoped<ConvertHandlerBase>((sp =>
                     {
-                        return new CuvidConvertHandler(sp.GetRequiredService<ILogger<ConvertHandlerBase>>());
+                        return new CuvidConvertHandler(sp.GetRequiredService<ILogger<ConvertHandlerBase>>(),
+                            new QueueSizeConvertHandler(sp.GetRequiredService<ILogger<QueueSizeConvertHandler>>(),
+                                new ClearConvertHandler(sp.GetRequiredService<ILogger<ClearConvertHandler>>(),
+                                    new EmptyConvertHandler(sp.GetRequiredService<ILogger<EmptyConvertHandler>>()))));
                     }));
 
                     services.AddSingleton<VideoConvertM3U8TaskManager>();

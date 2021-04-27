@@ -94,8 +94,9 @@ namespace HBK.Storage.Core.Services
         /// <param name="fileEntityId">檔案實體 ID</param>
         /// <param name="expireDateTime">過期時間</param>
         /// <param name="accessTimeLimit">存取次數限制</param>
+        /// <param name="handlerIndicate">檔案處理器指示字串</param>
         /// <returns></returns>
-        public async Task<FileAccessToken> GenerateNormalFileAccessTokenAsync(Guid storageProviderId, Guid? strogaeGroupId, Guid fileEntityId, DateTime expireDateTime, int accessTimeLimit)
+        public async Task<FileAccessToken> GenerateNormalFileAccessTokenAsync(Guid storageProviderId, Guid? strogaeGroupId, Guid fileEntityId, DateTime expireDateTime, int accessTimeLimit, string handlerIndicate)
         {
             FileAccessToken fileAccessToken = new FileAccessToken()
             {
@@ -112,6 +113,7 @@ namespace HBK.Storage.Core.Services
             claims.Add(new Claim("storageGroupId", fileAccessToken.StorageGroupId.HasValue ? fileAccessToken.StorageGroupId.Value.ToString() : string.Empty));
             claims.Add(new Claim("fileEntityId", fileAccessToken.FileEntityId.ToString()));
             claims.Add(new Claim("tokenType", FileAccessTokenTypeEnum.Normal.ToString()));
+            claims.Add(new Claim("handlerIndicate", handlerIndicate));
             fileAccessToken.Token = this.GenerateJWTToken(claims, fileAccessToken.ExpireDateTime.LocalDateTime);
             _dbContext.FileAccessToken.Add(fileAccessToken);
             await _dbContext.SaveChangesAsync();
@@ -124,8 +126,9 @@ namespace HBK.Storage.Core.Services
         /// <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
         /// <param name="fileEntityId">檔案實體 ID</param>
         /// <param name="expireDateTime">過期時間</param>
+        /// <param name="handlerIndicate">檔案處理器指示字串</param>
         /// <returns></returns>
-        public string GenerateNormalNoLimitFileAccessToken(Guid storageProviderId, Guid? strogaeGroupId, Guid fileEntityId, DateTime expireDateTime)
+        public string GenerateNormalNoLimitFileAccessToken(Guid storageProviderId, Guid? strogaeGroupId, Guid fileEntityId, DateTime expireDateTime, string handlerIndicate)
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
@@ -133,6 +136,7 @@ namespace HBK.Storage.Core.Services
             claims.Add(new Claim("storageGroupId", strogaeGroupId.HasValue ? strogaeGroupId.Value.ToString() : string.Empty));
             claims.Add(new Claim("fileEntityId", fileEntityId.ToString()));
             claims.Add(new Claim("tokenType", FileAccessTokenTypeEnum.NormalNoLimit.ToString()));
+            claims.Add(new Claim("handlerIndicate", handlerIndicate));
             var token = this.GenerateJWTToken(claims, expireDateTime);
             return token;
         }
@@ -144,8 +148,9 @@ namespace HBK.Storage.Core.Services
         /// <param name="allowTagPattern"></param>
         /// <param name="expireDateTime">過期時間</param>
         /// <param name="accessTimeLimit">存取次數限制</param>
+        /// <param name="handlerIndicate">檔案處理器指示字串</param>
         /// <returns></returns>
-        public async Task<FileAccessToken> GenerateAllowTagFileAccessTokenAsync(Guid storageProviderId, Guid? strogaeGroupId, string allowTagPattern, DateTime expireDateTime, int accessTimeLimit)
+        public async Task<FileAccessToken> GenerateAllowTagFileAccessTokenAsync(Guid storageProviderId, Guid? strogaeGroupId, string allowTagPattern, DateTime expireDateTime, int accessTimeLimit, string handlerIndicate)
         {
             FileAccessToken fileAccessToken = new FileAccessToken()
             {
@@ -162,6 +167,7 @@ namespace HBK.Storage.Core.Services
             claims.Add(new Claim("storageGroupId", strogaeGroupId.HasValue ? strogaeGroupId.Value.ToString() : string.Empty));
             claims.Add(new Claim("allowTagPattern", allowTagPattern));
             claims.Add(new Claim("tokenType", FileAccessTokenTypeEnum.AllowTag.ToString()));
+            claims.Add(new Claim("handlerIndicate", handlerIndicate));
             fileAccessToken.Token = this.GenerateJWTToken(claims, fileAccessToken.ExpireDateTime.LocalDateTime);
             _dbContext.FileAccessToken.Add(fileAccessToken);
             await _dbContext.SaveChangesAsync();
@@ -174,8 +180,9 @@ namespace HBK.Storage.Core.Services
         /// <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
         /// <param name="allowTagPattern"></param>
         /// <param name="expireDateTime">過期時間</param>
+        /// <param name="handlerIndicate">檔案處理器指示字串</param>
         /// <returns></returns>
-        public string GenerateAllowTagNoLimitFileAccessToken(Guid storageProviderId, Guid? strogaeGroupId, string allowTagPattern, DateTime expireDateTime)
+        public string GenerateAllowTagNoLimitFileAccessToken(Guid storageProviderId, Guid? strogaeGroupId, string allowTagPattern, DateTime expireDateTime, string handlerIndicate)
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
@@ -183,6 +190,7 @@ namespace HBK.Storage.Core.Services
             claims.Add(new Claim("storageGroupId", strogaeGroupId.HasValue ? strogaeGroupId.Value.ToString() : string.Empty));
             claims.Add(new Claim("allowTagPattern", allowTagPattern));
             claims.Add(new Claim("tokenType", FileAccessTokenTypeEnum.AllowTagNoLimit.ToString()));
+            claims.Add(new Claim("handlerIndicate", handlerIndicate));
             var token = this.GenerateJWTToken(claims, expireDateTime);
             return token;
         }

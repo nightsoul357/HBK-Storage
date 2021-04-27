@@ -50,6 +50,10 @@ namespace HBK.Storage.Api.Models.FileEntity
         /// </summary>
         public FileEntityStatusEnum[] Status { get; set; }
         /// <summary>
+        /// 標籤列表
+        /// </summary>
+        public List<string> Tages { get; set; }
+        /// <summary>
         /// 取得或設定存在的儲存集合清單
         /// </summary>
         public List<StorageSummaryResponse> StorageSummaryResponses { get; set; }

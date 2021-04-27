@@ -9,7 +9,7 @@
             外部檔案存取控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService,HBK.Storage.Core.Services.FileEntityStorageService)">
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService,HBK.Storage.Core.Services.FileEntityStorageService,HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy)">
             <summary>
             建構一個新的執行個體
             </summary>
@@ -17,6 +17,7 @@
             <param name="fileEntityService"></param>
             <param name="fileAccessTokenService"></param>
             <param name="fileEntityStorageService"></param>
+            <param name="fileAccessHandlerProxy"></param>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.Guid,System.String)">
             <summary>
@@ -103,6 +104,22 @@
             </summary>
             <param name="fileEntityId">檔案實體 ID</param>
             <param name="storageGroupId">強制指定儲存個體群組 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.AppendTag(System.Guid,HBK.Storage.Api.Models.FileEntity.AppendTagRequest)">
+            <summary>
+            附加檔案實體標籤
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="request">附加檔案實體標籤請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.DeleteTag(System.Guid,HBK.Storage.Api.Models.FileEntity.DeleteTagRequest)">
+            <summary>
+            刪除檔案實體標籤
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="request">刪除檔案實體標籤請求內容</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.FileEntityController.Delete(System.Guid)">
@@ -482,6 +499,86 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase">
+            <summary>
+            存取檔案處理器基底
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel)">
+            <summary>
+            處理檔案
+            </summary>
+            <param name="taskModel"></param>
+            <returns></returns>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase.Name">
+            <summary>
+            取得處理器名稱
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy">
+            <summary>
+            存取檔案處理器代理執行者
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase})">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="fileAccessHandlers"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel,System.String)">
+            <summary>
+            根據對應的處理器指示字串執行存取檔案處理器
+            </summary>
+            <param name="taskModel">存取檔案任務模型</param>
+            <param name="handlerIndicate">處理器指示字串</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel">
+            <summary>
+            存取檔案任務模型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.StorageProviderId">
+            <summary>
+            取得或設定檔案服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.FileEntity">
+            <summary>
+            取得或設定檔案實體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.FileInfo">
+            <summary>
+            取得或設定檔案資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.Token">
+            <summary>
+            取得或設定存取用的權杖
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler">
+            <summary>
+            處理使用 M3U8 影片轉換插件轉換完成的 M3U8 檔案實體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler.#ctor(Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler},HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="logger"></param>
+            <param name="fileEntityService"></param>
+            <param name="fileAccessTokenService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler.Name">
+            <inheritdoc/>
+        </member>
         <member name="T:HBK.Storage.Api.Filters.DisableFormValueModelBindingFilter">
             <summary>
             移除自動 Model Binding
@@ -678,6 +775,26 @@
             狀態
             </summary>
         </member>
+        <member name="T:HBK.Storage.Api.Models.FileEntity.AppendTagRequest">
+            <summary>
+            附加標籤請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.AppendTagRequest.Tag">
+            <summary>
+            取得或設定標籤
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileEntity.DeleteTagRequest">
+            <summary>
+            刪除檔案實體標籤請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.DeleteTagRequest.Tag">
+            <summary>
+            取得或設定標籤
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Api.Models.FileEntity.FileEntityResponse">
             <summary>
             檔案實體回應內容
@@ -726,6 +843,11 @@
         <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.Status">
             <summary>
             狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.Tages">
+            <summary>
+            標籤列表
             </summary>
         </member>
         <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.StorageSummaryResponses">
@@ -813,6 +935,11 @@
             存取次數限制
             </summary>
             <example>10</example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.HandlerIndicate">
+            <summary>
+            檔案處理器指示字串
+            </summary>
         </member>
         <member name="T:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse">
             <summary>

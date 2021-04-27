@@ -38,5 +38,9 @@ namespace HBK.Storage.Api.Models.FileService
         /// </summary>
         /// <example>10</example>
         public int? AccessTimesLimit { get; set; }
+        /// <summary>
+        /// 檔案處理器指示字串
+        /// </summary>
+        public string HandlerIndicate { get; set; }
     }
 }

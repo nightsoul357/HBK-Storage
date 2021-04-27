@@ -202,6 +202,16 @@ namespace HBK.Storage.Core.Services
                 await _dbContext.SaveChangesAsync();
             }
         }
+        /// <summary>
+        /// 取得子檔案實體清單
+        /// </summary>
+        /// <param name="parentFileEntityId">父檔案實體 ID</param>
+        /// <returns></returns>
+        public Task<List<FileEntity>> GetChildFileEntitiesAsync(Guid parentFileEntityId)
+        {
+            return this.ListQuery().Where(x => x.ParentFileEntityID == parentFileEntityId)
+                .ToListAsync();
+        }
         #endregion
         #region private method
         private async Task MarkFileEntityDeleteInternalAsync(FileEntity fileEntity)

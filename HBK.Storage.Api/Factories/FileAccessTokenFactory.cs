@@ -37,22 +37,22 @@ namespace HBK.Storage.Api.Factories
                 case FileAccessTokenTypeEnum.Normal:
                     {
                         return (await _fileAccessTokenService
-                            .GenerateNormalFileAccessTokenAsync(storageProviderId, request.StorageGroupId, request.FileEntityId.Value, expireDateTime, request.AccessTimesLimit.Value)).Token;
+                            .GenerateNormalFileAccessTokenAsync(storageProviderId, request.StorageGroupId, request.FileEntityId.Value, expireDateTime, request.AccessTimesLimit.Value, request.HandlerIndicate)).Token;
                     }
                 case FileAccessTokenTypeEnum.NormalNoLimit:
                     {
                         return _fileAccessTokenService
-                                .GenerateNormalNoLimitFileAccessToken(storageProviderId, request.StorageGroupId, request.FileEntityId.Value, expireDateTime);
+                                .GenerateNormalNoLimitFileAccessToken(storageProviderId, request.StorageGroupId, request.FileEntityId.Value, expireDateTime, request.HandlerIndicate);
                     }
                 case FileAccessTokenTypeEnum.AllowTag:
                     {
                         return (await _fileAccessTokenService
-                            .GenerateAllowTagFileAccessTokenAsync(storageProviderId, request.StorageGroupId, request.AllowTagPattern, expireDateTime, request.AccessTimesLimit.Value)).Token;
+                            .GenerateAllowTagFileAccessTokenAsync(storageProviderId, request.StorageGroupId, request.AllowTagPattern, expireDateTime, request.AccessTimesLimit.Value, request.HandlerIndicate)).Token;
                     }
                 case FileAccessTokenTypeEnum.AllowTagNoLimit:
                     {
                         return _fileAccessTokenService
-                            .GenerateAllowTagNoLimitFileAccessToken(storageProviderId, request.StorageGroupId, request.AllowTagPattern, expireDateTime);
+                            .GenerateAllowTagNoLimitFileAccessToken(storageProviderId, request.StorageGroupId, request.AllowTagPattern, expireDateTime, request.HandlerIndicate);
                     }
                 default:
                     {

@@ -62,6 +62,42 @@ namespace HBK.Storage.Api.Controllers
         }
 
         /// <summary>
+        /// 附加檔案實體標籤
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <param name="request">附加檔案實體標籤請求內容</param>
+        /// <returns></returns>
+        [HttpPost("{fileEntityId}/tag")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<FileEntityResponse> AppendTag(
+            [ExampleParameter("ba337d2f-760b-473e-b077-d352277651e2")]
+            [ExistInDatabase(typeof(FileEntity))] Guid fileEntityId,
+            AppendTagRequest request)
+        {
+            await _fileEntityService.AppendTagAsync(fileEntityId, request.Tag);
+            return FileEntityController.BuildFileEntityResponse(await _fileEntityService.FindByIdAsync(fileEntityId), _fileEntityService);
+        }
+
+        /// <summary>
+        /// 刪除檔案實體標籤
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <param name="request">刪除檔案實體標籤請求內容</param>
+        /// <returns></returns>
+        [HttpDelete("{fileEntityId}/tag")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<FileEntityResponse> DeleteTag(
+            [ExampleParameter("ba337d2f-760b-473e-b077-d352277651e2")]
+            [ExistInDatabase(typeof(FileEntity))] Guid fileEntityId,
+            DeleteTagRequest request)
+        {
+            await _fileEntityService.RemoveTagAsync(fileEntityId, request.Tag);
+            return FileEntityController.BuildFileEntityResponse(await _fileEntityService.FindByIdAsync(fileEntityId), _fileEntityService);
+        }
+
+        /// <summary>
         /// 將檔案實體標記為刪除
         /// </summary>
         /// <param name="fileEntityId">檔案實體 ID</param>
@@ -95,7 +131,8 @@ namespace HBK.Storage.Api.Controllers
                 Status = fileEntity.Status.FlattenFlags(),
                 Tags = fileEntity.FileEntityTag.Select(x => x.Value).ToList(),
                 UpdateDateTime = fileEntity.UpdateDateTime?.LocalDateTime,
-                StorageSummaryResponses = storage.Select(x => StorageController.BuildStorageSummaryResponse(x)).ToList()
+                StorageSummaryResponses = storage.Select(x => StorageController.BuildStorageSummaryResponse(x)).ToList(),
+                Tages = fileEntity.FileEntityTag.Select(x => x.Value).ToList()
             };
         }
     }

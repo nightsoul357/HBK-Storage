@@ -1,5 +1,6 @@
 ﻿using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Api.DataAnnotations;
+using HBK.Storage.Api.FileAccessHandlers;
 using HBK.Storage.Core.Enums;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
@@ -27,6 +28,7 @@ namespace HBK.Storage.Api.Controllers
         private readonly FileEntityService _fileEntityService;
         private readonly FileAccessTokenService _fileAccessTokenService;
         private readonly FileEntityStorageService _fileEntityStorageService;
+        private readonly FileAccessHandlerProxy _fileAccessHandlerProxy;
 
         /// <summary>
         /// 建構一個新的執行個體
@@ -35,12 +37,14 @@ namespace HBK.Storage.Api.Controllers
         /// <param name="fileEntityService"></param>
         /// <param name="fileAccessTokenService"></param>
         /// <param name="fileEntityStorageService"></param>
-        public ExternalFileAccessController(StorageProviderService storageProviderService, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService, FileEntityStorageService fileEntityStorageService)
+        /// <param name="fileAccessHandlerProxy"></param>
+        public ExternalFileAccessController(StorageProviderService storageProviderService, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService, FileEntityStorageService fileEntityStorageService, FileAccessHandlerProxy fileAccessHandlerProxy)
         {
             _storageProviderService = storageProviderService;
             _fileEntityService = fileEntityService;
             _fileAccessTokenService = fileAccessTokenService;
             _fileEntityStorageService = fileEntityStorageService;
+            _fileAccessHandlerProxy = fileAccessHandlerProxy;
         }
 
         /// <summary>
@@ -140,8 +144,16 @@ namespace HBK.Storage.Api.Controllers
                 fileName = fileEntity.Name;
             }
 
+            var processResult = await _fileAccessHandlerProxy.ProcessAsync(new FileAccessTaskModel()
+            {
+                FileEntity = fileEntity,
+                FileInfo = fileInfo,
+                Token = jwtSecurityToken,
+                StorageProviderId = fileAccessToken.StorageProviderId
+            }, jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "handlerIndicate").Value);
+
             await _fileEntityStorageService.AddAccessSuccessfullyRecordAsync(fileEntityStorage.FileEntityStorageId, "存取成功");
-            return new FileStreamResult(fileInfo.CreateReadStream(), new MediaTypeHeaderValue(fileEntity.MimeType))
+            return new FileStreamResult(processResult.FileInfo.CreateReadStream(), new MediaTypeHeaderValue(processResult.FileEntity.MimeType))
             {
                 FileDownloadName = fileName
             };
@@ -167,7 +179,7 @@ namespace HBK.Storage.Api.Controllers
             {
                 return base.BadRequest("沒有檔案存取權限");
             }
-            var fileEntityStorage = await _storageProviderService.GetFileEntityStorageAsync(fileAccessToken.StorageProviderId, fileAccessToken.StorageGroupId, fileAccessToken.FileEntityId.Value);
+            var fileEntityStorage = await _storageProviderService.GetFileEntityStorageAsync(fileAccessToken.StorageProviderId, fileAccessToken.StorageGroupId, fileEntityId);
             IAsyncFileInfo fileInfo = await _fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId);
             if (fileInfo == null)
             {
@@ -179,8 +191,16 @@ namespace HBK.Storage.Api.Controllers
                 fileName = fileEntity.Name;
             }
 
+            var processResult = await _fileAccessHandlerProxy.ProcessAsync(new FileAccessTaskModel()
+            {
+                FileEntity = fileEntity,
+                FileInfo = fileInfo,
+                Token = jwtSecurityToken,
+                StorageProviderId = fileAccessToken.StorageProviderId
+            }, jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "handlerIndicate").Value);
+
             await _fileEntityStorageService.AddAccessSuccessfullyRecordAsync(fileEntityStorage.FileEntityStorageId, "存取成功");
-            return new FileStreamResult(fileInfo.CreateReadStream(), new MediaTypeHeaderValue(fileEntity.MimeType))
+            return new FileStreamResult(processResult.FileInfo.CreateReadStream(), new MediaTypeHeaderValue(processResult.FileEntity.MimeType))
             {
                 FileDownloadName = fileName
             };

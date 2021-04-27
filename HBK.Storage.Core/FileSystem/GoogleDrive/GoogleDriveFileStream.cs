@@ -65,6 +65,11 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
                 return 0;
             }
 
+            if (_commonBuffer.IsAddingCompleted && _commonBuffer.Count == 0 && _currentBuffer == null)
+            {
+                return 0;
+            }
+
             if (_currentBuffer == null || _currentBuffer.Position == _currentBuffer.Length)
             {
                 if (_currentBuffer != null)
@@ -72,7 +77,14 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
                     _currentBuffer.Close();
                 }
 
-                _currentBuffer = _commonBuffer.Take();
+                try
+                {
+                    _currentBuffer = _commonBuffer.Take();
+                }
+                catch (InvalidOperationException)
+                {
+                    return 0;
+                }
                 _currentBuffer.Seek(0, SeekOrigin.Begin);
             }
 

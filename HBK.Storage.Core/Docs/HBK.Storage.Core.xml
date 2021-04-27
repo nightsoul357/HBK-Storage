@@ -833,6 +833,20 @@
         <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.Watch(System.String)">
             <inheritdoc/>
         </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Memory.MemoryFileInfo">
+            <summary>
+            記憶體內的檔案資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Memory.MemoryFileInfo.#ctor(System.IO.MemoryStream)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="ms"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Memory.MemoryFileInfo.CreateReadStreamAsync">
+            <inheritdoc/>
+        </member>
         <member name="T:HBK.Storage.Core.HBKStorageCoreDependencyInjectionExtensions">
             <summary>
             HBK 儲存服務核心相依性注入輔助類別
@@ -1040,7 +1054,7 @@
             <param name="jwtSecurityToken"></param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateNormalFileAccessTokenAsync(System.Guid,System.Nullable{System.Guid},System.Guid,System.DateTime,System.Int32)">
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateNormalFileAccessTokenAsync(System.Guid,System.Nullable{System.Guid},System.Guid,System.DateTime,System.Int32,System.String)">
             <summary>
             產生一般存取檔案使用的權杖
             </summary>
@@ -1049,9 +1063,10 @@
             <param name="fileEntityId">檔案實體 ID</param>
             <param name="expireDateTime">過期時間</param>
             <param name="accessTimeLimit">存取次數限制</param>
+            <param name="handlerIndicate">檔案處理器指示字串</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateNormalNoLimitFileAccessToken(System.Guid,System.Nullable{System.Guid},System.Guid,System.DateTime)">
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateNormalNoLimitFileAccessToken(System.Guid,System.Nullable{System.Guid},System.Guid,System.DateTime,System.String)">
             <summary>
             產生無限制的一般存取檔案使用的權杖
             </summary>
@@ -1059,9 +1074,10 @@
             <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
             <param name="fileEntityId">檔案實體 ID</param>
             <param name="expireDateTime">過期時間</param>
+            <param name="handlerIndicate">檔案處理器指示字串</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateAllowTagFileAccessTokenAsync(System.Guid,System.Nullable{System.Guid},System.String,System.DateTime,System.Int32)">
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateAllowTagFileAccessTokenAsync(System.Guid,System.Nullable{System.Guid},System.String,System.DateTime,System.Int32,System.String)">
             <summary>
             產生允許指定 Tag 通過的檔案存取權杖
             </summary>
@@ -1070,9 +1086,10 @@
             <param name="allowTagPattern"></param>
             <param name="expireDateTime">過期時間</param>
             <param name="accessTimeLimit">存取次數限制</param>
+            <param name="handlerIndicate">檔案處理器指示字串</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateAllowTagNoLimitFileAccessToken(System.Guid,System.Nullable{System.Guid},System.String,System.DateTime)">
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateAllowTagNoLimitFileAccessToken(System.Guid,System.Nullable{System.Guid},System.String,System.DateTime,System.String)">
             <summary>
             產生無限制的允許指定 Tag 通過的檔案存取權杖
             </summary>
@@ -1080,6 +1097,7 @@
             <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
             <param name="allowTagPattern"></param>
             <param name="expireDateTime">過期時間</param>
+            <param name="handlerIndicate">檔案處理器指示字串</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.ValidateFileAccessTokenAsync(System.String)">
@@ -1204,6 +1222,13 @@
             </summary>
             <param name="fileEntityId">檔案實體 ID</param>
             <param name="tag">標籤</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetChildFileEntitiesAsync(System.Guid)">
+            <summary>
+            取得子檔案實體清單
+            </summary>
+            <param name="parentFileEntityId">父檔案實體 ID</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Core.Services.FileEntityStorageService">
