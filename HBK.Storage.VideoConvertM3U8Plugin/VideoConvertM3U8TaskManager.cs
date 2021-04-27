@@ -28,6 +28,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
         {
             using (var scope = base._serviceProvider.CreateScope())
             {
+                base._logger.LogInformation("[{0}] 開始將檔案 ID {1} 的 {2} 轉換為 M3U8 格式", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
                 Guid taskId = Guid.NewGuid();
                 string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskId.ToString());
                 string sourceDirecotry = Path.Combine(workingDirectory, "src");
@@ -69,9 +70,18 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                     return false;
                 }
 
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine($"[{base.Options.Identity}] 檔案 ID {taskModel.FileEntity.FileEntityId} 的 {taskModel.FileEntity.Name} 轉換完成之");
+                sb.AppendLine($"M3U8 檔案大小為 : { outputVideo.Length } Bytes");
+                sb.AppendLine($"TS 檔案數量為 : { Directory.GetFiles(outputDirectory, "*.ts").Count() }");
+                sb.AppendLine($"VTT 檔案數量為 : { Directory.GetFiles(outputDirectory, "*.vtt").Count() }");
+                base._logger.LogInformation(sb.ToString());
+
                 this.UploadOutputDirectory(outputDirectory, outputVideo, taskModel.StorageProviderId, taskModel.FileEntity.FileEntityId, storageProviderService);
 
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
+
+                base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 轉換為 M3U8 格式 轉換成功", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
                 return true;
             }
         }
@@ -160,7 +170,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
             }
 
 
-            
+
         }
     }
 }

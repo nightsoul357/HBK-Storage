@@ -237,9 +237,8 @@
                 {
                     if (received.Data == null) return;
 #if (ConsoleToDebug)
-                    
-#endif
                     Console.WriteLine(received.Data);
+#endif
                     try
                     {
                         

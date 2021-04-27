@@ -39,7 +39,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                 {
                     return false;
                 }
-
+                base._logger.LogInformation("[{0}] 開始合併檔案 ID {1} 的檔案 {2} 之影片和字幕檔案", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
                 Guid taskId = Guid.NewGuid();
                 string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskId.ToString());
                 string sourceDirecotry = Path.Combine(workingDirectory, "src");
@@ -65,6 +65,8 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                 var handler = scope.ServiceProvider.GetRequiredService<CombineHandlerBase>();
                 foreach (var subTitleTrack in extendProperty.SubTitleTrackInfos)
                 {
+                    base._logger.LogInformation("[{0}] 開始合併檔案 ID {1} 的檔案 {2} 的 {3} 字幕軌", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, subTitleTrack.TrackName);
+
                     var subTitleFileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, subTitleTrack.SubTitleFileEntityId).Result;
                     IAsyncFileInfo subTitleFileInfo = fileEntityStorageService.TryFetchFileInfoAsync(subTitleFileEntityStorage.FileEntityStorageId).Result;
                     if (subTitleFileInfo == null)
@@ -90,27 +92,27 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
 
                     if (result.Success)
                     {
-                        using FileStream fs = File.OpenRead(outputVideoFile);
-                        var tags = new List<FileEntityTag>();
-                        tags.AddRange(subTitleTrack.CompleteTags.Select(x => new FileEntityTag() { Value = x }));
-                        tags.Add(new FileEntityTag() { Value = base.Options.Identity });
-                        tags.Add(new FileEntityTag() { Value = subTitleTrack.TrackName });
+                        using (FileStream fs = File.OpenRead(outputVideoFile))
+                        {
+                            var tags = new List<FileEntityTag>();
+                            tags.AddRange(subTitleTrack.CompleteTags.Select(x => new FileEntityTag() { Value = x }));
+                            tags.Add(new FileEntityTag() { Value = base.Options.Identity });
+                            tags.Add(new FileEntityTag() { Value = subTitleTrack.TrackName });
 
-                        _ = storageProviderService
-                            .UploadFileEntityAsync(taskModel.StorageProviderId,
-                                null,
-                                new FileEntity()
-                                {
-                                    MimeType = taskModel.FileEntity.MimeType,
-                                    Name = Path.GetFileNameWithoutExtension(taskModel.FileEntity.Name) + " Combine" + Path.GetExtension(taskModel.FileEntity.Name),
-                                    Size = fs.Length,
-                                    Status = FileEntityStatusEnum.None,
-                                    FileEntityTag = tags,
-                                    ParentFileEntityID = taskModel.FileEntity.FileEntityId
-                                },
-                                fs, this.Options.Identity).Result;
-
-                        fs.Close();
+                            _ = storageProviderService
+                                .UploadFileEntityAsync(taskModel.StorageProviderId,
+                                    null,
+                                    new FileEntity()
+                                    {
+                                        MimeType = taskModel.FileEntity.MimeType,
+                                        Name = Path.GetFileNameWithoutExtension(taskModel.FileEntity.Name) + "-Combine" + Path.GetExtension(taskModel.FileEntity.Name),
+                                        Size = fs.Length,
+                                        Status = FileEntityStatusEnum.None,
+                                        FileEntityTag = tags,
+                                        ParentFileEntityID = taskModel.FileEntity.FileEntityId
+                                    },
+                                    fs, this.Options.Identity).Result;
+                        }
                         FileOperator.DeleteSaftey(outputVideoFile);
                     }
                     else
@@ -119,10 +121,12 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                     }
 
                     FileOperator.DeleteSaftey(subTitleFile);
+                    base._logger.LogInformation("[{0}] 檔案 ID {1} 的檔案 {2} 的 {3} 字幕軌 合併完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, subTitleTrack.TrackName);
                 }
 
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
             }
+            base._logger.LogInformation("[{0}] 合併檔案 ID {1} 的檔案 {2} 之影片和字幕檔案完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
             return true;
         }
 
