@@ -92,6 +92,14 @@ TODO
 | AllowTag | 具有時間限制、存取次數限制、存取目標檔案規則限制 |
 | AllowTagNoLimit | 具有時間限制、存取目標檔案規則限制 |
 
+## 支援的 Storage 類型
+
+* Local
+* Google Drive
+* FTP
+* AWS S3(minio)
+* Mega
+
 ## 插件
 
 ### 取得多媒體 Metadata 插件
