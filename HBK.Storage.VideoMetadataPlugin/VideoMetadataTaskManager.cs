@@ -102,7 +102,7 @@ namespace HBK.Storage.VideoMetadataPlugin
                                 new FileEntity()
                                 {
                                     MimeType = "image/jpg",
-                                    Name = $"preview-{i}",
+                                    Name = $"preview-{i}.jpg",
                                     Size = previewfs.Length,
                                     Status = FileEntityStatusEnum.Processing,
                                     FileEntityTag = new List<FileEntityTag>()
