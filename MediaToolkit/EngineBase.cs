@@ -24,7 +24,7 @@
         protected readonly string FFmpegFilePath;
 
         /// <summary>   The Mutex. </summary>
-        protected readonly Mutex Mutex;
+        //protected readonly Mutex Mutex;
 
         /// <summary>   The ffmpeg process. </summary>
         protected Process FFmpegProcess;
@@ -42,7 +42,7 @@
         /// </summary>
         protected EngineBase(string ffMpegPath)
         {
-            this.Mutex = new Mutex(false, LockName);
+            //this.Mutex = new Mutex(false, LockName);
             this.isDisposed = false;
 
             if (ffMpegPath.IsNullOrWhiteSpace())
@@ -54,14 +54,14 @@
 
             this.EnsureDirectoryExists ();
             this.EnsureFFmpegFileExists();
-            this.EnsureFFmpegIsNotUsed ();
+            //this.EnsureFFmpegIsNotUsed ();
         }
 
         private void EnsureFFmpegIsNotUsed()
         {
             try
             {
-                this.Mutex.WaitOne();
+                //this.Mutex.WaitOne();
                 Process.GetProcessesByName(Resources.FFmpegProcessName)
                        .ForEach(process =>
                        {
@@ -71,7 +71,7 @@
             }
             finally
             {
-                this.Mutex.ReleaseMutex();
+                //this.Mutex.ReleaseMutex();
             }
         }
 

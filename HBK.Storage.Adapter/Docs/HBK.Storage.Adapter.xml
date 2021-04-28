@@ -115,6 +115,11 @@
             上傳中
             </summary>
         </member>
+        <member name="F:HBK.Storage.Adapter.Enums.FileEntityStatusEnum.Processing">
+            <summary>
+            處理中
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Enums.FileEntityStorageOperationStatusEnum">
             <summary>
             檔案位於儲存個體上的操作紀錄狀態列舉

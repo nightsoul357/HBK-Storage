@@ -1153,11 +1153,25 @@
             <param name="data"></param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.UpdateBatchAsync(System.Collections.Generic.List{HBK.Storage.Adapter.Storages.FileEntity})">
+            <summary>
+            批次更新檔案實體
+            </summary>
+            <param name="updateFileEntities"></param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Core.Services.FileEntityService.MarkFileEntityDeleteAsync(System.Guid)">
             <summary>
             將檔案實體註記為刪除
             </summary>
             <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.MarkFileEntityDeleteBatchAsync(System.Collections.Generic.List{System.Guid})">
+            <summary>
+            批次將檔案實體註記為刪除
+            </summary>
+            <param name="fileEntityIds">檔案實體 ID 清單</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.FileEntityService.GetMarkDeleteFileEntityStoragiesAsync(System.Int32,System.Int32,System.Int32)">

@@ -130,12 +130,12 @@
 
             try
             {
-                this.Mutex.WaitOne();
+                //this.Mutex.WaitOne();
                 this.StartFFmpegProcess(engineParameters);
             }
             finally
             {
-                this.Mutex.ReleaseMutex();
+                //this.Mutex.ReleaseMutex();
             }
         }
 
@@ -241,7 +241,6 @@
 #endif
                     try
                     {
-                        
                         receivedMessagesLog.Insert(0, received.Data);
                         if (engineParameters.InputFile != null)
                         {

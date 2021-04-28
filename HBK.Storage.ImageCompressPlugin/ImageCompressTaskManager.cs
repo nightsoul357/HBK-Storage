@@ -36,6 +36,9 @@ namespace HBK.Storage.ImageCompressPlugin
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
                 var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId).Result;
+
+                base.RemoveResidueFileEntity(fileEntityService, taskModel);
+
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)
                 {
@@ -43,10 +46,11 @@ namespace HBK.Storage.ImageCompressPlugin
                 }
 
                 using var bmp = new Bitmap(fileInfo.CreateReadStream());
+                List<FileEntity> processFileEntities = new List<FileEntity>();
                 foreach (var compress in base.Options.CompressLevels)
                 {
                     var result = this.CompressImage(bmp, compress.Quantity);
-                    _ = storageProviderService
+                    var compressFileEntity = storageProviderService
                     .UploadFileEntityAsync(taskModel.StorageProviderId,
                         null,
                         new FileEntity()
@@ -54,24 +58,31 @@ namespace HBK.Storage.ImageCompressPlugin
                             MimeType = "image/jpeg",
                             Name = Path.GetFileNameWithoutExtension(taskModel.FileEntity.Name) + $"-{ compress.Name }" + Path.GetExtension(taskModel.FileEntity.Name),
                             Size = result.Length,
-                            Status = FileEntityStatusEnum.None,
-                            FileEntityTag = new List<FileEntityTag>() { new FileEntityTag()
-                            {
-                                Value = this.Options.Identity
+                            Status = FileEntityStatusEnum.Processing,
+                            FileEntityTag = new List<FileEntityTag>() {
+                                new FileEntityTag()
+                                {
+                                    Value = this.Options.Identity
+                                },
+                                new FileEntityTag()
+                                {
+                                    Value = compress.Name
+                                }
                             },
-                            new FileEntityTag()
-                            {
-                                Value = compress.Name
-                            } },
                             ParentFileEntityID = taskModel.FileEntity.FileEntityId
                         },
                         result, this.Options.Identity).Result;
+
+                    processFileEntities.Add(compressFileEntity);
 
                     base._logger.LogInformation("[{0}] 成功將 {1} 檔案壓縮成 {2} 完成",
                         base.Options.Identity,
                         taskModel.FileEntity.Name,
                         compress.Name);
                 }
+
+                processFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);
+                fileEntityService.UpdateBatchAsync(processFileEntities).Wait();
             }
             return true;
         }

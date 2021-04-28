@@ -61,6 +61,28 @@ namespace HBK.Storage.Core.Services
             await _dbContext.SaveChangesAsync();
             return await this.FindByIdAsync(data.FileEntityId);
         }
+        /// <summary>
+        /// 批次更新檔案實體
+        /// </summary>
+        /// <param name="updateFileEntities"></param>
+        /// <returns></returns>
+        public async Task<List<FileEntity>> UpdateBatchAsync(List<FileEntity> updateFileEntities)
+        {
+            List<FileEntity> result = new List<FileEntity>();
+            foreach (var data in updateFileEntities)
+            {
+                var original = await this.FindByIdAsync(data.FileEntityId);
+                original.ExtendProperty = data.ExtendProperty;
+                original.IsMarkDelete = data.IsMarkDelete;
+                original.MimeType = data.MimeType;
+                original.Name = data.Name;
+                original.Size = data.Size;
+                original.Status = data.Status;
+                result.Add(original);
+            }
+            await _dbContext.SaveChangesAsync();
+            return result;
+        }
         #endregion
         #region BAL
         /// <summary>
@@ -76,7 +98,24 @@ namespace HBK.Storage.Core.Services
             await this.MarkFileEntityDeleteInternalAsync(fileEntity);
             await _dbContext.SaveChangesAsync();
         }
+        /// <summary>
+        /// 批次將檔案實體註記為刪除
+        /// </summary>
+        /// <param name="fileEntityIds">檔案實體 ID 清單</param>
+        /// <returns></returns>
+        public async Task MarkFileEntityDeleteBatchAsync(List<Guid> fileEntityIds)
+        {
+            foreach(var fileEntityId in fileEntityIds)
+            {
+                var fileEntity = await _dbContext.FileEntity
+                .Include(x => x.FileEntityStroage)
+                .FirstOrDefaultAsync(x => x.FileEntityId == fileEntityId);
 
+                await this.MarkFileEntityDeleteInternalAsync(fileEntity);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
         /// <summary>
         /// 取得需要被刪除的檔案位於儲存個體上的橋接資訊清單
         /// </summary>

@@ -42,7 +42,7 @@ namespace HBK.Storage.Api.FileAccessHandlers
             Guid taskId = Guid.NewGuid();
 
             var tsFiles = (await _fileEntityService.GetChildFileEntitiesAsync(taskModel.FileEntity.FileEntityId))
-                .Where(x => x.FileEntityTag.Any(t => t.Value.Contains("ts-")) && x.MimeType == "video/MP2T");
+                .Where(x => x.FileEntityTag.Any(t => t.Value.Contains("ts-")) && x.MimeType == "video/MP2T" && !x.Status.HasFlag(Adapter.Enums.FileEntityStatusEnum.Processing));
 
             var token = _fileAccessTokenService.GenerateAllowTagNoLimitFileAccessToken(taskModel.StorageProviderId, null, "ts-", taskModel.Token.ValidTo, string.Empty);
 

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -40,7 +44,6 @@ namespace HBK.Storage.PluginCore
                     if (!this.IsRunning)
                     {
                         _cancellationToken = cancellationToken;
-                        _cancellationToken.Register(this.Dispose);
                         Task.Factory.StartNewSafety(this.StartInternal,
                             TaskCreationOptions.LongRunning,
                             (Exception ex) =>
@@ -182,6 +185,33 @@ namespace HBK.Storage.PluginCore
                     fileEntityService.AppendTagAsync(fileEntityId, this.Options.ExceptionTag).Wait();
                 }
             }
+        }
+        /// <summary>
+        /// 移除殘留檔案
+        /// </summary>
+        /// <param name="fileEntityService"></param>
+        /// <param name="taskModel"></param>
+        protected void RemoveResidueFileEntity(FileEntityService fileEntityService, PluginTaskModel taskModel)
+        {
+            var remove = fileEntityService.GetChildFileEntitiesAsync(taskModel.FileEntity.FileEntityId).Result
+                    .Where(x => x.Status.HasFlag(FileEntityStatusEnum.Processing) && x.FileEntityTag.Any(t => t.Value == this.Options.Identity));
+
+            if (remove.Count() != 0)
+            {
+                fileEntityService.MarkFileEntityDeleteBatchAsync(remove.Select(x => x.FileEntityId).ToList()).Wait();
+                _logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 在處理的過程中發現了 {3} 個殘留的檔案，以標記為移除", this.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, remove.Count());
+            }
+        }
+
+        protected void DownloadFileEntity(IAsyncFileInfo downloadfile, FileEntity fileEntity, string savePath)
+        {
+            var sourceStream = downloadfile.CreateReadStream();
+            _logger.LogInformation("[{0}] 開始下載檔案 ID {1} 的 {2} 檔案", this.Options.Identity, fileEntity.FileEntityId, fileEntity.Name);
+            using (var fstream = File.Create(savePath))
+            {
+                sourceStream.CopyTo(fstream);
+            }
+            _logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 檔案 下載完成", this.Options.Identity, fileEntity.FileEntityId, fileEntity.Name);
         }
         protected abstract bool ExecuteInternal(PluginTaskModel taskModel);
         /// <summary>

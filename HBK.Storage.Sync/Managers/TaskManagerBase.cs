@@ -39,7 +39,6 @@ namespace HBK.Storage.Sync.Managers
                     if (!this.IsRunning)
                     {
                         _cancellationToken = cancellationToken;
-                        _cancellationToken.Register(this.Dispose);
                         Task.Factory.StartNewSafety(this.StartInternal,
                             TaskCreationOptions.LongRunning,
                             this.ExcetpionHandle);

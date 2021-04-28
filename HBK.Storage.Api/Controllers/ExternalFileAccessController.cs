@@ -128,6 +128,11 @@ namespace HBK.Storage.Api.Controllers
 
             var fileAccessToken = _fileAccessTokenService.BuildFileAccessToken(jwtSecurityToken);
             var fileEntity = await _fileEntityService.FindByIdAsync(fileAccessToken.FileEntityId.Value);
+            if (fileEntity.Status.HasFlag(Adapter.Enums.FileEntityStatusEnum.Processing) || fileEntity.Status.HasFlag(Adapter.Enums.FileEntityStatusEnum.Uploading))
+            {
+                return base.BadRequest("檔案處理中");
+            }
+
             var fileEntityStorage = await _storageProviderService.GetFileEntityStorageAsync(fileAccessToken.StorageProviderId, fileAccessToken.StorageGroupId, fileAccessToken.FileEntityId.Value);
             IAsyncFileInfo fileInfo = await _fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId);
             if (fileInfo == null)
@@ -174,6 +179,10 @@ namespace HBK.Storage.Api.Controllers
             var fileAccessToken = _fileAccessTokenService.BuildFileAccessToken(jwtSecurityToken);
 
             var fileEntity = await _fileEntityService.FindByIdAsync(fileEntityId);
+            if (fileEntity.Status.HasFlag(Adapter.Enums.FileEntityStatusEnum.Processing) || fileEntity.Status.HasFlag(Adapter.Enums.FileEntityStatusEnum.Uploading))
+            {
+                return base.BadRequest("檔案處理中");
+            }
             var allowTagPattern = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "allowTagPattern").Value;
             if (fileEntity.FileEntityTag.All(x => !Regex.IsMatch(x.Value, allowTagPattern)))
             {

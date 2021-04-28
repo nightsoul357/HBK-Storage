@@ -38,11 +38,15 @@ namespace HBK.Storage.VideoMetadataPlugin
 
             using (var scope = base._serviceProvider.CreateScope())
             {
-                base._logger.LogInformation("[{0}] 開始處理檔案 ID {1} 的 {2} 之 Metadata", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
                 var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId).Result;
+
+                base.RemoveResidueFileEntity(fileEntityService, taskModel);
+
+                base._logger.LogInformation("[{0}] 開始處理檔案 ID {1} 的 {2} 之 Metadata", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
+
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)
                 {
@@ -54,13 +58,13 @@ namespace HBK.Storage.VideoMetadataPlugin
                 Directory.CreateDirectory(workingDirectory);
 
                 string videoFileName = Path.Combine(workingDirectory, Guid.NewGuid() + Path.GetExtension(taskModel.FileEntity.Name));
-                using (var fs = File.Create(videoFileName))
-                {
-                    fileInfo.CreateReadStream().CopyTo(fs);
-                }
+                base.DownloadFileEntity(fileInfo, taskModel.FileEntity, videoFileName);
 
                 var videoFile = new MediaFile { Filename = videoFileName };
-                using var engine = new Engine(base.Options.FFmpegLocation);
+                string newFFmpegLocation = Path.Combine(workingDirectory, "ffmpeg.exe");
+                File.Copy(base.Options.FFmpegLocation, newFFmpegLocation);
+
+                using var engine = new Engine(newFFmpegLocation);
                 engine.GetMetadata(videoFile);
 
                 var perSecond = videoFile.Metadata.Duration.TotalSeconds / (base.Options.PreviewsCount + 1);
@@ -87,11 +91,12 @@ namespace HBK.Storage.VideoMetadataPlugin
                 taskModel.FileEntity.ExtendProperty = jobject.ToString();
                 taskModel.FileEntity = fileEntityService.UpdateAsync(taskModel.FileEntity).Result;
 
+                List<FileEntity> processingFileEntities = new List<FileEntity>();
                 for (int i = 1; i <= previewsFiles.Count; i++)
                 {
                     using (var previewfs = File.OpenRead(previewsFiles[i - 1]))
                     {
-                        _ = storageProviderService
+                        var preFileEntity = storageProviderService
                             .UploadFileEntityAsync(taskModel.StorageProviderId,
                                 null,
                                 new FileEntity()
@@ -99,19 +104,29 @@ namespace HBK.Storage.VideoMetadataPlugin
                                     MimeType = "image/jpg",
                                     Name = $"preview-{i}",
                                     Size = previewfs.Length,
-                                    Status = FileEntityStatusEnum.None,
+                                    Status = FileEntityStatusEnum.Processing,
                                     FileEntityTag = new List<FileEntityTag>()
                                     {
-                                    new FileEntityTag()
-                                    {
-                                        Value = $"preview-{i}"
-                                    }
+                                        new FileEntityTag()
+                                        {
+                                            Value = $"preview-{i}"
+                                        },
+                                        new FileEntityTag()
+                                        {
+                                            Value = base.Options.Identity
+                                        }
                                     },
                                     ParentFileEntityID = taskModel.FileEntity.FileEntityId
                                 },
                                 previewfs, this.Options.Identity).Result;
+
+                        base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 上傳第 {3} 張預覽圖完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, i);
+                        processingFileEntities.Add(preFileEntity);
                     }
                 }
+
+                processingFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);
+                fileEntityService.UpdateBatchAsync(processingFileEntities).Wait();
 
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
                 base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 之 Metadata 處理完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
