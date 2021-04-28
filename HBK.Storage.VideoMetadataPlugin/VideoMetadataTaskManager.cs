@@ -87,6 +87,10 @@ namespace HBK.Storage.VideoMetadataPlugin
                     jobject = new JObject();
                 }
                 var meta = JObject.Parse(JsonConvert.SerializeObject(videoFile.Metadata));
+                if (jobject.TryGetValue("MediaMetaData", out JToken temp))
+                {
+                    jobject.Remove("MediaMetaData");
+                }
                 jobject.Add(new JProperty("MediaMetaData", meta));
                 taskModel.FileEntity.ExtendProperty = jobject.ToString();
                 taskModel.FileEntity = fileEntityService.UpdateAsync(taskModel.FileEntity).Result;

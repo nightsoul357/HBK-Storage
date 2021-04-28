@@ -36,6 +36,7 @@ namespace HBK.Storage.PluginIntegration
 
             try
             {
+                _logger.LogInformation($"·í«e¥Ø¿ý -> { VideoSubTitleCombineTaskManager.CurrentDirectory }");
                 this.ImageCompressTaskManager.Start(stoppingToken);
                 this.VideoConvertM3U8TaskManager.Start(stoppingToken);
                 this.VideoMetadataTaskManager.Start(stoppingToken);

@@ -86,7 +86,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                     var result = handler.Execute(new CombineHandlerTaskModel()
                     {
                         FFmpegLocation = newFFmpegLocation,
-                        Identity = taskId.ToString(),
+                        Identity = base.Options.Identity,
                         OutputFileName = outputVideoFile,
                         SubTitleFileName = Path.GetFileName(subTitleFile),
                         VideoFileName = sourceVideoFile
