@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>Docs\HBK.Storage.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="FileSystem\NewFolder\**" />
+    <EmbeddedResource Remove="FileSystem\NewFolder\**" />
+    <None Remove="FileSystem\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.7.0.9" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.51.0.2265" />
+    <PackageReference Include="MegaApiClient" Version="1.9.0" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HBK.Storage.Adapter\HBK.Storage.Adapter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Docs\HBK.Storage.Core.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

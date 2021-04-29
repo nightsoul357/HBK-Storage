@@ -1,0 +1,1592 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HBK.Storage.Core</name>
+    </assembly>
+    <members>
+        <member name="T:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum">
+            <summary>
+            存取檔案權杖類型
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum.Normal">
+            <summary>
+            一般
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum.NormalNoLimit">
+            <summary>
+            無限制的一般
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum.AllowTag">
+            <summary>
+            允許指定的 Tag
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum.AllowTagNoLimit">
+            <summary>
+            無限制的允許指定的 Tag
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3DirectoryContents">
+            <summary>
+            AWS S3 目錄內容
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3DirectoryContents.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileInfo})">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="files">檔案清單</param>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3DirectoryContents.Exists">
+            <summary>
+            取得檔案室否存在
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3DirectoryContents.GetEnumerator">
+            <summary>
+            取得列舉器
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileInfo">
+            <summary>
+            AWS S3 檔案資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileInfo.LastModified">
+            <summary>
+            取得檔案修改時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileInfo.BucketName">
+            <summary>
+            取得 Bucket 名稱
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileInfo.#ctor(Amazon.S3.AmazonS3Client,System.String,System.String,System.String,Amazon.S3.Model.GetObjectMetadataResponse)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="client">AWS S3 客戶端</param>
+            <param name="key">檔案主鍵</param>
+            <param name="bucketName">bucket 名稱</param>
+            <param name="physicalPath">檔案路徑</param>
+            <param name="metadata">中繼資料</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileInfo.#ctor(Amazon.S3.AmazonS3Client,System.String,System.String,System.String,Amazon.S3.Model.S3Object)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="client">AWS S3 客戶端</param>
+            <param name="key">檔案主鍵</param>
+            <param name="bucketName">bucket 名稱</param>
+            <param name="physicalPath">檔案路徑</param>
+            <param name="s3Object">AWS S3 物件</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileInfo.CreateReadStreamAsync">
+            <summary>
+            取得檔案資料
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider">
+            <summary>
+            AWS S3 儲存服務提供者
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.BucketName">
+            <summary>
+            取得 Bucket 名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.DefaultExipreTime">
+            <summary>
+            取得預設的網址過期時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.BufferSize">
+            <summary>
+            取得緩衝區大小
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.BufferCount">
+            <summary>
+            取得緩衝區數量
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.#ctor(System.String,System.String,System.String,System.String,Amazon.S3.AmazonS3Config)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="name">提供者名稱</param>
+            <param name="accessKey">存取金鑰</param>
+            <param name="secretKey">存取密鑰</param>
+            <param name="bucketName">Bucket 名稱</param>
+            <param name="config">設定值</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.DeleteAsync(System.String)">
+            <summary>
+            刪除檔案
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.DeleteAsync(System.String[])">
+            <summary>
+            刪除檔案
+            </summary>
+            <param name="subpathes">檔案相對路徑集合</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.GetDirectoryContentsAsync(System.String)">
+            <summary>
+            取得目錄下的檔案
+            </summary>
+            <param name="subpath">相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.GetFileInfoAsync(System.String)">
+            <summary>
+            取得檔案資訊
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.PutAsync(System.String,System.IO.Stream)">
+            <summary>
+            新增檔案
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+            <param name="fileStream">檔案流</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.IsFileExistAsync(System.String)">
+            <summary>
+            指定的檔案是否存在
+            </summary>
+            <param name="subpath">檔案的相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.GetPreSignedUrl(System.String,System.TimeSpan)">
+            <summary>
+            取得檔案的 URL
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+            <param name="expire">過期時間</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.Watch(System.String)">
+            <summary>
+            監視檔案變更
+            </summary>
+            <param name="filter">篩選器</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.AsyncFileInfo">
+            <summary>
+            儲存服務檔案資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AsyncFileInfo.Exists">
+            <summary>
+            取得檔案是否存在
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AsyncFileInfo.Length">
+            <summary>
+            取得檔案長度
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AsyncFileInfo.PhysicalPath">
+            <summary>
+            取得檔案路徑
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AsyncFileInfo.Name">
+            <summary>
+            取得檔案名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AsyncFileInfo.LastModified">
+            <summary>
+            取得檔案修改時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AsyncFileInfo.IsDirectory">
+            <summary>
+            取得是否為目錄
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileInfo.CreateReadStream">
+            <summary>
+            取得檔案資料流
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileInfo.CreateReadStreamAsync">
+            <summary>
+            取得檔案資料流
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.AsyncFileProvider">
+            <summary>
+            儲存服務提供者
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AsyncFileProvider.Name">
+            <summary>
+            取得提供者的名字
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileProvider.#ctor(System.String)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="name">提供者名稱</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileProvider.DeleteAsync(System.String)">
+            <summary>
+            刪除檔案
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileProvider.PutAsync(System.String,System.IO.Stream)">
+            <summary>
+            新增檔案
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+            <param name="fileStream">檔案流</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileProvider.IsFileExistAsync(System.String)">
+            <summary>
+            指定的檔案是否存在
+            </summary>
+            <param name="subpath">檔案的相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileProvider.GetDirectoryContentsAsync(System.String)">
+            <summary>
+            取得目錄下的檔案資訊
+            </summary>
+            <param name="subpath">相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileProvider.GetFileInfoAsync(System.String)">
+            <summary>
+            取得檔案資訊
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileProvider.Watch(System.String)">
+            <summary>
+            監看檔案是否發生變更
+            </summary>
+            <param name="filter">檔案名稱過濾器</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileProvider.GetFileInfo(System.String)">
+            <summary>
+            取得檔案資訊
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileProvider.GetDirectoryContents(System.String)">
+            <summary>
+            取得目錄下的檔案資訊
+            </summary>
+            <param name="subpath">相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AsyncFileProvider.DeleteAsync(System.String[])">
+            <summary>
+            刪除多個檔案
+            </summary>
+            <param name="subpathes">檔案相對路徑集合</param>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.FileSystemFactory">
+            <summary>
+            檔案系統工廠
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FileSystemFactory.#ctor(HBK.Storage.Core.Services.StorageService)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="storageService">儲存個體服務</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FileSystemFactory.GetAsyncFileProvider(HBK.Storage.Adapter.Storages.Storage)">
+            <summary>
+            取得指定儲存個體之儲存服務提供者
+            </summary>
+            <param name="storage">儲存個體</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.FTP.FTPDirectoryContents">
+            <summary>
+            FTP 目錄內容
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPDirectoryContents.#ctor(System.Boolean,System.Collections.Generic.IEnumerable{HBK.Storage.Core.FileSystem.FTP.FTPFileInfo})">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="isExist">資料夾是否存在</param>
+            <param name="files">檔案清單</param>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.FTP.FTPDirectoryContents.Exists">
+            <summary>
+            取得檔案室否存在
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPDirectoryContents.GetEnumerator">
+            <summary>
+            取得列舉器
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.FTP.FTPFileInfo">
+            <summary>
+            FTP 的檔案資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileInfo.#ctor(HBK.Storage.Core.FileSystem.FTP.FTPOption,System.String,System.Int64,System.DateTimeOffset,System.String)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="ftpOption">FTP 連接選項</param>
+            <param name="key">檔案主鍵</param>
+            <param name="length">檔案大小</param>
+            <param name="lastModified">最後修訂時間</param>
+            <param name="physicalPath">檔案實際路徑</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileInfo.CreateReadStreamAsync">
+            <summary>
+            取得檔案資料
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.FTP.FTPFileProvider">
+            <summary>
+            FTP 儲存服務提供者
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileProvider.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="name">提供者名稱</param>
+            <param name="url">連接位置</param>
+            <param name="username">使用者名稱</param>
+            <param name="password">密碼</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileProvider.#ctor(System.String,HBK.Storage.Core.FileSystem.FTP.FTPOption)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="name">提供者名稱</param>
+            <param name="ftpOption">FTP 連接選項</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileProvider.DeleteAsync(System.String)">
+            <summary>
+            刪除檔案
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileProvider.DeleteAsync(System.String[])">
+            <summary>
+            刪除檔案
+            </summary>
+            <param name="subpathes">檔案相對路徑集合</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileProvider.GetDirectoryContentsAsync(System.String)">
+            <summary>
+            取得目錄下的檔案
+            </summary>
+            <param name="subpath">相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileProvider.GetFileInfoAsync(System.String)">
+            <summary>
+            取得檔案資訊
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileProvider.PutAsync(System.String,System.IO.Stream)">
+            <summary>
+            新增檔案
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+            <param name="fileStream">檔案流</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileProvider.IsFileExistAsync(System.String)">
+            <summary>
+            指定的檔案是否存在
+            </summary>
+            <param name="subpath">檔案的相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.FTP.FTPFileProvider.Watch(System.String)">
+            <summary>
+            監視檔案變更
+            </summary>
+            <param name="filter">篩選器</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.FTP.FTPOption">
+            <summary>
+            FTP 連接選項
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.FTP.FTPOption.Url">
+            <summary>
+            取得或設定 Url
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.FTP.FTPOption.Credentials">
+            <summary>
+            取得或設定連接 FTP 使用的驗證
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.FTP.FTPOption.UploadBufferSize">
+            <summary>
+            取得或設定上傳時使用的緩衝區大小
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore">
+            <summary>
+            Google Drive Token 儲存方式
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore.#ctor(HBK.Storage.Adapter.Storages.Storage,HBK.Storage.Core.Services.StorageService)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="storage">儲存個體</param>
+            <param name="storageService">儲存個體服務</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore.ClearAsync">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore.DeleteAsync``1(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore.GetAsync``1(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.CredentialsDataStore.StoreAsync``1(System.String,``0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveDirectoryContents">
+            <summary>
+            Google Drive 目錄內容
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveDirectoryContents.#ctor(System.Boolean,System.Collections.Generic.IEnumerable{HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileInfo})">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="isExist">資料夾是否存在</param>
+            <param name="files">檔案清單</param>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveDirectoryContents.Exists">
+            <summary>
+            取得檔案室否存在
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveDirectoryContents.GetEnumerator">
+            <summary>
+            取得列舉器
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileInfo">
+            <summary>
+            Google Drive 的檔案資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileInfo.#ctor(Google.Apis.Drive.v3.DriveService,Google.Apis.Drive.v3.Data.File)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="driveService">Google Drive 服務</param>
+            <param name="file">Google Drive 檔案</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileInfo.CreateReadStreamAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider">
+            <summary>
+            Google Drive 儲存服務提供者
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.BufferSize">
+            <summary>
+            取得緩衝區大小
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.Parent">
+            <summary>
+            取得父資料夾 ID
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.#ctor(System.String,System.String,System.String,System.String,System.String,Google.Apis.Util.Store.IDataStore)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="name">名稱</param>
+            <param name="parent">父資料夾 ID</param>
+            <param name="clientId">存取金鑰</param>
+            <param name="clientSecret">存取密鑰</param>
+            <param name="user">使用者名稱</param>
+            <param name="dataStore">Token 存取方式</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.DeleteAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.GetDirectoryContentsAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.GetFileInfoAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.IsFileExistAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.PutAsync(System.String,System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.Watch(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream">
+            <summary>
+            Google Drive 檔案使用的流
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.#ctor(Google.Apis.Drive.v3.DriveService,Google.Apis.Drive.v3.Data.File,System.Int32,System.Int32)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="driveService"></param>
+            <param name="file"></param>
+            <param name="bufferCount"></param>
+            <param name="bufferSize"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Position">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.BufferSize">
+            <summary>
+            取得緩衝區大小
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.BufferCount">
+            <summary>
+            取得緩衝區數量
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.IAsyncFileInfo">
+            <summary>
+            儲存服務檔案資訊介面
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.IAsyncFileInfo.CreateReadStreamAsync">
+            <summary>
+            取得檔案資料流
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.IAsyncFileProvider">
+            <summary>
+            儲存服務提供者介面
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.IAsyncFileProvider.Name">
+            <summary>
+            取得提供者名稱
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.IAsyncFileProvider.DeleteAsync(System.String)">
+            <summary>
+            刪除檔案
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.IAsyncFileProvider.DeleteAsync(System.String[])">
+            <summary>
+            刪除多個檔案
+            </summary>
+            <param name="subpathes">檔案相對路徑集合</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.IAsyncFileProvider.PutAsync(System.String,System.IO.Stream)">
+            <summary>
+            新增檔案
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+            <param name="fileStream">檔案流</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.IAsyncFileProvider.IsFileExistAsync(System.String)">
+            <summary>
+            指定的檔案是否存在
+            </summary>
+            <param name="subpath">檔案的相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.IAsyncFileProvider.GetDirectoryContentsAsync(System.String)">
+            <summary>
+            取得目錄下的檔案
+            </summary>
+            <param name="subpath">相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.IAsyncFileProvider.GetFileInfoAsync(System.String)">
+            <summary>
+            取得檔案資訊
+            </summary>
+            <param name="subpath">檔案相對路徑</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Local.LocalDirectoryContents">
+            <summary>
+            本地目錄內容
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalDirectoryContents.#ctor(System.Boolean,System.Collections.Generic.IEnumerable{HBK.Storage.Core.FileSystem.Local.LocalFileInfo})">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="isExist">資料夾是否存在</param>
+            <param name="files">檔案清單</param>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.Local.LocalDirectoryContents.Exists">
+            <summary>
+            取得檔案室否存在
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalDirectoryContents.GetEnumerator">
+            <summary>
+            取得列舉器
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Local.LocalFileInfo">
+            <summary>
+            本地的檔案資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalFileInfo.#ctor(System.String,System.IO.FileInfo)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="key">檔案主鍵</param>
+            <param name="fileInfo">檔案資訊</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalFileInfo.CreateReadStreamAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Local.LocalFileProvider">
+            <summary>
+            本地儲存服務提供者
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.Local.LocalFileProvider.Directory">
+            <summary>
+            取得目錄
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.Local.LocalFileProvider.BufferSize">
+            <summary>
+            取得緩衝區大小
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalFileProvider.#ctor(System.String,System.String)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="name"></param>
+            <param name="directory"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalFileProvider.DeleteAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalFileProvider.GetDirectoryContentsAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalFileProvider.GetFileInfoAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalFileProvider.IsFileExistAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalFileProvider.PutAsync(System.String,System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Local.LocalFileProvider.Watch(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Mega.MegaDirectoryContents">
+            <summary>
+            Mega 目錄內容
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaDirectoryContents.#ctor(System.Boolean,System.Collections.Generic.IEnumerable{HBK.Storage.Core.FileSystem.Mega.MegaFileInfo})">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="isExist">資料夾是否存在</param>
+            <param name="files">檔案清單</param>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.Mega.MegaDirectoryContents.Exists">
+            <summary>
+            取得檔案室否存在
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaDirectoryContents.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaDirectoryContents.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Mega.MegaFileInfo">
+            <summary>
+            Mega 的檔案資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileInfo.#ctor(CG.Web.MegaApiClient.MegaApiClient,CG.Web.MegaApiClient.INode)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="megaApiClient"></param>
+            <param name="node"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileInfo.CreateReadStreamAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider">
+            <summary>
+            Mega 儲存服務提供者
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.ParentId">
+            <summary>
+            取得父系資料夾 ID
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="name">提供者名稱</param>
+            <param name="username">帳號</param>
+            <param name="password">密碼</param>
+            <param name="parentId"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.DeleteAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.GetDirectoryContentsAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.GetFileInfoAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.IsFileExistAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.PutAsync(System.String,System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Mega.MegaFileProvider.Watch(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.Memory.MemoryFileInfo">
+            <summary>
+            記憶體內的檔案資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Memory.MemoryFileInfo.#ctor(System.IO.MemoryStream)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="ms"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.Memory.MemoryFileInfo.CreateReadStreamAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.HBKStorageCoreDependencyInjectionExtensions">
+            <summary>
+            HBK 儲存服務核心相依性注入輔助類別
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.HBKStorageCoreDependencyInjectionExtensions.AddHBKStorageService(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            自動加入完整 HBK 儲存服務相關資源
+            </summary>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.Models.FileEntityStorageServiceOption">
+            <summary>
+            檔案位於儲存個體上的資訊服務選項
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.FileEntityStorageServiceOption.FetchFailToCloseFileCount">
+            <summary>
+            Fetch 檔案失敗導致檔案關閉的嘗試次數
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.FileEntityStorageServiceOption.FetchFailToCloseStorgeCount">
+            <summary>
+            Fetch 檔案失敗導致關閉儲存個體的嘗試次數
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.FileEntityStorageServiceOption.SyncTargetFailtToCloseStorageCount">
+            <summary>
+            同步至目標儲存個體失敗導致關閉目標儲存個體的嘗試次數
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.Models.JWTOption">
+            <summary>
+            JWT 設定檔
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.JWTOption.Issuer">
+            <summary>
+            取得或設定發行者
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.JWTOption.X509Certificate2Location">
+            <summary>
+            取得或設定 X509Certificate2 檔案位置
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.JWTOption.X509Certificate2Password">
+            <summary>
+            取得或設定 X509Certificate2 使用的密碼
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.Models.StorageExtendProperty">
+            <summary>
+            儲存個體延展資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.StorageExtendProperty.Storage">
+            <summary>
+            取得過設定儲存個體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.StorageExtendProperty.RemainSize">
+            <summary>
+            取得或設定剩餘大小
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.Models.SyncFileEntity">
+            <summary>
+            需同步的檔案實體資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.SyncFileEntity.FileEntity">
+            <summary>
+            取得或設定檔案實體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.SyncFileEntity.FromStorageGroup">
+            <summary>
+            取得或設定檔案來源之檔案群組
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.SyncFileEntity.FromFileEntityStorage">
+            <summary>
+            取得或設定來源檔案位於儲存個體上的橋接資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.SyncFileEntity.DestinationStorageGroup">
+            <summary>
+            取得或設定檔案目的之檔案群組
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.Services.AuthorizeKeyService">
+            <summary>
+            驗證金鑰服務
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="dbContext">資料庫實體</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.ListQuery">
+            <summary>
+            取得金鑰列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.FindByIdAsync(System.Guid)">
+            <summary>
+            以 ID 取得金鑰
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.FindByKeyValueAsync(System.String)">
+            <summary>
+            以金鑰值取得金鑰
+            </summary>
+            <param name="keyValue">金鑰值</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByStorageProviderAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
+            <summary>
+            取得指金鑰 ID、儲存服務 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByStorageGroupAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
+            <summary>
+            取得指金鑰 ID、儲存個體群組 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <param name="storageGroupId">儲存個體群組 ID</param>
+            <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByStorageAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
+            <summary>
+            取得指金鑰 ID、儲存個體 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <param name="storageId">儲存個體 ID</param>
+            <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByFileEntityAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
+            <summary>
+            取得指金鑰 ID、檔案實體 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByFileAccessTokenAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
+            <summary>
+            取得指金鑰 ID、檔案存取權杖 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
+            </summary>
+            <param name="authorizeKeyId">金鑰 ID</param>
+            <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.Services.FileAccessTokenService">
+            <summary>
+            檔案存取權杖服務
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext,HBK.Storage.Core.Models.JWTOption)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="dbContext">資料庫實體</param>
+            <param name="jwtOption">JWT 設定檔</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.ListQuery">
+            <summary>
+            取得檔案存取權杖列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.FindByIdAsync(System.Guid)">
+            <summary>
+            以 ID 取得檔案存取權杖
+            </summary>
+            <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.RevokeTokenAsync(System.Guid)">
+            <summary>
+            撤銷檔案存取權杖
+            </summary>
+            <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.BuildFileAccessToken(System.IdentityModel.Tokens.Jwt.JwtSecurityToken)">
+            <summary>
+            產生檔案存取權杖模型
+            </summary>
+            <param name="jwtSecurityToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateNormalFileAccessTokenAsync(System.Guid,System.Nullable{System.Guid},System.Guid,System.DateTime,System.Int32,System.String)">
+            <summary>
+            產生一般存取檔案使用的權杖
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="expireDateTime">過期時間</param>
+            <param name="accessTimeLimit">存取次數限制</param>
+            <param name="handlerIndicate">檔案處理器指示字串</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateNormalNoLimitFileAccessToken(System.Guid,System.Nullable{System.Guid},System.Guid,System.DateTime,System.String)">
+            <summary>
+            產生無限制的一般存取檔案使用的權杖
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="expireDateTime">過期時間</param>
+            <param name="handlerIndicate">檔案處理器指示字串</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateAllowTagFileAccessTokenAsync(System.Guid,System.Nullable{System.Guid},System.String,System.DateTime,System.Int32,System.String)">
+            <summary>
+            產生允許指定 Tag 通過的檔案存取權杖
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
+            <param name="allowTagPattern"></param>
+            <param name="expireDateTime">過期時間</param>
+            <param name="accessTimeLimit">存取次數限制</param>
+            <param name="handlerIndicate">檔案處理器指示字串</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateAllowTagNoLimitFileAccessToken(System.Guid,System.Nullable{System.Guid},System.String,System.DateTime,System.String)">
+            <summary>
+            產生無限制的允許指定 Tag 通過的檔案存取權杖
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="strogaeGroupId">強制指定的存取對象的儲存個體集合 ID</param>
+            <param name="allowTagPattern"></param>
+            <param name="expireDateTime">過期時間</param>
+            <param name="handlerIndicate">檔案處理器指示字串</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.ValidateFileAccessTokenAsync(System.String)">
+            <summary>
+            驗證存取檔案使用的權杖是否有效
+            </summary>
+            <param name="token">權杖</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.TryAddAccessTimesAsync(System.Guid)">
+            <summary>
+            嘗試增加檔案存取次數
+            </summary>
+            <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileAccessTokenService.GenerateJWTToken(System.Collections.Generic.List{System.Security.Claims.Claim},System.DateTime)">
+            <summary>
+            產生 JWT Token
+            </summary>
+            <param name="claims">宣告式內容</param>
+            <param name="expireDateTime">過期時間</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.Services.FileEntityService">
+            <summary>
+            檔案實體服務
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="dbContext">資料庫實體</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.ListQuery">
+            <summary>
+            取得檔案實體列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.FindByIdAsync(System.Guid)">
+            <summary>
+            以 ID 取得檔案實體
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.UpdateAsync(HBK.Storage.Adapter.Storages.FileEntity)">
+            <summary>
+            更新檔案實體
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.UpdateBatchAsync(System.Collections.Generic.List{HBK.Storage.Adapter.Storages.FileEntity})">
+            <summary>
+            批次更新檔案實體
+            </summary>
+            <param name="updateFileEntities"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.MarkFileEntityDeleteAsync(System.Guid)">
+            <summary>
+            將檔案實體註記為刪除
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.MarkFileEntityDeleteBatchAsync(System.Collections.Generic.List{System.Guid})">
+            <summary>
+            批次將檔案實體註記為刪除
+            </summary>
+            <param name="fileEntityIds">檔案實體 ID 清單</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetMarkDeleteFileEntityStoragiesAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            取得需要被刪除的檔案位於儲存個體上的橋接資訊清單
+            </summary>
+            <param name="takeCount">取得數量</param>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.UpdateFileEntityDeleteInfoAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            更新移除完成的檔案實體
+            </summary>
+            <param name="updateCount">更新數量</param>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.DeleteFileEntityStroageAsync(System.Guid)">
+            <summary>
+            刪除檔案位於儲存個體上的橋接資訊
+            </summary>
+            <param name="fileEntityStorageId">儲存個體上的橋接資訊 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetStoragesAsync(System.Guid)">
+            <summary>
+            取得檔案存在的儲存個體集合
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetExpireFileEntityWithoutMarkDeleteAsync(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            取得已過期但未標記刪除的檔案
+            </summary>
+            <param name="takeCount">取得數量</param>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetStorageProviderIdByFileEntityIdAsync(System.Guid)">
+            <summary>
+            取得檔案實體所屬的儲存服務 ID
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.AppendTagAsync(System.Guid,System.String)">
+            <summary>
+            附加標籤到檔案實體上
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="tag">標籤</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.RemoveTagAsync(System.Guid,System.String)">
+            <summary>
+            移除檔案實體上的標籤
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="tag">標籤</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetChildFileEntitiesAsync(System.Guid)">
+            <summary>
+            取得子檔案實體清單
+            </summary>
+            <param name="parentFileEntityId">父檔案實體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.Services.FileEntityStorageService">
+            <summary>
+            檔案位於儲存個體上的資訊服務
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext,HBK.Storage.Core.FileSystem.FileSystemFactory,Microsoft.Extensions.Logging.ILogger{HBK.Storage.Core.Services.FileEntityStorageService},HBK.Storage.Core.Models.FileEntityStorageServiceOption)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="dbContext">資料庫實體</param>
+            <param name="fileSystemFactory">檔案系統工廠</param>
+            <param name="logger"></param>
+            <param name="option"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.ListQuery">
+            <summary>
+            取得檔案位於儲存個體上的資訊列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.FindByIdAsync(System.Guid)">
+            <summary>
+            以 ID 取得檔案位於儲存個體上的資訊
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的資訊 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.UpdateAsync(HBK.Storage.Adapter.Storages.FileEntityStorage)">
+            <summary>
+            更新檔案位於儲存個體上的資訊
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.TryFetchFileInfoAsync(System.Guid)">
+            <summary>
+            嘗試取得檔案資訊
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的資訊 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddFetchFailRecordAsync(System.Guid,System.String)">
+            <summary>
+            新增檔案位於儲存個體上的實體取得資訊失敗紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddFetchSuccessfullyRecordAsync(System.Guid,System.String)">
+            <summary>
+            新增檔案位於儲存個體上的實體取得資訊成功紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddSyncFailRecordAsync(System.Guid,System.String,System.Guid)">
+            <summary>
+            新增檔案位於儲存個體上的實體同步失敗紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+            <param name="syncTargeStorageId">同步目標儲存個體 ID</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddSyncSuccessfullyRecordAsync(System.Guid,System.String,System.Guid)">
+            <summary>
+            新增檔案位於儲存個體上的實體同步成功紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+            <param name="syncTargeStorageId">同步目標儲存個體 ID</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddSyncAccessFailRecordAsync(System.Guid,System.String)">
+            <summary>
+            新增檔案位於儲存個體上的實體存取失敗紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddAccessSuccessfullyRecordAsync(System.Guid,System.String)">
+            <summary>
+            新增檔案位於儲存個體上的實體存取成功紀錄
+            </summary>
+            <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="message">訊息</param>
+        </member>
+        <member name="T:HBK.Storage.Core.Services.StorageGroupService">
+            <summary>
+            儲存個體群組服務
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext,HBK.Storage.Core.Services.StorageService)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="dbContext">資料庫實體</param>
+            <param name="storageService">儲存個體服務</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.ListQuery">
+            <summary>
+            取得儲存個體群組列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.FindByIdAsync(System.Guid)">
+            <summary>
+            以 ID 取得儲存個體群組
+            </summary>
+            <param name="storageGroupId">儲存個體群組 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.AddAsync(HBK.Storage.Adapter.Storages.StorageGroup)">
+            <summary>
+            新增儲存個體集合
+            </summary>
+            <param name="storageGroup"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.UpdateAsync(HBK.Storage.Adapter.Storages.StorageGroup)">
+            <summary>
+            更新儲存個體集合
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.DeleteAsync(System.Guid)">
+            <summary>
+            刪除儲存個體集合(同時會刪除所有儲存個體)
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.DisableStorageGroupAsync(System.Guid)">
+            <summary>
+            停用指定的儲存個體集合
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(System.Guid)">
+            <summary>
+            取得儲存個體群組內剩餘容量最多的儲存個體延展資訊
+            </summary>
+            <param name="storageGroupId">儲存個體群組 ID</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.Services.StorageProviderService">
+            <summary>
+            儲存服務服務
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext,HBK.Storage.Core.Services.StorageGroupService,HBK.Storage.Core.FileSystem.FileSystemFactory)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="dbContext">資料庫實體</param>
+            <param name="storageGroupService">儲存個體群組服務</param>
+            <param name="fileSystemFactory">檔案系統工廠</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.ListQuery">
+            <summary>
+            取得儲存服務列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.FindByIdAsync(System.Guid)">
+            <summary>
+            以 ID 取得儲存服務
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetAllStorageProviderAsync">
+            <summary>
+            取得所有儲存服務
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetStorageProviderByIdsAsync(System.Collections.Generic.List{System.Guid})">
+            <summary>
+            取得指定儲存服務 ID 清單的所有儲存服務
+            </summary>
+            <param name="storageProviderIds">儲存服務 ID 清單</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.AddAsync(HBK.Storage.Adapter.Storages.StorageProvider)">
+            <summary>
+            加入儲存服務
+            </summary>
+            <param name="storageProvider"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.UpdateAsync(HBK.Storage.Adapter.Storages.StorageProvider)">
+            <summary>
+            更新儲存服務
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.DeleteAsync(System.Guid)">
+            <summary>
+            刪除儲存服務
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.UploadFileEntityAsync(System.Guid,System.Nullable{System.Guid},HBK.Storage.Adapter.Storages.FileEntity,System.IO.Stream,System.String)">
+            <summary>
+            上傳檔案至指定的儲存服務
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="storageGroupId">強制指定儲存集合 ID</param>
+            <param name="fileEntity">檔案實體</param>
+            <param name="fileStream">檔案流</param>
+            <param name="creatorIdentity">建立者識別</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityStorageAsync(System.Guid,System.Nullable{System.Guid},System.Guid)">
+            <summary>
+            取得指定儲存服務內的指定檔案實體的橋接資訊
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="storageGroupId">強制指定儲存個體群組 ID</param>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetSyncFileEntitiesAsync(System.Guid,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            取得需同步的同步任務資訊
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="takeCount">取得數量上限</param>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityWithoutTagAsync(System.Guid,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            取得儲存服務內不包含 Tag 且 MineType 為指定格式的檔案實體
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="tag">不包含的 Tag</param>
+            <param name="mimeTypeParten">指定的 MineType 範本</param>
+            <param name="isRootFileEntity">是否為跟檔案實體</param>
+            <param name="takeCount">取得數量上限</param>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityWithTagAsync(System.Guid,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            取得儲存服務內包含 Tag 且 MineType 為指定格式的檔案實體
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="tag">不包含的 Tag</param>
+            <param name="mimeTypeParten">指定的 MineType 範本</param>
+            <param name="isRootFileEntity">是否為跟檔案實體</param>
+            <param name="takeCount">取得數量上限</param>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.Services.StorageService">
+            <summary>
+            儲存個體服務
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="dbContext">資料庫實體</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.ListQuery">
+            <summary>
+            取得儲存個體列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.FindByIdAsync(System.Guid)">
+            <summary>
+            以 ID 取得儲存個體
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.AddAsync(HBK.Storage.Adapter.Storages.Storage)">
+            <summary>
+            新增儲存個體
+            </summary>
+            <param name="storage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.UpdateAsync(HBK.Storage.Adapter.Storages.Storage)">
+            <summary>
+            更新儲存個體
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.DeleteAsync(System.Guid)">
+            <summary>
+            刪除儲存個體(同時會刪除所有儲存個體內的檔案)
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.GetStorageExtendPropertyAsync(System.Guid)">
+            <summary>
+            取得儲存個體延展資訊
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.AddFileEntityInStorageAsync(HBK.Storage.Adapter.Storages.FileEntityStorage)">
+            <summary>
+            於儲存個體內新增檔案實體
+            </summary>
+            <param name="fileEntityStroage">檔案位於儲存個體上的橋接資訊</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.CompleteSyncAsync(System.Guid,System.String)">
+            <summary>
+            完成同步
+            </summary>
+            <param name="fileEntityStroageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <param name="value">檔案儲存個體更新值</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.RevorkSyncAsync(System.Guid)">
+            <summary>
+            撤銷同步(同步失敗)
+            </summary>
+            <param name="fileEntityStroageId">檔案位於儲存個體上的橋接資訊 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.UpdateCredentialsAsync(System.Guid,HBK.Storage.Adapter.StorageCredentials.StorageCredentialsBase)">
+            <summary>
+            更新儲存個體驗證資訊
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
+            <param name="storageCredentialsBase">儲存個體驗證資訊</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

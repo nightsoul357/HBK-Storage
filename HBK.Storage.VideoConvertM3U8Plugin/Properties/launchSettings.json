@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "HBK.Storage.VideoConvertM3U8Plugin": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

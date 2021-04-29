@@ -1,0 +1,52 @@
+﻿{
+   "CodeGenerationMode": 0,
+   "ContextClassName": "HBKStorageContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Storages",
+   "ProceduresReturnList": false,
+   "ProjectRootNamespace": "HBK.Storage.Adapter",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[FileEntity]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[FileEntityStroage]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Storage]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[StorageGroup]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[StorageProvider]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "DESKTOP-D0KQ4VT.HBKStorage",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseNoConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSpatial": false
+}

@@ -1,0 +1,1538 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HBK.Storage.Api</name>
+    </assembly>
+    <members>
+        <member name="T:HBK.Storage.Api.Controllers.ExternalFileAccessController">
+            <summary>
+            外部檔案存取控制器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService,HBK.Storage.Core.Services.FileEntityStorageService,HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="storageProviderService"></param>
+            <param name="fileEntityService"></param>
+            <param name="fileAccessTokenService"></param>
+            <param name="fileEntityStorageService"></param>
+            <param name="fileAccessHandlerProxy"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.Guid,System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="esic">存取權杖</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.Guid,System.String,System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="fileName">檔案名稱</param>
+            <param name="esic">存取權杖</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="esic">存取權杖</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.String,System.String)">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="esic">存取權杖</param>
+            <param name="fileName">檔案名稱</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Controllers.FileAccessTokenController">
+            <summary>
+            檔案存取權帳控制器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileAccessTokenController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="storageProviderService"></param>
+            <param name="fileEntityService"></param>
+            <param name="fileAccessTokenService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileAccessTokenController.Get(System.Guid)">
+            <summary>
+            取得指定 ID 之檔案存取權杖
+            </summary>
+            <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileAccessTokenController.Revoke(System.Guid)">
+            <summary>
+            撤銷指定 ID 的權杖
+            </summary>
+            <param name="fileAccessTokenId">檔案存取權杖 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileAccessTokenController.BuildFileAccessTokenResponse(HBK.Storage.Adapter.Storages.FileAccessToken)">
+            <summary>
+            產生檔案存取權杖回應內容
+            </summary>
+            <param name="fileAccessToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Controllers.FileEntityController">
+            <summary>
+            檔案實體控制器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileEntityStorageService)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="storageProviderService"></param>
+            <param name="fileEntityService"></param>
+            <param name="fileEntityStorageService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.Get(System.Guid,System.Nullable{System.Guid})">
+            <summary>
+            下載檔案
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="storageGroupId">強制指定儲存個體群組 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.AppendTag(System.Guid,HBK.Storage.Api.Models.FileEntity.AppendTagRequest)">
+            <summary>
+            附加檔案實體標籤
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="request">附加檔案實體標籤請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.DeleteTag(System.Guid,HBK.Storage.Api.Models.FileEntity.DeleteTagRequest)">
+            <summary>
+            刪除檔案實體標籤
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="request">刪除檔案實體標籤請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.Delete(System.Guid)">
+            <summary>
+            將檔案實體標記為刪除
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.BuildFileEntityResponse(HBK.Storage.Adapter.Storages.FileEntity,HBK.Storage.Core.Services.FileEntityService)">
+            <summary>
+            產生檔案實體回應內容
+            </summary>
+            <param name="fileEntity">檔案實體</param>
+            <param name="fileEntityService">檔案實體服務</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Controllers.HBKControllerBase">
+            <summary>
+            HBK Storage 使用的基底控制器
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Controllers.HBKControllerBase.AuthorizeKey">
+            <summary>
+            取得驗證用的金鑰
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.HBKControllerBase.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.HBKControllerBase.PagedResultAsync``2(Microsoft.AspNet.OData.Query.ODataQueryOptions{``0},System.Linq.IQueryable{``0},System.Func{System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1}},System.Nullable{System.Int32})">
+            <summary>
+            回傳 <see cref="T:HBK.Storage.Api.Models.PagedResponse`1"/> 結果
+            </summary>
+            <typeparam name="TModel">模型型別</typeparam>
+            <typeparam name="TReponse">回應型別</typeparam>
+            <param name="queryOptions">OData 查詢參數</param>
+            <param name="query">查詢式</param>
+            <param name="selector">選擇器</param>
+            <param name="defaultTake">預設回傳資料數量</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Controllers.StorageController">
+            <summary>
+            儲存個體控制器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.#ctor(HBK.Storage.Core.Services.StorageService,Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.Controllers.StorageController})">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="storageService"></param>
+            <param name="logger"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.Get(System.Guid)">
+            <summary>
+            取得指定 ID 之儲存個體
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.Put(System.Guid,HBK.Storage.Api.Models.Storage.StorageUpdateRequest)">
+            <summary>
+            更新儲存個體
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
+            <param name="request">更新儲存個體請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.Delete(System.Guid)">
+            <summary>
+            刪除儲存個體(同時刪除儲存個體內的所有檔案)
+            </summary>
+            <param name="storageId">儲存個體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.BuildStorageResponse(HBK.Storage.Adapter.Storages.Storage)">
+            <summary>
+            產生儲存個體回應內容
+            </summary>
+            <param name="storage">儲存個體</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.BuildStorageSummaryResponse(HBK.Storage.Adapter.Storages.Storage)">
+            <summary>
+            產生儲存個體基本資訊回應內容
+            </summary>
+            <param name="storage">儲存個體</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Controllers.StorageGroupController">
+            <summary>
+            儲存個體集合控制器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.#ctor(HBK.Storage.Core.Services.StorageGroupService,HBK.Storage.Core.Services.StorageService)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="storageGroupService"></param>
+            <param name="storageService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Get(System.Guid)">
+            <summary>
+            取得指定 ID 之儲存個體集合
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Put(System.Guid,HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest)">
+            <summary>
+            更新儲存個體集合
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <param name="request">更新儲存個體集合請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Delete(System.Guid)">
+            <summary>
+            刪除儲存個體集合(同時會刪除所有儲存個體)
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Post(System.Guid,HBK.Storage.Api.Models.Storage.StorageAddRequest)">
+            <summary>
+            新增儲存個體
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <param name="request">新增儲存個體請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.GetStorages(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.Storage})">
+            <summary>
+            取得儲存個體集合內的儲存個體集合，單次資料上限為 100 筆
+            </summary>
+            <param name="storageGroupId">儲存個體集合 ID</param>
+            <param name="queryOptions">OData 查詢選項</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.BuildStorageGroupResponse(HBK.Storage.Adapter.Storages.StorageGroup)">
+            <summary>
+            產生儲存個體集合回應內容
+            </summary>
+            <param name="storageGroup"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Controllers.StorageProviderController">
+            <summary>
+            儲存服務控制器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.StorageGroupService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService,HBK.Storage.Api.Factories.FileAccessTokenFactory,Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.Controllers.StorageProviderController})">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="storageProviderService"></param>
+            <param name="storageGroupService"></param>
+            <param name="fileEntityService"></param>
+            <param name="fileAccessTokenService"></param>
+            <param name="fileAccessTokenFactory"></param>
+            <param name="logger"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GET(System.Guid)">
+            <summary>
+            取得指定 ID 之儲存服務
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.List(Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.StorageProvider})">
+            <summary>
+            取得所有儲存服務資訊，單次資料上限為 100 筆
+            </summary>
+            <param name="queryOptions">OData 查詢參數</param>
+            <returns>儲存服務資訊集合</returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Post(HBK.Storage.Api.Models.StorageProvider.StorageProviderAddRequest)">
+            <summary>
+            加入儲存服務
+            </summary>
+            <param name="request">加入儲存服務請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Put(System.Guid,HBK.Storage.Api.Models.StorageProvider.StorageProviderUpdateRequest)">
+            <summary>
+            更新儲存服務內容
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="request">更新儲存服務內容請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Delete(System.Guid)">
+            <summary>
+            刪除儲存服務(包含所有儲存個體集合)
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Post(System.Guid,HBK.Storage.Api.Models.StorageGroup.StorageGroupAddRequest)">
+            <summary>
+            新增儲存個體集合
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="request">新增儲存個體集合請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetStorageGroups(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.StorageGroup})">
+            <summary>
+            取得儲存服務內的所有儲存個體集合，單次資料上限為 100 筆
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="queryOptions">OData 查詢選項</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetFileEntityResponses(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.FileEntity})">
+            <summary>
+            取得儲存服務內的檔案實體集合，單次資料上限為 100 筆
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="queryOptions">OData 查詢參數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Put(System.Guid,HBK.Storage.Api.Models.FileService.PutFileRequest)">
+            <summary>
+            上傳檔案至指定的儲存服務
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="request">上傳檔案的請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.PostFileAccessToken(System.Guid,HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest)">
+            <summary>
+            產生檔案存取權杖
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetFileAccessTokens(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.FileAccessToken})">
+            <summary>
+            取得檔案存取權杖清單，單次資料上限為 100 筆
+            </summary>
+            <param name="storageProviderId">儲存服務 ID</param>
+            <param name="queryOptions">OData 查詢參數</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.BuildStorageProviderResponse(HBK.Storage.Adapter.Storages.StorageProvider)">
+            <summary>
+            產生儲存服務回應內容
+            </summary>
+            <param name="storageProvider">儲存服務</param>
+            <returns>儲存服務回應內容</returns>
+        </member>
+        <member name="T:HBK.Storage.Api.DataAnnotations.ExampleArrayAttribute">
+            <summary>
+            標示範例參數的標記
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.ExampleArrayAttribute.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.ExampleArrayAttribute.#ctor(System.String[])">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="values">範例值</param>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.ExampleArrayAttribute.#ctor(System.Int32[])">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="values">範例值</param>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.ExampleArrayAttribute.#ctor(System.Double[])">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="values">範例值</param>
+        </member>
+        <member name="P:HBK.Storage.Api.DataAnnotations.ExampleArrayAttribute.Values">
+            <summary>
+            取得範例值
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.DataAnnotations.ExampleParameterAttribute">
+            <summary>
+            標示範例參數的標記
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.ExampleParameterAttribute.#ctor(System.String)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="value">範例值</param>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.ExampleParameterAttribute.#ctor(System.Int32)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="value">範例值</param>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.ExampleParameterAttribute.#ctor(System.Double)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="value">範例值</param>
+        </member>
+        <member name="P:HBK.Storage.Api.DataAnnotations.ExampleParameterAttribute.Value">
+            <summary>
+            取得範例值
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.DataAnnotations.ExistInDatabaseAttribute">
+            <summary>
+            判斷欄位 ID 是否在資料表中
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.DataAnnotations.ExistInDatabaseAttribute.ModelType">
+            <summary>
+            取得或設定模型類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.DataAnnotations.ExistInDatabaseAttribute.Column">
+            <summary>
+            取得或設定欄位名稱
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.ExistInDatabaseAttribute.#ctor(System.Type,System.String)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="modelType">模型類型</param>
+            <param name="column">欄位名稱</param>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.ExistInDatabaseAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            判斷是否有效
+            </summary>
+            <param name="value"></param>
+            <param name="validationContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Extensions.JsonSerializerExtensions">
+            <summary>
+            Json Serializer 輔助類別
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Extensions.JsonSerializerExtensions.CopySettings(Newtonsoft.Json.JsonSerializer)">
+            <summary>
+            取得 Serializer 的設定檔副本
+            </summary>
+            <param name="serializer"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Factories.FileAccessTokenFactory">
+            <summary>
+            產生檔案存取權杖的工廠
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Factories.FileAccessTokenFactory.#ctor(HBK.Storage.Core.Services.FileAccessTokenService)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="fileAccessTokenService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Factories.FileAccessTokenFactory.GetFileAccessTokenAsync(System.Guid,System.DateTime,HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest)">
+            <summary>
+            取得檔案存取權杖
+            </summary>
+            <param name="storageProviderId"></param>
+            <param name="expireDateTime"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase">
+            <summary>
+            存取檔案處理器基底
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel)">
+            <summary>
+            處理檔案
+            </summary>
+            <param name="taskModel"></param>
+            <returns></returns>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase.Name">
+            <summary>
+            取得處理器名稱
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy">
+            <summary>
+            存取檔案處理器代理執行者
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase})">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="fileAccessHandlers"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel,System.String)">
+            <summary>
+            根據對應的處理器指示字串執行存取檔案處理器
+            </summary>
+            <param name="taskModel">存取檔案任務模型</param>
+            <param name="handlerIndicate">處理器指示字串</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel">
+            <summary>
+            存取檔案任務模型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.StorageProviderId">
+            <summary>
+            取得或設定檔案服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.FileEntity">
+            <summary>
+            取得或設定檔案實體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.FileInfo">
+            <summary>
+            取得或設定檔案資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.Token">
+            <summary>
+            取得或設定存取用的權杖
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler">
+            <summary>
+            處理使用 M3U8 影片轉換插件轉換完成的 M3U8 檔案實體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler.#ctor(Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler},HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="logger"></param>
+            <param name="fileEntityService"></param>
+            <param name="fileAccessTokenService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler.Name">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.Filters.DisableFormValueModelBindingFilter">
+            <summary>
+            移除自動 Model Binding
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Filters.DisableFormValueModelBindingFilter.OnResourceExecuting(Microsoft.AspNetCore.Mvc.Filters.ResourceExecutingContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.Filters.DisableFormValueModelBindingFilter.OnResourceExecuted(Microsoft.AspNetCore.Mvc.Filters.ResourceExecutedContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.Filters.HBKAuthorizeFilter">
+            <summary>
+            HBK 驗證器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Filters.HBKAuthorizeFilter.#ctor(HBK.Storage.Core.Services.AuthorizeKeyService)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="authorizeKeyService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Filters.HBKAuthorizeFilter.OnAuthorizationAsync(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <summary>
+            執行驗證
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:HBK.Storage.Api.Helpers.MultipartRequestHelper">
+            <summary>
+            判斷請求是否為 multipart 輔助類別
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Helpers.MultipartRequestHelper.GetBoundary(Microsoft.Net.Http.Headers.MediaTypeHeaderValue,System.Int32)">
+            <summary>
+            取得 Boundary
+            </summary>
+            <param name="contentType"></param>
+            <param name="lengthLimit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Helpers.MultipartRequestHelper.IsMultipartContentType(System.String)">
+            <summary>
+            判斷請求是否為指定的 ContentType
+            </summary>
+            <param name="contentType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Helpers.MultipartRequestHelper.HasFormDataContentDisposition(Microsoft.Net.Http.Headers.ContentDispositionHeaderValue)">
+            <summary>
+            判斷否包含 Form Data Content Disposition
+            </summary>
+            <param name="contentDisposition"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Helpers.MultipartRequestHelper.HasFileContentDisposition(Microsoft.Net.Http.Headers.ContentDispositionHeaderValue)">
+            <summary>
+            判斷否包含 File Data Content Disposition
+            </summary>
+            <param name="contentDisposition"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.JsonConverters.StorageCredentialsJsonConverter">
+            <summary>
+            存取儲存個體的驗證資訊轉換器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.JsonConverters.StorageCredentialsJsonConverter.CanConvert(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.JsonConverters.StorageCredentialsJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.JsonConverters.StorageCredentialsJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.Middlewares.GlobalExceptionMiddleware">
+            <summary>
+            處理全域例外的中介層
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Middlewares.GlobalExceptionMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="next"></param>
+            <param name="loggerFactory"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Middlewares.GlobalExceptionMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            執行
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Middlewares.RequestResponseLoggingMiddleware">
+            <summary>
+            紀錄請求和回應內容的中介層
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Middlewares.RequestResponseLoggingMiddleware.#ctor(Microsoft.AspNetCore.Http.RequestDelegate,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="next"></param>
+            <param name="loggerFactory"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Middlewares.RequestResponseLoggingMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            執行
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.ModelBinders.PutFileRequestBinder">
+            <summary>
+            PutFileRequest 的資料綁定
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.ModelBinders.PutFileRequestBinder.BindModelAsync(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.ModelBinders.StorageCredentialsModelBinder">
+            <summary>
+            包含存取儲存個體的驗證資訊的資料綁定
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.ModelBinders.StorageCredentialsModelBinder.#ctor(Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Mvc.MvcNewtonsoftJsonOptions})">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="jsonOptions"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.ModelBinders.StorageCredentialsModelBinder.BindModelAsync(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse">
+            <summary>
+            檔案存取權杖回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.FileAccessTokenId">
+            <summary>
+            檔案存取權杖 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.StorageProviderId">
+            <summary>
+            存取對象的儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.StorageGroupId">
+            <summary>
+            強制指定的存取對象的儲存個體集合 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.FileEntityId">
+            <summary>
+            檔案實體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.Token">
+            <summary>
+            權杖
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.AccessTimesLimit">
+            <summary>
+            存取次數限制
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.AccessTimes">
+            <summary>
+            存取次數
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.ExpireDateTime">
+            <summary>
+            過期時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileEntity.AppendTagRequest">
+            <summary>
+            附加標籤請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.AppendTagRequest.Tag">
+            <summary>
+            取得或設定標籤
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileEntity.DeleteTagRequest">
+            <summary>
+            刪除檔案實體標籤請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.DeleteTagRequest.Tag">
+            <summary>
+            取得或設定標籤
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileEntity.FileEntityResponse">
+            <summary>
+            檔案實體回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.FileEntityId">
+            <summary>
+            檔案實體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.Name">
+            <summary>
+            檔案名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.Size">
+            <summary>
+            檔案大小(單位 Bytes)
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.Tags">
+            <summary>
+            檔案標籤列表
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.ExtendProperty">
+            <summary>
+            檔案擴充描述
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.MimeType">
+            <summary>
+            檔案的網際網路媒體型式
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.CreateDateTime">
+            <summary>
+            建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.UpdateDateTime">
+            <summary>
+            最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.Tages">
+            <summary>
+            標籤列表
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.StorageSummaryResponses">
+            <summary>
+            取得或設定存在的儲存集合清單
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileService.GetExternalDirectLinkResponse">
+            <summary>
+            取得外部檔案直連位置回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.GetExternalDirectLinkResponse.Url">
+            <summary>
+            取得或設定檔案直連位置
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.GetExternalDirectLinkResponse.Token">
+            <summary>
+            取得或設定 Token
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.GetExternalDirectLinkResponse.ExpireDateTime">
+            <summary>
+            取得或設定過期時間
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileService.PostExternalDirectLinkRequest">
+            <summary>
+            產生檔案直接下載位置
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostExternalDirectLinkRequest.StorageGroupId">
+            <summary>
+            強制指定儲存個體群組 ID
+            </summary>
+            <example></example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostExternalDirectLinkRequest.ExpireAfterMinutes">
+            <summary>
+            過期分鐘
+            </summary>
+            <example>60</example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostExternalDirectLinkRequest.AccessTimesLimit">
+            <summary>
+            存取次數限制
+            </summary>
+            <example>10</example>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest">
+            <summary>
+            產生檔案存取權杖請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.StorageGroupId">
+            <summary>
+            強制指定檔案群組 ID
+            </summary>
+            <example></example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.FileEntityId">
+            <summary>
+            檔案實體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.AllowTagPattern">
+            <summary>
+            允許 Tag 通過的格式
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.FileAccessTokenType">
+            <summary>
+            存取檔案權杖類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.ExpireAfterMinutes">
+            <summary>
+            過期分鐘
+            </summary>
+            <example>60</example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.AccessTimesLimit">
+            <summary>
+            存取次數限制
+            </summary>
+            <example>10</example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenRequest.HandlerIndicate">
+            <summary>
+            檔案處理器指示字串
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse">
+            <summary>
+            產生檔案存取權杖回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse.Token">
+            <summary>
+            取得或設定權杖
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PostFileAccessTokenResponse.ExpireDateTime">
+            <summary>
+            取得或設定過期時間
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileService.PutFileRequest">
+            <summary>
+            上傳檔案的請求內容
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Models.FileService.PutFileRequest.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.Filename">
+            <summary>
+            檔案名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.StorageGroupId">
+            <summary>
+            強制指定上傳目標的儲存集合 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.ExtendProperty">
+            <summary>
+            檔案的額外資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.Tags">
+            <summary>
+            檔案標籤清單
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.MimeType">
+            <summary>
+            檔案的網際網路媒體型式，留空將會透過檔名自動判定
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.FileStream">
+            <summary>
+            檔案串流
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.PagedResponse`1">
+            <summary>
+            分頁後的回應結果
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.PagedResponse`1.Value">
+            <summary>
+            取得或設定資料
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.PagedResponse`1.TotalCount">
+            <summary>
+            取得或設定資料總數
+            </summary>
+            <example>100</example>
+        </member>
+        <member name="M:HBK.Storage.Api.Models.PagedResponse`1.GetEnumerator">
+            <summary>
+            傳回逐一查看集合的列舉值。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageGroup.StorageGroupAddRequest">
+            <summary>
+            新增儲存個體集合請求內容
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse">
+            <summary>
+            儲存個體集合回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.StorageGroupId">
+            <summary>
+            儲存個體群組 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.StorageProviderId">
+            <summary>
+            所屬儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.Type">
+            <summary>
+            類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.SyncMode">
+            <summary>
+            同步模式
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.SyncPolicy">
+            <summary>
+            同步策略
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.CreateDateTime">
+            <summary>
+            建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.UpdateDateTime">
+            <summary>
+            更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest">
+            <summary>
+            更新儲存個體集合請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.Type">
+            <summary>
+            類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.SyncMode">
+            <summary>
+            同步模式
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.SyncPolicy">
+            <summary>
+            同步策略
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageProvider.StorageProviderAddRequest">
+            <summary>
+            加入儲存服務請求內容
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageProvider.StorageProviderResponse">
+            <summary>
+            儲存服務回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageProvider.StorageProviderResponse.StorageProviderId">
+            <summary>
+            儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageProvider.StorageProviderResponse.Name">
+            <summary>
+            取得或設定名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageProvider.StorageProviderResponse.CreateDateTime">
+            <summary>
+            建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageProvider.StorageProviderResponse.UpdateDateTime">
+            <summary>
+            最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageProvider.StorageProviderResponse.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageProvider.StorageProviderUpdateRequest">
+            <summary>
+            更新儲存服務請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageProvider.StorageProviderUpdateRequest.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageProvider.StorageProviderUpdateRequest.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.Storage.StorageAddRequest">
+            <summary>
+            新增儲存個體請求內容
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.Storage.StorageResponse">
+            <summary>
+            儲存個體回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageResponse.StorageId">
+            <summary>
+            儲存個體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageResponse.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageResponse.Type">
+            <summary>
+            類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageResponse.SizeLimit">
+            <summary>
+            檔案大小限制(單位 Bytes)
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageResponse.Credentials">
+            <summary>
+            存取儲存個體的驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageResponse.CreateDateTime">
+            <summary>
+            建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageResponse.UpdateDateTime">
+            <summary>
+            最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageResponse.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageResponse.StorageGroupResponse">
+            <summary>
+            所在的儲存個體集合
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.Storage.StorageSummaryResponse">
+            <summary>
+            儲存個體基本資訊回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageSummaryResponse.StorageId">
+            <summary>
+            儲存個體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageSummaryResponse.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageSummaryResponse.Type">
+            <summary>
+            類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageSummaryResponse.SizeLimit">
+            <summary>
+            檔案大小限制(單位 Bytes)
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageSummaryResponse.CreateDateTime">
+            <summary>
+            建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageSummaryResponse.UpdateDateTime">
+            <summary>
+            最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageSummaryResponse.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageSummaryResponse.StorageGroupResponse">
+            <summary>
+            所在的儲存個體集合
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.Storage.StorageUpdateRequest">
+            <summary>
+            更新儲存個體請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageUpdateRequest.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageUpdateRequest.Type">
+            <summary>
+            類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageUpdateRequest.SizeLimit">
+            <summary>
+            檔案大小限制(單位 Bytes)
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageUpdateRequest.Credentials">
+            <summary>
+            儲存個體的驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.Storage.StorageUpdateRequest.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.OData.EnableODataQueryAttribute">
+            <summary>
+            啟用 OData 參數查詢
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.EnableODataQueryAttribute.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.EnableODataQueryAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.EnableODataQueryAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.OData.SnakeCaseFilterBinder">
+            <summary>
+            小寫命名的 <see cref="T:Microsoft.AspNet.OData.Query.Expressions.FilterBinder"/>
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseFilterBinder.#ctor(System.IServiceProvider)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="requestContainer"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseFilterBinder.BindCollectionConstantNode(Microsoft.OData.UriParser.CollectionConstantNode)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseFilterBinder.ConvertToPascalCase(System.String)">
+            <summary>
+            轉換 Snake case 為 Pascal case
+            </summary>
+            <param name="snakeCase">要轉換的字串</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.OData.SnakeCaseODataUriResolver">
+            <summary>
+            小寫底線命名的 URL 剖析器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseODataUriResolver.#ctor">
+            <summary>
+            建立一個 新的執行個體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseODataUriResolver.ResolveProperty(Microsoft.OData.Edm.IEdmStructuredType,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.OData.SnakeCaseODataUriResolver.ConvertToPascalCase(System.String)">
+            <summary>
+            轉換 Snake case 為 Pascal case
+            </summary>
+            <param name="snakeCase">要轉換的字串</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Program">
+            <summary>
+            程式主類別
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Program.Main(System.String[])">
+            <summary>
+            應用程式進入點
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            建立主機
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Startup">
+            <summary>
+            網站進入點
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Startup.Configuration">
+            <summary>
+            取得設定檔
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Startup.HostingEnvironment">
+            <summary>
+            取得環境資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            網站進入點建構函式
+            </summary>
+            <param name="configuration"></param>
+            <param name="environment"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            This method gets called by the runtime. Use this method to add services to the container.
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,HBK.Storage.Adapter.Storages.HBKStorageContext)">
+            <summary>
+            This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+            <param name="db"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Startup.GetEdmModel(System.IServiceProvider)">
+            <summary>
+            建立 OData 的 EDM 模型
+            </summary>
+            <param name="serviceProvider">服務提供者</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Swagger.EnumDescriptorSchemaFilter">
+            <summary>
+            Add enum description to swagger gen files
+            </summary>
+            <remarks>https://github.com/Justin-Lessard/swagger-gen-enums</remarks>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.EnumDescriptorSchemaFilter.Apply(Microsoft.OpenApi.Models.OpenApiSchema,Swashbuckle.AspNetCore.SwaggerGen.SchemaFilterContext)">
+            <summary>
+            Apply filter
+            </summary>
+            <param name="schema"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.EnumDescriptorSchemaFilter.GetDocMember(System.Xml.Linq.XElement,System.Reflection.MemberInfo)">
+            <summary>
+            Get the xml element representing the member
+            </summary>
+            <param name="membersRoot"></param>
+            <param name="member"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.EnumDescriptorSchemaFilter.GetTypeMember(System.Xml.Linq.XElement,System.Reflection.TypeInfo)">
+            <summary>
+            Get the xml element representing the member
+            </summary>
+            <param name="membersRoot"></param>
+            <param name="member"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.EnumDescriptorSchemaFilter.GetXmlDocFile(System.Reflection.Assembly,System.Globalization.CultureInfo)">
+            <summary>
+            Find the XML documentation files for a given assembly
+            </summary>
+            <param name="assembly"></param>
+            <param name="culture"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Swagger.ExampleParameterOperationFilter">
+            <summary>
+            提供 Swagger 顯示範例參數
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.ExampleParameterOperationFilter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            套用過濾器
+            </summary>
+            <param name="operation"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:HBK.Storage.Api.Swagger.ExampleValueSchemaFilter">
+            <summary>
+            提供特殊的範例值
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.ExampleValueSchemaFilter.Apply(Microsoft.OpenApi.Models.OpenApiSchema,Swashbuckle.AspNetCore.SwaggerGen.SchemaFilterContext)">
+            <summary>
+            套用過濾器
+            </summary>
+            <param name="schema"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:HBK.Storage.Api.Swagger.FlagEnumSchemaFilter">
+            <summary>
+            提供旗標列舉類別的 Schema 修改
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.FlagEnumSchemaFilter.Apply(Microsoft.OpenApi.Models.OpenApiSchema,Swashbuckle.AspNetCore.SwaggerGen.SchemaFilterContext)">
+            <summary>
+            套用過濾器
+            </summary>
+            <param name="schema"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:HBK.Storage.Api.Swagger.ModelValidationOperationFilter">
+            <summary>
+            提供 Swagger 標記資料驗證需求
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.ModelValidationOperationFilter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            套用過濾器
+            </summary>
+            <param name="operation"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:HBK.Storage.Api.Swagger.ODataOperationFilter">
+            <summary>
+            提供 Swagger 支援 OData 相關參數
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.ODataOperationFilter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            套用過濾器
+            </summary>
+            <param name="operation"></param>
+            <param name="context"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.ODataOperationFilter.IsEnumerableType(System.Type)">
+            <summary>
+            檢查回傳類型是否為集合
+            </summary>
+            <param name="type">要檢查的類型</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Swagger.SecurityRequirementsOperationFilter">
+            <summary>
+            提供 Swagger 標記登入驗證需求
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.SecurityRequirementsOperationFilter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            套用過濾器
+            </summary>
+            <param name="operation"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:HBK.Storage.Api.Swagger.SwaggerSchemaIdGenerator">
+            <summary>
+            產生 Swagger 的 Schema ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Swagger.SwaggerSchemaIdGenerator.SchemaIdSelector">
+            <summary>
+            Schema ID 選擇器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.SwaggerSchemaIdGenerator.DefaultSchemaIdSelector(System.Type)">
+            <summary>
+            預設的 Schema ID 選擇器
+            </summary>
+            <param name="modelType">模型類型</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
