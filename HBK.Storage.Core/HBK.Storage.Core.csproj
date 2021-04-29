@@ -25,4 +25,10 @@
     <ProjectReference Include="..\HBK.Storage.Adapter\HBK.Storage.Adapter.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Docs\HBK.Storage.Core.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

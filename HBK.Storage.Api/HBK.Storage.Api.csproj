@@ -20,6 +20,12 @@
     <ProjectReference Include="..\HBK.Storage.Core\HBK.Storage.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Docs\HBK.Storage.Api.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
