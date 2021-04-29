@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace HBK.Storage.Sync
         private readonly ILogger<TaskWorker> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScope _scope;
+        private readonly IHostEnvironment _hostEnvironment;
+
         /// <summary>
         /// 建立一個新的執行個體
         /// </summary>
@@ -28,9 +31,12 @@ namespace HBK.Storage.Sync
             _logger = logger;
             _serviceProvider = serviceProvider;
             _scope = _serviceProvider.CreateScope();
+            _hostEnvironment = _scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
             this.SyncTaskManager = _scope.ServiceProvider.GetRequiredService<SyncTaskManager>();
             this.DeleteFileEntityTaskManager = _scope.ServiceProvider.GetRequiredService<DeleteFileEntityTaskManager>();
             this.ExpireFileEntityTaskManager = _scope.ServiceProvider.GetRequiredService<ExpireFileEntityTaskManager>();
+
+            Directory.SetCurrentDirectory(_hostEnvironment.ContentRootPath);
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

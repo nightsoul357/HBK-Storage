@@ -218,7 +218,8 @@ namespace HBK.Storage.Api
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        /// <param name="db"></param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, HBKStorageContext db)
         {
             if (env.IsDevelopment())
             {
@@ -257,6 +258,8 @@ namespace HBK.Storage.Api
                     endpoints.MapODataRoute("odata", "odata", edmModel);
                 }
             });
+
+            db.Database.EnsureCreated();
         }
 
         /// <summary>

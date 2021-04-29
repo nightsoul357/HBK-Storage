@@ -78,6 +78,7 @@ namespace HBK.Storage.Sync
 
                     services.AddHostedService<TaskWorker>();
                 })
+                .UseWindowsService()
                 .UseNLog();
     }
 }
