@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,16 +19,20 @@ namespace HBK.Storage.PluginIntegration
         private readonly ILogger<TaskWorker> _logger;
         private readonly IServiceProvider _serviceProvider;
         private readonly IServiceScope _scope;
+        private readonly IHostEnvironment _hostEnvironment;
 
         public TaskWorker(ILogger<TaskWorker> logger, IServiceProvider serviceProvider)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
             _scope = _serviceProvider.CreateScope();
+            _hostEnvironment = _scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
             this.ImageCompressTaskManager = _scope.ServiceProvider.GetRequiredService<ImageCompressTaskManager>();
             this.VideoConvertM3U8TaskManager = _scope.ServiceProvider.GetRequiredService<VideoConvertM3U8TaskManager>();
             this.VideoMetadataTaskManager = _scope.ServiceProvider.GetRequiredService<VideoMetadataTaskManager>();
             this.VideoSubTitleCombineTaskManager = _scope.ServiceProvider.GetRequiredService<VideoSubTitleCombineTaskManager>();
+
+            Directory.SetCurrentDirectory(this._hostEnvironment.ContentRootPath);
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -36,7 +41,7 @@ namespace HBK.Storage.PluginIntegration
 
             try
             {
-                _logger.LogInformation($"當前目錄 -> { VideoSubTitleCombineTaskManager.CurrentDirectory }");
+                _logger.LogInformation($"當前目錄 -> { this.VideoSubTitleCombineTaskManager.CurrentDirectory }");
                 this.ImageCompressTaskManager.Start(stoppingToken);
                 this.VideoConvertM3U8TaskManager.Start(stoppingToken);
                 this.VideoMetadataTaskManager.Start(stoppingToken);

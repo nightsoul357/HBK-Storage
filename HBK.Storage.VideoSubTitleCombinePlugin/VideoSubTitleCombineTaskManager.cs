@@ -7,6 +7,7 @@ using HBK.Storage.Utils;
 using HBK.Storage.VideoSubTitleCombinePlugin.CombineHandler;
 using HBK.Storage.VideoSubTitleCombinePlugin.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -20,10 +21,11 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
 {
     public class VideoSubTitleCombineTaskManager : PluginTaskManagerBase<VideoSubTitleCombineTaskManager, VideoSubTitleCombineTaskOptions>
     {
-
+        private readonly IHostEnvironment _hostEnvironment;
         public VideoSubTitleCombineTaskManager(ILogger<VideoSubTitleCombineTaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
+            _hostEnvironment = base._serviceScope.ServiceProvider.GetRequiredService<IHostEnvironment>();
         }
 
         protected override bool ExecuteInternal(PluginTaskModel taskModel)
@@ -53,7 +55,6 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                 string sourceDirecotry = Path.Combine(workingDirectory, "src");
                 Directory.CreateDirectory(sourceDirecotry);
 
-
                 if (fileInfo == null)
                 {
                     return false;
@@ -78,7 +79,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                         continue;
                     }
 
-                    string subTitleFile = Path.Combine(VideoSubTitleCombineTaskManager.CurrentDirectory, Guid.NewGuid().ToString() + Path.GetExtension(subTitleFileEntityStorage.FileEntity.Name));
+                    string subTitleFile = Path.Combine(this.CurrentDirectory, Guid.NewGuid().ToString() + Path.GetExtension(subTitleFileEntityStorage.FileEntity.Name));
                     var subTitleFileEntity = fileEntityService.FindByIdAsync(subTitleTrack.SubTitleFileEntityId).Result;
                     base.DownloadFileEntity(subTitleFileInfo, subTitleFileEntity, subTitleFile);
 
@@ -138,11 +139,11 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
             return true;
         }
 
-        public static string CurrentDirectory
+        public string CurrentDirectory
         {
             get
             {
-                return Directory.GetCurrentDirectory();
+                return _hostEnvironment.ContentRootPath;
             }
         }
     }

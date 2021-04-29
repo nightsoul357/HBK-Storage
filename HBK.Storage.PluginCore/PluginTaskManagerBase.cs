@@ -20,8 +20,8 @@ namespace HBK.Storage.PluginCore
         protected readonly IServiceProvider _serviceProvider;
         protected readonly ILogger<T> _logger;
         protected CancellationToken _cancellationToken;
+        protected readonly IServiceScope _serviceScope;
 
-        private readonly IServiceScope _serviceScope;
         private ConcurrentQueue<PluginTaskModel> _pendingQueue;
         private readonly object _syncObj;
         private bool _isDisposed = false;

@@ -100,6 +100,7 @@ namespace HBK.Storage.PluginIntegration
 
                     services.AddHostedService<TaskWorker>();
                 })
+                .UseWindowsService()
                 .UseNLog();
     }
 }
