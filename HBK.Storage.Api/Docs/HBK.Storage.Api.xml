@@ -852,11 +852,6 @@
             狀態
             </summary>
         </member>
-        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.Tages">
-            <summary>
-            標籤列表
-            </summary>
-        </member>
         <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.StorageSummaryResponses">
             <summary>
             取得或設定存在的儲存集合清單
