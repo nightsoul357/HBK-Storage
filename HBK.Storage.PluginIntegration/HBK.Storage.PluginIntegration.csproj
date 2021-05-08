@@ -16,7 +16,14 @@
     <ProjectReference Include="..\HBK.Storage.ImageCompressPlugin\HBK.Storage.ImageCompressPlugin.csproj" />
     <ProjectReference Include="..\HBK.Storage.VideoConvertM3U8Plugin\HBK.Storage.VideoConvertM3U8Plugin.csproj" />
     <ProjectReference Include="..\HBK.Storage.VideoMetadataPlugin\HBK.Storage.VideoMetadataPlugin.csproj" />
+    <ProjectReference Include="..\HBK.Storage.VideoSeekPreviewPlugin\HBK.Storage.VideoSeekPreviewPlugin.csproj" />
     <ProjectReference Include="..\HBK.Storage.VideoSubTitleCombinePlugin\HBK.Storage.VideoSubTitleCombinePlugin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ffmpeg.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

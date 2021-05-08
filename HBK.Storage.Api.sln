@@ -29,9 +29,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBK.Storage.Utils", "HBK.St
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBK.Storage.VideoConvertM3U8Plugin", "HBK.Storage.VideoConvertM3U8Plugin\HBK.Storage.VideoConvertM3U8Plugin.csproj", "{AD6A2681-1AF2-4927-87C7-61250138D6A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBK.Storage.VideoMetadataPlugin", "HBK.Storage.VideoMetadataPlugin\HBK.Storage.VideoMetadataPlugin.csproj", "{AF0FEA87-EE22-4583-812A-BDC0064515DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBK.Storage.VideoMetadataPlugin", "HBK.Storage.VideoMetadataPlugin\HBK.Storage.VideoMetadataPlugin.csproj", "{AF0FEA87-EE22-4583-812A-BDC0064515DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBK.Storage.PluginIntegration", "HBK.Storage.PluginIntegration\HBK.Storage.PluginIntegration.csproj", "{C4AA18D8-C669-40AE-97DA-9916FAFD4C2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HBK.Storage.PluginIntegration", "HBK.Storage.PluginIntegration\HBK.Storage.PluginIntegration.csproj", "{C4AA18D8-C669-40AE-97DA-9916FAFD4C2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HBK.Storage.VideoSeekPreviewPlugin", "HBK.Storage.VideoSeekPreviewPlugin\HBK.Storage.VideoSeekPreviewPlugin.csproj", "{0C5C66E5-3702-4982-9238-C3D6B9515105}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,6 +114,12 @@ Global
 		{C4AA18D8-C669-40AE-97DA-9916FAFD4C2B}.DebugToConsole|Any CPU.Build.0 = Debug|Any CPU
 		{C4AA18D8-C669-40AE-97DA-9916FAFD4C2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4AA18D8-C669-40AE-97DA-9916FAFD4C2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C5C66E5-3702-4982-9238-C3D6B9515105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C5C66E5-3702-4982-9238-C3D6B9515105}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C5C66E5-3702-4982-9238-C3D6B9515105}.DebugToConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C5C66E5-3702-4982-9238-C3D6B9515105}.DebugToConsole|Any CPU.Build.0 = Debug|Any CPU
+		{0C5C66E5-3702-4982-9238-C3D6B9515105}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C5C66E5-3702-4982-9238-C3D6B9515105}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,6 +133,7 @@ Global
 		{AD0BC559-E802-47CF-824F-C1E86100340A} = {B609FD70-82D4-4529-B4AB-8EF29C5E2AE7}
 		{AD6A2681-1AF2-4927-87C7-61250138D6A9} = {3AF09C2D-A4A1-4AC7-8556-AD012F094A75}
 		{AF0FEA87-EE22-4583-812A-BDC0064515DA} = {3AF09C2D-A4A1-4AC7-8556-AD012F094A75}
+		{0C5C66E5-3702-4982-9238-C3D6B9515105} = {3AF09C2D-A4A1-4AC7-8556-AD012F094A75}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E1D11872-B4FA-4F2E-AE42-F226CC13D991}

@@ -7,6 +7,8 @@ using HBK.Storage.VideoConvertM3U8Plugin.ConvertHandler;
 using HBK.Storage.VideoConvertM3U8Plugin.Models;
 using HBK.Storage.VideoMetadataPlugin;
 using HBK.Storage.VideoMetadataPlugin.Models;
+using HBK.Storage.VideoSeekPreviewPlugin;
+using HBK.Storage.VideoSeekPreviewPlugin.Models;
 using HBK.Storage.VideoSubTitleCombinePlugin;
 using HBK.Storage.VideoSubTitleCombinePlugin.CombineHandler;
 using HBK.Storage.VideoSubTitleCombinePlugin.Models;
@@ -74,6 +76,14 @@ namespace HBK.Storage.PluginIntegration
                         return option;
                     });
 
+                    var configurationForVideoSeekPreviewTaskManagerOptions = configuration.GetSection("VideoSeekPreviewTaskManagerOptions");
+                    services.AddSingleton(sp =>
+                    {
+                        var option = new VideoSeekPreviewTaskManagerOptions();
+                        configurationForVideoSeekPreviewTaskManagerOptions.Bind(option);
+                        return option;
+                    });
+
                     // ®Ö¤ßªA°È
                     services.AddHBKStorageService();
 
@@ -97,6 +107,7 @@ namespace HBK.Storage.PluginIntegration
                     services.AddSingleton<VideoConvertM3U8TaskManager>();
                     services.AddSingleton<VideoMetadataTaskManager>();
                     services.AddSingleton<VideoSubTitleCombineTaskManager>();
+                    services.AddSingleton<VideoSeekPreviewTaskManager>();
 
                     services.AddHostedService<TaskWorker>();
                 })

@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Adapter.Storages;
+﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Adapter.Storages;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -86,6 +87,16 @@ namespace HBK.Storage.Core.Services
         #endregion
         #region BAL
         /// <summary>
+        /// 取得檔案總存取次數
+        /// </summary>
+        /// <param name="fileEntityId">檔案 ID</param>
+        /// <returns></returns>
+        public Task<int> GetAccessTimesAsync(Guid fileEntityId)
+        {
+            return _dbContext.FileEntityStroageOperation
+                .CountAsync(x => x.FileEntityStroage.FileEntityId == fileEntityId && x.Type == FileEntityStorageOperationTypeEnum.AccessSuccessfully);
+        }
+        /// <summary>
         /// 將檔案實體註記為刪除
         /// </summary>
         /// <param name="fileEntityId">檔案實體 ID</param>
@@ -105,7 +116,7 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public async Task MarkFileEntityDeleteBatchAsync(List<Guid> fileEntityIds)
         {
-            foreach(var fileEntityId in fileEntityIds)
+            foreach (var fileEntityId in fileEntityIds)
             {
                 var fileEntity = await _dbContext.FileEntity
                 .Include(x => x.FileEntityStroage)

@@ -44,6 +44,10 @@ namespace HBK.Storage.Api.Models.FileService
         /// </summary>
         public string MimeType { get; set; }
         /// <summary>
+        /// 檔案
+        /// </summary>
+        public IFormFile File { get; set; } // 用於 Swagger 自動產生對應資訊
+        /// <summary>
         /// 檔案串流
         /// </summary>
         internal Stream FileStream { get; set; }

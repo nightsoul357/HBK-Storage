@@ -31,9 +31,11 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public Task ClearAsync()
+        public async Task ClearAsync()
         {
-            throw new NotImplementedException();
+            GoogleDriveCredentials credentials = (GoogleDriveCredentials)_storage.Credentials;
+            credentials.Tokens.Clear();
+            _storage = await _storageService.UpdateCredentialsAsync(_storage.StorageId, credentials);
         }
 
         /// <inheritdoc/>
@@ -47,10 +49,10 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
         /// <inheritdoc/>
         public Task<T> GetAsync<T>(string key)
         {
-            return Task<T>.Run(() => 
+            return Task<T>.Run(() =>
             {
                 GoogleDriveCredentials credentials = (GoogleDriveCredentials)_storage.Credentials;
-                if(!credentials.Tokens.ContainsKey(key) || String.IsNullOrWhiteSpace(credentials.Tokens[key]))
+                if (!credentials.Tokens.ContainsKey(key) || String.IsNullOrWhiteSpace(credentials.Tokens[key]))
                 {
                     return default(T);
                 }

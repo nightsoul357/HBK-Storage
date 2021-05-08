@@ -129,6 +129,13 @@
             <param name="fileEntityId">檔案實體 ID</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.GetAccessTimes(System.Guid)">
+            <summary>
+            取得檔案實體存取次數
+            </summary>
+            <param name="fileEntityId"></param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Api.Controllers.FileEntityController.BuildFileEntityResponse(HBK.Storage.Adapter.Storages.FileEntity,HBK.Storage.Core.Services.FileEntityService)">
             <summary>
             產生檔案實體回應內容
@@ -855,6 +862,16 @@
             取得或設定存在的儲存集合清單
             </summary>
         </member>
+        <member name="T:HBK.Storage.Api.Models.FileEntity.GetAccessTimesResponse">
+            <summary>
+            取得檔案存取次數回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.GetAccessTimesResponse.TotalAccessTimes">
+            <summary>
+            總存取次數
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Api.Models.FileService.GetExternalDirectLinkResponse">
             <summary>
             取得外部檔案直連位置回應內容
@@ -989,6 +1006,11 @@
         <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.MimeType">
             <summary>
             檔案的網際網路媒體型式，留空將會透過檔名自動判定
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.File">
+            <summary>
+            檔案
             </summary>
         </member>
         <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.FileStream">

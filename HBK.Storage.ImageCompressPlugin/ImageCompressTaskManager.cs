@@ -56,7 +56,7 @@ namespace HBK.Storage.ImageCompressPlugin
                         new FileEntity()
                         {
                             MimeType = "image/jpeg",
-                            Name = Path.GetFileNameWithoutExtension(taskModel.FileEntity.Name) + $"-{ compress.Name }" + Path.GetExtension(taskModel.FileEntity.Name),
+                            Name = Path.GetFileNameWithoutExtension(taskModel.FileEntity.Name) + $"-{ compress.Name }.jpeg",
                             Size = result.Length,
                             Status = FileEntityStatusEnum.Processing,
                             FileEntityTag = new List<FileEntityTag>() {

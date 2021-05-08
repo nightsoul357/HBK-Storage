@@ -111,6 +111,25 @@ namespace HBK.Storage.Api.Controllers
             await _fileEntityService.MarkFileEntityDeleteAsync(fileEntityId);
             return base.NoContent();
         }
+
+        /// <summary>
+        /// 取得檔案實體存取次數
+        /// </summary>
+        /// <param name="fileEntityId"></param>
+        /// <returns></returns>
+        [HttpGet("{fileEntityId}/access_times")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<GetAccessTimesResponse> GetAccessTimes(
+            [ExistInDatabase(typeof(FileEntity))]
+            [ExampleParameter("cfa83790-007c-4ba2-91b2-5b18dfe08735")]Guid fileEntityId)
+        {
+            return new GetAccessTimesResponse() 
+            {
+                TotalAccessTimes = await _fileEntityService.GetAccessTimesAsync(fileEntityId)
+            };
+        }
+
         /// <summary>
         /// 產生檔案實體回應內容
         /// </summary>
@@ -132,7 +151,6 @@ namespace HBK.Storage.Api.Controllers
                 Tags = fileEntity.FileEntityTag.Select(x => x.Value).ToList(),
                 UpdateDateTime = fileEntity.UpdateDateTime?.LocalDateTime,
                 StorageSummaryResponses = storage.Select(x => StorageController.BuildStorageSummaryResponse(x)).ToList(),
-                Tages = fileEntity.FileEntityTag.Select(x => x.Value).ToList()
             };
         }
     }

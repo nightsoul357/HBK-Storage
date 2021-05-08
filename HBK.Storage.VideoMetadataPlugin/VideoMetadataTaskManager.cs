@@ -71,7 +71,7 @@ namespace HBK.Storage.VideoMetadataPlugin
                 List<string> previewsFiles = new List<string>();
                 for (int i = 1; i <= base.Options.PreviewsCount; i++)
                 {
-                    var outputFile = new MediaFile { Filename = Path.Combine(workingDirectory, Guid.NewGuid().ToString() + ".jpg") };
+                    var outputFile = new MediaFile { Filename = Path.Combine(workingDirectory, Guid.NewGuid().ToString() + ".jpeg") };
                     var options = new ConversionOptions { Seek = TimeSpan.FromSeconds(perSecond * i) };
                     engine.GetThumbnail(videoFile, outputFile, options);
                     previewsFiles.Add(outputFile.Filename);
@@ -105,8 +105,8 @@ namespace HBK.Storage.VideoMetadataPlugin
                                 null,
                                 new FileEntity()
                                 {
-                                    MimeType = "image/jpg",
-                                    Name = $"preview-{i}.jpg",
+                                    MimeType = "image/jpeg",
+                                    Name = $"preview-{i}.jpeg",
                                     Size = previewfs.Length,
                                     Status = FileEntityStatusEnum.Processing,
                                     FileEntityTag = new List<FileEntityTag>()
@@ -118,6 +118,10 @@ namespace HBK.Storage.VideoMetadataPlugin
                                         new FileEntityTag()
                                         {
                                             Value = base.Options.Identity
+                                        },
+                                        new FileEntityTag() // 圖片壓縮
+                                        {
+                                            Value = "Require-Compress-Image"
                                         }
                                     },
                                     ParentFileEntityID = taskModel.FileEntity.FileEntityId

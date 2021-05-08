@@ -1160,6 +1160,13 @@
             <param name="updateFileEntities"></param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetAccessTimesAsync(System.Guid)">
+            <summary>
+            取得檔案總存取次數
+            </summary>
+            <param name="fileEntityId">檔案 ID</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Core.Services.FileEntityService.MarkFileEntityDeleteAsync(System.Guid)">
             <summary>
             將檔案實體註記為刪除
