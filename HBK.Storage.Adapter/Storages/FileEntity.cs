@@ -32,6 +32,7 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         [Key]
         [Column("FileEntityID")]
+        [Filterable]
         public Guid FileEntityId { get; set; }
         /// <summary>
         /// 取得或設定檔案實體流水號

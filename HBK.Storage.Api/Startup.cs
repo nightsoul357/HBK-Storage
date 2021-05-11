@@ -39,6 +39,7 @@ using Microsoft.AspNet.OData.Query.Expressions;
 using HBK.Storage.Api.OData;
 using HBK.Storage.Api.Factories;
 using HBK.Storage.Api.FileAccessHandlers;
+using System.IO;
 
 namespace HBK.Storage.Api
 {
@@ -211,6 +212,8 @@ namespace HBK.Storage.Api
             // 檔案處理器
             services.AddScoped<FileAccessHandlerBase, M3U8FileAccessHandler>();
             services.AddScoped<FileAccessHandlerProxy>();
+
+            Directory.SetCurrentDirectory(this.HostingEnvironment.ContentRootPath);
         }
 
         /// <summary>
