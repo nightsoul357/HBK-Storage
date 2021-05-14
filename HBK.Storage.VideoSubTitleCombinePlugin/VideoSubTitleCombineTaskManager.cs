@@ -34,11 +34,13 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
             {
                 if (taskModel.FileEntity.ExtendProperty == null)
                 {
+                    base._logger.LogInformation("[{0}] 檔案 ID {1} 的檔案 {2} 因為 ExtendProperty 為 NULL 而無法正確執行影片字幕合併任務", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
                     return false;
                 }
                 var extendProperty = JsonConvert.DeserializeObject<VideoSubTitleCombineExtendProperty>(taskModel.FileEntity.ExtendProperty);
                 if (extendProperty == null || extendProperty.SubTitleTrackInfos == null)
                 {
+                    base._logger.LogInformation("[{0}] 檔案 ID {1} 的檔案 {2} 因為 ExtendProperty 為 NULL 或 SubTitleTrackInfos 而無法正確執行影片字幕合併任務", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
                     return false;
                 }
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
