@@ -153,22 +153,20 @@ namespace HBK.Storage.Core.Services
                             StorageGroup = x,
                             StoragExtendProperty = _storageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(x.StorageGroupId).Result
                         })
-                    .OrderByDescending(x => x.StoragExtendProperty?.RemainSize)
+                    .Where(x => x.StoragExtendProperty?.RemainSize >= fileEntity.Size) // 過濾掉剩餘空間不足
+                    .OrderByDescending(x => x.StorageGroup.UploadPriority) // 先根據上傳優先度排序
+                    .ThenByDescending(x => x.StoragExtendProperty?.RemainSize) // 再根據剩餘空間排序
                     .ToList();
 
-                var sgMain = sg.Where(x => x.StorageGroup.Status.HasFlag(StorageGroupStatusEnum.Main)).FirstOrDefault();
+                if (sg.Count == 0)
+                {
+                    throw new InvalidOperationException($"Couldn't find any valid storage group.");
+                }
 
-                if (sgMain != null && sgMain.StoragExtendProperty?.RemainSize > fileEntity.Size)
-                {
-                    storageGroup = sgMain.StorageGroup;
-                    storageExtendProperty = sgMain.StoragExtendProperty;
-                }
-                else
-                {
-                    var sgOther = sg.FirstOrDefault();
-                    storageGroup = sgOther.StorageGroup;
-                    storageExtendProperty = sgOther.StoragExtendProperty;
-                }
+                var sgMain = sg.FirstOrDefault();
+
+                storageGroup = sgMain.StorageGroup;
+                storageExtendProperty = sgMain.StoragExtendProperty;
             }
 
             if (storageGroup.Status.HasFlag(StorageGroupStatusEnum.Disable))
@@ -215,6 +213,7 @@ namespace HBK.Storage.Core.Services
         {
             var query = _dbContext.FileEntityStorage
                 .Include(x => x.Storage)
+                .ThenInclude(x => x.StorageGroup)
                 .Include(x => x.FileEntity)
                 .Where(x => x.Storage.StorageGroup.StorageProviderId == storageProviderId && x.FileEntityId == fileEntityId);
 
@@ -231,7 +230,8 @@ namespace HBK.Storage.Core.Services
 
             var fileStorage = (await query.ToListAsync())
                 .Where(x => !x.Storage.Status.HasFlag(StorageStatusEnum.Disable))
-                .OrderBy(x => Guid.NewGuid()) // 未強制指定時，隨機取得 Storage
+                .OrderByDescending(x => x.Storage.StorageGroup.DownloadPriority) // 未強制指定時，先透過下載優先度排序
+                .ThenBy(x => Guid.NewGuid()) // 下載優先度一樣時，亂數排序
                 .FirstOrDefault();
 
             if (fileStorage == null)

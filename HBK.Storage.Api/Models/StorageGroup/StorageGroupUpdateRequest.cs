@@ -31,6 +31,14 @@ namespace HBK.Storage.Api.Models.StorageGroup
         /// </summary>
         public SyncPolicy SyncPolicy { get; set; }
         /// <summary>
+        /// 上傳優先度
+        /// </summary>
+        public int UploadPriority { get; set; }
+        /// <summary>
+        /// 下載優先度
+        /// </summary>
+        public int DownloadPriority { get; set; }
+        /// <summary>
         /// 狀態
         /// </summary>
         public StorageGroupStatusEnum[] Status { get; set; }

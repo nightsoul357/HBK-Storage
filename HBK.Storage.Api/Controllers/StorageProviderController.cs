@@ -164,6 +164,8 @@ namespace HBK.Storage.Api.Controllers
                 StorageProviderId = storageProviderId,
                 SyncMode = request.SyncMode,
                 SyncPolicy = request.SyncPolicy,
+                UploadPriority = request.UploadPriority,
+                DownloadPriority = request.DownloadPriority,
                 Type = request.Type
             });
             return StorageGroupController.BuildStorageGroupResponse(result);

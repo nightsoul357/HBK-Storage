@@ -72,9 +72,11 @@ namespace HBK.Storage.Api.Controllers
             storageGroup.Status = request.Status.UnflattenFlags();
             storageGroup.SyncMode = request.SyncMode;
             storageGroup.SyncPolicy = request.SyncPolicy;
+            storageGroup.UploadPriority = request.UploadPriority;
+            storageGroup.DownloadPriority = request.DownloadPriority;
             storageGroup.Type = request.Type;
             var result = await _storageGroupService.UpdateAsync(storageGroup);
-            return StorageGroupController.BuildStorageGroupResponse(storageGroup);
+            return StorageGroupController.BuildStorageGroupResponse(result);
         }
         /// <summary>
         /// 刪除儲存個體集合(同時會刪除所有儲存個體)
@@ -161,6 +163,8 @@ namespace HBK.Storage.Api.Controllers
                 StorageProviderId = storageGroup.StorageProviderId,
                 SyncMode = storageGroup.SyncMode,
                 SyncPolicy = storageGroup.SyncPolicy,
+                DownloadPriority = storageGroup.DownloadPriority,
+                UploadPriority = storageGroup.UploadPriority,
                 Type = storageGroup.Type,
                 UpdateDateTime = storageGroup.UpdateDateTime
             };

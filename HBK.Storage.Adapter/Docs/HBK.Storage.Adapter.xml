@@ -1058,6 +1058,16 @@
             取得或設定同步策略
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.UploadPriority">
+            <summary>
+            取得或設定上傳優先權
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.DownloadPriority">
+            <summary>
+            取得或設定下載優先權
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.CreateDateTime">
             <summary>
             取得建立時間

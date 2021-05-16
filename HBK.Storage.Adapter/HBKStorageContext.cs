@@ -291,6 +291,10 @@ namespace HBK.Storage.Adapter.Storages
 
                 entity.Property(e => e.StorageGroupId).HasDefaultValueSql("(newid())");
 
+                entity.Property(e => e.UploadPriority).HasDefaultValue("1");
+
+                entity.Property(e => e.DownloadPriority).HasDefaultValue("1");
+
                 entity.Property(e => e.StorageGroupNo).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.SyncPolicy)

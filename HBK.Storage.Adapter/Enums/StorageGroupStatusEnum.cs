@@ -17,10 +17,6 @@ namespace HBK.Storage.Adapter.Enums
         /// </summary>
         None = 0,
         /// <summary>
-        /// 是否為主要的儲存區
-        /// </summary>
-        Main = 1 << 0,
-        /// <summary>
         /// 已停用
         /// </summary>
         Disable = 1 << 1,

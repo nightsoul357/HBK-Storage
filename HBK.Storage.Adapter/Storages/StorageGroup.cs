@@ -60,6 +60,14 @@ namespace HBK.Storage.Adapter.Storages
         [StringLength(511)]
         public SyncPolicy SyncPolicy { get; set; }
         /// <summary>
+        /// 取得或設定上傳優先權
+        /// </summary>
+        public int UploadPriority { get; set; }
+        /// <summary>
+        /// 取得或設定下載優先權
+        /// </summary>
+        public int DownloadPriority { get; set; }
+        /// <summary>
         /// 取得建立時間
         /// </summary>
         public DateTimeOffset CreateDateTime { get; internal set; }
