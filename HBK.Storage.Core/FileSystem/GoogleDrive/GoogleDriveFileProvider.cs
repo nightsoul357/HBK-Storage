@@ -99,7 +99,12 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
             }
 
             FilesResource.CreateMediaUpload request = _driveService.Files.Create(fileMetadata, fileStream, "application/unknown");
-            await request.UploadAsync();
+            var progress = await request.UploadAsync();
+
+            if (request.ResponseBody == null || string.IsNullOrEmpty(request.ResponseBody.Id))
+            {
+                throw progress.Exception;
+            }
 
             return await this.GetFileInfoAsync(request.ResponseBody.Id);
         }
