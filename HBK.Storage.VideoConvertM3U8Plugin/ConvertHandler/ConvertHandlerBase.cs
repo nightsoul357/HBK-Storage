@@ -1,4 +1,5 @@
 ﻿using HBK.Storage.VideoConvertM3U8Plugin.Models;
+using MediaToolkit;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,19 +17,17 @@ namespace HBK.Storage.VideoConvertM3U8Plugin.ConvertHandler
             _logger = logger;
             this.InternalCovertHandler = internalConvertHandler;
         }
-        public ConvertHandlerExecuteResult Execute(ConvertHandlerTaskModel taskModel)
+        public ConvertHandlerExecuteResult Execute(ConvertHandlerTaskModel taskModel, Action<object, ConvertProgressEventArgs> convertProgress, Action<object, ConversionCompleteEventArgs> conversionComplete)
         {
-            var result = this.ExecuteInternal(taskModel);
+            var result = this.ExecuteInternal(taskModel, convertProgress, conversionComplete);
             if (result.Success)
             {
-                _logger.LogInformation("[{0}] 轉換成功", taskModel.Identity);
                 return result;
             }
-            _logger.LogInformation("[{0}] 轉換失敗", taskModel.Identity);
 
             if (this.InternalCovertHandler != null)
             {
-                return this.InternalCovertHandler.Execute(taskModel);
+                return this.InternalCovertHandler.Execute(taskModel, convertProgress, conversionComplete);
             }
 
             return new ConvertHandlerExecuteResult()
@@ -37,7 +36,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin.ConvertHandler
             };
         }
 
-        protected abstract ConvertHandlerExecuteResult ExecuteInternal(ConvertHandlerTaskModel taskModel);
+        protected abstract ConvertHandlerExecuteResult ExecuteInternal(ConvertHandlerTaskModel taskModel, Action<object, ConvertProgressEventArgs> convertProgress, Action<object, ConversionCompleteEventArgs> conversionComplete);
         public ConvertHandlerBase InternalCovertHandler { get; private set; }
     }
 }

@@ -91,7 +91,14 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                         OutputFileName = outputVideoFile,
                         SubTitleFileName = Path.GetFileName(subTitleFile),
                         VideoFileName = sourceVideoFile
+                    }, (e, arg) =>
+                    {
+                        base.LogInformation(taskModel, arg, "正在合併 {0} 字幕軌 ...", subTitleTrack.TrackName);
+                    }, (e, arg) =>
+                    {
+                        base.LogInformation(taskModel, arg, "{0} 字幕軌合併完成", subTitleTrack.TrackName);
                     });
+
                     if (result.Success)
                     {
                         using (FileStream fs = File.OpenRead(outputVideoFile))

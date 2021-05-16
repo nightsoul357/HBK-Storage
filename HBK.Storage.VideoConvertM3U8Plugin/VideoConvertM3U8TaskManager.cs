@@ -63,11 +63,22 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                     VideoFileName = sourceVideoFile,
                     TempDirectory = workingDirectory,
                     TSInterval = base.Options.TSInterval
-                });
+                }, (e, arg) =>
+                 {
+                     base.LogInformation(taskModel, arg, "正在轉換 M3U8 ...");
+                 }, (e, arg) =>
+                 {
+                     base.LogInformation(taskModel, arg, "M3U8 轉換完成");
+                 });
 
                 if (!result.Success)
                 {
+                    base.LogInformation(taskModel, null, "M3U8 轉換失敗");
                     return false;
+                }
+                else
+                {
+                    base.LogInformation(taskModel, null, "M3U8 轉換成功");
                 }
 
                 StringBuilder sb = new StringBuilder();

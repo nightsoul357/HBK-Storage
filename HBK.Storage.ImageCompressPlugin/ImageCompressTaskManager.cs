@@ -71,10 +71,9 @@ namespace HBK.Storage.ImageCompressPlugin
                         result, this.Options.Identity).Result;
 
                     processFileEntities.Add(compressFileEntity);
-
-                    base.LogInformation(taskModel, null, "任務結束 - 壓縮圖片");
                 }
 
+                base.LogInformation(taskModel, null, "任務結束 - 壓縮圖片");
                 processFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);
                 fileEntityService.UpdateBatchAsync(processFileEntities).Wait();
             }

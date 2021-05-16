@@ -328,6 +328,8 @@ namespace HBK.Storage.Core.Services
                 x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder &&
                 x.FileEntityStroage.Any(f => f.Storage.StorageGroup.StorageProviderId == storageProviderId) &&
                 x.FileEntityTag.All(t => t.Value != tag) &&
+                !x.Status.HasFlag(FileEntityStatusEnum.Processing) &&
+                !x.Status.HasFlag(FileEntityStatusEnum.Uploading) &&
                 EF.Functions.Like(x.MimeType, mimeTypeParten));
 
             if (isRootFileEntity)
@@ -354,6 +356,8 @@ namespace HBK.Storage.Core.Services
                 x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder &&
                 x.FileEntityStroage.Any(f => f.Storage.StorageGroup.StorageProviderId == storageProviderId) &&
                 x.FileEntityTag.Any(t => t.Value == tag) &&
+                !x.Status.HasFlag(FileEntityStatusEnum.Processing) &&
+                !x.Status.HasFlag(FileEntityStatusEnum.Uploading) &&
                 EF.Functions.Like(x.MimeType, mimeTypeParten));
 
             if (isRootFileEntity)

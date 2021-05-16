@@ -45,7 +45,7 @@ namespace HBK.Storage.VideoMetadataPlugin
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
 
-                base.LogInformation(taskModel, null, "任務開始 - 處理 Metadata");
+                base.LogInformation(taskModel, new { Test = "AAA" }, "任務開始 - 處理 Metadata");
 
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)

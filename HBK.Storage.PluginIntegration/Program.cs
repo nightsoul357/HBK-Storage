@@ -92,6 +92,15 @@ namespace HBK.Storage.PluginIntegration
                     LayoutRenderer.Register<PluginIdentityLayoutRenderer>("plugin_identity");
                     LayoutRenderer.Register<PluginFileEntityFilenameLayoutRenderer>("plugin_file_entity_filename");
                     LayoutRenderer.Register<PluginFileEntityIdLayoutRenderer>("plugin_file_entity_id");
+                    LayoutRenderer.Register<PluginActivityIdReanderer>("plugin_activityId");
+
+                    LayoutRenderer.Register<BitrateLayoutRenderer>("plugin_ffpmeg_bitrate");
+                    LayoutRenderer.Register<FpsLayoutRenderer>("plugin_ffpmeg_fps");
+                    LayoutRenderer.Register<FrameLayoutRenderer>("plugin_ffpmeg_frame");
+                    LayoutRenderer.Register<ProcessedDurationLayoutRenderer>("plugin_ffpmeg_processed_duration");
+                    LayoutRenderer.Register<SizeKbLayoutRenderer>("plugin_ffpmeg_sizeKb");
+                    LayoutRenderer.Register<SpeedLayoutRenderer>("plugin_ffpmeg_speed");
+                    LayoutRenderer.Register<TotalDurationLayoutRenderer>("plugin_ffpmeg_total_duration");
 
                     // Âà´«¾¹
                     services.AddScoped<ConvertHandlerBase>((sp =>
