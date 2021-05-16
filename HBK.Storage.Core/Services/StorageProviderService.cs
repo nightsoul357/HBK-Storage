@@ -253,19 +253,20 @@ namespace HBK.Storage.Core.Services
         {
             List<SyncFileEntity> result = new List<SyncFileEntity>();
             var storageProvider = await this.FindByIdAsync(storageProviderId);
-            var storageGroups = storageProvider.StorageGroup.Where(x => x.SyncMode != SyncModeEnum.Never && !x.Status.HasFlag(StorageGroupStatusEnum.Disable)).ToList();
+            var sourceStorageGroups = storageProvider.StorageGroup.Where(x => !x.Status.HasFlag(StorageGroupStatusEnum.Disable)).ToList();
+            var targetStorageGroups = storageProvider.StorageGroup.Where(x => x.SyncMode != SyncModeEnum.Never && !x.Status.HasFlag(StorageGroupStatusEnum.Disable)).ToList();
 
-            for (int i = 0; i < storageGroups.Count; i++)
+            for (int i = 0; i < sourceStorageGroups.Count; i++)
             {
-                for (int j = 0; j < storageGroups.Count; j++)
+                for (int j = 0; j < targetStorageGroups.Count; j++)
                 {
-                    if (i == j)
+                    var sourceStorageGroup = sourceStorageGroups[i];
+                    var targetStorageGroup = targetStorageGroups[j];
+
+                    if (sourceStorageGroup.StorageGroupId == targetStorageGroup.StorageGroupId)
                     {
                         continue;
                     }
-
-                    var sourceStorageGroup = storageGroups[i];
-                    var targetStorageGroup = storageGroups[j];
 
                     var fileEntitiesQuery = _dbContext.FileEntity
                         .Include(x => x.FileEntityStroage)
