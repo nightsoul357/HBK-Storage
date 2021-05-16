@@ -23,7 +23,7 @@ namespace HBK.Storage.ImageCompressPlugin
             : base(logger, serviceProvider)
         {
         }
-        protected override bool ExecuteInternal(PluginTaskModel taskModel)
+        protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
         {
             base.LogInformation(taskModel, null, "任務開始 - 壓縮圖片");
 
@@ -39,7 +39,7 @@ namespace HBK.Storage.ImageCompressPlugin
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)
                 {
-                    return false;
+                    return ExecuteResultEnum.Failed;
                 }
 
                 using var bmp = new Bitmap(fileInfo.CreateReadStream());
@@ -77,7 +77,7 @@ namespace HBK.Storage.ImageCompressPlugin
                 processFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);
                 fileEntityService.UpdateBatchAsync(processFileEntities).Wait();
             }
-            return true;
+            return ExecuteResultEnum.Successful;
         }
 
         private Stream CompressImage(Bitmap bmp, long quantity)

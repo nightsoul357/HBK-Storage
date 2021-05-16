@@ -28,20 +28,20 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
             _hostEnvironment = base._serviceScope.ServiceProvider.GetRequiredService<IHostEnvironment>();
         }
 
-        protected override bool ExecuteInternal(PluginTaskModel taskModel)
+        protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
         {
             using (var scope = base._serviceProvider.CreateScope())
             {
                 if (taskModel.FileEntity.ExtendProperty == null)
                 {
                     base.LogInformation(taskModel, null, "因為 ExtendProperty 為 NULL 而無法正確執行影片字幕合併任務");
-                    return false;
+                    return ExecuteResultEnum.Failed;
                 }
                 var extendProperty = JsonConvert.DeserializeObject<VideoSubTitleCombineExtendProperty>(taskModel.FileEntity.ExtendProperty);
                 if (extendProperty == null || extendProperty.SubTitleTrackInfos == null)
                 {
                     base.LogInformation(taskModel, null, "因為 ExtendProperty 為 NULL 或 SubTitleTrackInfos 而無法正確執行影片字幕合併任務");
-                    return false;
+                    return ExecuteResultEnum.Failed;
                 }
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
@@ -58,7 +58,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
 
                 if (fileInfo == null)
                 {
-                    return false;
+                    return ExecuteResultEnum.Failed;
                 }
 
                 string sourceVideoFile = Path.Combine(sourceDirecotry, Guid.NewGuid().ToString() + Path.GetExtension(taskModel.FileEntity.Name));
@@ -147,7 +147,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
             }
 
             base.LogInformation(taskModel, null, "任務完成 - 合併影片跟字幕");
-            return true;
+            return ExecuteResultEnum.Successful;
         }
 
         public string CurrentDirectory

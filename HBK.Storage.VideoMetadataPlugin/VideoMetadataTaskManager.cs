@@ -28,12 +28,12 @@ namespace HBK.Storage.VideoMetadataPlugin
         {
         }
 
-        protected override bool ExecuteInternal(PluginTaskModel taskModel)
+        protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
         {
             if (base.Options.ExceptionMimeTypes.Any(x => x == taskModel.FileEntity.MimeType))
             {
                 base.LogInformation(taskModel, null, "此檔案屬於例外格式，略過其 Metadata 的處理");
-                return false;
+                return ExecuteResultEnum.FailedWithForce;
             }
 
             using (var scope = base._serviceProvider.CreateScope())
@@ -50,7 +50,7 @@ namespace HBK.Storage.VideoMetadataPlugin
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)
                 {
-                    return false;
+                    return ExecuteResultEnum.Failed;
                 }
 
                 string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskModel.TaskId.ToString());
@@ -137,7 +137,7 @@ namespace HBK.Storage.VideoMetadataPlugin
 
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
                 base.LogInformation(taskModel, null, "任務結束 - 處理 Metadata");
-                return true;
+                return ExecuteResultEnum.Successful;
             }
         }
     }

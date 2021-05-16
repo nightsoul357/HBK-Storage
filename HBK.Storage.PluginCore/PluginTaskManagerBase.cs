@@ -24,6 +24,7 @@ namespace HBK.Storage.PluginCore
         protected readonly IServiceScope _serviceScope;
 
         private ConcurrentQueue<PluginTaskModel> _pendingQueue;
+        private Dictionary<Guid, int> _failCheck;
         private readonly object _syncObj;
         private bool _isDisposed = false;
         public PluginTaskManagerBase(ILogger<T> logger, IServiceProvider serviceProvider)
@@ -32,6 +33,7 @@ namespace HBK.Storage.PluginCore
             _serviceProvider = serviceProvider;
             _serviceScope = serviceProvider.CreateScope();
             _pendingQueue = new ConcurrentQueue<PluginTaskModel>();
+            _failCheck = new Dictionary<Guid, int>();
             _syncObj = new object();
             this.Options = _serviceScope.ServiceProvider.GetRequiredService<TOption>();
             this.IsRunning = false;
@@ -140,19 +142,29 @@ namespace HBK.Storage.PluginCore
             {
                 try
                 {
-                    if (!this.ExecuteInternal(task))
+                    ExecuteResultEnum result = this.ExecuteInternal(task);
+                    int k = -1;
+                    if (result == ExecuteResultEnum.Failed)
                     {
-                        this.ErrorFileEntity(task.FileEntity.FileEntityId);
+                        k = this.ErrorFileEntity(task);
+                    }
+                    else if (result == ExecuteResultEnum.FailedWithForce)
+                    {
+                        k = this.ErrorFileEntity(task, true);
+                    }
+
+                    if (result == ExecuteResultEnum.Successful || k == -1)
+                    {
+                        this.CompleteFileEntity(task.FileEntity.FileEntityId);
                     }
                 }
                 catch (Exception ex)
                 {
                     this.LogError(task, null, ex, "執行時發生未預期的例外");
-                    this.ErrorFileEntity(task.FileEntity.FileEntityId);
-                }
-                finally
-                {
-                    this.CompleteFileEntity(task.FileEntity.FileEntityId);
+                    if (this.ErrorFileEntity(task) == -1)
+                    {
+                        this.CompleteFileEntity(task.FileEntity.FileEntityId);
+                    }
                 }
             }
         }
@@ -172,21 +184,42 @@ namespace HBK.Storage.PluginCore
                 }
             }
         }
-        protected void ErrorFileEntity(Guid fileEntityId)
+        protected int ErrorFileEntity(PluginTaskModel pluginTaskModel, bool force = false)
         {
+            if (_failCheck.ContainsKey(pluginTaskModel.FileEntity.FileEntityId))
+            {
+                _failCheck[pluginTaskModel.FileEntity.FileEntityId]++;
+            }
+            else
+            {
+                _failCheck[pluginTaskModel.FileEntity.FileEntityId] = 1;
+            }
+
+            if (!force)
+            {    
+                if (_failCheck[pluginTaskModel.FileEntity.FileEntityId] < 3)
+                {
+                    this.LogError(pluginTaskModel, null, null, "執行此檔案第 {0} 次發生錯誤，{1} 次錯誤之後會註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId], 3);
+                    return _failCheck[pluginTaskModel.FileEntity.FileEntityId];
+                }
+            }
+
+            this.LogError(pluginTaskModel, null, null, "執行此檔案第 {0} 次發生錯誤，註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId]);
+            // 失敗三次以上才不繼續執行
             using (var scope = _serviceProvider.CreateScope())
             {
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
 
                 if (this.Options.FetchMode == FetchModeEnum.WithoutTag)
                 {
-                    fileEntityService.AppendTagAsync(fileEntityId, this.Options.ExceptionTag).Wait();
+                    fileEntityService.AppendTagAsync(pluginTaskModel.FileEntity.FileEntityId, this.Options.ExceptionTag).Wait();
                 }
                 else if (this.Options.FetchMode == FetchModeEnum.WithTag)
                 {
-                    fileEntityService.AppendTagAsync(fileEntityId, this.Options.ExceptionTag).Wait();
+                    fileEntityService.AppendTagAsync(pluginTaskModel.FileEntity.FileEntityId, this.Options.ExceptionTag).Wait();
                 }
             }
+            return -1;
         }
         /// <summary>
         /// 移除殘留檔案
@@ -215,7 +248,7 @@ namespace HBK.Storage.PluginCore
             }
             this.LogInformation(taskId, fileEntity, null, "檔案下載完成");
         }
-        protected abstract bool ExecuteInternal(PluginTaskModel taskModel);
+        protected abstract ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel);
         /// <summary>
         /// 未攔截的例外處理方式
         /// </summary>

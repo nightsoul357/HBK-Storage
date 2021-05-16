@@ -28,7 +28,7 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
         {
         }
 
-        protected override bool ExecuteInternal(PluginTaskModel taskModel)
+        protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
         {
             using (var scope = base._serviceProvider.CreateScope())
             {
@@ -44,7 +44,7 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)
                 {
-                    return false;
+                    return ExecuteResultEnum.Failed;
                 }
 
                 string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskModel.TaskId.ToString());
@@ -115,7 +115,7 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
                 base.LogInformation(taskModel, null, "任務結束 - 產生 Seek Preview");
 
-                return true;
+                return ExecuteResultEnum.Successful;
             }
         }
 

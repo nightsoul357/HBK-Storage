@@ -24,7 +24,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
         {
         }
 
-        protected override bool ExecuteInternal(PluginTaskModel taskModel)
+        protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
         {
             using (var scope = base._serviceProvider.CreateScope())
             {
@@ -42,7 +42,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)
                 {
-                    return false;
+                    return ExecuteResultEnum.Failed;
                 }
 
                 string sourceVideoFile = Path.Combine(sourceDirecotry, Guid.NewGuid().ToString() + Path.GetExtension(taskModel.FileEntity.Name));
@@ -74,7 +74,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                 if (!result.Success)
                 {
                     base.LogInformation(taskModel, null, "M3U8 轉換失敗");
-                    return false;
+                    return ExecuteResultEnum.Failed;
                 }
                 else
                 {
@@ -94,7 +94,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
 
                 base.LogInformation(taskModel, null, "任務結束 - 轉換 M3U8");
-                return true;
+                return ExecuteResultEnum.Successful;
             }
         }
 
