@@ -170,6 +170,11 @@ namespace HBK.Storage.PluginCore
         }
         protected void CompleteFileEntity(Guid fileEntityId)
         {
+            if (_failCheck.ContainsKey(fileEntityId))
+            {
+                _failCheck.Remove(fileEntityId);
+            }
+
             using (var scope = _serviceProvider.CreateScope())
             {
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
@@ -196,7 +201,7 @@ namespace HBK.Storage.PluginCore
             }
 
             if (!force)
-            {    
+            {
                 if (_failCheck[pluginTaskModel.FileEntity.FileEntityId] < 3)
                 {
                     this.LogError(pluginTaskModel, null, null, "執行此檔案第 {0} 次發生錯誤，{1} 次錯誤之後會註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId], 3);
