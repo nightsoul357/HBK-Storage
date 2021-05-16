@@ -32,7 +32,7 @@ namespace HBK.Storage.VideoMetadataPlugin
         {
             if (base.Options.ExceptionMimeTypes.Any(x => x == taskModel.FileEntity.MimeType))
             {
-                base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 屬於例外格式，略過其 Metadata 的處理", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
+                base.LogInformation(taskModel, null, "此檔案屬於例外格式，略過其 Metadata 的處理");
                 return false;
             }
 
@@ -45,7 +45,7 @@ namespace HBK.Storage.VideoMetadataPlugin
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
 
-                base._logger.LogInformation("[{0}] 開始處理檔案 ID {1} 的 {2} 之 Metadata", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
+                base.LogInformation(taskModel, null, "任務開始 - 處理 Metadata");
 
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)
@@ -53,12 +53,11 @@ namespace HBK.Storage.VideoMetadataPlugin
                     return false;
                 }
 
-                Guid taskId = Guid.NewGuid();
-                string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskId.ToString());
+                string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskModel.TaskId.ToString());
                 Directory.CreateDirectory(workingDirectory);
 
                 string videoFileName = Path.Combine(workingDirectory, Guid.NewGuid() + Path.GetExtension(taskModel.FileEntity.Name));
-                base.DownloadFileEntity(fileInfo, taskModel.FileEntity, videoFileName);
+                base.DownloadFileEntity(taskModel.TaskId, fileInfo, taskModel.FileEntity, videoFileName);
 
                 var videoFile = new MediaFile { Filename = videoFileName };
                 string newFFmpegLocation = Path.Combine(workingDirectory, "ffmpeg.exe");
@@ -128,7 +127,7 @@ namespace HBK.Storage.VideoMetadataPlugin
                                 },
                                 previewfs, this.Options.Identity).Result;
 
-                        base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 上傳第 {3} 張預覽圖完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, i);
+                        base.LogInformation(taskModel, null, "上傳第 {0} 張預覽圖完成", i);
                         processingFileEntities.Add(preFileEntity);
                     }
                 }
@@ -137,7 +136,7 @@ namespace HBK.Storage.VideoMetadataPlugin
                 fileEntityService.UpdateBatchAsync(processingFileEntities).Wait();
 
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
-                base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 之 Metadata 處理完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
+                base.LogInformation(taskModel, null, "任務結束 - 處理 Metadata");
                 return true;
             }
         }

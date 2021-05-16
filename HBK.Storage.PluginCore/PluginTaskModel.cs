@@ -9,6 +9,7 @@ namespace HBK.Storage.PluginCore
 {
     public class PluginTaskModel
     {
+        public Guid TaskId { get; set; }
         public FileEntity FileEntity { get; set; }
         public Guid StorageProviderId { get; set; }
     }

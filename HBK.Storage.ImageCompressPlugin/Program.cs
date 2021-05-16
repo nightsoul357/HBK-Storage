@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NLog.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +41,6 @@ namespace HBK.Storage.ImageCompressPlugin
 
                     services.AddSingleton<ImageCompressTaskManager>();
                     services.AddHostedService<TaskWorker>();
-                })
-                .UseNLog();
+                });
     }
 }

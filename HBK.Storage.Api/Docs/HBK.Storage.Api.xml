@@ -1075,6 +1075,16 @@
             同步策略
             </summary>
         </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.UploadPriority">
+            <summary>
+            上傳優先度
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.DownloadPriority">
+            <summary>
+            下載優先度
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupResponse.CreateDateTime">
             <summary>
             建立時間
@@ -1113,6 +1123,16 @@
         <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.SyncPolicy">
             <summary>
             同步策略
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.UploadPriority">
+            <summary>
+            上傳優先度
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.DownloadPriority">
+            <summary>
+            下載優先度
             </summary>
         </member>
         <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.Status">

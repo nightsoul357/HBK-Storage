@@ -25,10 +25,7 @@ namespace HBK.Storage.ImageCompressPlugin
         }
         protected override bool ExecuteInternal(PluginTaskModel taskModel)
         {
-            base._logger.LogInformation("[{0}] 開始壓縮圖片檔案 ID 為 {1} 的檔案 {2}",
-                base.Options.Identity,
-                taskModel.FileEntity.FileEntityId,
-                taskModel.FileEntity.Name);
+            base.LogInformation(taskModel, null, "任務開始 - 壓縮圖片");
 
             using (var scope = base._serviceProvider.CreateScope())
             {
@@ -75,10 +72,7 @@ namespace HBK.Storage.ImageCompressPlugin
 
                     processFileEntities.Add(compressFileEntity);
 
-                    base._logger.LogInformation("[{0}] 成功將 {1} 檔案壓縮成 {2} 完成",
-                        base.Options.Identity,
-                        taskModel.FileEntity.Name,
-                        compress.Name);
+                    base.LogInformation(taskModel, null, "任務結束 - 壓縮圖片");
                 }
 
                 processFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);

@@ -9,6 +9,7 @@ using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
+using HBK.Storage.PluginCore.NLog;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -121,6 +122,7 @@ namespace HBK.Storage.PluginCore
 
                     fileEntites.ForEach(x => _pendingQueue.Enqueue(new PluginTaskModel()
                     {
+                        TaskId = Guid.NewGuid(),
                         FileEntity = x,
                         StorageProviderId = storageProvider.StorageProviderId
                     }));
@@ -145,7 +147,7 @@ namespace HBK.Storage.PluginCore
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "[{0}] 檔案 ID -> {1} 執行時發生未預期的例外", this.Options.Identity, task.FileEntity.FileEntityId);
+                    this.LogError(task, null, ex, "執行時發生未預期的例外");
                     this.ErrorFileEntity(task.FileEntity.FileEntityId);
                 }
                 finally
@@ -199,19 +201,19 @@ namespace HBK.Storage.PluginCore
             if (remove.Count() != 0)
             {
                 fileEntityService.MarkFileEntityDeleteBatchAsync(remove.Select(x => x.FileEntityId).ToList()).Wait();
-                _logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 在處理的過程中發現了 {3} 個殘留的檔案，以標記為移除", this.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, remove.Count());
+                this.LogInformation(taskModel, null, "在處理的過程中發現了 {0} 個殘留的檔案，以標記為移除", remove.Count());
             }
         }
 
-        protected void DownloadFileEntity(IAsyncFileInfo downloadfile, FileEntity fileEntity, string savePath)
+        protected void DownloadFileEntity(Guid taskId, IAsyncFileInfo downloadfile, FileEntity fileEntity, string savePath)
         {
             var sourceStream = downloadfile.CreateReadStream();
-            _logger.LogInformation("[{0}] 開始下載檔案 ID {1} 的 {2} 檔案", this.Options.Identity, fileEntity.FileEntityId, fileEntity.Name);
+            this.LogInformation(taskId, fileEntity, null, "開始下載檔案");
             using (var fstream = File.Create(savePath))
             {
                 sourceStream.CopyTo(fstream);
             }
-            _logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 檔案 下載完成", this.Options.Identity, fileEntity.FileEntityId, fileEntity.Name);
+            this.LogInformation(taskId, fileEntity, null, "檔案下載完成");
         }
         protected abstract bool ExecuteInternal(PluginTaskModel taskModel);
         /// <summary>
@@ -221,6 +223,50 @@ namespace HBK.Storage.PluginCore
         protected virtual void ExcetpionHandle(Exception ex)
         {
             _logger.LogError(ex, "發生未預期的例外");
+        }
+        /// <summary>
+        /// 紀錄 Info 等級的訊息
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="extendProperty"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        protected void LogInformation(PluginTaskModel task, object extendProperty, string message, params object[] args)
+        {
+            this.LogInformation(task.TaskId, task.FileEntity, extendProperty, message, args);
+        }
+        /// <summary>
+        /// 紀錄 Info 等級的訊息
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="extendProperty"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        protected void LogInformation(Guid taskId, FileEntity fileEntity, object extendProperty, string message, params object[] args)
+        {
+            _logger.LogInformation(LogEvent.BuildPluginLogEvent(this.Options.Identity, taskId, fileEntity, extendProperty), message, args);
+        }
+        /// <summary>
+        /// 紀錄 Error 等級的訊息
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="extendProperty"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        protected void LogError(PluginTaskModel task, object extendProperty, Exception ex, string message, params object[] args)
+        {
+            this.LogError(task.TaskId, task.FileEntity, extendProperty, ex, message, args);
+        }
+        /// <summary>
+        /// 紀錄 Error 等級的訊息
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="extendProperty"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        protected void LogError(Guid taskId, FileEntity fileEntity, object extendProperty, Exception ex, string message, params object[] args)
+        {
+            _logger.LogError(LogEvent.BuildPluginLogEvent(this.Options.Identity, taskId, fileEntity, extendProperty), ex, message, args);
         }
 
         public virtual void Dispose()

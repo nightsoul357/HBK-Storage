@@ -39,7 +39,7 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
 
-                base._logger.LogInformation("[{0}] 開始處理檔案 ID {1} 的 {2} 之 Seek Preview", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
+                base.LogInformation(taskModel, null, "任務開始 - 產生 Seek Preview");
 
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)
@@ -47,12 +47,11 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                     return false;
                 }
 
-                Guid taskId = Guid.NewGuid();
-                string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskId.ToString());
+                string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskModel.TaskId.ToString());
                 Directory.CreateDirectory(workingDirectory);
 
                 string videoFileName = Path.Combine(workingDirectory, Guid.NewGuid() + Path.GetExtension(taskModel.FileEntity.Name));
-                base.DownloadFileEntity(fileInfo, taskModel.FileEntity, videoFileName);
+                base.DownloadFileEntity(taskModel.TaskId, fileInfo, taskModel.FileEntity, videoFileName);
 
                 var videoFile = new MediaFile { Filename = videoFileName };
                 string newFFmpegLocation = Path.Combine(workingDirectory, "ffmpeg.exe");
@@ -74,7 +73,7 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                     this.ResizeImage(outputFile.Filename, newFile, base.Options.PreviewWidth);
                     File.Delete(outputFile.Filename);
                     previewsFiles.Add(newFile);
-                    base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 的第 {3} 張 Seek Preview 產生完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, i);
+                    base.LogInformation(taskModel, null, "第 {0} 張 Seek Preview 產生完成", i);
                 }
 
                 List<FileEntity> processFileEntities = new List<FileEntity>();
@@ -106,7 +105,7 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                                 fstream, this.Options.Identity).Result;
 
                         processFileEntities.Add(fileEntity);
-                        base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 的第 {3} 張 Seek Preview 上傳完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, i);
+                        base.LogInformation(taskModel, null, "第 {0} 張 Seek Preview 上傳完成", i);
                     }
                 }
 
@@ -114,8 +113,7 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                 fileEntityService.UpdateBatchAsync(processFileEntities).Wait();
 
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
-
-                base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 之 Seek Preview 處理完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
+                base.LogInformation(taskModel, null, "任務結束 - 產生 Seek Preview");
 
                 return true;
             }

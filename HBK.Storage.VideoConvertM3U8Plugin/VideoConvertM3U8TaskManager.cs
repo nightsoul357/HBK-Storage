@@ -34,10 +34,8 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                 var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId).Result;
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
-
-                base._logger.LogInformation("[{0}] 開始將檔案 ID {1} 的 {2} 轉換為 M3U8 格式", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
-                Guid taskId = Guid.NewGuid();
-                string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskId.ToString());
+                base.LogInformation(taskModel, null, "任務開始 - 轉換 M3U8");
+                string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskModel.TaskId.ToString());
                 string sourceDirecotry = Path.Combine(workingDirectory, "src");
                 Directory.CreateDirectory(sourceDirecotry);
 
@@ -48,7 +46,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                 }
 
                 string sourceVideoFile = Path.Combine(sourceDirecotry, Guid.NewGuid().ToString() + Path.GetExtension(taskModel.FileEntity.Name));
-                base.DownloadFileEntity(fileInfo, taskModel.FileEntity, sourceVideoFile);
+                base.DownloadFileEntity(taskModel.TaskId, fileInfo, taskModel.FileEntity, sourceVideoFile);
 
                 string outputDirectory = Path.Combine(workingDirectory, "out");
                 string outputVideo = Path.Combine(outputDirectory, Guid.NewGuid().ToString() + ".m3u8");
@@ -73,17 +71,18 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                 }
 
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine($"[{base.Options.Identity}] 檔案 ID {taskModel.FileEntity.FileEntityId} 的 {taskModel.FileEntity.Name} 轉換完成之");
+                sb.AppendLine($"M3U8 轉換完成");
                 sb.AppendLine($"M3U8 檔案大小為 : { outputVideo.Length } Bytes");
                 sb.AppendLine($"TS 檔案數量為 : { Directory.GetFiles(outputDirectory, "*.ts").Count() } 個");
                 sb.AppendLine($"VTT 檔案數量為 : { Directory.GetFiles(outputDirectory, "*.vtt").Count() } 個");
-                base._logger.LogInformation(sb.ToString());
+
+                base.LogInformation(taskModel, null, sb.ToString());
 
                 this.UploadOutputDirectory(outputDirectory, outputVideo, taskModel, storageProviderService, fileEntityService);
 
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
 
-                base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 轉換為 M3U8 格式 轉換成功", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
+                base.LogInformation(taskModel, null, "任務結束 - 轉換 M3U8");
                 return true;
             }
         }
@@ -93,7 +92,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
             using var fs = File.OpenRead(outputVideo);
             List<FileEntity> processingFileEntities = new List<FileEntity>();
 
-            base._logger.LogInformation("[{0}] 開始上傳 檔案 ID {1} 的 {2} 之 M3U8 檔案", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
+            base.LogInformation(taskModel, null, "開始上傳 M3U8 檔案");
             var m3u8File = storageProviderService
                     .UploadFileEntityAsync(taskModel.StorageProviderId,
                         null,
@@ -115,12 +114,12 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                         fs, this.Options.Identity).Result;
 
             processingFileEntities.Add(m3u8File);
-            base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 之 M3U8 檔案 上傳完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
+            base.LogInformation(taskModel, null, "M3U8 檔案 上傳完成");
 
             int tsnumber = 1;
             foreach (var file in Directory.GetFiles(outputDirectory, "*.ts"))
             {
-                base._logger.LogInformation("[{0}] 開始上傳 檔案 ID {1} 的 {2} 第 {3} 個 TS 檔案", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, tsnumber);
+                base.LogInformation(taskModel, null, "開始上傳第 {0} 個 TS 檔案", tsnumber);
 
                 using var fsTs = File.OpenRead(file);
                 var fts = storageProviderService
@@ -147,7 +146,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                             },
                             fsTs, this.Options.Identity).Result;
 
-                base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 第 {3} 個 TS 檔案 上傳完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, tsnumber);
+                base.LogInformation(taskModel, null, "第 {0} 個 TS 檔案 上船完成", tsnumber);
                 processingFileEntities.Add(fts);
                 tsnumber++;
             }
@@ -155,7 +154,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
             int vttnumber = 1;
             foreach (var file in Directory.GetFiles(outputDirectory, "*.vtt"))
             {
-                base._logger.LogInformation("[{0}] 開始上傳 檔案 ID {1} 的 {2} 第 {3} 個 VTT 檔案", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, vttnumber);
+                base.LogInformation(taskModel, null, "開始上傳第 {0} 個 VTT 檔案", vttnumber);
 
                 using var fsVtt = File.OpenRead(file);
                 var fvtt = storageProviderService
@@ -182,13 +181,13 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                             },
                             fsVtt, this.Options.Identity).Result;
 
-                base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 第 {3} 個 VTT 檔案 上傳完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, vttnumber);
+                base.LogInformation(taskModel, null, "第 {0} 個 VTT 檔案上傳完成", vttnumber);
 
                 processingFileEntities.Add(fvtt);
                 vttnumber++;
             }
 
-            base._logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 之 M3U8 轉換完成所有檔案上傳完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
+            base.LogInformation(taskModel, null, "M3U8 轉換完成所有檔案上傳完成");
 
             processingFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing); // 移除處理中
             fileEntityService.UpdateBatchAsync(processingFileEntities).Wait();

@@ -2,6 +2,7 @@ using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core;
 using HBK.Storage.ImageCompressPlugin;
 using HBK.Storage.ImageCompressPlugin.Models;
+using HBK.Storage.PluginCore.NLog;
 using HBK.Storage.VideoConvertM3U8Plugin;
 using HBK.Storage.VideoConvertM3U8Plugin.ConvertHandler;
 using HBK.Storage.VideoConvertM3U8Plugin.Models;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.LayoutRenderers;
 using NLog.Web;
 using System;
 using System.Collections.Generic;
@@ -86,6 +88,10 @@ namespace HBK.Storage.PluginIntegration
 
                     // 核心服務
                     services.AddHBKStorageService();
+
+                    LayoutRenderer.Register<PluginIdentityLayoutRenderer>("plugin_identity");
+                    LayoutRenderer.Register<PluginFileEntityFilenameLayoutRenderer>("plugin_file_entity_filename");
+                    LayoutRenderer.Register<PluginFileEntityIdLayoutRenderer>("plugin_file_entity_id");
 
                     // 轉換器
                     services.AddScoped<ConvertHandlerBase>((sp =>

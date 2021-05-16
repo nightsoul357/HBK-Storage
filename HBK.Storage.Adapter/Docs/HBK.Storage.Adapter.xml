@@ -200,11 +200,6 @@
             無
             </summary>
         </member>
-        <member name="F:HBK.Storage.Adapter.Enums.StorageGroupStatusEnum.Main">
-            <summary>
-            是否為主要的儲存區
-            </summary>
-        </member>
         <member name="F:HBK.Storage.Adapter.Enums.StorageGroupStatusEnum.Disable">
             <summary>
             已停用
