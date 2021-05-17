@@ -11,6 +11,7 @@ using MediaToolkit.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -59,8 +60,8 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
 
                 using var engine = new Engine(newFFmpegLocation);
                 engine.GetMetadata(videoFile);
-                List<string> previewsFiles = new List<string>();
-                for (int i = 0; i < videoFile.Metadata.Duration.TotalSeconds; i++)
+                ConcurrentQueue<PreviewImage> previewsFiles = new ConcurrentQueue<PreviewImage>();
+                for (int i = 0; i < videoFile.Metadata.Duration.TotalSeconds; i += base.Options.PreviewInterval)
                 {
                     var outputFile = new MediaFile { Filename = Path.Combine(workingDirectory, Guid.NewGuid().ToString() + ".jpeg") };
                     var options = new ConversionOptions { Seek = TimeSpan.FromSeconds(i) };
@@ -72,42 +73,32 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                     string newFile = Path.Combine(workingDirectory, Guid.NewGuid().ToString() + ".jpeg");
                     this.ResizeImage(outputFile.Filename, newFile, base.Options.PreviewWidth);
                     File.Delete(outputFile.Filename);
-                    previewsFiles.Add(newFile);
-                    base.LogInformation(taskModel, null, "第 {0} 張 Seek Preview 產生完成", i);
-                }
-
-                List<FileEntity> processFileEntities = new List<FileEntity>();
-                for (int i = 0; i < previewsFiles.Count; i++)
-                {
-                    using (var fstream = File.Open(previewsFiles[i], FileMode.Open))
+                    previewsFiles.Enqueue(new PreviewImage()
                     {
-                        var fileEntity = storageProviderService
-                            .UploadFileEntityAsync(taskModel.StorageProviderId,
-                                null,
-                                new FileEntity()
-                                {
-                                    MimeType = "image/jpeg",
-                                    Name = Path.GetFileNameWithoutExtension(taskModel.FileEntity.Name) + $"-Seek-{i}.jpeg",
-                                    Size = fstream.Length,
-                                    Status = FileEntityStatusEnum.Processing,
-                                    FileEntityTag = new List<FileEntityTag>() {
-                                        new FileEntityTag()
-                                        {
-                                            Value = this.Options.Identity
-                                        },
-                                        new FileEntityTag()
-                                        {
-                                            Value = $"Seek-{i}"
-                                        }
-                                    },
-                                    ParentFileEntityID = taskModel.FileEntity.FileEntityId
-                                },
-                                fstream, this.Options.Identity).Result;
-
-                        processFileEntities.Add(fileEntity);
-                        base.LogInformation(taskModel, null, "第 {0} 張 Seek Preview 上傳完成", i);
-                    }
+                        Filename = newFile,
+                        Second = i
+                    });
                 }
+                List<Task> uploadTasks = new List<Task>();
+                List<FileEntity> processFileEntities = new List<FileEntity>();
+
+                for (int i = 0; i < base.Options.UploadTaskCount; i++)
+                {
+                    uploadTasks.Add(Task.Factory.StartNew(() =>
+                    {
+                        using (var currnetScope = _serviceProvider.CreateScope())
+                        {
+                            var storageProviderService = currnetScope.ServiceProvider.GetRequiredService<StorageProviderService>();
+                            PreviewImage previewImage;
+                            while (previewsFiles.TryDequeue(out previewImage))
+                            {
+                                processFileEntities.Add(this.UploadPreivewImage(storageProviderService, taskModel, previewImage));
+                            }
+                        }
+                    }));
+                }
+
+                Task.WaitAll(uploadTasks.ToArray());
 
                 processFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);
                 fileEntityService.UpdateBatchAsync(processFileEntities).Wait();
@@ -118,8 +109,38 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                 return ExecuteResultEnum.Successful;
             }
         }
+        private FileEntity UploadPreivewImage(StorageProviderService storageProviderService, PluginTaskModel taskModel, PreviewImage previewImage)
+        {
+            using (var fstream = File.Open(previewImage.Filename, FileMode.Open))
+            {
+                var fileEntity = storageProviderService
+                    .UploadFileEntityAsync(taskModel.StorageProviderId,
+                        null,
+                        new FileEntity()
+                        {
+                            MimeType = "image/jpeg",
+                            Name = Path.GetFileNameWithoutExtension(taskModel.FileEntity.Name) + $"-Seek-{previewImage.Second}.jpeg",
+                            Size = fstream.Length,
+                            Status = FileEntityStatusEnum.Processing,
+                            FileEntityTag = new List<FileEntityTag>() {
+                                        new FileEntityTag()
+                                        {
+                                            Value = this.Options.Identity
+                                        },
+                                        new FileEntityTag()
+                                        {
+                                            Value = $"Seek-{ previewImage.Second }"
+                                        }
+                            },
+                            ParentFileEntityID = taskModel.FileEntity.FileEntityId
+                        },
+                        fstream, this.Options.Identity).Result;
 
-        public void ResizeImage(string source, string output, int newWidth)
+                base.LogInformation(taskModel, null, "第 {0} 秒 Seek Preview 上傳完成", previewImage.Second);
+                return fileEntity;
+            }
+        }
+        private void ResizeImage(string source, string output, int newWidth)
         {
             using (Bitmap bitmap = new Bitmap(source))
             {

@@ -12,5 +12,6 @@ namespace HBK.Storage.VideoConvertM3U8Plugin.Models
         public string FFmpegLocation { get; set; }
         public string WorkingDirectory { get; set; }
         public double TSInterval { get; set; }
+        public int UploadTaskCount { get; set; } = 5;
     }
 }

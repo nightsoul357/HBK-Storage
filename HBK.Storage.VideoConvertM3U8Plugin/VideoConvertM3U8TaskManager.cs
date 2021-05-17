@@ -5,10 +5,12 @@ using HBK.Storage.Core.Services;
 using HBK.Storage.PluginCore;
 using HBK.Storage.Utils;
 using HBK.Storage.VideoConvertM3U8Plugin.ConvertHandler;
+using HBK.Storage.VideoConvertM3U8Plugin.Enums;
 using HBK.Storage.VideoConvertM3U8Plugin.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,6 +21,11 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
 {
     public class VideoConvertM3U8TaskManager : PluginTaskManagerBase<VideoConvertM3U8TaskManager, VideoConvertM3U8TaskManagerOptions>
     {
+        private static Dictionary<UploadFileTypeEnum, string> mimeTypes = new Dictionary<UploadFileTypeEnum, string>()
+        {
+            [UploadFileTypeEnum.TS] = "video/MP2T",
+            [UploadFileTypeEnum.VTT] = "text/vtt"
+        };
         public VideoConvertM3U8TaskManager(ILogger<VideoConvertM3U8TaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
@@ -127,82 +134,89 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
             processingFileEntities.Add(m3u8File);
             base.LogInformation(taskModel, null, "M3U8 檔案 上傳完成");
 
+            ConcurrentQueue<UploadFile> uploadFiles = new ConcurrentQueue<UploadFile>();
             int tsnumber = 1;
             foreach (var file in Directory.GetFiles(outputDirectory, "*.ts"))
             {
-                base.LogInformation(taskModel, null, "開始上傳第 {0} 個 TS 檔案", tsnumber);
-
-                using var fsTs = File.OpenRead(file);
-                var fts = storageProviderService
-                        .UploadFileEntityAsync(taskModel.StorageProviderId,
-                            null,
-                            new FileEntity()
-                            {
-                                MimeType = "video/MP2T",
-                                Name = Path.GetFileName(file),
-                                Size = fsTs.Length,
-                                Status = FileEntityStatusEnum.Processing,
-                                FileEntityTag = new List<FileEntityTag>()
-                                {
-                                    new FileEntityTag()
-                                    {
-                                        Value = $"ts-{tsnumber}"
-                                    },
-                                    new FileEntityTag()
-                                    {
-                                        Value = this.Options.Identity
-                                    }
-                                },
-                                ParentFileEntityID = m3u8File.FileEntityId
-                            },
-                            fsTs, this.Options.Identity).Result;
-
-                base.LogInformation(taskModel, null, "第 {0} 個 TS 檔案 上船完成", tsnumber);
-                processingFileEntities.Add(fts);
+                uploadFiles.Enqueue(new UploadFile()
+                {
+                    Filename = file,
+                    M3U8FileEntityId = m3u8File.FileEntityId,
+                    Number = tsnumber,
+                    Type = UploadFileTypeEnum.TS
+                });
                 tsnumber++;
             }
 
             int vttnumber = 1;
             foreach (var file in Directory.GetFiles(outputDirectory, "*.vtt"))
             {
-                base.LogInformation(taskModel, null, "開始上傳第 {0} 個 VTT 檔案", vttnumber);
-
-                using var fsVtt = File.OpenRead(file);
-                var fvtt = storageProviderService
-                        .UploadFileEntityAsync(taskModel.StorageProviderId,
-                            null,
-                            new FileEntity()
-                            {
-                                MimeType = "text/vtt",
-                                Name = Path.GetFileName(file),
-                                Size = fsVtt.Length,
-                                Status = FileEntityStatusEnum.Processing,
-                                FileEntityTag = new List<FileEntityTag>()
-                                {
-                                    new FileEntityTag()
-                                    {
-                                        Value = $"vtt-{vttnumber}"
-                                    },
-                                    new FileEntityTag()
-                                    {
-                                        Value = this.Options.Identity
-                                    }
-                                },
-                                ParentFileEntityID = m3u8File.FileEntityId
-                            },
-                            fsVtt, this.Options.Identity).Result;
-
-                base.LogInformation(taskModel, null, "第 {0} 個 VTT 檔案上傳完成", vttnumber);
-
-                processingFileEntities.Add(fvtt);
+                uploadFiles.Enqueue(new UploadFile()
+                {
+                    Filename = file,
+                    M3U8FileEntityId = m3u8File.FileEntityId,
+                    Number = vttnumber,
+                    Type = UploadFileTypeEnum.VTT
+                });
                 vttnumber++;
             }
+
+            List<Task> uploadTasks = new List<Task>();
+            for (int i = 0; i < base.Options.UploadTaskCount; i++)
+            {
+                uploadTasks.Add(Task.Factory.StartNew(() =>
+                {
+                    UploadFile uploadFile;
+                    while (uploadFiles.TryDequeue(out uploadFile))
+                    {
+                        using (var currentScope = base._serviceProvider.CreateScope())
+                        {
+                            var storageProviderService = currentScope.ServiceProvider.GetRequiredService<StorageProviderService>();
+                            processingFileEntities.Add(this.UploadFile(storageProviderService, taskModel, uploadFile));
+                        }
+                    }
+                }));
+            }
+
+            Task.WaitAll(uploadTasks.ToArray());
 
             base.LogInformation(taskModel, null, "M3U8 轉換完成所有檔案上傳完成");
 
             processingFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing); // 移除處理中
             fileEntityService.UpdateBatchAsync(processingFileEntities).Wait();
+        }
 
+        private FileEntity UploadFile(StorageProviderService storageProviderService, PluginTaskModel taskModel, UploadFile uploadFile)
+        {
+            base.LogInformation(taskModel, null, "開始上傳第 {0} 個 {1} 檔案", uploadFile.Number, uploadFile.Type.ToString());
+            using (var file = File.OpenRead(uploadFile.Filename))
+            {
+                var fileEntity = storageProviderService
+                       .UploadFileEntityAsync(taskModel.StorageProviderId,
+                           null,
+                           new FileEntity()
+                           {
+                               MimeType = mimeTypes[uploadFile.Type],
+                               Name = Path.GetFileName(uploadFile.Filename),
+                               Size = file.Length,
+                               Status = FileEntityStatusEnum.Processing,
+                               FileEntityTag = new List<FileEntityTag>()
+                               {
+                                    new FileEntityTag()
+                                    {
+                                        Value = $"{uploadFile.Type.ToString().ToLower()}-{uploadFile.Number}"
+                                    },
+                                    new FileEntityTag()
+                                    {
+                                        Value = this.Options.Identity
+                                    }
+                               },
+                               ParentFileEntityID = uploadFile.M3U8FileEntityId
+                           },
+                           file, this.Options.Identity).Result;
+                base.LogInformation(taskModel, null, "第 {0} 個 {1} 檔案 上傳完成", uploadFile.Number, uploadFile.Type.ToString());
+                return fileEntity;
+            }
         }
     }
 }

@@ -21,5 +21,13 @@ namespace HBK.Storage.VideoSeekPreviewPlugin.Models
         /// 取得或設定預覽圖的寬度
         /// </summary>
         public int PreviewWidth { get; set; }
+        /// <summary>
+        /// 取得或設定預覽圖的間隔
+        /// </summary>
+        public int PreviewInterval { get; set; } = 1;
+        /// <summary>
+        /// 取得或設定上傳任務數量
+        /// </summary>
+        public int UploadTaskCount { get; set; } = 5;
     }
 }
