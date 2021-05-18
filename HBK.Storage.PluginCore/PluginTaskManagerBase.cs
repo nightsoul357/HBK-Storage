@@ -63,6 +63,10 @@ namespace HBK.Storage.PluginCore
                                     SpinWait.SpinUntil(() => false, this.Options.AutoRetryInterval);
                                     this.Start(cancellationToken);
                                 }
+                                else
+                                {
+                                    this.LogInformation(_executeId, null, null, "插件終止");
+                                }
                             });
 
                         this.IsRunning = true;
