@@ -63,5 +63,17 @@ namespace HBK.Storage.PluginCore
         /// 取得或設定間隔時間
         /// </summary>
         public int Interval { get; set; } = 1000;
+        /// <summary>
+        /// 取得或設定是否自動重試
+        /// </summary>
+        public bool IsAutoRetry { get; set; } = true;
+        /// <summary>
+        /// 取得或設定自動重試間隔
+        /// </summary>
+        public int AutoRetryInterval { get; set; } = 10000;
+        /// <summary>
+        /// 取得或設定失敗次數判定
+        /// </summary>
+        public int FailTimes { get; set; } = 3;
     }
 }

@@ -27,6 +27,7 @@ namespace HBK.Storage.PluginCore
         private Dictionary<Guid, int> _failCheck;
         private readonly object _syncObj;
         private bool _isDisposed = false;
+        private Guid _executeId;
         public PluginTaskManagerBase(ILogger<T> logger, IServiceProvider serviceProvider)
         {
             _logger = logger;
@@ -46,6 +47,8 @@ namespace HBK.Storage.PluginCore
                 {
                     if (!this.IsRunning)
                     {
+                        _executeId = Guid.NewGuid();
+                        this.LogInformation(_executeId, null, null, "插件啟動");
                         _cancellationToken = cancellationToken;
                         Task.Factory.StartNewSafety(this.StartInternal,
                             TaskCreationOptions.LongRunning,
@@ -53,6 +56,13 @@ namespace HBK.Storage.PluginCore
                             {
                                 this.ExcetpionHandle(ex);
                                 this.IsRunning = false;
+                                _failCheck.Clear();
+                                if (this.Options.IsAutoRetry)
+                                {
+                                    this.LogInformation(_executeId, null, null, $"{this.Options.AutoRetryInterval / 1000} 秒後嘗試重新啟動...");
+                                    SpinWait.SpinUntil(() => false, this.Options.AutoRetryInterval);
+                                    this.Start(cancellationToken);
+                                }
                             });
 
                         this.IsRunning = true;
@@ -202,14 +212,18 @@ namespace HBK.Storage.PluginCore
 
             if (!force)
             {
-                if (_failCheck[pluginTaskModel.FileEntity.FileEntityId] < 3)
+                if (_failCheck[pluginTaskModel.FileEntity.FileEntityId] < this.Options.FailTimes)
                 {
-                    this.LogError(pluginTaskModel, null, null, "執行此檔案第 {0} 次發生錯誤，{1} 次錯誤之後會註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId], 3);
+                    this.LogError(pluginTaskModel, null, null, "執行此檔案第 {0} 次發生錯誤，{1} 次錯誤之後會註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId], this.Options.FailTimes);
                     return _failCheck[pluginTaskModel.FileEntity.FileEntityId];
                 }
+                this.LogError(pluginTaskModel, null, null, "執行此檔案第 {0} 次發生錯誤，註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId]);
+            }
+            else
+            {
+                this.LogInformation(pluginTaskModel, null, null, "註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId]);
             }
 
-            this.LogError(pluginTaskModel, null, null, "執行此檔案第 {0} 次發生錯誤，註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId]);
             // 失敗三次以上才不繼續執行
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -260,7 +274,7 @@ namespace HBK.Storage.PluginCore
         /// <param name="ex"></param>
         protected virtual void ExcetpionHandle(Exception ex)
         {
-            _logger.LogError(ex, "發生未預期的例外");
+            this.LogError(_executeId, null, null, ex, "發生未預期的例外");
         }
         /// <summary>
         /// 紀錄 Info 等級的訊息

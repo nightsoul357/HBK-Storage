@@ -19,11 +19,11 @@ namespace HBK.Storage.PluginCore.NLog
         /// <summary>
         /// 取得或設定活動 ID
         /// </summary>
-        public Guid ActivityId { get; set; }
+        public Guid? ActivityId { get; set; }
         /// <summary>
         /// 取得或設定檔案 ID
         /// </summary>
-        public Guid FileEntityId { get; set; }
+        public Guid? FileEntityId { get; set; }
         /// <summary>
         /// 取得或設定檔案名稱
         /// </summary>

@@ -28,8 +28,8 @@ namespace HBK.Storage.PluginCore.NLog
             {
                 Identity = identity,
                 ActivityId = activityId,
-                FileEntityId = fileEntity.FileEntityId,
-                FileEntityName = fileEntity.Name,
+                FileEntityId = fileEntity?.FileEntityId,
+                FileEntityName = fileEntity?.Name,
                 ExtendProperty = extendProperty
             }));
         }
