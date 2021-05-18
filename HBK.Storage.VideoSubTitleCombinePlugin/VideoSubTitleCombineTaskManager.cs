@@ -140,7 +140,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                     base.LogInformation(taskModel, null, "字幕軌 {0} 合併完成", subTitleTrack.TrackName);
                 }
 
-                processFileEntities.Select(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);
+                processFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);
                 fileEntityService.UpdateBatchAsync(processFileEntities).Wait();
 
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
