@@ -225,7 +225,7 @@ namespace HBK.Storage.PluginCore
             }
             else
             {
-                this.LogInformation(pluginTaskModel, null, null, "註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId]);
+                this.LogInformation(pluginTaskModel, null, "註記此檔案不再執行");
             }
 
             // 失敗三次以上才不繼續執行
