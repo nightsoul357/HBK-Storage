@@ -277,7 +277,8 @@ namespace HBK.Storage.Core.Services
                         .Where(x => x.FileEntityStroage.Select(fs => fs.Storage.StorageGroup).Any(sg => sg.StorageGroupId == sourceStorageGroup.StorageGroupId) &&
                                     x.FileEntityStroage.Select(fs => fs.Storage.StorageGroup).All(sg => sg.StorageGroupId != targetStorageGroup.StorageGroupId))
                         .Where(x => x.FileEntityStroage.First(t => t.Storage.StorageGroupId == sourceStorageGroup.StorageGroupId).Status == FileEntityStorageStatusEnum.None) // 已經限制 Storage Group 了，所以 FileEntityStroage 必定唯一
-                        .Where(x => !x.FileEntityStroage.First(t => t.Storage.StorageGroupId == sourceStorageGroup.StorageGroupId).IsMarkDelete);
+                        .Where(x => !x.FileEntityStroage.First(t => t.Storage.StorageGroupId == sourceStorageGroup.StorageGroupId).IsMarkDelete)
+                        .Where(x => !x.Status.HasFlag(FileEntityStatusEnum.Processing) && !x.Status.HasFlag(FileEntityStatusEnum.Uploading));
 
                     if (targetStorageGroup.SyncMode == SyncModeEnum.Policy)
                     {

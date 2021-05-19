@@ -70,7 +70,7 @@ namespace HBK.Storage.Sync
                     services.AddSingleton(sp =>
                     {
                         var option = new ExpireFileEntityTaskManagerOption();
-                        configForDeleteFileEntityTaskManagerOption.Bind(option);
+                        configForExpireFileEntityTaskManagerOption.Bind(option);
                         return option;
                     });
 
