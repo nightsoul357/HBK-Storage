@@ -4,11 +4,13 @@ using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
 using HBK.Storage.Sync.Managers;
 using HBK.Storage.Sync.Model;
+using HBK.Storage.Sync.NLog;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.LayoutRenderers;
 using NLog.Web;
 using System;
 using System.Collections.Generic;
@@ -71,6 +73,11 @@ namespace HBK.Storage.Sync
                         configForDeleteFileEntityTaskManagerOption.Bind(option);
                         return option;
                     });
+
+                    LayoutRenderer.Register<PluginIdentityLayoutRenderer>("plugin_identity");
+                    LayoutRenderer.Register<PluginFileEntityFilenameLayoutRenderer>("plugin_file_entity_filename");
+                    LayoutRenderer.Register<PluginFileEntityIdLayoutRenderer>("plugin_file_entity_id");
+                    LayoutRenderer.Register<PluginActivityIdReanderer>("plugin_activityId");
 
                     services.AddSingleton<SyncTaskManager>();
                     services.AddSingleton<DeleteFileEntityTaskManager>();
