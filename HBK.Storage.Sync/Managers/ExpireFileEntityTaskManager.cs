@@ -15,10 +15,8 @@ namespace HBK.Storage.Sync.Managers
     /// <summary>
     /// 過期檔案處理任務管理者
     /// </summary>
-    public class ExpireFileEntityTaskManager : TaskManagerBase<ExpireFileEntityTaskManager>
+    public class ExpireFileEntityTaskManager : TaskManagerBase<ExpireFileEntityTaskManager, ExpireFileEntityTaskManagerOption>
     {
-        private readonly IServiceScope _serviceScope;
-        private readonly ExpireFileEntityTaskManagerOption _option;
 
         /// <summary>
         /// 建立一個新的執行個體
@@ -28,8 +26,6 @@ namespace HBK.Storage.Sync.Managers
         public ExpireFileEntityTaskManager(ILogger<ExpireFileEntityTaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
-            _serviceScope = _serviceProvider.CreateScope();
-            _option = _serviceScope.ServiceProvider.GetRequiredService<ExpireFileEntityTaskManagerOption>();
         }
 
         protected override void StartInternal()
@@ -40,12 +36,10 @@ namespace HBK.Storage.Sync.Managers
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-                    var shouldMarkDeleteFileEntity = fileEntityService.GetExpireFileEntityWithoutMarkDeleteAsync(_option.FetchLimit, _option.FileEntityNoDivisor, _option.FileEntityNoRemainder).Result;
+                    var shouldMarkDeleteFileEntity = fileEntityService.GetExpireFileEntityWithoutMarkDeleteAsync(base.Option.FetchLimit, base.Option.FileEntityNoDivisor, base.Option.FileEntityNoRemainder).Result;
                     foreach (var fileEntity in shouldMarkDeleteFileEntity)
                     {
-                        base._logger.LogCustomInformation(_option.Identity, "過期處理", taskId, "檔案 ID 為 {0} 的檔案 {1} 已過期並標註為刪除",
-                            fileEntity.FileEntityId,
-                            fileEntity.Name);
+                        base.LogInformation(taskId, fileEntity, null, "已過期並標註為刪除");
 
                         fileEntityService.MarkFileEntityDeleteAsync(fileEntity.FileEntityId).Wait();
                     }
@@ -58,7 +52,6 @@ namespace HBK.Storage.Sync.Managers
         }
         public override void Dispose()
         {
-            _serviceScope.Dispose();
         }
     }
 }

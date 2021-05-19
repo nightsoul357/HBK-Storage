@@ -9,12 +9,8 @@ namespace HBK.Storage.Sync.Model
     /// <summary>
     /// 刪除檔案實體任務管理者選項
     /// </summary>
-    public class DeleteFileEntityTaskManagerOption
+    public class DeleteFileEntityTaskManagerOption : TaskMangagerOptionBase
     {
-        /// <summary>
-        /// 取得或設定識別名稱
-        /// </summary>
-        public string Identity { get; set; }
         /// <summary>
         /// 取得或設定工作數量上限
         /// </summary>
