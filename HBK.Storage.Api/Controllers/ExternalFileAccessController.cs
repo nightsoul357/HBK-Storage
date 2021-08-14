@@ -56,7 +56,7 @@ namespace HBK.Storage.Api.Controllers
         [HttpGet("{fileEntityId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DirectDownload(
+        public async Task<ActionResult<FileStreamResult>> DirectDownload(
             [ExistInDatabase(typeof(FileEntity))]
             [ExampleParameter("cfa83790-007c-4ba2-91b2-5b18dfe08735")]Guid fileEntityId,
             [FromQuery] string esic)
@@ -74,7 +74,7 @@ namespace HBK.Storage.Api.Controllers
         [HttpGet("{fileEntityId}/filename/{fileName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DirectDownload(
+        public async Task<ActionResult<FileStreamResult>> DirectDownload(
             [ExistInDatabase(typeof(FileEntity))]
             [ExampleParameter("cfa83790-007c-4ba2-91b2-5b18dfe08735")]Guid fileEntityId,
             [ExampleParameter("test.mp4")] string fileName,

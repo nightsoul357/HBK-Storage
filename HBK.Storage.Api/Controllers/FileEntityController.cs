@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -124,7 +125,7 @@ namespace HBK.Storage.Api.Controllers
             [ExistInDatabase(typeof(FileEntity))]
             [ExampleParameter("cfa83790-007c-4ba2-91b2-5b18dfe08735")]Guid fileEntityId)
         {
-            return new GetAccessTimesResponse() 
+            return new GetAccessTimesResponse()
             {
                 TotalAccessTimes = await _fileEntityService.GetAccessTimesAsync(fileEntityId)
             };

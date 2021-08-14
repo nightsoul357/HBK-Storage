@@ -1499,6 +1499,18 @@
             <param name="schema"></param>
             <param name="context"></param>
         </member>
+        <member name="T:HBK.Storage.Api.Swagger.FileStreamTypeOperationFilter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.FileStreamTypeOperationFilter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            
+            </summary>
+            <param name="operation"></param>
+            <param name="context"></param>
+        </member>
         <member name="T:HBK.Storage.Api.Swagger.FlagEnumSchemaFilter">
             <summary>
             提供旗標列舉類別的 Schema 修改
