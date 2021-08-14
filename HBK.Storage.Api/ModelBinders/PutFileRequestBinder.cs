@@ -65,13 +65,13 @@ namespace HBK.Storage.Api.ModelBinders
                             bufferSize: 1024,
                             leaveOpen: true))
                         {
-                            var value = await streamReader.ReadToEndAsync();
+                            string value = await streamReader.ReadToEndAsync();
                             if (String.Equals(value, "undefined", StringComparison.OrdinalIgnoreCase))
                             {
                                 value = String.Empty;
                             }
                             var prop = model.GetType().GetProperty(key, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                            if (prop != null)
+                            if (prop != null && !string.IsNullOrEmpty(value))
                             {
                                 if (prop.PropertyType == typeof(String))
                                 {
