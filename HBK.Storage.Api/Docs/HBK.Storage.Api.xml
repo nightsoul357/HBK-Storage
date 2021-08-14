@@ -1501,12 +1501,12 @@
         </member>
         <member name="T:HBK.Storage.Api.Swagger.FileStreamTypeOperationFilter">
             <summary>
-            
+            提供 Swagger 標記檔案類型回傳
             </summary>
         </member>
         <member name="M:HBK.Storage.Api.Swagger.FileStreamTypeOperationFilter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
             <summary>
-            
+            套用過濾器
             </summary>
             <param name="operation"></param>
             <param name="context"></param>

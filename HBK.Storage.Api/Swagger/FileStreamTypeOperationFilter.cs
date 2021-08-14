@@ -20,7 +20,8 @@ namespace HBK.Storage.Api.Swagger
         /// <param name="context"></param>
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            if (context.MethodInfo.ReturnType != typeof(Task<FileStreamResult>))
+            if (context.MethodInfo.ReturnType != typeof(Task<FileStreamResult>) &&
+                context.MethodInfo.ReturnType != typeof(Task<ActionResult<FileStreamResult>>))
             {
                 return;
             }

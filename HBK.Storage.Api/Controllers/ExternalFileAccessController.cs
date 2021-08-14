@@ -91,7 +91,7 @@ namespace HBK.Storage.Api.Controllers
         [HttpGet("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> DirectDownload([FromQuery] string esic)
+        public async Task<ActionResult<FileStreamResult>> DirectDownload([FromQuery] string esic)
         {
             return await this.DoDirectDownloadAsync(esic, string.Empty);
         }
@@ -106,7 +106,7 @@ namespace HBK.Storage.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public async Task<ActionResult> DirectDownload(
+        public async Task<ActionResult<FileStreamResult>> DirectDownload(
             [ExampleParameter("test.mp4")] string fileName,
             [FromQuery] string esic)
         {
