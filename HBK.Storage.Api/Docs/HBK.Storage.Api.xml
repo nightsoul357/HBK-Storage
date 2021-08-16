@@ -474,6 +474,27 @@
             <param name="validationContext"></param>
             <returns></returns>
         </member>
+        <member name="T:HBK.Storage.Api.DataAnnotations.FileStreamResultResponseAttribute">
+            <summary>
+            標記方法以 <see cref="T:Microsoft.AspNetCore.Mvc.FileStreamResult"/> 回傳檔案
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.FileStreamResultResponseAttribute.#ctor">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.FileStreamResultResponseAttribute.#ctor(System.String)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="contentType">類型</param>
+        </member>
+        <member name="P:HBK.Storage.Api.DataAnnotations.FileStreamResultResponseAttribute.ContentType">
+            <summary>
+            取得類型
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Api.Extensions.JsonSerializerExtensions">
             <summary>
             Json Serializer 輔助類別

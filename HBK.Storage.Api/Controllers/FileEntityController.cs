@@ -46,6 +46,7 @@ namespace HBK.Storage.Api.Controllers
         [HttpGet("{fileEntityId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [FileStreamResultResponse]
         public async Task<FileStreamResult> Get(
             [ExampleParameter("ba337d2f-760b-473e-b077-d352277651e2")]
             [ExistInDatabase(typeof(FileEntity))]Guid fileEntityId,

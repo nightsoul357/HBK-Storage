@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HBK.Storage.Api.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace HBK.Storage.Api.Swagger
@@ -20,8 +22,13 @@ namespace HBK.Storage.Api.Swagger
         /// <param name="context"></param>
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
-            if (context.MethodInfo.ReturnType != typeof(Task<FileStreamResult>) &&
-                context.MethodInfo.ReturnType != typeof(Task<ActionResult<FileStreamResult>>))
+
+            var attribute = context.MethodInfo
+                .GetCustomAttributes(typeof(FileStreamResultResponseAttribute), false)
+                .Cast<FileStreamResultResponseAttribute>()
+                .FirstOrDefault();
+
+            if (attribute == null)
             {
                 return;
             }
@@ -36,7 +43,7 @@ namespace HBK.Storage.Api.Swagger
                 Content = new Dictionary<string, OpenApiMediaType>
                 {
                     {
-                        "application/octet-stream", new OpenApiMediaType
+                        attribute.ContentType, new OpenApiMediaType
                         {
                             Schema = new OpenApiSchema
                             {
