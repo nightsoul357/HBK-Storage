@@ -4,6 +4,91 @@
         <name>HBK.Storage.Api</name>
     </assembly>
     <members>
+        <member name="T:HBK.Storage.Api.Comparers.AddAuthorizeKeyScopeRequestComparer">
+            <summary>
+            新增驗證金鑰使用範圍請求內容比較方法
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Comparers.AddAuthorizeKeyScopeRequestComparer.Equals(HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyScopeRequest,HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyScopeRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.Comparers.AddAuthorizeKeyScopeRequestComparer.GetHashCode(HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyScopeRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.Comparers.AddAuthorizeKeyScopeRequestComparer.GetInstance">
+            <summary>
+            取得唯一實體
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.Controllers.AuthorizeKeyController">
+            <summary>
+            驗證金鑰控制器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.AuthorizeKeyController.#ctor(HBK.Storage.Core.Services.AuthorizeKeyService)">
+            <summary>
+            建立新的執行個體
+            </summary>
+            <param name="authorizeKeyService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.AuthorizeKeyController.Get(System.Guid)">
+            <summary>
+            取得指定 ID 驗證金鑰
+            </summary>
+            <param name="authorizeKeyId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.AuthorizeKeyController.GetByKeyValue(System.String)">
+            <summary>
+            取得指定金鑰值的驗證金鑰
+            </summary>
+            <param name="keyValue">金鑰值</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.AuthorizeKeyController.Post(HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyRequest)">
+            <summary>
+            新增驗證金鑰
+            </summary>
+            <param name="request">新增驗證金鑰請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.AuthorizeKeyController.DisableKey(System.Guid)">
+            <summary>
+            停用驗證金鑰
+            </summary>
+            <param name="authorizeKeyId">驗證金鑰 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.AuthorizeKeyController.EnableKey(System.Guid)">
+            <summary>
+            啟用驗證金鑰
+            </summary>
+            <param name="authorizeKeyId">驗證金鑰 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.AuthorizeKeyController.Delete(System.Guid)">
+            <summary>
+            刪除驗證金鑰
+            </summary>
+            <param name="authorizeKeyId">驗證金鑰 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.AuthorizeKeyController.List(Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.AuthorizeKey})">
+            <summary>
+            取得所有驗證金鑰，單次資料上限為 100 筆
+            </summary>
+            <param name="queryOptions">OData 查詢參數</param>
+            <returns>驗證金鑰資訊集合</returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.AuthorizeKeyController.BuildAuthorizeKeyResponse(HBK.Storage.Adapter.Storages.AuthorizeKey,System.Boolean)">
+            <summary>
+            產生驗證金鑰回應內容
+            </summary>
+            <param name="authorizeKey">驗證金鑰</param>
+            <param name="isMaskKey">是否遮蔽金鑰值</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Api.Controllers.ExternalFileAccessController">
             <summary>
             外部檔案存取控制器
@@ -383,6 +468,11 @@
             <param name="storageProvider">儲存服務</param>
             <returns>儲存服務回應內容</returns>
         </member>
+        <member name="T:HBK.Storage.Api.DataAnnotations.AllowRootAttribute">
+            <summary>
+            僅允許 Root 通過
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Api.DataAnnotations.ExampleArrayAttribute">
             <summary>
             標示範例參數的標記
@@ -494,6 +584,30 @@
             <summary>
             取得類型
             </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.DataAnnotations.StatusEnumAttribute">
+            <summary>
+            判斷欄位 ID 是否在資料表中
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.DataAnnotations.StatusEnumAttribute.EnumType">
+            <summary>
+            取得或設定列舉類型
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.StatusEnumAttribute.#ctor(System.Type)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="enumType">列舉類型</param>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.StatusEnumAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            判斷是否有效
+            </summary>
+            <param name="value"></param>
+            <param name="validationContext"></param>
+            <returns></returns>
         </member>
         <member name="T:HBK.Storage.Api.Extensions.JsonSerializerExtensions">
             <summary>
@@ -742,6 +856,111 @@
         </member>
         <member name="M:HBK.Storage.Api.ModelBinders.StorageCredentialsModelBinder.BindModelAsync(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext)">
             <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyRequest">
+            <summary>
+            新增驗證金鑰請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyRequest.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyRequest.Type">
+            <summary>
+            類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyRequest.AddAuthorizeKeyScopeRequests">
+            <summary>
+            驗證金鑰使用範圍清單
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyScopeRequest">
+            <summary>
+            新增驗證金鑰使用範圍請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyScopeRequest.StorageProviderId">
+            <summary>
+            儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AddAuthorizeKeyScopeRequest.AllowOperationType">
+            <summary>
+            允許的操作類型
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyResponse">
+            <summary>
+            驗證金鑰回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyResponse.AuthorizeKeyId">
+            <summary>
+            金鑰 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyResponse.Name">
+            <summary>
+            名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyResponse.KeyValue">
+            <summary>
+            金鑰值
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyResponse.CreateDateTime">
+            <summary>
+            取得建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyResponse.UpdateDateTime">
+            <summary>
+            取得最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyResponse.Type">
+            <summary>
+            類型
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyResponse.Status">
+            <summary>
+            狀態
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyResponse.AuthorizeKeyScopeResponses">
+            <summary>
+            驗證用的金鑰資訊清單
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyScopeResponse">
+            <summary>
+            驗證金鑰使用範圍回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyScopeResponse.StorageProviderId">
+            <summary>
+            儲存服務 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyScopeResponse.CreateDateTime">
+            <summary>
+            建立時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyScopeResponse.UpdateDateTime">
+            <summary>
+            最後更新時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.AuthorizeKey.AuthorizeKeyScopeResponse.AllowOperationType">
+            <summary>
+            允許的操作類型
+            </summary>
         </member>
         <member name="T:HBK.Storage.Api.Models.FileAccessToken.FileAccessTokenResponse">
             <summary>

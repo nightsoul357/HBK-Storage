@@ -970,6 +970,27 @@
             <param name="keyValue">金鑰值</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.AddAsync(HBK.Storage.Adapter.Storages.AuthorizeKey)">
+            <summary>
+            新增金鑰
+            </summary>
+            <param name="authorizeKey">新增的金鑰</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.UpdateAsync(HBK.Storage.Adapter.Storages.AuthorizeKey)">
+            <summary>
+            更新驗證金鑰
+            </summary>
+            <param name="authorizeKey"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.DeleteAsync(System.Guid)">
+            <summary>
+            移除驗證金鑰
+            </summary>
+            <param name="authorizeKeyId">驗證金鑰 ID</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.IsExistAuthorizeKeyScopeByStorageProviderAsync(System.Guid,System.Guid,HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum)">
             <summary>
             取得指金鑰 ID、儲存服務 ID、允許的操作類型所對應的金鑰使用範圍資訊是否存在
@@ -1013,6 +1034,20 @@
             <param name="authorizeKeyId">金鑰 ID</param>
             <param name="fileAccessTokenId">檔案存取權杖 ID</param>
             <param name="authorizeKeyScopeOperationType">允許的操作類型</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.DiableAsync(System.Guid)">
+            <summary>
+            停用驗證金鑰
+            </summary>
+            <param name="authorizeKeyId">驗證金鑰 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.AuthorizeKeyService.EnableAsync(System.Guid)">
+            <summary>
+            啟用驗證金鑰
+            </summary>
+            <param name="authorizeKeyId">驗證金鑰 ID</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Core.Services.FileAccessTokenService">

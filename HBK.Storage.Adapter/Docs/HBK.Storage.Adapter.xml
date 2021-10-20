@@ -488,6 +488,11 @@
             取得或設定流水號
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.Name">
+            <summary>
+            取得或設定名稱
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.KeyValue">
             <summary>
             取得或設定金鑰值
@@ -560,7 +565,7 @@
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.AllowOperationType">
             <summary>
-            取得允許的操作類型
+            取得或設定允許的操作類型
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.AuthorizeKey">

@@ -1,4 +1,5 @@
 ﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Api.DataAnnotations;
 using HBK.Storage.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -47,7 +48,6 @@ namespace HBK.Storage.Api.Filters
                 };
                 return;
             }
-
             var key = context.HttpContext.Request.Headers["HBKey"].First();
             var authorizeKey = await _authorizeKeyService.FindByKeyValueAsync(key);
             if (authorizeKey == null)
@@ -60,7 +60,11 @@ namespace HBK.Storage.Api.Filters
                 context.Result = this.BuildForbiddenResult("APIKey was Disable;");
                 return;
             }
-
+            if (context.ActionDescriptor.EndpointMetadata.Any(x => x is AllowRootAttribute) && authorizeKey.Type != AuthorizeKeyTypeEnum.Root) // 僅允許 Root 通過
+            {
+                context.Result = this.BuildForbiddenResult("Scope Incorrect;");
+                return;
+            }
             if (authorizeKey.Type == AuthorizeKeyTypeEnum.Root) // 若為 Root 權限，不檢查 Scope
             {
                 return;

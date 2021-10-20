@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using MudBlazor.Services;
+using HBK.Storage.Web.Authentications;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace HBK.Storage.Web
 {
@@ -22,6 +24,9 @@ namespace HBK.Storage.Web
 
             builder.Services.AddMudServices();
 
+            builder.Services.AddScoped<AuthenticationStateProvider, HBKAuthStateProvider>();
+            builder.Services.AddOptions();
+            builder.Services.AddAuthorizationCore();
             await builder.Build().RunAsync();
         }
     }

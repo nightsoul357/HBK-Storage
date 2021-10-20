@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,7 +33,8 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public IQueryable<AuthorizeKey> ListQuery()
         {
-            return _dbContext.AuthorizeKey;
+            return _dbContext.AuthorizeKey
+                .Include(x => x.AuthorizeKeyScope);
         }
         /// <summary>
         /// 以 ID 取得金鑰
@@ -53,6 +55,59 @@ namespace HBK.Storage.Core.Services
         {
             return this.ListQuery()
                 .FirstOrDefaultAsync(x => x.KeyValue == keyValue);
+        }
+        /// <summary>
+        /// 新增金鑰
+        /// </summary>
+        /// <param name="authorizeKey">新增的金鑰</param>
+        /// <returns></returns>
+        public async Task<AuthorizeKey> AddAsync(AuthorizeKey authorizeKey)
+        {
+            if (authorizeKey.AuthorizeKeyId == default)
+            {
+                authorizeKey.AuthorizeKeyId = Guid.NewGuid();
+            }
+
+            if (String.IsNullOrEmpty(authorizeKey.KeyValue))
+            {
+                using (SHA256 sha256Hash = SHA256.Create())
+                {
+                    var data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(authorizeKey.AuthorizeKeyId.ToString()));
+                    var key = Encoding.UTF8.GetString(data);
+                    authorizeKey.KeyValue = authorizeKey.Name + "_" + key;
+                }
+            }
+
+            _dbContext.AuthorizeKey.Add(authorizeKey);
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(authorizeKey.AuthorizeKeyId);
+        }
+        /// <summary>
+        /// 更新驗證金鑰
+        /// </summary>
+        /// <param name="authorizeKey"></param>
+        /// <returns></returns>
+        public async Task<AuthorizeKey> UpdateAsync(AuthorizeKey authorizeKey)
+        {
+            AuthorizeKey original = await this.FindByIdAsync(authorizeKey.AuthorizeKeyId);
+            original.ExtendProperty = authorizeKey.ExtendProperty;
+            original.KeyValue = authorizeKey.KeyValue;
+            original.Name = authorizeKey.Name;
+            original.Status = authorizeKey.Status;
+            original.Type = authorizeKey.Type;
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(authorizeKey.AuthorizeKeyId);
+        }
+        /// <summary>
+        /// 移除驗證金鑰
+        /// </summary>
+        /// <param name="authorizeKeyId">驗證金鑰 ID</param>
+        /// <returns></returns>
+        public async Task<bool> DeleteAsync(Guid authorizeKeyId)
+        {
+            _dbContext.AuthorizeKey.Remove(await _dbContext.AuthorizeKey.FirstOrDefaultAsync(x => x.AuthorizeKeyId == authorizeKeyId));
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
         #endregion
         #region BAL
@@ -133,6 +188,30 @@ namespace HBK.Storage.Core.Services
                 .FirstOrDefaultAsync();
 
             return storageProviderId == default ? false : await this.IsExistAuthorizeKeyScopeByStorageProviderAsync(authorizeKeyId, storageProviderId, authorizeKeyScopeOperationType);
+        }
+        /// <summary>
+        /// 停用驗證金鑰
+        /// </summary>
+        /// <param name="authorizeKeyId">驗證金鑰 ID</param>
+        /// <returns></returns>
+        public async Task<AuthorizeKey> DiableAsync(Guid authorizeKeyId)
+        {
+            AuthorizeKey authorizeKey = await this.FindByIdAsync(authorizeKeyId); ;
+            authorizeKey.Status |= AuthorizeKeyStatusEnum.Disable; // 加入 Disable
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(authorizeKeyId);
+        }
+        /// <summary>
+        /// 啟用驗證金鑰
+        /// </summary>
+        /// <param name="authorizeKeyId">驗證金鑰 ID</param>
+        /// <returns></returns>
+        public async Task<AuthorizeKey> EnableAsync(Guid authorizeKeyId)
+        {
+            AuthorizeKey authorizeKey = await this.FindByIdAsync(authorizeKeyId); ;
+            authorizeKey.Status &= (~AuthorizeKeyStatusEnum.Disable); // 移除 Disable
+            await _dbContext.SaveChangesAsync();
+            return await this.FindByIdAsync(authorizeKeyId);
         }
         #endregion
     }
