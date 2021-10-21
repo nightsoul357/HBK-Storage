@@ -859,6 +859,18 @@
             <param name="services"></param>
             <returns></returns>
         </member>
+        <member name="T:HBK.Storage.Core.Helpers.StringHelper">
+            <summary>
+            字串輔助類別
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Helpers.StringHelper.GetRandomString(System.Int32)">
+            <summary>
+            取得隨機英數字字串
+            </summary>
+            <param name="length">字串長度</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Core.Models.FileEntityStorageServiceOption">
             <summary>
             檔案位於儲存個體上的資訊服務選項

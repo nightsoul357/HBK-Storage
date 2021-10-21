@@ -1,5 +1,6 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -72,7 +73,7 @@ namespace HBK.Storage.Core.Services
             {
                 using (SHA256 sha256Hash = SHA256.Create())
                 {
-                    var data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(authorizeKey.AuthorizeKeyId.ToString()));
+                    var data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(authorizeKey.AuthorizeKeyId.ToString() + StringHelper.GetRandomString(10)));
                     var key = Encoding.UTF8.GetString(data);
                     authorizeKey.KeyValue = authorizeKey.Name + "_" + key;
                 }

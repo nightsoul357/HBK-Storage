@@ -224,7 +224,8 @@ namespace HBK.Storage.Api
         /// <param name="app"></param>
         /// <param name="env"></param>
         /// <param name="db"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, HBKStorageContext db)
+        /// <param name="authorizeKeyService"></param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, HBKStorageContext db, AuthorizeKeyService authorizeKeyService)
         {
             if (env.IsDevelopment())
             {
@@ -269,6 +270,15 @@ namespace HBK.Storage.Api
             });
 
             db.Database.EnsureCreated();
+            if (authorizeKeyService.FindByKeyValueAsync(this.Configuration["RootKey:Key"]).Result == null)
+            {
+                authorizeKeyService.AddAsync(new AuthorizeKey()
+                {
+                    KeyValue = this.Configuration["RootKey:Key"],
+                    Name = this.Configuration["RootKey:Name"],
+                    Type = Adapter.Enums.AuthorizeKeyTypeEnum.Root
+                }).Wait();
+            }
         }
 
         /// <summary>

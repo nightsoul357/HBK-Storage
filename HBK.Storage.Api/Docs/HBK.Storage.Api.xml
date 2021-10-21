@@ -132,8 +132,8 @@
             <summary>
             下載檔案
             </summary>
-            <param name="esic">存取權杖</param>
-            <param name="fileName">檔案名稱(該參數可於 Query 或 Header 內則一處帶入)</param>
+            <param name="esic">存取權杖(該參數可於 Query 或 Header 內則一處帶入)</param>
+            <param name="fileName">檔案名稱</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Api.Controllers.FileAccessTokenController">
@@ -1683,13 +1683,14 @@
             </summary>
             <param name="services"></param>
         </member>
-        <member name="M:HBK.Storage.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,HBK.Storage.Adapter.Storages.HBKStorageContext)">
+        <member name="M:HBK.Storage.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,HBK.Storage.Adapter.Storages.HBKStorageContext,HBK.Storage.Core.Services.AuthorizeKeyService)">
             <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
             </summary>
             <param name="app"></param>
             <param name="env"></param>
             <param name="db"></param>
+            <param name="authorizeKeyService"></param>
         </member>
         <member name="M:HBK.Storage.Api.Startup.GetEdmModel(System.IServiceProvider)">
             <summary>
