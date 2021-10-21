@@ -179,6 +179,7 @@ namespace HBK.Storage.Api
                 options.OperationFilter<ExampleParameterOperationFilter>();
                 options.OperationFilter<ODataOperationFilter>();
                 options.OperationFilter<FileStreamTypeOperationFilter>();
+                options.OperationFilter<HeaderParameterOperationFilter>();
                 options.SchemaFilter<FlagEnumSchemaFilter>();
                 options.SchemaFilter<EnumDescriptorSchemaFilter>();
                 options.SchemaFilter<ExampleValueSchemaFilter>();

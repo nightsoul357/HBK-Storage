@@ -51,9 +51,10 @@ namespace HBK.Storage.Api.Controllers
         /// 下載檔案
         /// </summary>
         /// <param name="fileEntityId">檔案實體 ID</param>
-        /// <param name="esic">存取權杖</param>
+        /// <param name="esic">存取權杖(該參數可於 Query 或 Header 內則一處帶入)</param>
         /// <returns></returns>
         [HttpGet("{fileEntityId}")]
+        [HeaderParameter(Name = "esic", Description = "存取權杖(該參數可於 Query 或 Header 內則一處帶入)")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [FileStreamResultResponse]
@@ -62,6 +63,10 @@ namespace HBK.Storage.Api.Controllers
             [ExampleParameter("cfa83790-007c-4ba2-91b2-5b18dfe08735")]Guid fileEntityId,
             [FromQuery] string esic)
         {
+            if (string.IsNullOrEmpty(esic) && base.Request.Headers.ContainsKey("esic"))
+            {
+                esic = base.Request.Headers["esic"];
+            }
             return await this.DoDirectForFileEntityIdDownloadAsync(fileEntityId, esic, string.Empty);
         }
 
@@ -70,9 +75,10 @@ namespace HBK.Storage.Api.Controllers
         /// </summary>
         /// <param name="fileEntityId">檔案實體 ID</param>
         /// <param name="fileName">檔案名稱</param>
-        /// <param name="esic">存取權杖</param>
+        /// <param name="esic">存取權杖(該參數可於 Query 或 Header 內則一處帶入)</param>
         /// <returns></returns>
         [HttpGet("{fileEntityId}/filename/{fileName}")]
+        [HeaderParameter(Name = "esic", Description = "存取權杖(該參數可於 Query 或 Header 內則一處帶入)")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [FileStreamResultResponse]
@@ -82,37 +88,51 @@ namespace HBK.Storage.Api.Controllers
             [ExampleParameter("test.mp4")] string fileName,
             [FromQuery] string esic)
         {
+            if (string.IsNullOrEmpty(esic) && base.Request.Headers.ContainsKey("esic"))
+            {
+                esic = base.Request.Headers["esic"];
+            }
             return await this.DoDirectForFileEntityIdDownloadAsync(fileEntityId, esic, fileName);
         }
 
         /// <summary>
         /// 下載檔案
         /// </summary>
-        /// <param name="esic">存取權杖</param>
+        /// <param name="esic">存取權杖(該參數可於 Query 或 Header 內則一處帶入)</param>
         /// <returns></returns>
         [HttpGet("")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [HeaderParameter(Name = "esic", Description = "存取權杖(該參數可於 Query 或 Header 內則一處帶入)")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [FileStreamResultResponse]
         public async Task<ActionResult> DirectDownload([FromQuery] string esic)
         {
+            if (string.IsNullOrEmpty(esic) && base.Request.Headers.ContainsKey("esic"))
+            {
+                esic = base.Request.Headers["esic"];
+            }
             return await this.DoDirectDownloadAsync(esic, string.Empty);
         }
 
         /// <summary>
         /// 下載檔案
         /// </summary>
-        /// <param name="esic">存取權杖</param>
+        /// <param name="esic">存取權杖(該參數可於 Query 或 Header 內則一處帶入)</param>
         /// <param name="fileName">檔案名稱</param>
         /// <returns></returns>
         [HttpGet("filename/{fileName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [HeaderParameter(Name = "esic", Description = "存取權杖(該參數可於 Query 或 Header 內則一處帶入)")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [FileStreamResultResponse]
         public async Task<ActionResult> DirectDownload(
             [ExampleParameter("test.mp4")] string fileName,
             [FromQuery] string esic)
         {
+            if (string.IsNullOrEmpty(esic) && base.Request.Headers.ContainsKey("esic"))
+            {
+                esic = base.Request.Headers["esic"];
+            }
             return await this.DoDirectDownloadAsync(esic, fileName);
         }
 

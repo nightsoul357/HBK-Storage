@@ -78,7 +78,7 @@ namespace HBK.Storage.Api.Controllers
         {
             request.AddAuthorizeKeyScopeRequests = request.AddAuthorizeKeyScopeRequests.Distinct(AddAuthorizeKeyScopeRequestComparer.GetInstance()).ToList();
 
-            var result = await _authorizeKeyService.AddAsync(new Adapter.Storages.AuthorizeKey()
+            var result = await _authorizeKeyService.AddAsync(new AuthorizeKey()
             {
                 AuthorizeKeyScope = request.AddAuthorizeKeyScopeRequests.Select(x => new AuthorizeKeyScope()
                 {

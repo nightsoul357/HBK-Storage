@@ -109,7 +109,7 @@
             下載檔案
             </summary>
             <param name="fileEntityId">檔案實體 ID</param>
-            <param name="esic">存取權杖</param>
+            <param name="esic">存取權杖(該參數可於 Query 或 Header 內則一處帶入)</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.Guid,System.String,System.String)">
@@ -118,14 +118,14 @@
             </summary>
             <param name="fileEntityId">檔案實體 ID</param>
             <param name="fileName">檔案名稱</param>
-            <param name="esic">存取權杖</param>
+            <param name="esic">存取權杖(該參數可於 Query 或 Header 內則一處帶入)</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.String)">
             <summary>
             下載檔案
             </summary>
-            <param name="esic">存取權杖</param>
+            <param name="esic">存取權杖(該參數可於 Query 或 Header 內則一處帶入)</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.String,System.String)">
@@ -133,7 +133,7 @@
             下載檔案
             </summary>
             <param name="esic">存取權杖</param>
-            <param name="fileName">檔案名稱</param>
+            <param name="fileName">檔案名稱(該參數可於 Query 或 Header 內則一處帶入)</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Api.Controllers.FileAccessTokenController">
@@ -583,6 +583,26 @@
         <member name="P:HBK.Storage.Api.DataAnnotations.FileStreamResultResponseAttribute.ContentType">
             <summary>
             取得類型
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.DataAnnotations.HeaderParameterAttribute">
+            <summary>
+            標示請求 Header 的標記
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.DataAnnotations.HeaderParameterAttribute.Name">
+            <summary>
+            取得或設定名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.DataAnnotations.HeaderParameterAttribute.Required">
+            <summary>
+            取得或設定是否為必要
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.DataAnnotations.HeaderParameterAttribute.Description">
+            <summary>
+            取得或設定說明
             </summary>
         </member>
         <member name="T:HBK.Storage.Api.DataAnnotations.StatusEnumAttribute">
@@ -1762,6 +1782,14 @@
             </summary>
             <param name="schema"></param>
             <param name="context"></param>
+        </member>
+        <member name="T:HBK.Storage.Api.Swagger.HeaderParameterOperationFilter">
+            <summary>
+            提供 Swagger 顯示 Header 參數
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Swagger.HeaderParameterOperationFilter.Apply(Microsoft.OpenApi.Models.OpenApiOperation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <inheritdoc/>
         </member>
         <member name="T:HBK.Storage.Api.Swagger.ModelValidationOperationFilter">
             <summary>
