@@ -28,17 +28,23 @@
                     <MudExpansionPanel Text="儲存群組清單">
                         <MudGrid>
                             <MudItem xs="12" md="12">
-                                <MudTable Items="@this.FileEntity.Storage_summary_responses" Dense="false" Hover="true" Bordered="false" Striped="false">
+                                <MudTable Items="@this.FileEntity.File_entity_storage_responses" Dense="false" Hover="true" Bordered="false" Striped="false">
                                     <HeaderContent>
                                         <MudTh>儲存群組名稱</MudTh>
                                         <MudTh>儲存個體名稱</MudTh>
+                                        <MudTh>建立者識別碼</MudTh>
+                                        <MudTh>建立時間</MudTh>
+                                        <MudTh>最後更新時間</MudTh>
                                         <MudTh>狀態</MudTh>
                                     </HeaderContent>
                                     <RowTemplate>
                                         <MudTd>@context.Storage_group_response.Name</MudTd>
                                         <MudTd>@context.Name</MudTd>
+                                        <MudTd>@context.Creator_identity</MudTd>
+                                        <MudTd>@context.File_entity_storage_create_date_time.ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
+                                        <MudTd>@context.File_entity_storage_update_date_time?.ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
                                         <MudTd>
-                                            @foreach (var status in context.Status)
+                                            @foreach (var status in context.File_entity_storage_status)
                                             {
                                                 <MudText>
                                                     @status.ToString()

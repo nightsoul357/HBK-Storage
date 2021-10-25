@@ -48,11 +48,11 @@ namespace HBK.Storage.Web.Containers
             }
         }
 
-        public StorageGroupResponse StorageGroup
+        public StorageGroupExtendPropertyResponse StorageGroup
         {
             get
             {
-                return _storageServiceProxy.GetItem<StorageGroupResponse>(nameof(this.StorageGroup));
+                return _storageServiceProxy.GetItem<StorageGroupExtendPropertyResponse>(nameof(this.StorageGroup));
             }
             set
             {

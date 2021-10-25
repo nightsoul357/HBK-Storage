@@ -23,12 +23,12 @@
                     {
                         <MudSelectItem Value="@item">@item</MudSelectItem>
                     }
-                </MudSelect>    
+                </MudSelect>
             </MudItem>
             @if (this.SyncMode == SyncMode.Policy)
             {
                 <MudItem xs="12" sm="12" md="12">
-                    <MudTextField T="string" @bind-Value="this.SyncPolicyRule" Label="Outlined" Variant="Variant.Outlined" Lines="3" />
+                    <MudTextField T="string" @bind-Value="this.SyncPolicyRule" Label="同步規則" Variant="Variant.Outlined" Lines="3" />
                 </MudItem>
             }
             <MudItem xs="12" sm="8" md="6">

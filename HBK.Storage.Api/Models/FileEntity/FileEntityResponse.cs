@@ -52,6 +52,6 @@ namespace HBK.Storage.Api.Models.FileEntity
         /// <summary>
         /// 取得或設定存在的儲存集合清單
         /// </summary>
-        public List<StorageSummaryResponse> StorageSummaryResponses { get; set; }
+        public List<FileEntityStorageResponse> FileEntityStorageResponses { get; set; }
     }
 }

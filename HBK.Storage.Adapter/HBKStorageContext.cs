@@ -78,6 +78,14 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得或設定檔案實體遞迴解析結果資料集
         /// </summary>
         public virtual DbSet<VwFileEntityRecursive> VwFileEntityRecursive { get; set; }
+        /// <summary>
+        /// 取得或設定儲存個體分析結果資料集
+        /// </summary>
+        public virtual DbSet<VwStorageAnalysis> VwStorageAnalysis { get; set; }
+        /// <summary>
+        /// 取得或設定儲存群組分析結果資料集
+        /// </summary>
+        public virtual DbSet<VwStorageGroupAnalysis> VwStorageGroupAnalysis { get; set; }
 
         /// <summary>
         /// 設定資料庫實體
@@ -334,6 +342,16 @@ namespace HBK.Storage.Adapter.Storages
             modelBuilder.Entity<VwFileEntityRecursive>(entity =>
             {
                 entity.ToView("vw_FileEntityRecursive");
+            });
+
+            modelBuilder.Entity<VwStorageAnalysis>(entity =>
+            {
+                entity.ToView("vw_StorageAnalysis");
+            });
+
+            modelBuilder.Entity<VwStorageGroupAnalysis>(entity =>
+            {
+                entity.ToView("vw_StorageGroupAnalysis");
             });
 
             this.OnModelCreatingPartial(modelBuilder);

@@ -1,4 +1,5 @@
 ﻿using HBK.Storage.Adapter.DataAnnotations;
+using HBK.Storage.Adapter.Storages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,31 +9,27 @@ using System.Threading.Tasks;
 namespace HBK.Storage.Core.Models
 {
     /// <summary>
-    /// 儲存個體延展資訊
+    /// 儲存群組擴充資訊
     /// </summary>
-    public class StorageExtendProperty
+    public class StorageGroupExtendProperty
     {
         /// <summary>
-        /// 取得過設定儲存個體
+        /// 取得或設定儲存群組
         /// </summary>
         [Sortable]
         [Filterable]
-        public Adapter.Storages.Storage Storage { get; set; }
+        public StorageGroup StorageGroup { get; set; }
         /// <summary>
-        /// 取得或設定已使用大小(Bytes)
+        /// 取得或設定大小限制
+        /// </summary>
+        [Sortable]
+        [Filterable]
+        public long? SizeLimit { get; set; }
+        /// <summary>
+        /// 取得或設定已使用空間
         /// </summary>
         [Sortable]
         [Filterable]
         public long? UsedSize { get; set; }
-        /// <summary>
-        /// 取得剩餘大小(Bytes)
-        /// </summary>
-        public long RemainSize
-        {
-            get
-            {
-                return this.Storage.SizeLimit - this.UsedSize ?? 0;
-            }
-        }
     }
 }

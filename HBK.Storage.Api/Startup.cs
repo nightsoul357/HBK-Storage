@@ -297,6 +297,8 @@ namespace HBK.Storage.Api
             builder.EntitySet<StorageProvider>("StorageProviders");
 
             builder.EntitySet<ChildFileEntity>("ChildFileEntitys");
+            builder.EntitySet<StorageGroupExtendProperty>("StorageGroupExtendProperties");
+            builder.EntitySet<StorageExtendProperty>("StorageExtendProperties");
 
             // ODataConventionModelBuilder 會自動加入相關聯的模型
             builder.OnModelCreating = builder =>

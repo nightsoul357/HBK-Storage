@@ -219,6 +219,19 @@ namespace HBK.Storage.Core.Services
                 .ToListAsync();
         }
         /// <summary>
+        /// 取得檔案存在的儲存個體橋接資訊集合
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <returns></returns>
+        public Task<List<FileEntityStorage>> GetFileEntityStroageAsync(Guid fileEntityId)
+        {
+            return _dbContext.FileEntityStorage
+                .Include(x => x.Storage)
+                .ThenInclude(x => x.StorageGroup)
+                .Where(x => x.FileEntityId == fileEntityId)
+                .ToListAsync();
+        }
+        /// <summary>
         /// 取得已過期但未標記刪除的檔案
         /// </summary>
         /// <param name="takeCount">取得數量</param>

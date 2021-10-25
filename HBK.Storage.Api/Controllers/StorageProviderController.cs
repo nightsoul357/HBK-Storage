@@ -11,6 +11,7 @@ using HBK.Storage.Api.Models.StorageGroup;
 using HBK.Storage.Api.Models.StorageProvider;
 using HBK.Storage.Api.OData;
 using HBK.Storage.Core.Enums;
+using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Authorization;
@@ -182,7 +183,7 @@ namespace HBK.Storage.Api.Controllers
             return StorageGroupController.BuildStorageGroupResponse(result);
         }
         /// <summary>
-        /// 取得儲存服務內的所有儲存個體集合，單次資料上限為 100 筆
+        /// 取得儲存服務內的所有儲存群組集合，單次資料上限為 100 筆
         /// </summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
@@ -206,6 +207,34 @@ namespace HBK.Storage.Api.Controllers
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storgaeGroup => StorageGroupController.BuildStorageGroupResponse(storgaeGroup)),
+                100
+            );
+        }
+        /// <summary>
+        /// 取得儲存服務內的所有儲存群組擴充資訊集合，單次資料上限為 100 筆
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="queryOptions">OData 查詢選項</param>
+        /// <returns></returns>
+        [HttpGet("{storageProviderId}/storageGroupExtendProperties")]
+        [EnableODataQuery(AllowedQueryOptions =
+            AllowedQueryOptions.Filter |
+            AllowedQueryOptions.Skip |
+            AllowedQueryOptions.Top |
+            AllowedQueryOptions.OrderBy,
+            MaxTop = 100)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<PagedResponse<StorageGroupExtendPropertyResponse>> GetStorageGroupExtendProperties(
+            [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
+            [ExistInDatabase(typeof(StorageProvider))] Guid storageProviderId,
+            [FromServices] ODataQueryOptions<StorageGroupExtendProperty> queryOptions)
+        {
+            var query = _storageGroupService.GetStorageGroupExtendPropertiesQuery()
+               .Where(x => x.StorageGroup.StorageProviderId == storageProviderId);
+
+            return await base.PagedResultAsync(queryOptions, query, (data) =>
+                data.Select(storageGroupExtendProperty => StorageGroupController.BuildStorageGroupExtendPropertyResponse(storageGroupExtendProperty)),
                 100
             );
         }

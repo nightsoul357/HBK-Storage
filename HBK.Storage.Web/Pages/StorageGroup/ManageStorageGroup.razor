@@ -10,7 +10,7 @@
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="this.ShowAddDialogAsync">新增儲存群組</MudButton>
         </MudItem>
         <MudItem xs="12" md="12">
-            <MudTable ServerData="@(new Func<TableState, Task<TableData<StorageGroupResponse>>>(this.ServerReloadAsync))"
+            <MudTable ServerData="@(new Func<TableState, Task<TableData<StorageGroupExtendPropertyResponse>>>(this.ServerReloadAsync))"
                       Dense="true" Hover="true" @ref="_table">
                 <ToolBarContent>
                     <MudText Typo="Typo.h6">儲存群組列表</MudText>
@@ -20,23 +20,25 @@
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh>儲存群組 ID</MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="name" T="StorageGroupResponse">名稱</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="type" T="StorageGroupResponse">類型</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="sync_mode" T="StorageGroupResponse">同步模式</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="upload_priority" T="StorageGroupResponse">上傳優先度</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="download_priority" T="StorageGroupResponse">下載優先度</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="create_date_time" T="StorageGroupResponse">建立時間</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="storage_group/name" T="StorageGroupExtendPropertyResponse">名稱</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="storage_group/type" T="StorageGroupExtendPropertyResponse">類型</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="storage_group/sync_mode" T="StorageGroupExtendPropertyResponse">同步模式</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="used_size" T="StorageGroupExtendPropertyResponse">已使用空間</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="storage_group/upload_priority" T="StorageGroupExtendPropertyResponse">上傳優先度</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="storage_group/download_priority" T="StorageGroupExtendPropertyResponse">下載優先度</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="storage_group/create_date_time" T="StorageGroupExtendPropertyResponse">建立時間</MudTableSortLabel></MudTh>
                     <MudTh>狀態</MudTh>
                     <MudTh>功能</MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd>@context.Storage_group_id</MudTd>
-                    <MudTd DataLabel="name">@context.Name</MudTd>
-                    <MudTd DataLabel="type">@context.Type.ToString()</MudTd>
-                    <MudTd DataLabel="sync_mode">@context.Sync_mode.ToString()</MudTd>
-                    <MudTd DataLabel="upload_priority">@context.Upload_priority</MudTd>
-                    <MudTd DataLabel="download_priority">@context.Download_priority</MudTd>
-                    <MudTd DataLabel="create_date_time">@context.Create_date_time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
+                    <MudTd DataLabel="storage_group/name">@context.Name</MudTd>
+                    <MudTd DataLabel="storage_group/type">@context.Type.ToString()</MudTd>
+                    <MudTd DataLabel="storage_group/sync_mode">@context.Sync_mode.ToString()</MudTd>
+                    <MudTd DataLabel="used_size">@DataUnitFormatHelper.Format(context.Used_size ?? 0) / @DataUnitFormatHelper.Format(context.Size_limit ?? 0)</MudTd>
+                    <MudTd DataLabel="storage_group/upload_priority">@context.Upload_priority</MudTd>
+                    <MudTd DataLabel="storage_group/download_priority">@context.Download_priority</MudTd>
+                    <MudTd DataLabel="storage_group/create_date_time">@context.Create_date_time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
                     <MudTd>
                         @foreach (var status in context.Status)
                         {

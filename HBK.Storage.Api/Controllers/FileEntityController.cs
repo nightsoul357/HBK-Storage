@@ -169,7 +169,7 @@ namespace HBK.Storage.Api.Controllers
         /// <returns></returns>
         internal static FileEntityResponse BuildFileEntityResponse(FileEntity fileEntity, FileEntityService fileEntityService)
         {
-            var storage = fileEntityService.GetStoragesAsync(fileEntity.FileEntityId).Result;
+            var fileEntityStorages = fileEntityService.GetFileEntityStroageAsync(fileEntity.FileEntityId).Result;
             return new FileEntityResponse()
             {
                 CreateDateTime = fileEntity.CreateDateTime.LocalDateTime,
@@ -181,7 +181,30 @@ namespace HBK.Storage.Api.Controllers
                 Status = fileEntity.Status.FlattenFlags(),
                 Tags = fileEntity.FileEntityTag.Select(x => x.Value).ToList(),
                 UpdateDateTime = fileEntity.UpdateDateTime?.LocalDateTime,
-                StorageSummaryResponses = storage.Select(x => StorageController.BuildStorageSummaryResponse(x)).ToList(),
+                FileEntityStorageResponses = fileEntityStorages.Select(x => FileEntityController.BuildFileEntityStorageResponse(x)).ToList(),
+            };
+        }
+        /// <summary>
+        /// 產生檔案實體於儲存個體上的回應內容
+        /// </summary>
+        /// <param name="fileEntityStorage">檔案位於儲存個體上的橋接資訊</param>
+        /// <returns></returns>
+        internal static FileEntityStorageResponse BuildFileEntityStorageResponse(FileEntityStorage fileEntityStorage)
+        {
+            return new FileEntityStorageResponse()
+            {
+                CreateDateTime = fileEntityStorage.Storage.CreateDateTime.LocalDateTime,
+                FileEntityStorageStatus = fileEntityStorage.Status.FlattenFlags(),
+                Status = fileEntityStorage.Storage.Status.FlattenFlags(),
+                Name = fileEntityStorage.Storage.Name,
+                SizeLimit = fileEntityStorage.Storage.SizeLimit,
+                StorageId = fileEntityStorage.Storage.StorageId,
+                Type = fileEntityStorage.Storage.Type,
+                UpdateDateTime = fileEntityStorage.Storage.UpdateDateTime?.LocalDateTime,
+                CreatorIdentity = fileEntityStorage.CreatorIdentity,
+                FileEntityStorageCreateDateTime = fileEntityStorage.CreateDateTime.LocalDateTime,
+                FileEntityStorageUpdateDateTime = fileEntityStorage.UpdateDateTime?.LocalDateTime,
+                StorageGroupResponse = StorageGroupController.BuildStorageGroupResponse(fileEntityStorage.Storage.StorageGroup)
             };
         }
         /// <summary>

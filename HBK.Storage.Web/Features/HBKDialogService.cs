@@ -73,7 +73,7 @@ namespace HBK.Storage.Web.Features
             return dialog.Result;
         }
 
-        public Task<DialogResult> ShowEditStorageGroupAsync(StorageGroupResponse storageGroup)
+        public Task<DialogResult> ShowEditStorageGroupAsync(StorageGroupExtendPropertyResponse storageGroup)
         {
             var parameters = new DialogParameters();
             parameters.Add("EditStorageGroup", storageGroup);
@@ -104,7 +104,7 @@ namespace HBK.Storage.Web.Features
             return dialog.Result;
         }
 
-        public Task<DialogResult> ShowEditStorageAsync(StorageResponse storage)
+        public Task<DialogResult> ShowEditStorageAsync(StorageExtendPropertyResponse storage)
         {
             var parameters = new DialogParameters();
             parameters.Add("EditStorage", storage);

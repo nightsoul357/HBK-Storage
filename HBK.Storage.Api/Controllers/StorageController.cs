@@ -5,6 +5,7 @@ using HBK.Storage.Api.ModelBinders;
 using HBK.Storage.Api.Models.FileService;
 using HBK.Storage.Api.Models.Storage;
 using HBK.Storage.Core.FileSystem.FTP;
+using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -113,6 +114,28 @@ namespace HBK.Storage.Api.Controllers
                 Type = storage.Type,
                 UpdateDateTime = storage.UpdateDateTime?.LocalDateTime,
                 StorageGroupResponse = StorageGroupController.BuildStorageGroupResponse(storage.StorageGroup)
+            };
+        }
+        /// <summary>
+        /// 產生儲存個體擴充資訊回應內容
+        /// </summary>
+        /// <param name="storageExtendProperty">儲存個體擴充資訊</param>
+        /// <param name="jsonSerializerSettings"></param>
+        /// <returns></returns>
+        internal static StorageExtendPropertyResponse BuildStorageExtendPropertyResponse(StorageExtendProperty storageExtendProperty, JsonSerializerSettings jsonSerializerSettings)
+        {
+            return new StorageExtendPropertyResponse()
+            {
+                CreateDateTime = storageExtendProperty.Storage.CreateDateTime.LocalDateTime,
+                Credentials = JsonConvert.SerializeObject(storageExtendProperty.Storage.Credentials, jsonSerializerSettings),
+                Name = storageExtendProperty.Storage.Name,
+                SizeLimit = storageExtendProperty.Storage.SizeLimit,
+                Status = storageExtendProperty.Storage.Status.FlattenFlags(),
+                StorageId = storageExtendProperty.Storage.StorageId,
+                Type = storageExtendProperty.Storage.Type,
+                UpdateDateTime = storageExtendProperty.Storage.UpdateDateTime?.LocalDateTime,
+                StorageGroupResponse = StorageGroupController.BuildStorageGroupResponse(storageExtendProperty.Storage.StorageGroup),
+                UsedSize = storageExtendProperty.UsedSize
             };
         }
         /// <summary>

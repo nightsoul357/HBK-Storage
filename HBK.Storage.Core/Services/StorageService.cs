@@ -94,17 +94,29 @@ namespace HBK.Storage.Core.Services
         #endregion
         #region BAL
         /// <summary>
+        /// 取得儲存個體擴充資訊清單
+        /// </summary>
+        /// <returns></returns>
+        public IQueryable<StorageExtendProperty> GetStorageExtendPropertyQuery()
+        {
+            var query = _dbContext.Storage
+                .Include(x => x.StorageGroup)
+                .Join(_dbContext.VwStorageAnalysis, s => s.StorageId, sa => sa.StorageId, (s, sa) => new StorageExtendProperty()
+                {
+                    UsedSize = sa.UsedSize,
+                    Storage = s
+                })
+                .OrderBy(x => x.UsedSize);
+            return query;
+        }
+        /// <summary>
         /// 取得儲存個體延展資訊
         /// </summary>
         /// <param name="storageId">儲存個體 ID</param>
         /// <returns></returns>
         public Task<StorageExtendProperty> GetStorageExtendPropertyAsync(Guid storageId)
         {
-            return this.ListQuery().Where(x => x.StorageId == storageId).Select(x => new StorageExtendProperty()
-            {
-                Storage = x,
-                RemainSize = x.SizeLimit - x.FileEntityStroage.Sum(f => f.FileEntity.Size)
-            }).FirstOrDefaultAsync();
+            return this.GetStorageExtendPropertyQuery().FirstOrDefaultAsync(x => x.Storage.StorageId == storageId);
         }
         /// <summary>
         /// 於儲存個體內新增檔案實體

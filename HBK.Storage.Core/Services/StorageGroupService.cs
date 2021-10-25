@@ -99,6 +99,23 @@ namespace HBK.Storage.Core.Services
         #endregion
 
         #region BAL
+
+        /// <summary>
+        /// 取得儲存群組擴充資訊清單
+        /// </summary>
+        /// <returns></returns>
+        public IQueryable<StorageGroupExtendProperty> GetStorageGroupExtendPropertiesQuery()
+        {
+            var query = _dbContext.StorageGroup
+                .Join(_dbContext.VwStorageGroupAnalysis, sg => sg.StorageGroupId, sga => sga.StorageGroupId, (sg, sga) => new StorageGroupExtendProperty()
+                {
+                    StorageGroup = sg,
+                    UsedSize = sga.UsedSize,
+                    SizeLimit = sga.SizeLimit
+                });
+
+            return query;
+        }
         /// <summary>
         /// 停用指定的儲存個體集合
         /// </summary>

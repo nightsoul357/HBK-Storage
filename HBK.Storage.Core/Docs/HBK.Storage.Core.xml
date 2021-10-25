@@ -941,9 +941,34 @@
             取得過設定儲存個體
             </summary>
         </member>
+        <member name="P:HBK.Storage.Core.Models.StorageExtendProperty.UsedSize">
+            <summary>
+            取得或設定已使用大小(Bytes)
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Core.Models.StorageExtendProperty.RemainSize">
             <summary>
-            取得或設定剩餘大小
+            取得剩餘大小(Bytes)
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.Models.StorageGroupExtendProperty">
+            <summary>
+            儲存群組擴充資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.StorageGroupExtendProperty.StorageGroup">
+            <summary>
+            取得或設定儲存群組
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.StorageGroupExtendProperty.SizeLimit">
+            <summary>
+            取得或設定大小限制
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.StorageGroupExtendProperty.UsedSize">
+            <summary>
+            取得或設定已使用空間
             </summary>
         </member>
         <member name="T:HBK.Storage.Core.Models.SyncFileEntity">
@@ -1287,6 +1312,13 @@
             <param name="fileEntityId">檔案實體 ID</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetFileEntityStroageAsync(System.Guid)">
+            <summary>
+            取得檔案存在的儲存個體橋接資訊集合
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Core.Services.FileEntityService.GetExpireFileEntityWithoutMarkDeleteAsync(System.Int32,System.Int32,System.Int32)">
             <summary>
             取得已過期但未標記刪除的檔案
@@ -1455,6 +1487,12 @@
             刪除儲存個體集合(同時會刪除所有儲存個體)
             </summary>
             <param name="storageGroupId">儲存個體集合 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.GetStorageGroupExtendPropertiesQuery">
+            <summary>
+            取得儲存群組擴充資訊清單
+            </summary>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.StorageGroupService.DisableStorageGroupAsync(System.Guid)">
@@ -1630,6 +1668,12 @@
             刪除儲存個體(同時會刪除所有儲存個體內的檔案)
             </summary>
             <param name="storageId">儲存個體 ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.StorageService.GetStorageExtendPropertyQuery">
+            <summary>
+            取得儲存個體擴充資訊清單
+            </summary>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.StorageService.GetStorageExtendPropertyAsync(System.Guid)">

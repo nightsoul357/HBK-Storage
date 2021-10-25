@@ -32,7 +32,7 @@ namespace HBK.Storage.Api.Controllers
 
         public HBKControllerBase()
         {
-            this.AuthorizeKey = new Lazy<AuthorizeKey>(() => 
+            this.AuthorizeKey = new Lazy<AuthorizeKey>(() =>
             {
                 var keyService = base.HttpContext.RequestServices.GetService<AuthorizeKeyService>();
                 var key = base.HttpContext.Request.Headers["HBKey"].First();
@@ -57,7 +57,7 @@ namespace HBK.Storage.Api.Controllers
             {
                 countQuery = queryOptions.Filter.ApplyTo(query, new ODataQuerySettings()).Cast<TModel>();
             }
-            var newQuery = queryOptions.ApplyTo(query).Cast<TModel>();
+            var newQuery = queryOptions.ApplyTo(query, new ODataQuerySettings() { EnsureStableOrdering = false }).Cast<TModel>();
             if (defaultTake != null)
             {
                 newQuery = newQuery.Take(defaultTake.Value);

@@ -18,7 +18,7 @@ namespace HBK.Storage.Web.Pages.Storage
         public long SizeLimit { get; set; }
         public StorageType StorageType { get; set; }
         [Parameter]
-        public StorageResponse EditStorage { get; set; }
+        public StorageExtendPropertyResponse EditStorage { get; set; }
         [Inject]
         public HBKStorageApi HBKStorageApi { get; set; }
         [Inject]

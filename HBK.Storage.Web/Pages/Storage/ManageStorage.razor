@@ -7,10 +7,11 @@
             <MudText Typo="Typo.h3" GutterBottom="true">管理 @this.StateContainer.StorageGroup.Name 內的所有儲存個體</MudText>
         </MudItem>
         <MudItem xs="12" md="12">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="this.GoBack">返回</MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="this.ShowAddDialogAsync">新增儲存個體</MudButton>
         </MudItem>
         <MudItem xs="12" md="12">
-            <MudTable ServerData="@(new Func<TableState, Task<TableData<StorageResponse>>>(this.ServerReloadAsync))"
+            <MudTable ServerData="@(new Func<TableState, Task<TableData<StorageExtendPropertyResponse>>>(this.ServerReloadAsync))"
                       Dense="true" Hover="true" @ref="_table">
                 <ToolBarContent>
                     <MudText Typo="Typo.h6">儲存個體列表</MudText>
@@ -20,19 +21,21 @@
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh>儲存個體 ID</MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="name" T="StorageResponse">名稱</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="type" T="StorageResponse">類型</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="size_limit" T="StorageResponse">檔案容量限制</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortLabel="create_date_time" T="StorageResponse">建立時間</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="storage/name" T="StorageExtendPropertyResponse">名稱</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="storage/type" T="StorageExtendPropertyResponse">類型</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="used_size" T="StorageExtendPropertyResponse">已使用容量</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="storage/size_limit" T="StorageExtendPropertyResponse">檔案容量限制</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="storage/create_date_time" T="StorageExtendPropertyResponse">建立時間</MudTableSortLabel></MudTh>
                     <MudTh>狀態</MudTh>
                     <MudTh>功能</MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd>@context.Storage_id</MudTd>
-                    <MudTd DataLabel="name">@context.Name</MudTd>
-                    <MudTd DataLabel="type">@context.Type.ToString()</MudTd>
-                    <MudTd DataLabel="size_limit">@DataUnitFormatHelper.Format(context.Size_limit)</MudTd>
-                    <MudTd DataLabel="create_date_time">@context.Create_date_time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
+                    <MudTd DataLabel="storage/name">@context.Name</MudTd>
+                    <MudTd DataLabel="storage/type">@context.Type.ToString()</MudTd>
+                    <MudTd DataLabel="used_size">@DataUnitFormatHelper.Format(context.Used_size ?? 0)</MudTd>
+                    <MudTd DataLabel="storage/size_limit">@DataUnitFormatHelper.Format(context.Size_limit)</MudTd>
+                    <MudTd DataLabel="storage/create_date_time">@context.Create_date_time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
                     <MudTd>
                         @foreach (var status in context.Status)
                         {

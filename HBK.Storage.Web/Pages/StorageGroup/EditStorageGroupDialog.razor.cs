@@ -18,7 +18,7 @@ namespace HBK.Storage.Web.Pages.StorageGroup
         [Inject]
         public StateContainer StateContainer { get; set; }
         [Parameter]
-        public StorageGroupResponse EditStorageGroup { get; set; }
+        public StorageGroupExtendPropertyResponse EditStorageGroup { get; set; }
         public int UploadPriority { get; set; } = 1;
         public int DownloadPriority { get; set; } = 1;
         public string Name { get; set; }

@@ -5,6 +5,7 @@ using HBK.Storage.Api.Models;
 using HBK.Storage.Api.Models.Storage;
 using HBK.Storage.Api.Models.StorageGroup;
 using HBK.Storage.Api.OData;
+using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
 using HBK.Storage.Core.Strategies;
 using Microsoft.AspNet.OData.Query;
@@ -129,7 +130,7 @@ namespace HBK.Storage.Api.Controllers
             return StorageController.BuildStorageResponse(result, _jsonSerializerSettings);
         }
         /// <summary>
-        /// 取得儲存個體集合內的儲存個體集合，單次資料上限為 100 筆
+        /// 取得儲存群組內的儲存個體集合，單次資料上限為 100 筆
         /// </summary>
         /// <param name="storageGroupId">儲存個體集合 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
@@ -156,7 +157,34 @@ namespace HBK.Storage.Api.Controllers
                 100
             );
         }
+        /// <summary>
+        /// 取得儲存群組內的儲存個體擴展資訊集合，單次資料上限為 100 筆
+        /// </summary>
+        /// <param name="storageGroupId">儲存群組 ID</param>
+        /// <param name="queryOptions">OData 查詢選項</param>
+        /// <returns></returns>
+        [HttpGet("{storageGroupId}/storageextendProperties")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [EnableODataQuery(AllowedQueryOptions =
+            AllowedQueryOptions.Filter |
+            AllowedQueryOptions.Skip |
+            AllowedQueryOptions.Top |
+            AllowedQueryOptions.OrderBy,
+            MaxTop = 100)]
+        public async Task<PagedResponse<StorageExtendPropertyResponse>> GetStorageExtendPropreties(
+            [ExampleParameter("8acdbf86-cb7b-4d1a-8745-44115f656287")]
+            [ExistInDatabase(typeof(StorageGroup))] Guid storageGroupId,
+            [FromServices] ODataQueryOptions<StorageExtendProperty> queryOptions)
+        {
+            var query = _storageService.GetStorageExtendPropertyQuery()
+                .Where(x => x.Storage.StorageGroupId == storageGroupId);
 
+            return await base.PagedResultAsync(queryOptions, query, (data) =>
+                data.Select(storageExtendProperty => StorageController.BuildStorageExtendPropertyResponse(storageExtendProperty, _jsonSerializerSettings)),
+                100
+            );
+        }
         /// <summary>
         /// 測試同步策略
         /// </summary>
@@ -203,7 +231,7 @@ namespace HBK.Storage.Api.Controllers
             return response;
         }
         /// <summary>
-        /// 產生儲存個體集合回應內容
+        /// 產生儲存群組回應內容
         /// </summary>
         /// <param name="storageGroup"></param>
         /// <returns></returns>
@@ -222,6 +250,31 @@ namespace HBK.Storage.Api.Controllers
                 UploadPriority = storageGroup.UploadPriority,
                 Type = storageGroup.Type,
                 UpdateDateTime = storageGroup.UpdateDateTime
+            };
+        }
+
+        /// <summary>
+        /// 產生儲存群組擴充資訊回應內容
+        /// </summary>
+        /// <param name="storageGroupExtendProperty"></param>
+        /// <returns></returns>
+        internal static StorageGroupExtendPropertyResponse BuildStorageGroupExtendPropertyResponse(StorageGroupExtendProperty storageGroupExtendProperty)
+        {
+            return new StorageGroupExtendPropertyResponse()
+            {
+                CreateDateTime = storageGroupExtendProperty.StorageGroup.CreateDateTime,
+                Name = storageGroupExtendProperty.StorageGroup.Name,
+                Status = storageGroupExtendProperty.StorageGroup.Status.FlattenFlags(),
+                StorageGroupId = storageGroupExtendProperty.StorageGroup.StorageGroupId,
+                StorageProviderId = storageGroupExtendProperty.StorageGroup.StorageProviderId,
+                SyncMode = storageGroupExtendProperty.StorageGroup.SyncMode,
+                SyncPolicy = storageGroupExtendProperty.StorageGroup.SyncPolicy,
+                DownloadPriority = storageGroupExtendProperty.StorageGroup.DownloadPriority,
+                UploadPriority = storageGroupExtendProperty.StorageGroup.UploadPriority,
+                Type = storageGroupExtendProperty.StorageGroup.Type,
+                UpdateDateTime = storageGroupExtendProperty.StorageGroup.UpdateDateTime,
+                UsedSize = storageGroupExtendProperty.UsedSize,
+                SizeLimit = storageGroupExtendProperty.SizeLimit
             };
         }
     }

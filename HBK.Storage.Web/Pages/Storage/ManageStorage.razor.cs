@@ -12,7 +12,7 @@ namespace HBK.Storage.Web.Pages.Storage
 {
     public partial class ManageStorage
     {
-        private MudTable<StorageResponse> _table;
+        private MudTable<StorageExtendPropertyResponse> _table;
         private string _searchString = null;
         [Inject]
         public HBKStorageApi HBKStorageApi { get; set; }
@@ -25,7 +25,7 @@ namespace HBK.Storage.Web.Pages.Storage
         /// <summary>
         /// Here we simulate getting the paged, filtered and ordered data from the server
         /// </summary>
-        public async Task<TableData<StorageResponse>> ServerReloadAsync(TableState state)
+        public async Task<TableData<StorageExtendPropertyResponse>> ServerReloadAsync(TableState state)
         {
             string filter = null;
             string order = null;
@@ -39,9 +39,9 @@ namespace HBK.Storage.Web.Pages.Storage
                 order = $"{state.SortLabel} {(state.SortDirection == SortDirection.Ascending ? "asc" : "desc")}";
             }
 
-            var response = await this.HBKStorageApi.StoragesGET2Async(this.StateContainer.StorageGroup.Storage_group_id, filter, order, state.Page, state.PageSize);
+            var response = await this.HBKStorageApi.StorageextendpropertiesAsync(this.StateContainer.StorageGroup.Storage_group_id, filter, order, state.Page, state.PageSize);
 
-            return new TableData<StorageResponse>()
+            return new TableData<StorageExtendPropertyResponse>()
             {
                 Items = response.Value,
                 TotalItems = response.OdataCount
@@ -53,12 +53,12 @@ namespace HBK.Storage.Web.Pages.Storage
             await _table.ReloadServerData();
         }
 
-        public async Task ShowEditDialogAsync(StorageResponse storage)
+        public async Task ShowEditDialogAsync(StorageExtendPropertyResponse storage)
         {
             await this.HBKDialogService.ShowEditStorageAsync(storage);
             await _table.ReloadServerData();
         }
-        public async Task ShowDeleteDialogAsync(StorageResponse storage)
+        public async Task ShowDeleteDialogAsync(StorageExtendPropertyResponse storage)
         {
             var result = await this.HBKDialogService.ShowBasicAsync("刪除", $"確定刪除 { storage.Name } 嗎(此操作無法復原)?", "刪除", Color.Error);
             if (result.Cancelled)
@@ -67,6 +67,10 @@ namespace HBK.Storage.Web.Pages.Storage
             }
             await this.HBKStorageApi.StoragesDELETEAsync(storage.Storage_id);
             await _table.ReloadServerData();
+        }
+        public void GoBack()
+        {
+            this.NavigationManager.NavigateTo("/storageGroup/manage");
         }
         public async Task ShowAddDialogAsync()
         {

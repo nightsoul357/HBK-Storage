@@ -429,7 +429,7 @@ namespace HBK.Storage.Web.DataSource
         /// <br/>* 允許的欄位：
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -447,7 +447,7 @@ namespace HBK.Storage.Web.DataSource
         /// <br/>* 允許的欄位：
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -1527,7 +1527,7 @@ namespace HBK.Storage.Web.DataSource
         /// <br/>* 允許的欄位：`file_entity`, `child_level`
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：`file_entity`, `child_level`</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -1546,7 +1546,7 @@ namespace HBK.Storage.Web.DataSource
         /// <br/>* 允許的欄位：`file_entity`, `child_level`
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：`file_entity`, `child_level`</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -2679,13 +2679,13 @@ namespace HBK.Storage.Web.DataSource
             }
         }
 
-        /// <summary>🔧取得儲存個體集合內的儲存個體集合，單次資料上限為 100 筆</summary>
+        /// <summary>🔧取得儲存群組內的儲存個體集合，單次資料上限為 100 筆</summary>
         /// <param name="storageGroupId">儲存個體集合 ID</param>
         /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
         /// <br/>* 允許的欄位：`name`, `type`
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：`name`, `type`, `size_limit`, `create_date_time`</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -2698,13 +2698,13 @@ namespace HBK.Storage.Web.DataSource
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>🔧取得儲存個體集合內的儲存個體集合，單次資料上限為 100 筆</summary>
+        /// <summary>🔧取得儲存群組內的儲存個體集合，單次資料上限為 100 筆</summary>
         /// <param name="storageGroupId">儲存個體集合 ID</param>
         /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
         /// <br/>* 允許的欄位：`name`, `type`
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：`name`, `type`, `size_limit`, `create_date_time`</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -2770,6 +2770,141 @@ namespace HBK.Storage.Web.DataSource
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<StorageResponsePagedResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        if (status_ == 404)
+                        {
+                            string responseText_ = (response_.Content == null) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("Not Found", status_, responseText_, headers_, null);
+                        }
+                        else
+                        if (status_ == 401)
+                        {
+                            string responseText_ = (response_.Content == null) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("Unauthorized", status_, responseText_, headers_, null);
+                        }
+                        else
+                        if (status_ == 403)
+                        {
+                            string responseText_ = (response_.Content == null) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("Forbidden", status_, responseText_, headers_, null);
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <summary>🔧取得儲存群組內的儲存個體擴展資訊集合，單次資料上限為 100 筆</summary>
+        /// <param name="storageGroupId">儲存群組 ID</param>
+        /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
+        /// <br/>* 允許的欄位：
+        /// <br/>
+        /// <br/>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
+        /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
+        /// <br/>* 允許的欄位：</param>
+        /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
+        /// <param name="top">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$top_System_1) 指定要取得的資料數量，上限 100</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task<StorageExtendPropertyResponsePagedResponse> StorageextendpropertiesAsync(System.Guid storageGroupId, string filter, string orderby, int? skip, int? top)
+        {
+            return StorageextendpropertiesAsync(storageGroupId, filter, orderby, skip, top, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>🔧取得儲存群組內的儲存個體擴展資訊集合，單次資料上限為 100 筆</summary>
+        /// <param name="storageGroupId">儲存群組 ID</param>
+        /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
+        /// <br/>* 允許的欄位：
+        /// <br/>
+        /// <br/>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
+        /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
+        /// <br/>* 允許的欄位：</param>
+        /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
+        /// <param name="top">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$top_System_1) 指定要取得的資料數量，上限 100</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public async System.Threading.Tasks.Task<StorageExtendPropertyResponsePagedResponse> StorageextendpropertiesAsync(System.Guid storageGroupId, string filter, string orderby, int? skip, int? top, System.Threading.CancellationToken cancellationToken)
+        {
+            if (storageGroupId == null)
+                throw new System.ArgumentNullException("storageGroupId");
+
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/storagegroups/{storageGroupId}/storageextendproperties?");
+            urlBuilder_.Replace("{storageGroupId}", System.Uri.EscapeDataString(ConvertToString(storageGroupId, System.Globalization.CultureInfo.InvariantCulture)));
+            if (filter != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$filter") + "=").Append(System.Uri.EscapeDataString(ConvertToString(filter, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (orderby != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$orderby") + "=").Append(System.Uri.EscapeDataString(ConvertToString(orderby, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (skip != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$skip") + "=").Append(System.Uri.EscapeDataString(ConvertToString(skip, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (top != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$top") + "=").Append(System.Uri.EscapeDataString(ConvertToString(top, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<StorageExtendPropertyResponsePagedResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -3211,7 +3346,7 @@ namespace HBK.Storage.Web.DataSource
         /// <br/>* 允許的欄位：`name`
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：`name`, `create_date_time`</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -3229,7 +3364,7 @@ namespace HBK.Storage.Web.DataSource
         /// <br/>* 允許的欄位：`name`
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：`name`, `create_date_time`</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -3533,13 +3668,13 @@ namespace HBK.Storage.Web.DataSource
             }
         }
 
-        /// <summary>🔧取得儲存服務內的所有儲存個體集合，單次資料上限為 100 筆</summary>
+        /// <summary>🔧取得儲存服務內的所有儲存群組集合，單次資料上限為 100 筆</summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
         /// <br/>* 允許的欄位：`name`, `type`, `sync_mode`, `upload_priority`, `download_priority`
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：`name`, `type`, `sync_mode`, `upload_priority`, `download_priority`, `create_date_time`</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -3552,13 +3687,13 @@ namespace HBK.Storage.Web.DataSource
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>🔧取得儲存服務內的所有儲存個體集合，單次資料上限為 100 筆</summary>
+        /// <summary>🔧取得儲存服務內的所有儲存群組集合，單次資料上限為 100 筆</summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
         /// <br/>* 允許的欄位：`name`, `type`, `sync_mode`, `upload_priority`, `download_priority`
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：`name`, `type`, `sync_mode`, `upload_priority`, `download_priority`, `create_date_time`</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -3668,15 +3803,150 @@ namespace HBK.Storage.Web.DataSource
             }
         }
 
+        /// <summary>🔧取得儲存服務內的所有儲存群組擴充資訊集合，單次資料上限為 100 筆</summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
+        /// <br/>* 允許的欄位：
+        /// <br/>
+        /// <br/>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
+        /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
+        /// <br/>* 允許的欄位：</param>
+        /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
+        /// <param name="top">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$top_System_1) 指定要取得的資料數量，上限 100</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task<StorageGroupExtendPropertyResponsePagedResponse> StoragegroupextendpropertiesAsync(System.Guid storageProviderId, string filter, string orderby, int? skip, int? top)
+        {
+            return StoragegroupextendpropertiesAsync(storageProviderId, filter, orderby, skip, top, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>🔧取得儲存服務內的所有儲存群組擴充資訊集合，單次資料上限為 100 筆</summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
+        /// <br/>* 允許的欄位：
+        /// <br/>
+        /// <br/>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
+        /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
+        /// <br/>* 允許的欄位：</param>
+        /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
+        /// <param name="top">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$top_System_1) 指定要取得的資料數量，上限 100</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public async System.Threading.Tasks.Task<StorageGroupExtendPropertyResponsePagedResponse> StoragegroupextendpropertiesAsync(System.Guid storageProviderId, string filter, string orderby, int? skip, int? top, System.Threading.CancellationToken cancellationToken)
+        {
+            if (storageProviderId == null)
+                throw new System.ArgumentNullException("storageProviderId");
+
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/storageproviders/{storageProviderId}/storagegroupextendproperties?");
+            urlBuilder_.Replace("{storageProviderId}", System.Uri.EscapeDataString(ConvertToString(storageProviderId, System.Globalization.CultureInfo.InvariantCulture)));
+            if (filter != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$filter") + "=").Append(System.Uri.EscapeDataString(ConvertToString(filter, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (orderby != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$orderby") + "=").Append(System.Uri.EscapeDataString(ConvertToString(orderby, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (skip != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$skip") + "=").Append(System.Uri.EscapeDataString(ConvertToString(skip, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (top != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$top") + "=").Append(System.Uri.EscapeDataString(ConvertToString(top, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<StorageGroupExtendPropertyResponsePagedResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        if (status_ == 404)
+                        {
+                            string responseText_ = (response_.Content == null) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("Not Found", status_, responseText_, headers_, null);
+                        }
+                        else
+                        if (status_ == 401)
+                        {
+                            string responseText_ = (response_.Content == null) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("Unauthorized", status_, responseText_, headers_, null);
+                        }
+                        else
+                        if (status_ == 403)
+                        {
+                            string responseText_ = (response_.Content == null) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("Forbidden", status_, responseText_, headers_, null);
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
         /// <summary>🔧取得儲存服務內的檔案實體集合，單次資料上限為 100 筆</summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
-        /// <br/>* 允許的欄位：`file_entity_id`, `name`, `size`, `extend_property`, `mime_type`, `parent_file_entity_id`, `create_date_time`
+        /// <br/>* 允許的欄位：`file_entity_id`, `name`, `size`, `extend_property`, `mime_type`, `parent_file_entity_id`, `create_date_time`, `file_entity_tag`
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
-        /// <br/>* 允許的欄位：`name`, `size`, `create_date_time`</param>
+        /// <br/>* 允許的欄位：`name`, `size`, `mime_type`, `create_date_time`</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
         /// <param name="top">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$top_System_1) 指定要取得的資料數量，上限 100</param>
         /// <returns>Success</returns>
@@ -3690,12 +3960,12 @@ namespace HBK.Storage.Web.DataSource
         /// <summary>🔧取得儲存服務內的檔案實體集合，單次資料上限為 100 筆</summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
-        /// <br/>* 允許的欄位：`file_entity_id`, `name`, `size`, `extend_property`, `mime_type`, `parent_file_entity_id`, `create_date_time`
+        /// <br/>* 允許的欄位：`file_entity_id`, `name`, `size`, `extend_property`, `mime_type`, `parent_file_entity_id`, `create_date_time`, `file_entity_tag`
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
-        /// <br/>* 允許的欄位：`name`, `size`, `create_date_time`</param>
+        /// <br/>* 允許的欄位：`name`, `size`, `mime_type`, `create_date_time`</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
         /// <param name="top">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$top_System_1) 指定要取得的資料數量，上限 100</param>
         /// <returns>Success</returns>
@@ -4065,7 +4335,7 @@ namespace HBK.Storage.Web.DataSource
         /// <br/>* 允許的欄位：
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -4084,7 +4354,7 @@ namespace HBK.Storage.Web.DataSource
         /// <br/>* 允許的欄位：
         /// <br/>
         /// <br/>
-        /// <br/>* 允許的函數：`contains()`</param>
+        /// <br/>* 允許的函數：`contains()`, `cast()`, `any()`, `all()`</param>
         /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
         /// <br/>* 允許的欄位：</param>
         /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
@@ -4469,8 +4739,8 @@ namespace HBK.Storage.Web.DataSource
         public System.Collections.Generic.ICollection<FileEntityStatus> Status { get; set; }
 
         /// <summary>取得或設定存在的儲存集合清單</summary>
-        [Newtonsoft.Json.JsonProperty("storage_summary_responses", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<StorageSummaryResponse> Storage_summary_responses { get; set; }
+        [Newtonsoft.Json.JsonProperty("file_entity_storage_responses", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<FileEntityStorageResponse> File_entity_storage_responses { get; set; }
 
 
     }
@@ -4602,6 +4872,26 @@ namespace HBK.Storage.Web.DataSource
 
         [System.Runtime.Serialization.EnumMember(Value = @"processing")]
         Processing = 1,
+
+    }
+
+    /// <summary>[Flags] 檔案位於儲存個體上的橋接資訊狀態列舉
+    /// <br/>
+    /// <br/>* **syncing** - 正在同步
+    /// <br/>* **sync_fail** - 同步失敗
+    /// <br/>* **disable** - 停用
+    /// <br/></summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
+    public enum FileEntityStorageStatus
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"syncing")]
+        Syncing = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"sync_fail")]
+        Sync_fail = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"disable")]
+        Disable = 2,
 
     }
 
@@ -4800,8 +5090,8 @@ namespace HBK.Storage.Web.DataSource
         public System.Collections.Generic.ICollection<FileEntityStatus> Status { get; set; }
 
         /// <summary>取得或設定存在的儲存集合清單</summary>
-        [Newtonsoft.Json.JsonProperty("storage_summary_responses", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Collections.Generic.ICollection<StorageSummaryResponse> Storage_summary_responses { get; set; }
+        [Newtonsoft.Json.JsonProperty("file_entity_storage_responses", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<FileEntityStorageResponse> File_entity_storage_responses { get; set; }
 
 
     }
@@ -4817,6 +5107,60 @@ namespace HBK.Storage.Web.DataSource
         /// <summary>取得或設定資料總數</summary>
         [Newtonsoft.Json.JsonProperty("@odata.count", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int OdataCount { get; set; }
+
+
+    }
+
+    /// <summary>檔案實體於儲存個體上的回應內容</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class FileEntityStorageResponse
+    {
+        /// <summary>檔案於儲存個體上的狀態</summary>
+        [Newtonsoft.Json.JsonProperty("file_entity_storage_status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public System.Collections.Generic.ICollection<FileEntityStorageStatus> File_entity_storage_status { get; set; }
+
+        /// <summary>檔案於儲存個體上的建立時間</summary>
+        [Newtonsoft.Json.JsonProperty("file_entity_storage_create_date_time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset File_entity_storage_create_date_time { get; set; }
+
+        /// <summary>檔案於儲存個體上的最後更新時間</summary>
+        [Newtonsoft.Json.JsonProperty("file_entity_storage_update_date_time", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? File_entity_storage_update_date_time { get; set; }
+
+        /// <summary>檔案於儲存個體上的建立者識別名稱</summary>
+        [Newtonsoft.Json.JsonProperty("creator_identity", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Creator_identity { get; set; }
+
+        /// <summary>儲存個體 ID</summary>
+        [Newtonsoft.Json.JsonProperty("storage_id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid Storage_id { get; set; }
+
+        /// <summary>名稱</summary>
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public StorageType Type { get; set; }
+
+        /// <summary>檔案大小限制(單位 Bytes)</summary>
+        [Newtonsoft.Json.JsonProperty("size_limit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long Size_limit { get; set; }
+
+        /// <summary>建立時間</summary>
+        [Newtonsoft.Json.JsonProperty("create_date_time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset Create_date_time { get; set; }
+
+        /// <summary>最後更新時間</summary>
+        [Newtonsoft.Json.JsonProperty("update_date_time", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? Update_date_time { get; set; }
+
+        /// <summary>狀態</summary>
+        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public System.Collections.Generic.ICollection<StorageStatus> Status { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("storage_group_response", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public StorageGroupResponse Storage_group_response { get; set; }
 
 
     }
@@ -4920,6 +5264,67 @@ namespace HBK.Storage.Web.DataSource
 
     }
 
+    /// <summary>儲存個體擴充資訊回應內容</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class StorageExtendPropertyResponse
+    {
+        /// <summary>已使用大小(Bytes)</summary>
+        [Newtonsoft.Json.JsonProperty("used_size", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long? Used_size { get; set; }
+
+        /// <summary>儲存個體 ID</summary>
+        [Newtonsoft.Json.JsonProperty("storage_id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid Storage_id { get; set; }
+
+        /// <summary>名稱</summary>
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public StorageType Type { get; set; }
+
+        /// <summary>檔案大小限制(單位 Bytes)</summary>
+        [Newtonsoft.Json.JsonProperty("size_limit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long Size_limit { get; set; }
+
+        /// <summary>存取儲存個體的驗證資訊</summary>
+        [Newtonsoft.Json.JsonProperty("credentials", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Credentials { get; set; }
+
+        /// <summary>建立時間</summary>
+        [Newtonsoft.Json.JsonProperty("create_date_time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset Create_date_time { get; set; }
+
+        /// <summary>最後更新時間</summary>
+        [Newtonsoft.Json.JsonProperty("update_date_time", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? Update_date_time { get; set; }
+
+        /// <summary>狀態</summary>
+        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public System.Collections.Generic.ICollection<StorageStatus> Status { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("storage_group_response", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public StorageGroupResponse Storage_group_response { get; set; }
+
+
+    }
+
+    /// <summary>分頁後的回應結果</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class StorageExtendPropertyResponsePagedResponse
+    {
+        /// <summary>取得或設定資料</summary>
+        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<StorageExtendPropertyResponse> Value { get; set; }
+
+        /// <summary>取得或設定資料總數</summary>
+        [Newtonsoft.Json.JsonProperty("@odata.count", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int OdataCount { get; set; }
+
+
+    }
+
     /// <summary>新增儲存個體集合請求內容</summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class StorageGroupAddRequest
@@ -4951,6 +5356,80 @@ namespace HBK.Storage.Web.DataSource
         /// <summary>狀態</summary>
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public System.Collections.Generic.ICollection<StorageGroupStatus> Status { get; set; }
+
+
+    }
+
+    /// <summary>儲存群組額外資訊回應內容</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class StorageGroupExtendPropertyResponse
+    {
+        /// <summary>大小限制(Bytes)</summary>
+        [Newtonsoft.Json.JsonProperty("size_limit", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long? Size_limit { get; set; }
+
+        /// <summary>已使用大小(Bytes)</summary>
+        [Newtonsoft.Json.JsonProperty("used_size", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long? Used_size { get; set; }
+
+        /// <summary>儲存個體群組 ID</summary>
+        [Newtonsoft.Json.JsonProperty("storage_group_id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid Storage_group_id { get; set; }
+
+        /// <summary>所屬儲存服務 ID</summary>
+        [Newtonsoft.Json.JsonProperty("storage_provider_id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid? Storage_provider_id { get; set; }
+
+        /// <summary>名稱</summary>
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Name { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public StorageType Type { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("sync_mode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public SyncMode Sync_mode { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("sync_policy", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public SyncPolicy Sync_policy { get; set; }
+
+        /// <summary>上傳優先度</summary>
+        [Newtonsoft.Json.JsonProperty("upload_priority", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int Upload_priority { get; set; }
+
+        /// <summary>下載優先度</summary>
+        [Newtonsoft.Json.JsonProperty("download_priority", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int Download_priority { get; set; }
+
+        /// <summary>建立時間</summary>
+        [Newtonsoft.Json.JsonProperty("create_date_time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset Create_date_time { get; set; }
+
+        /// <summary>更新時間</summary>
+        [Newtonsoft.Json.JsonProperty("update_date_time", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? Update_date_time { get; set; }
+
+        /// <summary>狀態</summary>
+        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public System.Collections.Generic.ICollection<StorageGroupStatus> Status { get; set; }
+
+
+    }
+
+    /// <summary>分頁後的回應結果</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class StorageGroupExtendPropertyResponsePagedResponse
+    {
+        /// <summary>取得或設定資料</summary>
+        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<StorageGroupExtendPropertyResponse> Value { get; set; }
+
+        /// <summary>取得或設定資料總數</summary>
+        [Newtonsoft.Json.JsonProperty("@odata.count", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int OdataCount { get; set; }
 
 
     }
@@ -5183,44 +5662,6 @@ namespace HBK.Storage.Web.DataSource
         /// <summary>取得或設定資料總數</summary>
         [Newtonsoft.Json.JsonProperty("@odata.count", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int OdataCount { get; set; }
-
-
-    }
-
-    /// <summary>儲存個體基本資訊回應內容</summary>
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
-    public partial class StorageSummaryResponse
-    {
-        /// <summary>儲存個體 ID</summary>
-        [Newtonsoft.Json.JsonProperty("storage_id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Guid Storage_id { get; set; }
-
-        /// <summary>名稱</summary>
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public StorageType Type { get; set; }
-
-        /// <summary>檔案大小限制(單位 Bytes)</summary>
-        [Newtonsoft.Json.JsonProperty("size_limit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public long Size_limit { get; set; }
-
-        /// <summary>建立時間</summary>
-        [Newtonsoft.Json.JsonProperty("create_date_time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset Create_date_time { get; set; }
-
-        /// <summary>最後更新時間</summary>
-        [Newtonsoft.Json.JsonProperty("update_date_time", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? Update_date_time { get; set; }
-
-        /// <summary>狀態</summary>
-        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
-        public System.Collections.Generic.ICollection<StorageStatus> Status { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("storage_group_response", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public StorageGroupResponse Storage_group_response { get; set; }
 
 
     }

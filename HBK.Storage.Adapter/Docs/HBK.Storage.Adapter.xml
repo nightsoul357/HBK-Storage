@@ -446,6 +446,16 @@
             取得或設定檔案實體遞迴解析結果資料集
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.VwStorageAnalysis">
+            <summary>
+            取得或設定儲存個體分析結果資料集
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.VwStorageGroupAnalysis">
+            <summary>
+            取得或設定儲存群組分析結果資料集
+            </summary>
+        </member>
         <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)">
             <summary>
             設定資料庫實體
@@ -1191,6 +1201,41 @@
         <member name="P:HBK.Storage.Adapter.Storages.VwFileEntityRecursive.ChildLevel">
             <summary>
             取得或設定於根檔案相距層數
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.VwStorageAnalysis">
+            <summary>
+            儲存個體分析結果
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwStorageAnalysis.StorageId">
+            <summary>
+            取得或設定儲存個體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwStorageAnalysis.UsedSize">
+            <summary>
+            取得或設定已使用空間(Bytes)
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.VwStorageGroupAnalysis">
+            <summary>
+            儲存群組的分析結果
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwStorageGroupAnalysis.StorageGroupId">
+            <summary>
+            取得或設定儲存群組 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwStorageGroupAnalysis.SizeLimit">
+            <summary>
+            取得或設定大小限制
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwStorageGroupAnalysis.UsedSize">
+            <summary>
+            取得或設定已使用大小
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.Interfaces.ICreatedDateModel">
