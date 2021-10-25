@@ -63,6 +63,7 @@ namespace HBK.Storage.Adapter.Storages
         [Required]
         [StringLength(255)]
         [Filterable]
+        [Sortable]
         public string MimeType { get; set; }
         /// <summary>
         /// 取得或設定是否標記刪除

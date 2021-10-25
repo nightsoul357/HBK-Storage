@@ -2,11 +2,6 @@
     <DialogContent>
         <MudGrid @attributes="this.DialogAttributes">
             <MudItem xs="12" md="12">
-                <MudText Inline="false" Style="outline: none">
-                    Test..
-                </MudText>
-            </MudItem>
-            <MudItem xs="12" md="12">
                 <MudExpansionPanels MultiExpansion="true">
                     <MudExpansionPanel Text="基本資訊" IsInitiallyExpanded="true">
                         <MudGrid>
@@ -37,10 +32,18 @@
                                     <HeaderContent>
                                         <MudTh>儲存群組名稱</MudTh>
                                         <MudTh>儲存個體名稱</MudTh>
+                                        <MudTh>狀態</MudTh>
                                     </HeaderContent>
                                     <RowTemplate>
                                         <MudTd>@context.Storage_group_response.Name</MudTd>
                                         <MudTd>@context.Name</MudTd>
+                                        <MudTd>
+                                            @foreach (var status in context.Status)
+                                            {
+                                                <MudText>
+                                                    @status.ToString()
+                                                </MudText>}
+                                        </MudTd>
                                     </RowTemplate>
                                     <PagerContent>
                                         <MudTablePager />
@@ -64,6 +67,7 @@
                                 <MudTh><MudTableSortLabel SortLabel="file_entity/mime_type" T="ChildFileEntityResponse">MimeType</MudTableSortLabel></MudTh>
                                 <MudTh>標籤</MudTh>
                                 <MudTh><MudTableSortLabel SortLabel="file_entity/create_date_time" T="ChildFileEntityResponse">建立時間</MudTableSortLabel></MudTh>
+                                <MudTh>狀態</MudTh>
                             </HeaderContent>
                             <RowTemplate>
                                 <MudTd>@context.File_entity_id</MudTd>
@@ -78,6 +82,13 @@
                                         </MudText>}
                                 </MudTd>
                                 <MudTd DataLabel="file_entity/create_date_time">@context.Create_date_time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
+                                <MudTd DataLabel="status">
+                                    @foreach (var status in context.Status)
+                                    {
+                                        <MudText>
+                                            @status.ToString()
+                                        </MudText>}
+                                </MudTd>
                             </RowTemplate>
                             <NoRecordsContent>
                                 <MudText>未找到任何資料</MudText>

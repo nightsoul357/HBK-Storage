@@ -143,7 +143,7 @@ namespace HBK.Storage.Web.Features
             var options = new DialogOptions()
             {
                 FullWidth = true,
-                MaxWidth = MaxWidth.Medium,
+                MaxWidth = MaxWidth.ExtraLarge,
                 CloseButton = true,
                 DisableBackdropClick = true,
                 NoHeader = false,

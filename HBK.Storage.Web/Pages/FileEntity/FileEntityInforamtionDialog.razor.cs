@@ -45,7 +45,7 @@ namespace HBK.Storage.Web.Pages.FileEntity
 
             if (!string.IsNullOrEmpty(_searchString))
             {
-                filter += $" contains(file_entity/name,'{_searchString}')";
+                filter += $"(contains(file_entity/name,'{_searchString}') or contains(cast(file_entity/file_entity_id, 'Edm.String'),'{_searchString}') or file_entity/file_entity_tag/any(t:contains(t/value,'{_searchString}')) or contains(file_entity/mime_type,'{_searchString}'))";
             }
             if (!string.IsNullOrEmpty(state.SortLabel))
             {
