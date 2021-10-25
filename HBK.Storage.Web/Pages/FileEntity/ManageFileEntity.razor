@@ -7,7 +7,7 @@
             <MudText Typo="Typo.h3" GutterBottom="true">管理檔案</MudText>
         </MudItem>
         <MudItem xs="12" md="12">
-            <InputFile id="fileInput112" OnChange="this.UploadFilesAsync" hidden multiple/>
+            <InputFile id="fileInput112" OnChange="this.UploadFilesAsync" hidden multiple />
 
             <MudButton HtmlTag="label"
                        Variant="Variant.Filled"
@@ -23,14 +23,18 @@
                 <ToolBarContent>
                     <MudText Typo="Typo.h6">檔案列表</MudText>
                     <MudSpacer />
+
                     <MudTextField T="string" ValueChanged="@(async s => await this.OnSearchAsync(s))" Placeholder="Search" Adornment="Adornment.Start"
                                   AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+
+                    <MudCheckBox @bind-Checked="@this.IsDisplayChildFileEntity" Label="顯示子檔案" Color="Color.Primary" Class="mt-2 mr-2"></MudCheckBox>
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh>檔案 ID</MudTh>
                     <MudTh><MudTableSortLabel SortLabel="name" T="FileEntityResponse">檔案名稱</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="size" T="FileEntityResponse">檔案大小</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="mime_type" T="FileEntityResponse">MimeType</MudTableSortLabel></MudTh>
+                    <MudTh>標籤</MudTh>
                     <MudTh><MudTableSortLabel SortLabel="create_date_time" T="FileEntityResponse">建立時間</MudTableSortLabel></MudTh>
                     <MudTh>狀態</MudTh>
                     <MudTh>功能</MudTh>
@@ -40,6 +44,13 @@
                     <MudTd DataLabel="name">@context.Name</MudTd>
                     <MudTd DataLabel="size">@DataUnitFormatHelper.Format(context.Size)</MudTd>
                     <MudTd DataLabel="mime_type">@context.Mime_type</MudTd>
+                    <MudTd>
+                        @foreach (var tag in context.Tags)
+                        {
+<MudText>
+    @tag
+</MudText>}
+                    </MudTd>
                     <MudTd DataLabel="create_date_time">@context.Create_date_time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
                     <MudTd DataLabel="status">
                         @foreach (var status in context.Status)

@@ -336,7 +336,7 @@ namespace HBK.Storage.Adapter.Storages
                 entity.ToView("vw_FileEntityRecursive");
             });
 
-            OnModelCreatingPartial(modelBuilder);
+            this.OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

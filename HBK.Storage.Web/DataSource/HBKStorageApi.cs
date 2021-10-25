@@ -1521,6 +1521,141 @@ namespace HBK.Storage.Web.DataSource
             }
         }
 
+        /// <summary>🔧取得指定檔案的所有子檔案(遞迴查詢)</summary>
+        /// <param name="fileEntityId">檔案 ID</param>
+        /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
+        /// <br/>* 允許的欄位：`file_entity`, `child_level`
+        /// <br/>
+        /// <br/>
+        /// <br/>* 允許的函數：`contains()`</param>
+        /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
+        /// <br/>* 允許的欄位：`file_entity`, `child_level`</param>
+        /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
+        /// <param name="top">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$top_System_1) 指定要取得的資料數量，上限 100</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task<ChildFileEntityResponsePagedResponse> ChildsAsync(System.Guid fileEntityId, string filter, string orderby, int? skip, int? top)
+        {
+            return ChildsAsync(fileEntityId, filter, orderby, skip, top, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>🔧取得指定檔案的所有子檔案(遞迴查詢)</summary>
+        /// <param name="fileEntityId">檔案 ID</param>
+        /// <param name="filter">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System) 篩選指定欄位
+        /// <br/>* 允許的欄位：`file_entity`, `child_level`
+        /// <br/>
+        /// <br/>
+        /// <br/>* 允許的函數：`contains()`</param>
+        /// <param name="orderby">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$select_System_1) 指定結果依照指定欄位排序
+        /// <br/>* 允許的欄位：`file_entity`, `child_level`</param>
+        /// <param name="skip">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$skip_System) 指定要跳過的資料數量</param>
+        /// <param name="top">[OData v4](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$top_System_1) 指定要取得的資料數量，上限 100</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public async System.Threading.Tasks.Task<ChildFileEntityResponsePagedResponse> ChildsAsync(System.Guid fileEntityId, string filter, string orderby, int? skip, int? top, System.Threading.CancellationToken cancellationToken)
+        {
+            if (fileEntityId == null)
+                throw new System.ArgumentNullException("fileEntityId");
+
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/fileentities/{fileEntityId}/childs?");
+            urlBuilder_.Replace("{fileEntityId}", System.Uri.EscapeDataString(ConvertToString(fileEntityId, System.Globalization.CultureInfo.InvariantCulture)));
+            if (filter != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$filter") + "=").Append(System.Uri.EscapeDataString(ConvertToString(filter, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (orderby != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$orderby") + "=").Append(System.Uri.EscapeDataString(ConvertToString(orderby, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (skip != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$skip") + "=").Append(System.Uri.EscapeDataString(ConvertToString(skip, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (top != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("$top") + "=").Append(System.Uri.EscapeDataString(ConvertToString(top, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ChildFileEntityResponsePagedResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        if (status_ == 404)
+                        {
+                            string responseText_ = (response_.Content == null) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("Not Found", status_, responseText_, headers_, null);
+                        }
+                        else
+                        if (status_ == 401)
+                        {
+                            string responseText_ = (response_.Content == null) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("Unauthorized", status_, responseText_, headers_, null);
+                        }
+                        else
+                        if (status_ == 403)
+                        {
+                            string responseText_ = (response_.Content == null) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("Forbidden", status_, responseText_, headers_, null);
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
         /// <summary>附加檔案實體標籤</summary>
         /// <param name="fileEntityId">檔案實體 ID</param>
         /// <param name="body">附加檔案實體標籤請求內容</param>
@@ -3702,33 +3837,25 @@ namespace HBK.Storage.Web.DataSource
                     content_.Headers.Remove("Content-Type");
                     content_.Headers.TryAddWithoutValidation("Content-Type", "multipart/form-data; boundary=" + boundary_);
                     if (filename == null)
-                    {
-
-                    }
+                        throw new System.ArgumentNullException("filename");
                     else
                     {
                         content_.Add(new System.Net.Http.StringContent(ConvertToString(filename, System.Globalization.CultureInfo.InvariantCulture)), "Filename");
                     }
                     if (storageGroupId == null)
-                    {
-
-                    }
+                        throw new System.ArgumentNullException("storageGroupId");
                     else
                     {
                         content_.Add(new System.Net.Http.StringContent(ConvertToString(storageGroupId, System.Globalization.CultureInfo.InvariantCulture)), "StorageGroupId");
                     }
                     if (extendProperty == null)
-                    {
-
-                    }
+                        throw new System.ArgumentNullException("extendProperty");
                     else
                     {
                         content_.Add(new System.Net.Http.StringContent(ConvertToString(extendProperty, System.Globalization.CultureInfo.InvariantCulture)), "ExtendProperty");
                     }
                     if (tags == null)
-                    {
-
-                    }
+                        throw new System.ArgumentNullException("tags");
                     else
                     {
                         foreach (var item_ in tags)
@@ -3737,9 +3864,7 @@ namespace HBK.Storage.Web.DataSource
                         }
                     }
                     if (mimeType == null)
-                    {
-
-                    }
+                        throw new System.ArgumentNullException("mimeType");
                     else
                     {
                         content_.Add(new System.Net.Http.StringContent(ConvertToString(mimeType, System.Globalization.CultureInfo.InvariantCulture)), "MimeType");
@@ -4291,6 +4416,76 @@ namespace HBK.Storage.Web.DataSource
         [Newtonsoft.Json.JsonProperty("allow_operation_type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public AuthorizeKeyScopeOperationType Allow_operation_type { get; set; }
+
+
+    }
+
+    /// <summary>Child 的檔案實體回應內容</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class ChildFileEntityResponse
+    {
+        /// <summary>根檔案 ID</summary>
+        [Newtonsoft.Json.JsonProperty("root_file_entity_id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid? Root_file_entity_id { get; set; }
+
+        /// <summary>與根檔案相差的層數</summary>
+        [Newtonsoft.Json.JsonProperty("child_level", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? Child_level { get; set; }
+
+        /// <summary>檔案實體 ID</summary>
+        [Newtonsoft.Json.JsonProperty("file_entity_id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Guid File_entity_id { get; set; }
+
+        /// <summary>檔案名稱</summary>
+        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Name { get; set; }
+
+        /// <summary>檔案大小(單位 Bytes)</summary>
+        [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public long Size { get; set; }
+
+        /// <summary>檔案標籤列表</summary>
+        [Newtonsoft.Json.JsonProperty("tags", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<string> Tags { get; set; }
+
+        /// <summary>檔案擴充描述</summary>
+        [Newtonsoft.Json.JsonProperty("extend_property", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Extend_property { get; set; }
+
+        /// <summary>檔案的網際網路媒體型式</summary>
+        [Newtonsoft.Json.JsonProperty("mime_type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Mime_type { get; set; }
+
+        /// <summary>建立時間</summary>
+        [Newtonsoft.Json.JsonProperty("create_date_time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset Create_date_time { get; set; }
+
+        /// <summary>最後更新時間</summary>
+        [Newtonsoft.Json.JsonProperty("update_date_time", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTimeOffset? Update_date_time { get; set; }
+
+        /// <summary>狀態</summary>
+        [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public System.Collections.Generic.ICollection<FileEntityStatus> Status { get; set; }
+
+        /// <summary>取得或設定存在的儲存集合清單</summary>
+        [Newtonsoft.Json.JsonProperty("storage_summary_responses", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<StorageSummaryResponse> Storage_summary_responses { get; set; }
+
+
+    }
+
+    /// <summary>分頁後的回應結果</summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
+    public partial class ChildFileEntityResponsePagedResponse
+    {
+        /// <summary>取得或設定資料</summary>
+        [Newtonsoft.Json.JsonProperty("value", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.Collections.Generic.ICollection<ChildFileEntityResponse> Value { get; set; }
+
+        /// <summary>取得或設定資料總數</summary>
+        [Newtonsoft.Json.JsonProperty("@odata.count", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int OdataCount { get; set; }
 
 
     }

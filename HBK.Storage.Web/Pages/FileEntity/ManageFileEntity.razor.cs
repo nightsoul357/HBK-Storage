@@ -19,6 +19,19 @@ namespace HBK.Storage.Web.Pages.FileEntity
         private string _searchString = null;
         private int[] _timerInterval = { 2000, 4000, 8000, 16000, 32000, 64000 };
         private int _timerIntervalIndex = 0;
+        private bool _isDisplayChildFileEntity = false;
+        public bool IsDisplayChildFileEntity
+        {
+            get
+            {
+                return _isDisplayChildFileEntity;
+            }
+            set
+            {
+                _isDisplayChildFileEntity = value;
+                _table.ReloadServerData();
+            }
+        }
         public Timer Timer { get; set; }
         [Inject]
         public HBKStorageApi HBKStorageApi { get; set; }
@@ -35,16 +48,25 @@ namespace HBK.Storage.Web.Pages.FileEntity
         /// </summary>
         public async Task<TableData<FileEntityResponse>> ServerReloadAsync(TableState state)
         {
-            string filter = "parent_file_entity_id eq null";
+            string filter = null;
             string order = null;
 
+            if (!this.IsDisplayChildFileEntity)
+            {
+                filter += $"parent_file_entity_id eq null and ";
+            }
             if (!string.IsNullOrEmpty(_searchString))
             {
-                filter += $"& contains(name,'{_searchString}')";
+                filter += $"(contains(name,'{_searchString}') or contains(cast(file_entity_id, 'Edm.String'),'{_searchString}'))";
             }
             if (!string.IsNullOrEmpty(state.SortLabel))
             {
                 order = $"{state.SortLabel} {(state.SortDirection == SortDirection.Ascending ? "asc" : "desc")}";
+            }
+
+            if (filter != null)
+            {
+                filter = filter.Trim("and ".ToArray());
             }
 
             var response = await this.HBKStorageApi.FileentitiesGET2Async(this.StateContainer.StorageProvider.Storage_provider_id, filter, order, state.Page, state.PageSize);

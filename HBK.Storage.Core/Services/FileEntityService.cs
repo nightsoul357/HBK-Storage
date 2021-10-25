@@ -92,31 +92,20 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public IQueryable<ChildFileEntity> GetChildFileEntitiesQuery(Guid rootFileEntityId)
         {
-
-            //var query = (from vw in _dbContext.VwFileEntityRecursive
-            //             join fileEntity in _dbContext.FileEntity
-            //             on vw.FileEntityId equals fileEntity.FileEntityId
-            //             select new ChildFileEntity()
-            //             {
-            //                 ChildLevel = vw.ChildLevel,
-            //                 FileEntity = fileEntity,
-            //                 RootFileEntityId = vw.RootFileEntityId
-            //             });
-
             var query = _dbContext.FileEntity
                 .Include(x => x.FileEntityTag)
                 .Join(
                 _dbContext.VwFileEntityRecursive,
-                f => f.FileEntityId,
-                vw => vw.FileEntityId,
-                (f, vw) => new ChildFileEntity()
+                fileEntity => fileEntity.FileEntityId,
+                child => child.FileEntityId,
+                (fileEntity, child) => new ChildFileEntity()
                 {
-                    ChildLevel = vw.ChildLevel,
-                    FileEntity = f,
-                    RootFileEntityId = vw.RootFileEntityId
-                });
+                    ChildLevel = child.ChildLevel,
+                    FileEntity = fileEntity,
+                    RootFileEntityId = child.RootFileEntityId
+                })
+                .Where(x => x.RootFileEntityId == rootFileEntityId);
 
-            var temp = query.ToQueryString();
             return query;
         }
         #endregion

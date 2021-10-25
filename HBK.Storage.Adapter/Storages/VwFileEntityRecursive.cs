@@ -10,7 +10,6 @@ namespace HBK.Storage.Adapter.Storages
     /// <summary>
     /// 檔案實體遞迴解析結果
     /// </summary>
-    [Keyless]
     public partial class VwFileEntityRecursive
     {
         /// <summary>
@@ -21,6 +20,7 @@ namespace HBK.Storage.Adapter.Storages
         /// <summary>
         /// 取得或設定檔案 ID
         /// </summary>
+        [Key] // For Subquery, It not uniqe, be sure the query has correct filter
         [Column("FileEntityID")]
         public Guid? FileEntityId { get; set; }
         /// <summary>
