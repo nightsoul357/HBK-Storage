@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HBK.Storage.Adapter.DataAnnotations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,6 +28,7 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得或設定值
         /// </summary>
         [Required]
+        [Filterable]
         public string Value { get; set; }
 
         /// <summary>

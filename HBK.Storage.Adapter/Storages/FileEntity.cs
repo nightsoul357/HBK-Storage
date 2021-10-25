@@ -121,6 +121,7 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得或設定檔案實體標籤集合
         /// </summary>
         [InverseProperty("FileEntity")]
+        [Filterable]
         public virtual ICollection<FileEntityTag> FileEntityTag { get; set; }
 
         DateTimeOffset? ITimeStampModel.UpdateDateTime { get => this.UpdateDateTime; set => this.UpdateDateTime = value; }
