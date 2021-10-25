@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using HBK.Storage.Adapter.DataAnnotations;
 using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -40,10 +41,13 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         [Required]
         [StringLength(255)]
+        [Sortable]
+        [Filterable]
         public string Name { get; set; }
         /// <summary>
         /// 取得建立時間
         /// </summary>
+        [Sortable]
         public DateTimeOffset CreateDateTime { get; internal set; }
         /// <summary>
         /// 取得最後更新時間

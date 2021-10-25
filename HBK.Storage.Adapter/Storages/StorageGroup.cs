@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using HBK.Storage.Adapter.DataAnnotations;
 using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Interfaces;
 using HBK.Storage.Adapter.Models;
@@ -45,14 +46,20 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         [Required]
         [StringLength(255)]
+        [Sortable]
+        [Filterable]
         public string Name { get; set; }
         /// <summary>
         /// 取得或設定類型
         /// </summary>
+        [Sortable]
+        [Filterable]
         public StorageTypeEnum Type { get; set; }
         /// <summary>
         /// 取得或設定同步模式
         /// </summary>
+        [Sortable]
+        [Filterable]
         public SyncModeEnum SyncMode { get; set; }
         /// <summary>
         /// 取得或設定同步策略
@@ -62,14 +69,19 @@ namespace HBK.Storage.Adapter.Storages
         /// <summary>
         /// 取得或設定上傳優先權
         /// </summary>
+        [Sortable]
+        [Filterable]
         public int UploadPriority { get; set; }
         /// <summary>
         /// 取得或設定下載優先權
         /// </summary>
+        [Sortable]
+        [Filterable]
         public int DownloadPriority { get; set; }
         /// <summary>
         /// 取得建立時間
         /// </summary>
+        [Sortable]
         public DateTimeOffset CreateDateTime { get; internal set; }
         /// <summary>
         /// 取得最後更新時間

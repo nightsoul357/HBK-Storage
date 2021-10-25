@@ -1,0 +1,57 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            檔案資訊
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" md="12">
+                <MudExpansionPanels MultiExpansion="true">
+                    <MudExpansionPanel Text="基本資訊" IsInitiallyExpanded="true">
+                        <MudGrid>
+                            <MudItem xs="12" sm="8" md="6">
+                                <MudTextField @bind-Value="this.FileEntity.Name" Label="名稱" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                            <MudItem xs="12" sm="8" md="6">
+                                <MudTextField Value="DataUnitFormatHelper.Format(this.FileEntity.Size)" Label="檔案大小" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                            <MudItem xs="12" sm="8" md="6">
+                                <MudTextField Value="this.FileEntity.Mime_type" Label="MimeType" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                            <MudItem xs="12" sm="8" md="6">
+                                <MudTextField Value="@(this.FileEntity.Status.Aggregate("",(s1,s2) => s1 + "," + s2).Trim(','))" Label="狀態" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                            <MudItem xs="12" sm="12" md="12">
+                                <MudTextField Converter="this.TagConverter" @bind-Value="this.FileEntity.Tags" Label="標籤" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                            <MudItem xs="12" sm="12" md="12">
+                                <MudTextField @bind-Value="this.FileEntity.Extend_property" Label="擴充資訊" Lines="3" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                        </MudGrid>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="儲存群組清單">
+                        <MudTable Items="@this.FileEntity.Storage_summary_responses" Dense="false" Hover="true" Bordered="false" Striped="false">
+                            <HeaderContent>
+                                <MudTh>儲存群組名稱</MudTh>
+                                <MudTh>儲存個體名稱</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd>@context.Storage_group_response.Name</MudTd>
+                                <MudTd>@context.Name</MudTd>
+                            </RowTemplate>
+                            <PagerContent>
+                                <MudTablePager />
+                            </PagerContent>
+                        </MudTable>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="子檔案清單">
+
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+    </DialogActions>
+</MudDialog>

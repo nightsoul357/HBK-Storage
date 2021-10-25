@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Core.Enums;
+﻿using HBK.Storage.Api.DataAnnotations;
+using HBK.Storage.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace HBK.Storage.Api.Models.FileService
         /// <summary>
         /// 存取檔案權杖類型
         /// </summary>
+        [StatusEnum(typeof(FileAccessTokenTypeEnum))]
         public FileAccessTokenTypeEnum FileAccessTokenType { get; set; }
         /// <summary>
         /// 過期分鐘

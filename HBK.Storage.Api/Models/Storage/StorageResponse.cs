@@ -32,7 +32,7 @@ namespace HBK.Storage.Api.Models.Storage
         /// <summary>
         /// 存取儲存個體的驗證資訊
         /// </summary>
-        public StorageCredentialsBase Credentials { get; set; }
+        public string Credentials { get; set; }
         /// <summary>
         /// 建立時間
         /// </summary>

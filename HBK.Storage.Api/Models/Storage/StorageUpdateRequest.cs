@@ -1,5 +1,6 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.StorageCredentials;
+using HBK.Storage.Api.DataAnnotations;
 using HBK.Storage.Api.JsonConverters;
 using HBK.Storage.Api.ModelBinders;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ namespace HBK.Storage.Api.Models.Storage
         /// <summary>
         /// 類型
         /// </summary>
+        [StatusEnum(typeof(StorageTypeEnum))]
         public StorageTypeEnum Type { get; set; }
         /// <summary>
         /// 檔案大小限制(單位 Bytes)

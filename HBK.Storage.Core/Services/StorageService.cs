@@ -54,6 +54,10 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public async Task<Adapter.Storages.Storage> AddAsync(Adapter.Storages.Storage storage)
         {
+            if (storage.StorageId == default)
+            {
+                storage.StorageId = Guid.NewGuid();
+            }
             _dbContext.Storage.Add(storage);
             await _dbContext.SaveChangesAsync();
             return await this.FindByIdAsync(storage.StorageId);
@@ -83,7 +87,7 @@ namespace HBK.Storage.Core.Services
         public async Task DeleteAsync(Guid storageId)
         {
             _ = await _dbContext.Database
-                .ExecuteSqlRawAsync($"Update FileEntityStorage Set IsMarkDelete = true Where StorgeID = '{storageId}'");
+                .ExecuteSqlRawAsync($"Update FileEntityStorage Set IsMarkDelete = 'true' Where StorageID = '{storageId}'");
             _dbContext.Storage.Remove(await _dbContext.Storage.FirstAsync(x => x.StorageId == storageId));
             await _dbContext.SaveChangesAsync();
         }

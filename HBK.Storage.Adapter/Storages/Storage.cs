@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using HBK.Storage.Adapter.DataAnnotations;
 using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Interfaces;
 using HBK.Storage.Adapter.StorageCredentials;
@@ -45,14 +46,19 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         [Required]
         [StringLength(255)]
+        [Sortable]
+        [Filterable]
         public string Name { get; set; }
         /// <summary>
         /// 取得或設定類型
         /// </summary>
+        [Sortable]
+        [Filterable]
         public StorageTypeEnum Type { get; set; }
         /// <summary>
         /// 取得或設定檔案大小限制(單位 Bytes)
         /// </summary>
+        [Sortable]
         public long SizeLimit { get; set; }
         /// <summary>
         /// 取得或設定存取儲存個體的驗證資訊
@@ -63,6 +69,7 @@ namespace HBK.Storage.Adapter.Storages
         /// <summary>
         /// 取得建立時間
         /// </summary>
+        [Sortable]
         public DateTimeOffset CreateDateTime { get; internal set; }
         /// <summary>
         /// 取得最後更新時間

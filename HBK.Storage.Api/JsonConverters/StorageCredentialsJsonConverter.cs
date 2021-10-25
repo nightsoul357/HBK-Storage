@@ -40,7 +40,7 @@ namespace HBK.Storage.Api.JsonConverters
                 string source = obj.ToString();
                 var settings = serializer.CopySettings();
                 StorageCredentialsBase result = JsonConvert.DeserializeObject<FTPStorageCredentials>(source, settings);
-                return (StorageCredentialsBase)JsonConvert.DeserializeObject(source, result.StorageType.GetConvertType());
+                return (StorageCredentialsBase)JsonConvert.DeserializeObject(source, result.StorageType.GetConvertType(), settings);
             }
         }
 

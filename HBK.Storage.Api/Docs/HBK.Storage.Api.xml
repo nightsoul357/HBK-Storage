@@ -191,6 +191,14 @@
             <param name="storageGroupId">強制指定儲存個體群組 ID</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.GetChildFileEntities(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Core.Models.ChildFileEntity})">
+            <summary>
+            取得指定檔案的所有子檔案(遞迴查詢)
+            </summary>
+            <param name="fileEntityId">檔案 ID</param>
+            <param name="queryOptions">查詢參數</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Api.Controllers.FileEntityController.AppendTag(System.Guid,HBK.Storage.Api.Models.FileEntity.AppendTagRequest)">
             <summary>
             附加檔案實體標籤
@@ -229,6 +237,13 @@
             <param name="fileEntityService">檔案實體服務</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.BuildChildFileEntityResponse(HBK.Storage.Core.Models.ChildFileEntity)">
+            <summary>
+            產生 Child 的檔案實體回應內容
+            </summary>
+            <param name="childFileEntity">Child 的檔案實體</param>
+            <returns></returns>
+        </member>
         <member name="T:HBK.Storage.Api.Controllers.HBKControllerBase">
             <summary>
             HBK Storage 使用的基底控制器
@@ -261,12 +276,13 @@
             儲存個體控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.StorageController.#ctor(HBK.Storage.Core.Services.StorageService,Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.Controllers.StorageController})">
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.#ctor(HBK.Storage.Core.Services.StorageService,Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.Controllers.StorageController},Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Mvc.MvcNewtonsoftJsonOptions})">
             <summary>
             建構一個新的執行個體
             </summary>
             <param name="storageService"></param>
             <param name="logger"></param>
+            <param name="jsonOptions"></param>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageController.Get(System.Guid)">
             <summary>
@@ -290,11 +306,12 @@
             <param name="storageId">儲存個體 ID</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.StorageController.BuildStorageResponse(HBK.Storage.Adapter.Storages.Storage)">
+        <member name="M:HBK.Storage.Api.Controllers.StorageController.BuildStorageResponse(HBK.Storage.Adapter.Storages.Storage,Newtonsoft.Json.JsonSerializerSettings)">
             <summary>
             產生儲存個體回應內容
             </summary>
             <param name="storage">儲存個體</param>
+            <param name="jsonSerializerSettings"></param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageController.BuildStorageSummaryResponse(HBK.Storage.Adapter.Storages.Storage)">
@@ -309,12 +326,13 @@
             儲存個體集合控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.#ctor(HBK.Storage.Core.Services.StorageGroupService,HBK.Storage.Core.Services.StorageService)">
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.#ctor(HBK.Storage.Core.Services.StorageGroupService,HBK.Storage.Core.Services.StorageService,Microsoft.Extensions.Options.IOptions{Microsoft.AspNetCore.Mvc.MvcNewtonsoftJsonOptions})">
             <summary>
             建立一個新的執行個體
             </summary>
             <param name="storageGroupService"></param>
             <param name="storageService"></param>
+            <param name="jsonOptions"></param>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.Get(System.Guid)">
             <summary>
@@ -354,6 +372,13 @@
             <param name="queryOptions">OData 查詢選項</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.TestSyncPolicy(HBK.Storage.Api.Models.StorageGroup.TestSyncPolicyRequest)">
+            <summary>
+            測試同步策略
+            </summary>
+            <param name="request">測試同步策略請求內容</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.BuildStorageGroupResponse(HBK.Storage.Adapter.Storages.StorageGroup)">
             <summary>
             產生儲存個體集合回應內容
@@ -377,7 +402,7 @@
             <param name="fileAccessTokenFactory"></param>
             <param name="logger"></param>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GET(System.Guid)">
+        <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.Get(System.Guid)">
             <summary>
             取得指定 ID 之儲存服務
             </summary>
@@ -622,6 +647,19 @@
             <param name="enumType">列舉類型</param>
         </member>
         <member name="M:HBK.Storage.Api.DataAnnotations.StatusEnumAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            判斷是否有效
+            </summary>
+            <param name="value"></param>
+            <param name="validationContext"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.DataAnnotations.SyncRuleAttribute">
+            <summary>
+            判斷同步規則是否符合格式
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.DataAnnotations.SyncRuleAttribute.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
             <summary>
             判斷是否有效
             </summary>
@@ -1052,6 +1090,21 @@
             取得或設定標籤
             </summary>
         </member>
+        <member name="T:HBK.Storage.Api.Models.FileEntity.ChildFileEntityResponse">
+            <summary>
+            Child 的檔案實體回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.ChildFileEntityResponse.RootFileEntityId">
+            <summary>
+            根檔案 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.ChildFileEntityResponse.ChildLevel">
+            <summary>
+            與根檔案相差的層數
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Api.Models.FileEntity.DeleteTagRequest">
             <summary>
             刪除檔案實體標籤請求內容
@@ -1398,6 +1451,67 @@
         <member name="P:HBK.Storage.Api.Models.StorageGroup.StorageGroupUpdateRequest.Status">
             <summary>
             狀態
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageGroup.SyncPolicyRequest">
+            <summary>
+            同步規則請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.SyncPolicyRequest.Rule">
+            <summary>
+            規則
+            </summary>
+            <example>Name.Contains(\"test\")</example>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageGroup.TestSyncPolicyRequest">
+            <summary>
+            測試同步策略請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.TestSyncPolicyRequest.Name">
+            <summary>
+            檔案名稱
+            </summary>
+            <example>test.mp4</example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.TestSyncPolicyRequest.Size">
+            <summary>
+            檔案大小(單位 Bytes)
+            </summary>
+            <example>104929280</example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.TestSyncPolicyRequest.ExtendProperty">
+            <summary>
+            檔案擴充描述
+            </summary>
+            <example>This is some information...</example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.TestSyncPolicyRequest.MimeType">
+            <summary>
+            檔案的網際網路媒體型式
+            </summary>
+            <example>video/mp4</example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.TestSyncPolicyRequest.Tags">
+            <summary>
+            檔案的標籤清單
+            </summary>
+            <example>["video","hbk"]</example>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.TestSyncPolicyRequest.SyncPolicy">
+            <summary>
+            規則
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.StorageGroup.TestSyncPolicyResponse">
+            <summary>
+            測試同步策略回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.StorageGroup.TestSyncPolicyResponse.IsPass">
+            <summary>
+            是否通過
             </summary>
         </member>
         <member name="T:HBK.Storage.Api.Models.StorageProvider.StorageProviderAddRequest">

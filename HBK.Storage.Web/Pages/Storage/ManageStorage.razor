@@ -1,0 +1,60 @@
+﻿@page "/storage/manage"
+@attribute [Authorize]
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
+    <MudGrid>
+        <MudItem xs="12" md="12">
+            <MudText Typo="Typo.h3" GutterBottom="true">管理 @this.StateContainer.StorageGroup.Name 內的所有儲存個體</MudText>
+        </MudItem>
+        <MudItem xs="12" md="12">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="this.ShowAddDialogAsync">新增儲存個體</MudButton>
+        </MudItem>
+        <MudItem xs="12" md="12">
+            <MudTable ServerData="@(new Func<TableState, Task<TableData<StorageResponse>>>(this.ServerReloadAsync))"
+                      Dense="true" Hover="true" @ref="_table">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">儲存個體列表</MudText>
+                    <MudSpacer />
+                    <MudTextField T="string" ValueChanged="@(async s => await this.OnSearchAsync(s))" Placeholder="Search" Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>儲存個體 ID</MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="name" T="StorageResponse">名稱</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="type" T="StorageResponse">類型</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="size_limit" T="StorageResponse">檔案容量限制</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortLabel="create_date_time" T="StorageResponse">建立時間</MudTableSortLabel></MudTh>
+                    <MudTh>狀態</MudTh>
+                    <MudTh>功能</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.Storage_id</MudTd>
+                    <MudTd DataLabel="name">@context.Name</MudTd>
+                    <MudTd DataLabel="type">@context.Type.ToString()</MudTd>
+                    <MudTd DataLabel="size_limit">@DataUnitFormatHelper.Format(context.Size_limit)</MudTd>
+                    <MudTd DataLabel="create_date_time">@context.Create_date_time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
+                    <MudTd>
+                        @foreach (var status in context.Status)
+                        {
+<MudText>
+    @status.ToString()
+</MudText>}
+                    </MudTd>
+                    <MudTd>
+                        <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Info" OnClick="async () => await this.ShowEditDialogAsync(context)">編輯</MudButton>
+                        <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="async () => await this.ShowDeleteDialogAsync(context)">刪除</MudButton>
+                    </MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText>未找到任何資料</MudText>
+                </NoRecordsContent>
+                <LoadingContent>
+                    <MudText>正在載入中...</MudText>
+                </LoadingContent>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

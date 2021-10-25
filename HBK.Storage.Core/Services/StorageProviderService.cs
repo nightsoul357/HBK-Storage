@@ -2,6 +2,7 @@
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Models;
+using HBK.Storage.Core.Strategies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -282,16 +283,7 @@ namespace HBK.Storage.Core.Services
 
                     if (targetStorageGroup.SyncMode == SyncModeEnum.Policy)
                     {
-                        if (targetStorageGroup.SyncPolicy.TagMatchMode == TagMatchModeEnum.All)
-                        {
-                            fileEntitiesQuery = fileEntitiesQuery
-                                .Where(f => f.FileEntityTag.All(st => EF.Functions.Like(st.Value, targetStorageGroup.SyncPolicy.TagRule)));
-                        }
-                        else
-                        {
-                            fileEntitiesQuery = fileEntitiesQuery
-                                .Where(f => f.FileEntityTag.Any(st => EF.Functions.Like(st.Value, targetStorageGroup.SyncPolicy.TagRule)));
-                        }
+                        fileEntitiesQuery = fileEntitiesQuery.ApplyPolicy(targetStorageGroup.SyncPolicy);
                     }
 
                     var fileEntities = await fileEntitiesQuery.Take(takeCount - result.Count).ToListAsync();

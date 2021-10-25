@@ -290,6 +290,11 @@
             標籤驗證模式列舉
             </summary>
         </member>
+        <member name="F:HBK.Storage.Adapter.Enums.TagMatchModeEnum.None">
+            <summary>
+            無
+            </summary>
+        </member>
         <member name="F:HBK.Storage.Adapter.Enums.TagMatchModeEnum.All">
             <summary>
             所有
@@ -434,6 +439,11 @@
         <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.StorageProvider">
             <summary>
             取得或設定儲存服務資料集
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.VwFileEntityRecursive">
+            <summary>
+            取得或設定檔案實體遞迴解析結果資料集
             </summary>
         </member>
         <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)">
@@ -1163,6 +1173,26 @@
             取得或設定檔案存取權杖集合
             </summary>
         </member>
+        <member name="T:HBK.Storage.Adapter.Storages.VwFileEntityRecursive">
+            <summary>
+            檔案實體遞迴解析結果
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwFileEntityRecursive.RootFileEntityId">
+            <summary>
+            取得或設定根檔案 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwFileEntityRecursive.FileEntityId">
+            <summary>
+            取得或設定檔案 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwFileEntityRecursive.ChildLevel">
+            <summary>
+            取得或設定於根檔案相距層數
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Interfaces.ICreatedDateModel">
             <summary>
             支援建立時間模型介面
@@ -1201,16 +1231,6 @@
         <member name="P:HBK.Storage.Adapter.Models.SyncPolicy.Rule">
             <summary>
             取得或設定規則
-            </summary>
-        </member>
-        <member name="P:HBK.Storage.Adapter.Models.SyncPolicy.TagRule">
-            <summary>
-            取得或設定標籤驗證規則
-            </summary>
-        </member>
-        <member name="P:HBK.Storage.Adapter.Models.SyncPolicy.TagMatchMode">
-            <summary>
-            取得或設定標籤驗證模式
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials">
@@ -1271,6 +1291,11 @@
         <member name="T:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials">
             <summary>
             Google Drive 使用的驗證資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials.#ctor">
+            <summary>
+            初始化 Google Drive 使用的驗證資訊
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials.Parent">

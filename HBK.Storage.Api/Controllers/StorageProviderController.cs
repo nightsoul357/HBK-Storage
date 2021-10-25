@@ -63,7 +63,7 @@ namespace HBK.Storage.Api.Controllers
         [HttpGet("{storageProviderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<StorageProviderResponse> GET(
+        public async Task<StorageProviderResponse> Get(
             [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
             [ExistInDatabase(typeof(StorageProvider))] Guid storageProviderId)
         {
@@ -85,6 +85,14 @@ namespace HBK.Storage.Api.Controllers
         public async Task<ActionResult<PagedResponse<StorageProviderResponse>>> List([FromServices] ODataQueryOptions<StorageProvider> queryOptions)
         {
             var query = _storageProviderService.ListQuery();
+
+            if (base.AuthorizeKey.Value.Type == AuthorizeKeyTypeEnum.Normal)
+            {
+                var authorizeKeyId = base.AuthorizeKey.Value.AuthorizeKeyId;
+                query = query
+                    .Where(storageProvider => storageProvider.AuthorizeKeyScope
+                        .Any(scope => scope.AuthorizeKeyId == authorizeKeyId && scope.AllowOperationType == AuthorizeKeyScopeOperationTypeEnum.Read));
+            }
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storageProvider => StorageProviderController.BuildStorageProviderResponse(storageProvider)),
@@ -163,7 +171,10 @@ namespace HBK.Storage.Api.Controllers
                 Status = request.Status.UnflattenFlags(),
                 StorageProviderId = storageProviderId,
                 SyncMode = request.SyncMode,
-                SyncPolicy = request.SyncPolicy,
+                SyncPolicy = new Adapter.Models.SyncPolicy()
+                {
+                    Rule = request.SyncPolicy.Rule
+                },
                 UploadPriority = request.UploadPriority,
                 DownloadPriority = request.DownloadPriority,
                 Type = request.Type

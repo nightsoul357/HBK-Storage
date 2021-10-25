@@ -1,0 +1,68 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            @(this.IsEditMode ? "編輯儲存個體" : "新增儲存個體")
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" sm="8" md="6">
+                <MudTextField @bind-Value="this.Name" Label="名稱" Variant="Variant.Outlined" Required="true" />
+            </MudItem>
+            <MudItem xs="12" sm="8" md="6">
+                <MudSelect @bind-Value="this.StorageType" T="StorageType" Label="類型" Variant="Variant.Outlined" ReadOnly="this.IsEditMode">
+                    @foreach (StorageType item in Enum.GetValues(typeof(StorageType)))
+                    {
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            @switch (this.StorageType)
+            {
+                case StorageType.Local:
+                    {
+                        <HBK.Storage.Web.Pages.Storage.Credential.LocalCredentialComponent Credential="this.IsEditMode ? JsonConvert.DeserializeObject<LocalStorageCredentials>(this.EditStorage.Credentials) : null" @ref="this.CredentialsComponent" />
+                        break;
+                    }
+                case StorageType.Amazon_s3:
+                    {
+                        <HBK.Storage.Web.Pages.Storage.Credential.AmazonS3CredentialComponent Credential="this.IsEditMode ? JsonConvert.DeserializeObject<AmazonS3StorageCredentials>(this.EditStorage.Credentials) : null" @ref="this.CredentialsComponent" />
+                        break;
+                    }
+                case StorageType.Ftp:
+                    {
+                        <HBK.Storage.Web.Pages.Storage.Credential.FTPCredentialComponent Credential="this.IsEditMode ? JsonConvert.DeserializeObject<FTPStorageCredentials>(this.EditStorage.Credentials) : null" @ref="this.CredentialsComponent" />
+                        break;
+                    }
+                case StorageType.Mega:
+                    {
+                        <HBK.Storage.Web.Pages.Storage.Credential.MegaCredentialComponent Credential="this.IsEditMode ? JsonConvert.DeserializeObject<MegaStorageCredentials>(this.EditStorage.Credentials) : null" @ref="this.CredentialsComponent" />
+                        break;
+                    }
+                case StorageType.Google_drive:
+                    {
+                        <HBK.Storage.Web.Pages.Storage.Credential.GoogleDriveCredentailComponent Credential="this.IsEditMode ? JsonConvert.DeserializeObject<GoogleDriveCredentials>(this.EditStorage.Credentials) : null" @ref="this.CredentialsComponent" />
+                        break;
+                    }
+            }
+            <MudItem xs="12" sm="8" md="6">
+                <MudNumericField @bind-Value="this.SizeLimit" Label="檔案容量上限" Variant="Variant.Text" Min="0" Max="long.MaxValue" HideSpinButtons="true" Adornment="Adornment.End" AdornmentText="Bytes" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="this.Cancel">取消</MudButton>
+        @if (this.IsEditMode)
+        {
+            if (this.EditStorage.Status.Contains(StorageStatus.Disable))
+            {
+                <MudButton Color="Color.Primary" OnClick="this.Enable">啟用</MudButton>
+            }
+            else
+            {
+                <MudButton Color="Color.Error" OnClick="this.Disable">停用</MudButton>
+            }
+        }
+        <MudButton Color="Color.Primary" OnClick="this.SaveChangeAsync">@(this.IsEditMode ? "儲存" : "新增")</MudButton>
+    </DialogActions>
+</MudDialog>

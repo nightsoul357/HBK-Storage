@@ -12,6 +12,13 @@ namespace HBK.Storage.Adapter.StorageCredentials
     public class GoogleDriveCredentials : StorageCredentialsBase
     {
         /// <summary>
+        /// 初始化 Google Drive 使用的驗證資訊
+        /// </summary>
+        public GoogleDriveCredentials()
+        {
+            this.Tokens = new Dictionary<string, string>();
+        }
+        /// <summary>
         /// 取得或設定父資料夾 ID
         /// </summary>
         public string Parent { get; set; }

@@ -1,5 +1,6 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Models;
+using HBK.Storage.Api.DataAnnotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,15 +22,17 @@ namespace HBK.Storage.Api.Models.StorageGroup
         /// <summary>
         /// 類型
         /// </summary>
+        [StatusEnum(typeof(StorageTypeEnum))]
         public StorageTypeEnum Type { get; set; }
         /// <summary>
         /// 同步模式
         /// </summary>
+        [StatusEnum(typeof(SyncModeEnum))]
         public SyncModeEnum SyncMode { get; set; }
         /// <summary>
         /// 同步策略
         /// </summary>
-        public SyncPolicy SyncPolicy { get; set; }
+        public SyncPolicyRequest SyncPolicy { get; set; }
         /// <summary>
         /// 上傳優先度
         /// </summary>

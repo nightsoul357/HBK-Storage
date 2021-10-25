@@ -19,7 +19,8 @@
             <MudText Typo="Typo.subtitle2">HBK Storage Dashboard</MudText>
         </MudHidden>
         <MudSpacer />
-
+        <MudText Typo="Typo.subtitle2">@this.AuthorizeKey.Type.ToString() / @this.AuthorizeKey.Name</MudText>
+        <MudIconButton Icon="@Icons.Material.Outlined.Logout" Color="Color.Inherit" OnClick="this.SignOut" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="_themeManager.DrawerElevation" ClipMode="_themeManager.DrawerClipMode">
         <NavMenu />
@@ -27,7 +28,7 @@
     <MudMainContent>
         <MudHidden Breakpoint="Breakpoint.SmAndDown">
             <MudToolBar DisableGutters="true">
-                <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" Class="ml-3" />
+                <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => this.DrawerToggle())" Class="ml-3" />
                 <MudSpacer />
             </MudToolBar>
         </MudHidden>

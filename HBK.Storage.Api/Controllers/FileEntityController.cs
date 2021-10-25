@@ -1,8 +1,12 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Api.DataAnnotations;
+using HBK.Storage.Api.Models;
 using HBK.Storage.Api.Models.FileEntity;
+using HBK.Storage.Api.OData;
+using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
+using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -62,7 +66,32 @@ namespace HBK.Storage.Api.Controllers
                 FileDownloadName = fileEntity.Name
             };
         }
-
+        /// <summary>
+        /// 取得指定檔案的所有子檔案(遞迴查詢)
+        /// </summary>
+        /// <param name="fileEntityId">檔案 ID</param>
+        /// <param name="queryOptions">查詢參數</param>
+        /// <returns></returns>
+        [HttpGet("{fileEntityId}/childs")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [EnableODataQuery(AllowedQueryOptions =
+            AllowedQueryOptions.Filter |
+            AllowedQueryOptions.Skip |
+            AllowedQueryOptions.Top |
+            AllowedQueryOptions.OrderBy,
+            MaxTop = 100)]
+        public async Task<PagedResponse<ChildFileEntityResponse>> GetChildFileEntities(
+            [ExampleParameter("ba337d2f-760b-473e-b077-d352277651e2")]
+            [ExistInDatabase(typeof(FileEntity))]Guid fileEntityId,
+            [FromServices] ODataQueryOptions<ChildFileEntity> queryOptions)
+        {
+            var query = _fileEntityService.GetChildFileEntitiesQuery(fileEntityId);
+            return await base.PagedResultAsync(queryOptions, query, (data) =>
+                data.Select(childFileEntity => FileEntityController.BuildChildFileEntityResponse(childFileEntity)),
+                100
+            );
+        }
         /// <summary>
         /// 附加檔案實體標籤
         /// </summary>
@@ -153,6 +182,28 @@ namespace HBK.Storage.Api.Controllers
                 Tags = fileEntity.FileEntityTag.Select(x => x.Value).ToList(),
                 UpdateDateTime = fileEntity.UpdateDateTime?.LocalDateTime,
                 StorageSummaryResponses = storage.Select(x => StorageController.BuildStorageSummaryResponse(x)).ToList(),
+            };
+        }
+        /// <summary>
+        /// 產生 Child 的檔案實體回應內容
+        /// </summary>
+        /// <param name="childFileEntity">Child 的檔案實體</param>
+        /// <returns></returns>
+        internal static ChildFileEntityResponse BuildChildFileEntityResponse(ChildFileEntity childFileEntity)
+        {
+            return new ChildFileEntityResponse()
+            {
+                CreateDateTime = childFileEntity.FileEntity.CreateDateTime.LocalDateTime,
+                ExtendProperty = childFileEntity.FileEntity.ExtendProperty,
+                FileEntityId = childFileEntity.FileEntity.FileEntityId,
+                MimeType = childFileEntity.FileEntity.MimeType,
+                Name = childFileEntity.FileEntity.Name,
+                Size = childFileEntity.FileEntity.Size,
+                Status = childFileEntity.FileEntity.Status.FlattenFlags(),
+                Tags = childFileEntity.FileEntity.FileEntityTag.Select(x => x.Value).ToList(),
+                UpdateDateTime = childFileEntity.FileEntity.UpdateDateTime?.LocalDateTime,
+                ChildLevel = childFileEntity.ChildLevel,
+                RootFileEntityId = childFileEntity.RootFileEntityId
             };
         }
     }

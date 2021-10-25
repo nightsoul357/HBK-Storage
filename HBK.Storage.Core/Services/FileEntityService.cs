@@ -1,5 +1,6 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -83,6 +84,40 @@ namespace HBK.Storage.Core.Services
             }
             await _dbContext.SaveChangesAsync();
             return result;
+        }
+        /// <summary>
+        /// 取得指定檔案的所有子檔案清單(遞迴查詢)
+        /// </summary>
+        /// <param name="rootFileEntityId">根檔案 ID</param>
+        /// <returns></returns>
+        public IQueryable<ChildFileEntity> GetChildFileEntitiesQuery(Guid rootFileEntityId)
+        {
+
+            //var query = (from vw in _dbContext.VwFileEntityRecursive
+            //             join fileEntity in _dbContext.FileEntity
+            //             on vw.FileEntityId equals fileEntity.FileEntityId
+            //             select new ChildFileEntity()
+            //             {
+            //                 ChildLevel = vw.ChildLevel,
+            //                 FileEntity = fileEntity,
+            //                 RootFileEntityId = vw.RootFileEntityId
+            //             });
+
+            var query = _dbContext.FileEntity
+                .Include(x => x.FileEntityTag)
+                .Join(
+                _dbContext.VwFileEntityRecursive,
+                f => f.FileEntityId,
+                vw => vw.FileEntityId,
+                (f, vw) => new ChildFileEntity()
+                {
+                    ChildLevel = vw.ChildLevel,
+                    FileEntity = f,
+                    RootFileEntityId = vw.RootFileEntityId
+                });
+
+            var temp = query.ToQueryString();
+            return query;
         }
         #endregion
         #region BAL

@@ -4,8 +4,6 @@
             @*<RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />*@
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
-                    <h3>You shall not pass!</h3>
-                    <img src="https://media.giphy.com/media/8abAbOrQ9rvLG/giphy.gif" class="img-fluid" />
                 </NotAuthorized>
             </AuthorizeRouteView>
         </Found>
@@ -35,4 +33,5 @@
             </LayoutView>
         </NotFound>
     </Router>
+
 </CascadingAuthenticationState>

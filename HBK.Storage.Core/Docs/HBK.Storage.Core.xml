@@ -871,6 +871,26 @@
             <param name="length">字串長度</param>
             <returns></returns>
         </member>
+        <member name="T:HBK.Storage.Core.Models.ChildFileEntity">
+            <summary>
+            Child 的檔案實體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.ChildFileEntity.RootFileEntityId">
+            <summary>
+            取得或設定根檔案 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.ChildFileEntity.FileEntity">
+            <summary>
+            取得或設定檔案實體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.Models.ChildFileEntity.ChildLevel">
+            <summary>
+            取得或設定於根檔案相距層數
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Core.Models.FileEntityStorageServiceOption">
             <summary>
             檔案位於儲存個體上的資訊服務選項
@@ -1205,6 +1225,13 @@
             批次更新檔案實體
             </summary>
             <param name="updateFileEntities"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetChildFileEntitiesQuery(System.Guid)">
+            <summary>
+            取得指定檔案的所有子檔案清單(遞迴查詢)
+            </summary>
+            <param name="rootFileEntityId">根檔案 ID</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.FileEntityService.GetAccessTimesAsync(System.Guid)">
@@ -1640,6 +1667,19 @@
             </summary>
             <param name="storageId">儲存個體 ID</param>
             <param name="storageCredentialsBase">儲存個體驗證資訊</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.Strategies.FileEntitySyncPolicyStrategy">
+            <summary>
+            檔案實體同步策略
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Strategies.FileEntitySyncPolicyStrategy.ApplyPolicy(System.Linq.IQueryable{HBK.Storage.Adapter.Storages.FileEntity},HBK.Storage.Adapter.Models.SyncPolicy)">
+            <summary>
+            附加策略篩選
+            </summary>
+            <param name="fileEntities">檔案實體清單</param>
+            <param name="syncPolicy">同步策略</param>
             <returns></returns>
         </member>
     </members>

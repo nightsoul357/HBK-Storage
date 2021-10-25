@@ -81,9 +81,9 @@ namespace HBK.Storage.Api
             {
                 options.AddPolicy(_corsPolicyName, builder =>
                 {
-                    builder.WithOrigins(this.Configuration.GetSection("CorsOrigins").Get<string[]>())
+                    builder.AllowAnyOrigin()
                         .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                        .WithHeaders("Content-Type", "Authorization", "Cache-Control", "X-Requested-With", "Accept");
+                        .WithHeaders("Content-Type", "Authorization", "Cache-Control", "X-Requested-With", "Accept", "HBKey");
                 });
             });
             // HSTS
@@ -247,6 +247,8 @@ namespace HBK.Storage.Api
 
             app.UseRouting();
 
+            app.UseCors(_corsPolicyName);
+
             app.UseAuthorization();
 
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
@@ -293,6 +295,8 @@ namespace HBK.Storage.Api
 
             // Models
             builder.EntitySet<StorageProvider>("StorageProviders");
+
+            builder.EntitySet<ChildFileEntity>("ChildFileEntitys");
 
             // ODataConventionModelBuilder 會自動加入相關聯的模型
             builder.OnModelCreating = builder =>

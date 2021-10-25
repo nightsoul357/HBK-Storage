@@ -63,7 +63,7 @@ namespace HBK.Storage.Api.Controllers
             var authorizeKey = await _authorizeKeyService.FindByKeyValueAsync(keyValue);
             if (authorizeKey == null)
             {
-                return base.NotFound();
+                return base.NotFound("Key Not Found");
             }
             return AuthorizeKeyController.BuildAuthorizeKeyResponse(authorizeKey);
         }

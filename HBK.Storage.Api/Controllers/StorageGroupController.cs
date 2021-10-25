@@ -6,9 +6,13 @@ using HBK.Storage.Api.Models.Storage;
 using HBK.Storage.Api.Models.StorageGroup;
 using HBK.Storage.Api.OData;
 using HBK.Storage.Core.Services;
+using HBK.Storage.Core.Strategies;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,16 +28,19 @@ namespace HBK.Storage.Api.Controllers
     {
         private readonly StorageGroupService _storageGroupService;
         private readonly StorageService _storageService;
+        private readonly JsonSerializerSettings _jsonSerializerSettings;
 
         /// <summary>
         /// 建立一個新的執行個體
         /// </summary>
         /// <param name="storageGroupService"></param>
         /// <param name="storageService"></param>
-        public StorageGroupController(StorageGroupService storageGroupService, StorageService storageService)
+        /// <param name="jsonOptions"></param>
+        public StorageGroupController(StorageGroupService storageGroupService, StorageService storageService, IOptions<MvcNewtonsoftJsonOptions> jsonOptions)
         {
             _storageGroupService = storageGroupService;
             _storageService = storageService;
+            _jsonSerializerSettings = jsonOptions.Value.SerializerSettings;
         }
 
         /// <summary>
@@ -71,7 +78,10 @@ namespace HBK.Storage.Api.Controllers
             storageGroup.Name = request.Name;
             storageGroup.Status = request.Status.UnflattenFlags();
             storageGroup.SyncMode = request.SyncMode;
-            storageGroup.SyncPolicy = request.SyncPolicy;
+            storageGroup.SyncPolicy = new Adapter.Models.SyncPolicy()
+            {
+                Rule = request.SyncPolicy.Rule
+            };
             storageGroup.UploadPriority = request.UploadPriority;
             storageGroup.DownloadPriority = request.DownloadPriority;
             storageGroup.Type = request.Type;
@@ -116,7 +126,7 @@ namespace HBK.Storage.Api.Controllers
                 StorageGroupId = storageGroupId,
                 Type = request.Type
             });
-            return StorageController.BuildStorageResponse(result);
+            return StorageController.BuildStorageResponse(result, _jsonSerializerSettings);
         }
         /// <summary>
         /// 取得儲存個體集合內的儲存個體集合，單次資料上限為 100 筆
@@ -142,11 +152,56 @@ namespace HBK.Storage.Api.Controllers
                 .Where(x => x.StorageGroupId == storageGroupId);
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
-                data.Select(storage => StorageController.BuildStorageResponse(storage)),
+                data.Select(storage => StorageController.BuildStorageResponse(storage, _jsonSerializerSettings)),
                 100
             );
         }
 
+        /// <summary>
+        /// 測試同步策略
+        /// </summary>
+        /// <param name="request">測試同步策略請求內容</param>
+        /// <returns></returns>
+        [HttpPost("testPolicy")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public TestSyncPolicyResponse TestSyncPolicy(TestSyncPolicyRequest request)
+        {
+            TestSyncPolicyResponse response = new TestSyncPolicyResponse();
+
+            var query = new List<FileEntity>() {
+                new FileEntity()
+                {
+                    ExtendProperty = request.ExtendProperty,
+                    FileEntityTag = request.Tags.Select(x => new FileEntityTag()
+                    {
+                        Value = x
+                    }).ToList(),
+                   MimeType = request.MimeType,
+                   Name = request.Name,
+                   Size = request.Size
+                }
+            }.AsQueryable();
+
+            query = query.ApplyPolicy(new Adapter.Models.SyncPolicy()
+            {
+                Rule = request.SyncPolicy.Rule
+            });
+
+            var result = query.ToList();
+
+            if (result.Count == 1)
+            {
+                response.IsPass = true;
+            }
+            else
+            {
+                response.IsPass = false;
+            }
+
+            return response;
+        }
         /// <summary>
         /// 產生儲存個體集合回應內容
         /// </summary>

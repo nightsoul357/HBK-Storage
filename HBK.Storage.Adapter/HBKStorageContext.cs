@@ -74,6 +74,10 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得或設定儲存服務資料集
         /// </summary>
         public virtual DbSet<StorageProvider> StorageProvider { get; set; }
+        /// <summary>
+        /// 取得或設定檔案實體遞迴解析結果資料集
+        /// </summary>
+        public virtual DbSet<VwFileEntityRecursive> VwFileEntityRecursive { get; set; }
 
         /// <summary>
         /// 設定資料庫實體
@@ -127,7 +131,7 @@ namespace HBK.Storage.Adapter.Storages
                     .HasConstraintName("FK_AuthorizeKeyScope_StorageProvider");
             });
 
-            modelBuilder.Entity<FileEntityStroageOperation>(entity => 
+            modelBuilder.Entity<FileEntityStroageOperation>(entity =>
             {
                 entity.HasKey(e => e.FileEntityStroageOperationNo)
                     .IsClustered();
@@ -189,7 +193,7 @@ namespace HBK.Storage.Adapter.Storages
                     .HasConstraintName("FK_FileAccessToken_StorageProvider");
             });
 
-            modelBuilder.Entity<FileEntityTag>(entity => 
+            modelBuilder.Entity<FileEntityTag>(entity =>
             {
                 entity.HasKey(e => e.FileEntityTagNo)
                     .IsClustered();
@@ -269,7 +273,7 @@ namespace HBK.Storage.Adapter.Storages
                 entity.HasOne(d => d.StorageGroup)
                     .WithMany(p => p.Storage)
                     .HasForeignKey(d => d.StorageGroupId)
-                    .OnDelete(DeleteBehavior.SetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Storage_StorageGroup");
 
                 entity.Property(e => e.StorageId).HasDefaultValueSql("(newid())");
@@ -303,7 +307,7 @@ namespace HBK.Storage.Adapter.Storages
                 entity.HasOne(d => d.StorageProvider)
                     .WithMany(p => p.StorageGroup)
                     .HasForeignKey(d => d.StorageProviderId)
-                    .OnDelete(DeleteBehavior.SetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_StorageGroup_StorageProvider");
 
                 // SoftDelete
@@ -325,6 +329,11 @@ namespace HBK.Storage.Adapter.Storages
 
                 // SoftDelete
                 entity.HasQueryFilter(model => model.DeleteDateTime == null);
+            });
+
+            modelBuilder.Entity<VwFileEntityRecursive>(entity =>
+            {
+                entity.ToView("vw_FileEntityRecursive");
             });
 
             OnModelCreatingPartial(modelBuilder);
