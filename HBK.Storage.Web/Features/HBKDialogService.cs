@@ -1,4 +1,5 @@
 ﻿using HBK.Storage.Web.DataSource;
+using HBK.Storage.Web.Pages.AuthorizeKey;
 using HBK.Storage.Web.Pages.FileEntity;
 using HBK.Storage.Web.Pages.Storage;
 using HBK.Storage.Web.Pages.StorageGroup;
@@ -150,6 +151,55 @@ namespace HBK.Storage.Web.Features
                 Position = DialogPosition.Center
             };
             var dialog = _dialogService.Show<FileEntityInforamtionDialog>("檔案資訊", parameters, options);
+            return dialog.Result;
+        }
+
+        public Task<DialogResult> ShowPublishAccessTokenAsync(FileEntityResponse fileEntity)
+        {
+            var parameters = new DialogParameters();
+            parameters.Add("FileEntity", fileEntity);
+            var options = new DialogOptions()
+            {
+                FullWidth = true,
+                MaxWidth = MaxWidth.Medium,
+                CloseButton = true,
+                DisableBackdropClick = true,
+                NoHeader = false,
+                Position = DialogPosition.Center
+            };
+            var dialog = _dialogService.Show<PublishAccessTokenDialog>("發行檔案連結", parameters, options);
+            return dialog.Result;
+        }
+
+        public Task<DialogResult> ShowEditAuthorizeKeyAsync(AuthorizeKeyResponse authorizeKey)
+        {
+            var parameters = new DialogParameters();
+            parameters.Add("EditAuthorizeKey", authorizeKey);
+            var options = new DialogOptions()
+            {
+                FullWidth = true,
+                MaxWidth = MaxWidth.Medium,
+                CloseButton = true,
+                DisableBackdropClick = true,
+                NoHeader = false,
+                Position = DialogPosition.Center
+            };
+            var dialog = _dialogService.Show<EditAuthorizeKeyDialog>("驗證金鑰內容", parameters, options);
+            return dialog.Result;
+        }
+
+        public Task<DialogResult> ShowAddAuthorizeKeyAsync()
+        {
+            var options = new DialogOptions()
+            {
+                FullWidth = true,
+                MaxWidth = MaxWidth.Medium,
+                CloseButton = true,
+                DisableBackdropClick = true,
+                NoHeader = false,
+                Position = DialogPosition.Center
+            };
+            var dialog = _dialogService.Show<EditAuthorizeKeyDialog>("編輯驗證金鑰", options);
             return dialog.Result;
         }
     }

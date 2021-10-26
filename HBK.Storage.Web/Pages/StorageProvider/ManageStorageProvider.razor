@@ -1,5 +1,6 @@
 ﻿@page "/storageProvider/manage"
 @page "/"
+@inherits PageBase<ManageStorageProvider>
 @attribute [Authorize]
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
@@ -18,6 +19,7 @@
                     <MudSpacer />
                     <MudTextField T="string" ValueChanged="@(async s => await this.OnSearchAsync(s))" Placeholder="Search" Adornment="Adornment.Start"
                                   AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    <MudIconButton Icon="@Icons.Material.Filled.Refresh" aria-label="refresh" OnClick="async () => await _table.ReloadServerData()"></MudIconButton>
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh>儲存提供者 ID</MudTh>

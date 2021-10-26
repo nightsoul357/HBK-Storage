@@ -11,7 +11,6 @@ namespace HBK.Storage.Core.Helpers
     /// </summary>
     public static class StringHelper
     {
-        private static Random random = new Random();
         /// <summary>
         /// 取得隨機英數字字串
         /// </summary>
@@ -19,6 +18,7 @@ namespace HBK.Storage.Core.Helpers
         /// <returns></returns>
         public static string GetRandomString(int length)
         {
+            Random random = new Random(Guid.NewGuid().GetHashCode());
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());

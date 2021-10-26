@@ -1259,6 +1259,13 @@
             <param name="rootFileEntityId">根檔案 ID</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityService.GetFileAccessTokenQuery(System.Guid)">
+            <summary>
+            取得檔案的存取權杖列表
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Core.Services.FileEntityService.GetAccessTimesAsync(System.Guid)">
             <summary>
             取得檔案總存取次數
@@ -1392,11 +1399,12 @@
             <param name="data"></param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.TryFetchFileInfoAsync(System.Guid)">
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.TryFetchFileInfoAsync(System.Guid,System.Boolean)">
             <summary>
             嘗試取得檔案資訊
             </summary>
             <param name="fileEntityStorageId">檔案位於儲存個體上的資訊 ID</param>
+            <param name="ignoreStorageSoftDelete">是否忽略儲存個體已被刪除</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.AddFetchFailRecordAsync(System.Guid,System.String)">
@@ -1442,6 +1450,14 @@
             </summary>
             <param name="fileEntityStorageId">檔案位於儲存個體上的橋接資訊 ID</param>
             <param name="message">訊息</param>
+        </member>
+        <member name="M:HBK.Storage.Core.Services.FileEntityStorageService.DeleteSyncingFileEntityStorageAsync(System.Int32,System.Int32)">
+            <summary>
+            刪除同步中檔案位於儲存個體上的橋接資訊
+            </summary>
+            <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+            <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+            <returns>移除數量</returns>
         </member>
         <member name="T:HBK.Storage.Core.Services.StorageGroupService">
             <summary>

@@ -40,9 +40,10 @@ namespace HBK.Storage.Web.Authentications
         /// 登入
         /// </summary>
         /// <param name="authorizeKeyResponse"></param>
-        public void SignIn(AuthorizeKeyResponse authorizeKeyResponse)
+        /// <param name="isRemeber"></param>
+        public void SignIn(AuthorizeKeyResponse authorizeKeyResponse, bool isRemeber)
         {
-            _stateContainer.AuthorizeKey = authorizeKeyResponse;
+            _stateContainer.SetAuthoirzeKey(authorizeKeyResponse, isRemeber);
             var identity = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.Name, authorizeKeyResponse.Name),

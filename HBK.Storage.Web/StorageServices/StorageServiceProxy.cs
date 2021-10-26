@@ -26,10 +26,15 @@ namespace HBK.Storage.Web.StorageServices
         public void SetItem<T>(string key, T data)
         {
             _storageService.SetItem(key, data);
-            if(_internalStorageService != null)
+            if (_internalStorageService != null)
             {
                 _internalStorageService.SetItem(key, data);
             }
+        }
+
+        public void SetItemWithoutRecursive<T>(string key, T data)
+        {
+            _storageService.SetItem(key, data);
         }
     }
 }

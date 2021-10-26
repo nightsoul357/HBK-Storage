@@ -31,7 +31,7 @@ namespace HBK.Storage.Core.Models
         {
             get
             {
-                return this.Storage.SizeLimit - this.UsedSize ?? 0;
+                return this.Storage.SizeLimit - (this.UsedSize ?? 0);
             }
         }
     }

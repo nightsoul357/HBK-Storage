@@ -15,6 +15,7 @@ namespace HBK.Storage.Web.Pages.Authentication
     {
         public string Password { get; set; } = "ThisIsKeyForRoot_60990e6c-95f2-412e-8708-1961777e88fc";
         public bool PasswordVisibility { get; set; }
+        public bool IsRemeber { get; set; } = false;
         public InputType PasswordInput { get; set; } = InputType.Password;
         public string PasswordInputIcon { get; set; } = Icons.Material.Filled.VisibilityOff;
         [Inject]
@@ -64,7 +65,7 @@ namespace HBK.Storage.Web.Pages.Authentication
             {
                 var authorizeKey = await this.HBKStorageApi.KeyAsync(this.Password);
                 authorizeKey.Key_value = this.Password;
-                this.HBKAuthStateProvider.SignIn(authorizeKey);
+                this.HBKAuthStateProvider.SignIn(authorizeKey, this.IsRemeber);
                 this.NavigationManager.NavigateTo("/");
             }
             catch (ApiException ex) when (ex.StatusCode == 404)

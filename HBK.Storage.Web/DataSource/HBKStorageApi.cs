@@ -4113,28 +4113,25 @@ namespace HBK.Storage.Web.DataSource
                         content_.Add(new System.Net.Http.StringContent(ConvertToString(filename, System.Globalization.CultureInfo.InvariantCulture)), "Filename");
                     }
                     if (storageGroupId == null)
-                        throw new System.ArgumentNullException("storageGroupId");
+                    { }
                     else
                     {
                         content_.Add(new System.Net.Http.StringContent(ConvertToString(storageGroupId, System.Globalization.CultureInfo.InvariantCulture)), "StorageGroupId");
                     }
                     if (extendProperty == null)
-                        throw new System.ArgumentNullException("extendProperty");
+                    { }
                     else
                     {
                         content_.Add(new System.Net.Http.StringContent(ConvertToString(extendProperty, System.Globalization.CultureInfo.InvariantCulture)), "ExtendProperty");
                     }
                     if (tags == null)
-                        throw new System.ArgumentNullException("tags");
+                    { }
                     else
                     {
-                        foreach (var item_ in tags)
-                        {
-                            content_.Add(new System.Net.Http.StringContent(ConvertToString(item_, System.Globalization.CultureInfo.InvariantCulture)), "Tags");
-                        }
+                        content_.Add(new System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(tags)), "Tags");
                     }
                     if (mimeType == null)
-                        throw new System.ArgumentNullException("mimeType");
+                    { }
                     else
                     {
                         content_.Add(new System.Net.Http.StringContent(ConvertToString(mimeType, System.Globalization.CultureInfo.InvariantCulture)), "MimeType");

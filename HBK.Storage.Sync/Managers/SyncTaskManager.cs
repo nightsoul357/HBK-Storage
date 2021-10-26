@@ -37,6 +37,15 @@ namespace HBK.Storage.Sync.Managers
         {
             _pendingQueue = new ConcurrentQueue<SyncTaskModel>();
 
+            #region 移除遺留檔案
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
+                var count = fileEntityStorageService.DeleteSyncingFileEntityStorageAsync(base.Option.FileEntityNoDivisor, base.Option.FileEntityNoRemainder).Result;
+                base.LogInformation(Guid.NewGuid(), null, null, $"移除 {count} 個遺留檔案");
+            }
+            #endregion
+
             List<Task> tasks = new List<Task>();
             while (!_cancellationToken.IsCancellationRequested)
             {

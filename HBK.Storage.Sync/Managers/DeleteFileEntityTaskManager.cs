@@ -85,7 +85,7 @@ namespace HBK.Storage.Sync.Managers
                             fileEntityStroage.Storage.StorageGroup.Name,
                             fileEntityStroage.Storage.Name);
 
-                        if (fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStroage.FileEntityStorageId).Result == null)
+                        if (fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStroage.FileEntityStorageId, true).Result == null)
                         {
                             base.LogInformation(deleteTaskId, fileEntityStroage.FileEntity, null, "在 {0} 群組中的 {1} 儲存個體中無法 Fetch 相關資訊，故直接刪除其資訊",
                                 fileEntityStroage.Storage.StorageGroup.Name,

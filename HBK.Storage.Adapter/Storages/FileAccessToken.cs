@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Adapter.Enums;
+﻿using HBK.Storage.Adapter.DataAnnotations;
+using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -49,18 +50,24 @@ namespace HBK.Storage.Adapter.Storages
         /// <summary>
         /// 取得或設定存取次數限制
         /// </summary>
+        [Sortable]
+        [Filterable]
         public int AccessTimesLimit { get; set; }
         /// <summary>
         /// 取得或設定存取次數
         /// </summary>
+        [Sortable]
+        [Filterable]
         public int AccessTimes { get; set; }
         /// <summary>
         /// 取得或設定過期時間
         /// </summary>
+        [Sortable]
         public DateTimeOffset ExpireDateTime { get; set; }
         /// <summary>
         /// 取得建立時間
         /// </summary>
+        [Sortable]
         public DateTimeOffset CreateDateTime { get; internal set; }
         /// <summary>
         /// 取得最後更新時間
@@ -73,6 +80,7 @@ namespace HBK.Storage.Adapter.Storages
         /// <summary>
         /// 取得或設定狀態
         /// </summary>
+        [Filterable]
         public FileAccessTokenStatusEnum Status { get; set; }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿@page "/fileEntity/manage"
 @attribute [Authorize]
+@inherits PageBase<ManageFileEntity>
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
     <MudGrid>
@@ -25,8 +26,8 @@
                     <MudSpacer />
                     <MudTextField T="string" ValueChanged="@(async s => await this.OnSearchAsync(s))" Placeholder="Search" Adornment="Adornment.Start"
                                   AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-
                     <MudCheckBox @bind-Checked="@this.IsDisplayChildFileEntity" Label="顯示子檔案" Color="Color.Primary" Class="mt-2 mr-2"></MudCheckBox>
+                    <MudIconButton Icon="@Icons.Material.Filled.Refresh" aria-label="refresh" OnClick="async () => await _table.ReloadServerData()"></MudIconButton>
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh>檔案 ID</MudTh>
@@ -60,6 +61,7 @@
                     </MudTd>
                     <MudTd>
                         <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Info" OnClick="async () => await this.ShowInformationDialogAsync(context)">詳細</MudButton>
+                        <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Info" OnClick="async () => await this.ShowPublishAccessTokenDialogAsync(context)">發行</MudButton>
                         <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Success" OnClick="async () => await this.DownloadFileAsync(context)">下載</MudButton>
                         <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Error" OnClick="async () => await this.ShowDeleteDialogAsync(context)">刪除</MudButton>
                     </MudTd>

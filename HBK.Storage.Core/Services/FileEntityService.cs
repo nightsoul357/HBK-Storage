@@ -111,6 +111,15 @@ namespace HBK.Storage.Core.Services
         #endregion
         #region BAL
         /// <summary>
+        /// 取得檔案的存取權杖列表
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <returns></returns>
+        public IQueryable<FileAccessToken> GetFileAccessTokenQuery(Guid fileEntityId)
+        {
+            return _dbContext.FileAccessToken.Where(x => x.FileEntityId == fileEntityId);
+        }
+        /// <summary>
         /// 取得檔案總存取次數
         /// </summary>
         /// <param name="fileEntityId">檔案 ID</param>
@@ -164,8 +173,9 @@ namespace HBK.Storage.Core.Services
                 .Include(x => x.FileEntity)
                 .Include(x => x.Storage)
                 .ThenInclude(x => x.StorageGroup)
-                .Where(x => x.IsMarkDelete && x.FileEntity.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder)
+                .Where(x => x.IsMarkDelete && x.FileEntity.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder && x.DeleteDateTime == null) // 手動判斷 Soft-Delete
                 .Take(takeCount)
+                .IgnoreQueryFilters() // 需處理 Storage Group 已被移除的狀況
                 .ToListAsync();
         }
         /// <summary>

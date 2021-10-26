@@ -21,7 +21,7 @@
                                 <MudTextField Converter="this.TagConverter" @bind-Value="this.FileEntity.Tags" Label="標籤" Variant="Variant.Outlined" ReadOnly="true" />
                             </MudItem>
                             <MudItem xs="12" sm="12" md="12">
-                                <MudTextField @bind-Value="this.FileEntity.Extend_property" Label="擴充資訊" Lines="3" Variant="Variant.Outlined" ReadOnly="true" />
+                                <MudTextField @bind-Value="this.FileEntity.Extend_property" Label="擴充資訊" Lines="5" Variant="Variant.Outlined" ReadOnly="true" />
                             </MudItem>
                         </MudGrid>
                     </MudExpansionPanel>
@@ -65,6 +65,7 @@
                             <ToolBarContent>
                                 <MudTextField T="string" ValueChanged="@(async s => await this.OnSearchAsync(s))" Placeholder="Search" Adornment="Adornment.Start"
                                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                                <MudIconButton Icon="@Icons.Material.Filled.Refresh" aria-label="refresh" OnClick="async () => await _table.ReloadServerData()"></MudIconButton>
                             </ToolBarContent>
                             <HeaderContent>
                                 <MudTh>檔案 ID</MudTh>

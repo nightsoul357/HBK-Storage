@@ -1,4 +1,5 @@
 ﻿using HBK.Storage.Web.Containers;
+using HBK.Storage.Web.DataAnnotations;
 using HBK.Storage.Web.DataSource;
 using HBK.Storage.Web.Features;
 using Microsoft.AspNetCore.Components;
@@ -10,18 +11,11 @@ using System.Threading.Tasks;
 
 namespace HBK.Storage.Web.Pages.StorageGroup
 {
-    public partial class ManageStorageGroup
+    [StateValidation(IsStorageProviderValid = true)]
+    public partial class ManageStorageGroup : PageBase<ManageStorageGroup>
     {
         private MudTable<StorageGroupExtendPropertyResponse> _table;
         private string _searchString = null;
-        [Inject]
-        public HBKStorageApi HBKStorageApi { get; set; }
-        [Inject]
-        public HBKDialogService HBKDialogService { get; set; }
-        [Inject]
-        public StateContainer StateContainer { get; set; }
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
         /// <summary>
         /// Here we simulate getting the paged, filtered and ordered data from the server
         /// </summary>
@@ -39,7 +33,7 @@ namespace HBK.Storage.Web.Pages.StorageGroup
                 order = $"{state.SortLabel} {(state.SortDirection == SortDirection.Ascending ? "asc" : "desc")}";
             }
 
-            var response = await this.HBKStorageApi.StoragegroupextendpropertiesAsync(this.StateContainer.StorageProvider.Storage_provider_id, filter, order, state.Page, state.PageSize);
+            var response = await base.HBKStorageApi.StoragegroupextendpropertiesAsync(base.StateContainer.StorageProvider.Storage_provider_id, filter, order, state.Page * state.PageSize, state.PageSize);
 
             return new TableData<StorageGroupExtendPropertyResponse>()
             {
@@ -54,27 +48,27 @@ namespace HBK.Storage.Web.Pages.StorageGroup
         }
         public void NavigateToManage(StorageGroupExtendPropertyResponse storageGroup)
         {
-            this.StateContainer.StorageGroup = storageGroup;
-            this.NavigationManager.NavigateTo("/storage/manage");
+            base.StateContainer.StorageGroup = storageGroup;
+            base.NavigationManager.NavigateTo("/storage/manage");
         }
         public async Task ShowEditDialogAsync(StorageGroupExtendPropertyResponse storageGroup)
         {
-            await this.HBKDialogService.ShowEditStorageGroupAsync(storageGroup);
+            await base.HBKDialogService.ShowEditStorageGroupAsync(storageGroup);
             await _table.ReloadServerData();
         }
         public async Task ShowDeleteDialogAsync(StorageGroupExtendPropertyResponse storageGroup)
         {
-            var result = await this.HBKDialogService.ShowBasicAsync("刪除", $"確定刪除 { storageGroup.Name } 嗎(此操作無法復原)?", "刪除", Color.Error);
+            var result = await base.HBKDialogService.ShowBasicAsync("刪除", $"確定刪除 { storageGroup.Name } 嗎(此操作無法復原)?", "刪除", Color.Error);
             if (result.Cancelled)
             {
                 return;
             }
-            await this.HBKStorageApi.StoragegroupsDELETEAsync(storageGroup.Storage_group_id);
+            await base.HBKStorageApi.StoragegroupsDELETEAsync(storageGroup.Storage_group_id);
             await _table.ReloadServerData();
         }
         public async Task ShowAddDialogAsync()
         {
-            await this.HBKDialogService.ShowAddStorageGroupAsync();
+            await base.HBKDialogService.ShowAddStorageGroupAsync();
             await _table.ReloadServerData();
         }
     }

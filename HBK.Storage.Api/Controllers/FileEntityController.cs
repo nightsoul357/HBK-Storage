@@ -2,7 +2,9 @@
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Api.DataAnnotations;
 using HBK.Storage.Api.Models;
+using HBK.Storage.Api.Models.FileAccessToken;
 using HBK.Storage.Api.Models.FileEntity;
+using HBK.Storage.Api.Models.FileService;
 using HBK.Storage.Api.OData;
 using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
@@ -65,6 +67,45 @@ namespace HBK.Storage.Api.Controllers
             {
                 FileDownloadName = fileEntity.Name
             };
+        }
+        /// <summary>
+        /// 更新檔案實體
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <param name="request">更新檔案實體請求內容</param>
+        /// <returns></returns>
+        [HttpPut("{fileEntityId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<FileEntityResponse> Put(
+            [ExampleParameter("ba337d2f-760b-473e-b077-d352277651e2")]
+            [ExistInDatabase(typeof(FileEntity))]Guid fileEntityId,
+            FileEntityUpdateRequest request)
+        {
+            var fileEntity = await _fileEntityService.FindByIdAsync(fileEntityId);
+            fileEntity = await _fileEntityService.UpdateAsync(fileEntity);
+            return FileEntityController.BuildFileEntityResponse(fileEntity, _fileEntityService);
+        }
+        /// <summary>
+        /// 取得檔案的所有存取權杖資訊，單次資料上限為 100 筆
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <param name="queryOptions">OData 查詢參數</param>
+        /// <returns></returns>
+        [HttpGet("{fileEntityId}/fileAccessTokens")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<PagedResponse<FileAccessTokenResponse>> GetFileAccessTokenResponse(
+            [ExampleParameter("ba337d2f-760b-473e-b077-d352277651e2")]
+            [ExistInDatabase(typeof(FileEntity))]Guid fileEntityId,
+            [FromServices] ODataQueryOptions<FileAccessToken> queryOptions)
+        {
+            var query = _fileEntityService.GetFileAccessTokenQuery(fileEntityId);
+
+            return await base.PagedResultAsync(queryOptions, query, (data) =>
+                data.Select(fileAccessToken => FileAccessTokenController.BuildFileAccessTokenResponse(fileAccessToken)),
+                100
+            );
         }
         /// <summary>
         /// 取得指定檔案的所有子檔案(遞迴查詢)

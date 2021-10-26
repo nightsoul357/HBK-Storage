@@ -191,6 +191,22 @@
             <param name="storageGroupId">強制指定儲存個體群組 ID</param>
             <returns></returns>
         </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.Put(System.Guid,HBK.Storage.Api.Models.FileService.FileEntityUpdateRequest)">
+            <summary>
+            更新檔案實體
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="request">更新檔案實體請求內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.GetFileAccessTokenResponse(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.FileAccessToken})">
+            <summary>
+            取得檔案的所有存取權杖資訊，單次資料上限為 100 筆
+            </summary>
+            <param name="fileEntityId">檔案實體 ID</param>
+            <param name="queryOptions">OData 查詢參數</param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Api.Controllers.FileEntityController.GetChildFileEntities(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Core.Models.ChildFileEntity})">
             <summary>
             取得指定檔案的所有子檔案(遞迴查詢)
@@ -1241,6 +1257,21 @@
         <member name="P:HBK.Storage.Api.Models.FileEntity.GetAccessTimesResponse.TotalAccessTimes">
             <summary>
             總存取次數
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.FileService.FileEntityUpdateRequest">
+            <summary>
+            更新檔案實體請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.FileEntityUpdateRequest.Filename">
+            <summary>
+            檔案名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.FileEntityUpdateRequest.ExtendProperty">
+            <summary>
+            擴充資訊
             </summary>
         </member>
         <member name="T:HBK.Storage.Api.Models.FileService.GetExternalDirectLinkResponse">

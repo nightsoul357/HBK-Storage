@@ -1,4 +1,5 @@
 ﻿using HBK.Storage.Web.Containers;
+using HBK.Storage.Web.DataAnnotations;
 using HBK.Storage.Web.DataSource;
 using HBK.Storage.Web.Features;
 using Microsoft.AspNetCore.Components;
@@ -10,18 +11,11 @@ using System.Threading.Tasks;
 
 namespace HBK.Storage.Web.Pages.Storage
 {
-    public partial class ManageStorage
+    [StateValidation(IsStorageGroupValid = true, IsStorageProviderValid = true)]
+    public partial class ManageStorage : PageBase<ManageStorage>
     {
         private MudTable<StorageExtendPropertyResponse> _table;
         private string _searchString = null;
-        [Inject]
-        public HBKStorageApi HBKStorageApi { get; set; }
-        [Inject]
-        public HBKDialogService HBKDialogService { get; set; }
-        [Inject]
-        public StateContainer StateContainer { get; set; }
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
         /// <summary>
         /// Here we simulate getting the paged, filtered and ordered data from the server
         /// </summary>
@@ -39,7 +33,7 @@ namespace HBK.Storage.Web.Pages.Storage
                 order = $"{state.SortLabel} {(state.SortDirection == SortDirection.Ascending ? "asc" : "desc")}";
             }
 
-            var response = await this.HBKStorageApi.StorageextendpropertiesAsync(this.StateContainer.StorageGroup.Storage_group_id, filter, order, state.Page, state.PageSize);
+            var response = await this.HBKStorageApi.StorageextendpropertiesAsync(this.StateContainer.StorageGroup.Storage_group_id, filter, order, state.Page * state.PageSize, state.PageSize);
 
             return new TableData<StorageExtendPropertyResponse>()
             {

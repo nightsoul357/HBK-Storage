@@ -1,5 +1,6 @@
 ﻿@page "/storage/manage"
 @attribute [Authorize]
+@inherits PageBase<ManageStorage>
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-16">
     <MudGrid>
@@ -18,6 +19,7 @@
                     <MudSpacer />
                     <MudTextField T="string" ValueChanged="@(async s => await this.OnSearchAsync(s))" Placeholder="Search" Adornment="Adornment.Start"
                                   AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    <MudIconButton Icon="@Icons.Material.Filled.Refresh" aria-label="refresh" OnClick="async () => await _table.ReloadServerData()"></MudIconButton>
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh>儲存個體 ID</MudTh>

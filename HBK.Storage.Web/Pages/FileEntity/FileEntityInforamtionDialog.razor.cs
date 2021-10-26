@@ -52,7 +52,7 @@ namespace HBK.Storage.Web.Pages.FileEntity
                 order = $"{state.SortLabel} {(state.SortDirection == SortDirection.Ascending ? "asc" : "desc")}";
             }
 
-            var response = await this.HBKStorageApi.ChildsAsync(this.FileEntity.File_entity_id, filter, order, state.Page, state.PageSize);
+            var response = await this.HBKStorageApi.ChildsAsync(this.FileEntity.File_entity_id, filter, order, state.Page * state.PageSize, state.PageSize);
 
             return new TableData<ChildFileEntityResponse>()
             {

@@ -133,7 +133,7 @@ namespace HBK.Storage.Api.Controllers
             [ExistInDatabase(typeof(AuthorizeKey))]Guid authorizeKeyId)
         {
             await _authorizeKeyService.DeleteAsync(authorizeKeyId);
-            return base.NotFound();
+            return base.NoContent();
         }
         /// <summary>
         /// 取得所有驗證金鑰，單次資料上限為 100 筆

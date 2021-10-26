@@ -1,4 +1,5 @@
 ﻿using HBK.Storage.Web.Containers;
+using HBK.Storage.Web.DataAnnotations;
 using HBK.Storage.Web.DataSource;
 using HBK.Storage.Web.Features;
 using Microsoft.AspNetCore.Components;
@@ -10,18 +11,11 @@ using System.Threading.Tasks;
 
 namespace HBK.Storage.Web.Pages.StorageProvider
 {
-    public partial class ManageStorageProvider
+    public partial class ManageStorageProvider : PageBase<ManageStorageProvider>
     {
         private MudTable<StorageProviderResponse> _table;
         private string _searchString = null;
-        [Inject]
-        public HBKStorageApi HBKStorageApi { get; set; }
-        [Inject]
-        public HBKDialogService HBKDialogService { get; set; }
-        [Inject]
-        public StateContainer StateContainer { get; set; }
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        
         /// <summary>
         /// Here we simulate getting the paged, filtered and ordered data from the server
         /// </summary>
@@ -39,7 +33,7 @@ namespace HBK.Storage.Web.Pages.StorageProvider
                 order = $"{state.SortLabel} {(state.SortDirection == SortDirection.Ascending ? "asc" : "desc")}";
             }
 
-            var response = await this.HBKStorageApi.StorageprovidersGET2Async(filter, order, state.Page, state.PageSize);
+            var response = await base.HBKStorageApi.StorageprovidersGET2Async(filter, order, state.Page * state.PageSize, state.PageSize);
 
             return new TableData<StorageProviderResponse>()
             {
@@ -55,30 +49,35 @@ namespace HBK.Storage.Web.Pages.StorageProvider
 
         public async Task ShowDeleteDialogAsync(StorageProviderResponse storageProvider)
         {
-            var result = await this.HBKDialogService.ShowBasicAsync("刪除", $"確定刪除 { storageProvider.Name } 嗎(此操作無法復原)?", "刪除", Color.Error);
+            var result = await base.HBKDialogService.ShowBasicAsync("刪除", $"確定刪除 { storageProvider.Name } 嗎(此操作無法復原)?", "刪除", Color.Error);
             if (result.Cancelled)
             {
                 return;
             }
-            await this.HBKStorageApi.StorageprovidersDELETEAsync(storageProvider.Storage_provider_id);
+            await base.HBKStorageApi.StorageprovidersDELETEAsync(storageProvider.Storage_provider_id);
             await _table.ReloadServerData();
+            if (base.StateContainer.StorageProvider != null && storageProvider.Storage_provider_id == base.StateContainer.StorageProvider.Storage_provider_id)
+            {
+                base.StateContainer.StorageProvider = null;
+                base.NavigationManager.NavigateTo("/");
+            }
         }
 
         public void SelectStorageProvider(StorageProviderResponse storageProvider)
         {
-            this.StateContainer.StorageProvider = storageProvider;
-            this.NavigationManager.NavigateTo("/storageGroup/manage", true);
+            base.StateContainer.StorageProvider = storageProvider;
+            base.NavigationManager.NavigateTo("/storageGroup/manage", true);
         }
 
         public async Task ShowEditDialogAsync(StorageProviderResponse storageProvider)
         {
-            var result = await this.HBKDialogService.ShowEditStorageProviderAsync(storageProvider);
+            var result = await base.HBKDialogService.ShowEditStorageProviderAsync(storageProvider);
             await _table.ReloadServerData();
         }
 
         public async Task ShowAddDialogAsync()
         {
-            var result = await this.HBKDialogService.ShowAddStorageProviderAsync();
+            var result = await base.HBKDialogService.ShowAddStorageProviderAsync();
             await _table.ReloadServerData();
         }
     }

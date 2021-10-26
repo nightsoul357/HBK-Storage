@@ -69,15 +69,10 @@ namespace HBK.Storage.Web.Shared
         protected override void OnInitialized()
         {
             base.StateHasChanged();
-        }
-        protected override Task OnInitializedAsync()
-        {
-            base.OnInitialized();
             if (this.AuthorizeKey == null)
             {
                 this.NavigationManager.NavigateTo($"authentication/login");
             }
-            return Task.CompletedTask;
         }
     }
 }

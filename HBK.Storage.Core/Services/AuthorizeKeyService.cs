@@ -71,12 +71,7 @@ namespace HBK.Storage.Core.Services
 
             if (String.IsNullOrEmpty(authorizeKey.KeyValue))
             {
-                using (SHA256 sha256Hash = SHA256.Create())
-                {
-                    var data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(authorizeKey.AuthorizeKeyId.ToString() + StringHelper.GetRandomString(10)));
-                    var key = Encoding.UTF8.GetString(data);
-                    authorizeKey.KeyValue = authorizeKey.Name + "_" + key;
-                }
+                authorizeKey.KeyValue = StringHelper.GetRandomString(255);
             }
 
             _dbContext.AuthorizeKey.Add(authorizeKey);

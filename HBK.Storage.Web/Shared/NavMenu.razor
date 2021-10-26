@@ -2,15 +2,23 @@
     <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">Storage Provider</MudText>
     <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">
         @if (this.StateContainer.StorageProvider == null)
-        {@("尚未選擇") }
-                    else
-                    { @(this.StateContainer.StorageProvider.Name)}
+        {
+            @("尚未選擇")
+        }
+        else
+        { 
+            @(this.StateContainer.StorageProvider.Name)
+        }
     </MudText>
     <MudDivider Class="mb-4" />
-    <MudNavLink Href="/storageProvider/manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.List">管理儲存提供者</MudNavLink>
+    <MudNavLink Href="/storageProvider/manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">管理儲存提供者</MudNavLink>
     @if (this.StateContainer.StorageProvider != null)
     {
-        <MudNavLink Href="/storageGroup/manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.List">管理儲存群組</MudNavLink>
-        <MudNavLink Href="/fileEntity/manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.List">管理檔案</MudNavLink>
+        <MudNavLink Href="/storageGroup/manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Storage">管理儲存群組</MudNavLink>
+        <MudNavLink Href="/fileEntity/manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Folder">管理檔案</MudNavLink>
+    }
+    @if(this.StateContainer.AuthorizeKey != null && this.StateContainer.AuthorizeKey.Type == AuthorizeKeyType.Root)
+    {
+        <MudNavLink Href="/authorizeKey/manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.VpnKey">管理驗證金鑰</MudNavLink>
     }
 </MudNavMenu>

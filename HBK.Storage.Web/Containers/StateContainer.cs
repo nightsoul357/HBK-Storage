@@ -59,5 +59,17 @@ namespace HBK.Storage.Web.Containers
                 _storageServiceProxy.SetItem(nameof(this.StorageGroup), value);
             }
         }
+
+        public void SetAuthoirzeKey(AuthorizeKeyResponse authorizeKey, bool isRemeber)
+        {
+            if (isRemeber)
+            {
+                this.AuthorizeKey = authorizeKey;
+            }
+            else
+            {
+                _storageServiceProxy.SetItemWithoutRecursive(nameof(this.AuthorizeKey), authorizeKey);
+            }
+        }
     }
 }

@@ -3,10 +3,10 @@
 
 <MudText Typo="Typo.h4" GutterBottom="true">Sign In</MudText>
 
-<MudTextField @bind-Value="@this.Password" Label="Password" Variant="Variant.Outlined" InputType="@this.PasswordInput" Adornment="Adornment.End" AdornmentIcon="@this.PasswordInputIcon" OnAdornmentClick="this.TogglePasswordVisibility" />
+<MudTextField @bind-Value="@this.Password" Label="API Key" Variant="Variant.Outlined" InputType="@this.PasswordInput" Adornment="Adornment.End" AdornmentIcon="@this.PasswordInputIcon" OnAdornmentClick="this.TogglePasswordVisibility" />
 
 <div Class="d-flex justify-space-between align-center">
-    <MudCheckBox T="bool" Label="Remember me?" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+    <MudCheckBox T="bool" @bind-Checked="this.IsRemeber" Label="Remember me?" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
 </div>
 
 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="this.SignIn" Size="Size.Large" FullWidth="true">Sign In</MudButton>

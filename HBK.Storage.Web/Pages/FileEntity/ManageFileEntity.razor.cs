@@ -1,5 +1,6 @@
 ﻿using BlazorDownloadFile;
 using HBK.Storage.Web.Containers;
+using HBK.Storage.Web.DataAnnotations;
 using HBK.Storage.Web.DataSource;
 using HBK.Storage.Web.Features;
 using Microsoft.AspNetCore.Components;
@@ -7,13 +8,15 @@ using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 
 namespace HBK.Storage.Web.Pages.FileEntity
 {
-    public partial class ManageFileEntity
+    [StateValidation(IsStorageProviderValid = true)]
+    public partial class ManageFileEntity : PageBase<ManageFileEntity>
     {
         private MudTable<FileEntityResponse> _table;
         private string _searchString = null;
@@ -33,14 +36,6 @@ namespace HBK.Storage.Web.Pages.FileEntity
             }
         }
         public Timer Timer { get; set; }
-        [Inject]
-        public HBKStorageApi HBKStorageApi { get; set; }
-        [Inject]
-        public HBKDialogService HBKDialogService { get; set; }
-        [Inject]
-        public StateContainer StateContainer { get; set; }
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
         [Inject]
         public IBlazorDownloadFileService DownloadFileService { get; set; }
         /// <summary>
@@ -69,7 +64,7 @@ namespace HBK.Storage.Web.Pages.FileEntity
                 filter = filter.Trim("and ".ToArray());
             }
 
-            var response = await this.HBKStorageApi.FileentitiesGET2Async(this.StateContainer.StorageProvider.Storage_provider_id, filter, order, state.Page, state.PageSize);
+            var response = await this.HBKStorageApi.FileentitiesGET2Async(this.StateContainer.StorageProvider.Storage_provider_id, filter, order, state.Page * state.PageSize, state.PageSize);
 
             return new TableData<FileEntityResponse>()
             {
@@ -81,6 +76,11 @@ namespace HBK.Storage.Web.Pages.FileEntity
         {
             _searchString = text;
             await _table.ReloadServerData();
+        }
+
+        public async Task ShowPublishAccessTokenDialogAsync(FileEntityResponse fileEntity)
+        {
+            await this.HBKDialogService.ShowPublishAccessTokenAsync(fileEntity);
         }
 
         public async Task ShowInformationDialogAsync(FileEntityResponse fileEntity)
@@ -106,12 +106,23 @@ namespace HBK.Storage.Web.Pages.FileEntity
         }
         public async Task UploadFilesAsync(InputFileChangeEventArgs e)
         {
-            foreach (var file in e.GetMultipleFiles())
+            foreach (IBrowserFile file in e.GetMultipleFiles(int.MaxValue))
             {
-                await this.HBKStorageApi.FileentitiesPOSTAsync(this.StateContainer.StorageProvider.Storage_provider_id, file.Name, null, null, null,
+                List<string> tags = new List<string>();
+                if (file.ContentType.StartsWith("image"))
+                {
+                    tags.Add("Require-Compress-Image");
+                }
+                var fileName = Path.Combine(Directory.GetCurrentDirectory(), Path.GetTempFileName());
+
+                await using FileStream fs = new FileStream(fileName, FileMode.Create);
+                await file.OpenReadStream(long.MaxValue).CopyToAsync(fs);
+                fs.Seek(0, SeekOrigin.Begin);
+                await this.HBKStorageApi.FileentitiesPOSTAsync(this.StateContainer.StorageProvider.Storage_provider_id, file.Name, null, null, tags,
                     file.ContentType,
-                    new FileParameter(file.OpenReadStream(long.MaxValue)));
+                    new FileParameter(fs));
                 await _table.ReloadServerData();
+                base.Snackbar.Add("上傳完成", Severity.Info);
             }
         }
 
