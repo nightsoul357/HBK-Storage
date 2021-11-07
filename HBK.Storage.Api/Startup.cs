@@ -44,22 +44,22 @@ using System.IO;
 namespace HBK.Storage.Api
 {
     /// <summary>
-    /// ºô¯¸¶i¤JÂI
+    /// ç¶²ç«™é€²å…¥é»
     /// </summary>
     public class Startup
     {
         private readonly string _corsPolicyName = "_corsPolicy";
         /// <summary>
-        /// ¨ú±o³]©wÀÉ
+        /// å–å¾—è¨­å®šæª”
         /// </summary>
         public IConfiguration Configuration { get; }
         /// <summary>
-        /// ¨ú±oÀô¹Ò¸ê°T
+        /// å–å¾—ç’°å¢ƒè³‡è¨Š
         /// </summary>
         public IWebHostEnvironment HostingEnvironment { get; }
 
         /// <summary>
-        /// ºô¯¸¶i¤JÂI«Øºc¨ç¦¡
+        /// ç¶²ç«™é€²å…¥é»å»ºæ§‹å‡½å¼
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="environment"></param>
@@ -100,11 +100,11 @@ namespace HBK.Storage.Api
             services.AddControllers(options =>
             {
                 options.OutputFormatters.RemoveType<StringOutputFormatter>();
-                options.EnableEndpointRouting = false; // AllowAnonymous ¦b .Net Core 3.1 ·|¥¢®Ä https://blog.csdn.net/elvismile/article/details/104003004
+                options.EnableEndpointRouting = false; // AllowAnonymous åœ¨ .Net Core 3.1 æœƒå¤±æ•ˆ https://blog.csdn.net/elvismile/article/details/104003004
             })
             .AddNewtonsoftJson(options =>
             {
-                // ±j¨î¨Ï¥Î¤p¼g©³½uÄİ©Ê¦WºÙ
+                // å¼·åˆ¶ä½¿ç”¨å°å¯«åº•ç·šå±¬æ€§åç¨±
                 var snakeCaseNamingStrategy = new SnakeCaseNamingStrategy();
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver() { NamingStrategy = snakeCaseNamingStrategy };
                 options.SerializerSettings.Converters.Add(new StringEnumConverter(snakeCaseNamingStrategy));
@@ -115,7 +115,7 @@ namespace HBK.Storage.Api
                 {
                     if (actionContext.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
                     {
-                        // ÂĞ¼g ExistInDatabaseAttribute ÅçÃÒ¥¢±Ñªº¿ù»~¥N½X
+                        // è¦†å¯« ExistInDatabaseAttribute é©—è­‰å¤±æ•—çš„éŒ¯èª¤ä»£ç¢¼
                         var parameters = controllerActionDescriptor.MethodInfo.GetParameters().Select(param => param.Name).ToList();
                         var invalidNames = actionContext.ModelState
                             .Where(state => state.Value.ValidationState == ModelValidationState.Invalid)
@@ -129,7 +129,7 @@ namespace HBK.Storage.Api
                 };
             });
 
-            // ¸ô¥Ñ
+            // è·¯ç”±
             services.AddRouting(options => options.LowercaseUrls = true);
 
             // ODATA
@@ -147,7 +147,7 @@ namespace HBK.Storage.Api
                 }
             });
 
-            // IIS ³]©w
+            // IIS è¨­å®š
             services.Configure<IISServerOptions>(options =>
             {
                 options.MaxRequestBodySize = int.MaxValue;
@@ -158,18 +158,18 @@ namespace HBK.Storage.Api
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "HBK Storage Api", Version = "v1" });
 
-                // ¥[¤J XML µù¸Ñ
+                // åŠ å…¥ XML è¨»è§£
                 options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, "HBK.Storage.Api.xml"));
                 options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, "HBK.Storage.Core.xml"));
                 options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, "HBK.Storage.Adapter.xml"));
 
-                // ¥[¤JÅçÃÒ
+                // åŠ å…¥é©—è­‰
                 options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme()
                 {
                     Type = SecuritySchemeType.ApiKey,
                     In = ParameterLocation.Header,
                     Name = "HBKey",
-                    Description = "¦s¨ú HBK Storage Api ®É»İ±a¤Jªº API Key",
+                    Description = "å­˜å– HBK Storage Api æ™‚éœ€å¸¶å…¥çš„ API Key",
                 });
 
                 options.CustomSchemaIds(SwaggerSchemaIdGenerator.SchemaIdSelector);
@@ -186,14 +186,14 @@ namespace HBK.Storage.Api
             });
             services.AddSwaggerGenNewtonsoftSupport();
 
-            // Form ½Ğ¨D³]©w
+            // Form è«‹æ±‚è¨­å®š
             services.Configure<FormOptions>(x =>
             {
                 x.ValueLengthLimit = int.MaxValue;
                 x.MultipartBodyLengthLimit = int.MaxValue;
             });
 
-            // JWT ³]©wÀÉ
+            // JWT è¨­å®šæª”
             IConfiguration jwtConfiguration = this.Configuration.GetSection("JWTOption");
             services.AddSingleton<JWTOption>((sp) =>
             {
@@ -202,16 +202,16 @@ namespace HBK.Storage.Api
                 return jwtOption;
             });
 
-            // ¸ê®Æ®w
+            // è³‡æ–™åº«
             services.AddDbContext<HBKStorageContext>(options =>
                 options.UseSqlServer(this.Configuration["Database:ConnectionString"]));
 
-            // ®Ö¤ßÅŞ¿è
+            // æ ¸å¿ƒé‚è¼¯
             services.AddScoped<FileAccessTokenService>();
             services.AddScoped<FileAccessTokenFactory>();
             services.AddHBKStorageService();
 
-            // ÀÉ®×³B²z¾¹
+            // æª”æ¡ˆè™•ç†å™¨
             services.AddScoped<FileAccessHandlerBase, M3U8FileAccessHandler>();
             services.AddScoped<FileAccessHandlerProxy>();
 
@@ -284,9 +284,9 @@ namespace HBK.Storage.Api
         }
 
         /// <summary>
-        /// «Ø¥ß OData ªº EDM ¼Ò«¬
+        /// å»ºç«‹ OData çš„ EDM æ¨¡å‹
         /// </summary>
-        /// <param name="serviceProvider">ªA°È´£¨ÑªÌ</param>
+        /// <param name="serviceProvider">æœå‹™æä¾›è€…</param>
         /// <returns></returns>
         private IEdmModel GetEdmModel(IServiceProvider serviceProvider)
         {
@@ -300,18 +300,18 @@ namespace HBK.Storage.Api
             builder.EntitySet<StorageGroupExtendProperty>("StorageGroupExtendProperties");
             builder.EntitySet<StorageExtendProperty>("StorageExtendProperties");
 
-            // ODataConventionModelBuilder ·|¦Û°Ê¥[¤J¬ÛÃöÁpªº¼Ò«¬
+            // ODataConventionModelBuilder æœƒè‡ªå‹•åŠ å…¥ç›¸é—œè¯çš„æ¨¡å‹
             builder.OnModelCreating = builder =>
             {
                 foreach (var type in builder.EnumTypes.Where(type => type.Namespace == "HBK.Storage.Adapter.Enums" || type.Namespace == "HBK.Storage.Core.Enums"))
                 {
                     type.Namespace = "Enums";
-                    // ²¾°£ Enum µ²§À
+                    // ç§»é™¤ Enum çµå°¾
                     if (type.Name.EndsWith("Enum"))
                     {
                         type.Name = type.Name[0..^4];
                     }
-                    // §ï¬°¤p¼g©³½u©R¦W
+                    // æ”¹ç‚ºå°å¯«åº•ç·šå‘½å
                     foreach (var member in type.Members)
                     {
                         member.Name = snakeCaseNamingStrategy.GetPropertyName(member.Name, false);
