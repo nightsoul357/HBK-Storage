@@ -22,10 +22,10 @@ docker build -t hbk-storage-sync-image -f Dockerfile_Sync .
 docker create -p 1433:1433 --name hbk-storage-db hbk-storage-db-image
 docker start hbk-storage-db
 
-docker create -p 8080:80 --name hbk-storage-api hbk-storage-api-image
+docker create -p 2080:80 --name hbk-storage-api hbk-storage-api-image
 docker start hbk-storage-api
 
-docker create -p 80:80 --name hbk-storage-web hbk-storage-web-image
+docker create -p 1080:80 --name hbk-storage-web hbk-storage-web-image
 docker start hbk-storage-web
 
 docker create --name hbk-storage-sync hbk-storage-sync-image
