@@ -159,9 +159,9 @@ namespace HBK.Storage.Api
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "HBK Storage Api", Version = "v1" });
 
                 // 加入 XML 註解
-                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, $@"Docs\HBK.Storage.Api.xml"));
-                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, $@"Docs\HBK.Storage.Core.xml"));
-                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, $@"Docs\HBK.Storage.Adapter.xml"));
+                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, Path.Combine("Docs", "HBK.Storage.Api.xml")));
+                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, Path.Combine("Docs", "HBK.Storage.Core.xml")));
+                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, Path.Combine("Docs", "HBK.Storage.Adapter.xml")));
 
                 // 加入驗證
                 options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme()
