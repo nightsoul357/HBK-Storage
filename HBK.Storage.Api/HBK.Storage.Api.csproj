@@ -9,6 +9,10 @@
     <DocumentationFile>Docs\HBK.Storage.Api.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>Docs\HBK.Storage.Api.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="7.5.7" />
     <PackageReference Include="NLog" Version="4.7.9" />

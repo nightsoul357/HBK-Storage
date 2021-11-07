@@ -8,6 +8,10 @@
     <DocumentationFile>Docs\HBK.Storage.Core.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>Docs\HBK.Storage.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="FileSystem\NewFolder\**" />
     <EmbeddedResource Remove="FileSystem\NewFolder\**" />
