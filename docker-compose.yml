@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  db:
+    build: Dokcerfile_DB
+    ports:
+      - "1433:1433"
+
+  api:
+    build: Dokcerfile_Api
+    ports:
+      - "2080:80"
+    environment:
+      "Database:ConnectionString": "Data Source=localhost;Initial Catalog=HBKStorage;Persist Security Info=True;User ID=sa;Password=MGG2hZPxtW22@"
+
+  web:
+    build: Dockerfile_Web
+    ports:
+      - "1080:80"
+
+  sync:
+    build: Dockerfile_Sync
+    environment:
+      "Database:ConnectionString": "Data Source=localhost;Initial Catalog=HBKStorage;Persist Security Info=True;User ID=sa;Password=MGG2hZPxtW22@"
