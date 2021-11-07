@@ -45,10 +45,17 @@ namespace HBK.Storage.PluginIntegration
             {
                 _logger.LogInformation($"當前目錄 -> { this.VideoSubTitleCombineTaskManager.CurrentDirectory }");
                 this.ImageCompressTaskManager.Start(stoppingToken);
-                this.VideoConvertM3U8TaskManager.Start(stoppingToken);
-                this.VideoMetadataTaskManager.Start(stoppingToken);
-                this.VideoSubTitleCombineTaskManager.Start(stoppingToken);
-                this.VideoSeekPreviewTaskManager.Start(stoppingToken);
+                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+                {
+                    this.VideoConvertM3U8TaskManager.Start(stoppingToken);
+                    this.VideoMetadataTaskManager.Start(stoppingToken);
+                    this.VideoSubTitleCombineTaskManager.Start(stoppingToken);
+                    this.VideoSeekPreviewTaskManager.Start(stoppingToken);
+                }
+                else
+                {
+                    _logger.LogWarning($"當前環境為 {System.Runtime.InteropServices.RuntimeInformation.OSDescription}，無法啟動 VideoConvertM3U8、VideoMetadata、VideoSubTitleCombine、VideoSeekPreview 插件");
+                }
             }
             catch (Exception ex)
             {

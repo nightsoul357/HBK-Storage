@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/mssql/server:2019-latest
+COPY mssql2019_initialization.sql .
+ENV ACCEPT_EULA Y
+ENV sa_password BY5RauQ$9w$V
+RUN sqlcmd -i mssql2019_initialization.sql
