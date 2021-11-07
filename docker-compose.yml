@@ -1,13 +1,13 @@
-version: "3.8"
-
+version: "3.3"
 services:
+
   db:
-    build: Dokcerfile_DB
+    build: Dockerfile_DB
     ports:
       - "1433:1433"
 
   api:
-    build: Dokcerfile_Api
+    build: Dockerfile_Api
     ports:
       - "2080:80"
     environment:
