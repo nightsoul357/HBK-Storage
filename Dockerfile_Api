@@ -12,8 +12,6 @@ RUN dotnet build "HBK.Storage.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "HBK.Storage.Api.csproj" -c Release -o /app/publish
-
-FROM publish AS certificate
 WORKDIR /app/publish
 RUN apt-get update && \
 	apt-get install -y openssl && \
@@ -26,4 +24,4 @@ RUN apt-get update && \
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "HBK.Storage.Api.dll"]
+ENTRYPOINT ["dotnet", "HBK.Storage.Api.dll",""]
