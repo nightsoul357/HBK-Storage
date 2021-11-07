@@ -271,7 +271,6 @@ namespace HBK.Storage.Api
                 }
             });
 
-            db.Database.EnsureCreated();
             if (authorizeKeyService.FindByKeyValueAsync(this.Configuration["RootKey:Key"]).Result == null)
             {
                 authorizeKeyService.AddAsync(new AuthorizeKey()

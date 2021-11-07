@@ -1,24 +1,38 @@
-version: "3.3"
-services:
+version: "3.3"
 
+services:
   db:
-    build: Dockerfile_DB
+    build:
+      context: .
+      dockerfile: Dockerfile_DB
     ports:
       - "1433:1433"
 
   api:
-    build: Dockerfile_Api
+    build:
+      context: .
+      dockerfile: Dockerfile_Api
     ports:
       - "2080:80"
+    depends_on:
+      - db
     environment:
-      "Database:ConnectionString": "Data Source=localhost;Initial Catalog=HBKStorage;Persist Security Info=True;User ID=sa;Password=MGG2hZPxtW22@"
+      "Database:ConnectionString": "Data Source=192.168.222.104;Initial Catalog=HBKStorage;Persist Security Info=True;User ID=sa;Password=MGG2hZPxtW22@"
 
   web:
-    build: Dockerfile_Web
+    build:
+      context: .
+      dockerfile: Dockerfile_Web
+    depends_on:
+      - api
     ports:
       - "1080:80"
 
   sync:
-    build: Dockerfile_Sync
+    build:
+      context: .
+      dockerfile: Dockerfile_Sync
+    depends_on:
+      - db
     environment:
-      "Database:ConnectionString": "Data Source=localhost;Initial Catalog=HBKStorage;Persist Security Info=True;User ID=sa;Password=MGG2hZPxtW22@"
+      "Database:ConnectionString": "Data Source=192.168.222.104;Initial Catalog=HBKStorage;Persist Security Info=True;User ID=sa;Password=MGG2hZPxtW22@"

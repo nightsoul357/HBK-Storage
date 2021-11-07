@@ -40,6 +40,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F9B2CA6C-6F72-4622-B84C-702941D07790}"
 	ProjectSection(SolutionItems) = preProject
 		build.sh = build.sh
+		docker-compose.yml = docker-compose.yml
 		Dockerfile_Api = Dockerfile_Api
 		Dockerfile_DB = Dockerfile_DB
 		Dockerfile_Sync = Dockerfile_Sync
