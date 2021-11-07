@@ -21,7 +21,7 @@ RUN apt-get update && \
 	openssl req -new -sha256 -key key.pem -out csr.csr \
 	-subj "/C=TW/ST=NightSoul/L=Taipei/O=HBK/OU=IT Department/CN=nightsoul.com" && \
 	openssl req -x509 -sha256 -days 365 -key key.pem -in csr.csr -out certificate.pem && \
-	openssl pkcs12 -export -out certificate.p12 -inkey key.pem -in certificate.pem
+	openssl pkcs12 -export -out certificate.p12 -inkey key.pem -in certificate.pem -password pass:develop123465
 
 FROM base AS final
 WORKDIR /app
