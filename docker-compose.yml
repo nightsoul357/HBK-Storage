@@ -53,6 +53,8 @@ services:
       dockerfile: Dockerfile_ImageCompressPlugin
     depends_on:
       - db
+    volumes:
+      - ./storage_external:/app/default_storage
     environment:
       "Database:ConnectionString": "Data Source=192.168.222.104;Initial Catalog=HBKStorage;Persist Security Info=True;User ID=sa;Password=MGG2hZPxtW22@"
       "NLog:LogstashUrl": "http://192.168.222.102:5046/dev-hbk-storage-image-compress-plugin"
