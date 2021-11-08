@@ -1,10 +1,13 @@
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core;
 using HBK.Storage.ImageCompressPlugin.Models;
+using HBK.Storage.PluginCore.NLog;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NLog.LayoutRenderers;
+using NLog.Web;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +19,7 @@ namespace HBK.Storage.ImageCompressPlugin
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            Program.CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -37,10 +40,16 @@ namespace HBK.Storage.ImageCompressPlugin
                         return option;
                     });
 
+                    LayoutRenderer.Register<PluginIdentityLayoutRenderer>("plugin_identity");
+                    LayoutRenderer.Register<PluginFileEntityFilenameLayoutRenderer>("plugin_file_entity_filename");
+                    LayoutRenderer.Register<PluginFileEntityIdLayoutRenderer>("plugin_file_entity_id");
+                    LayoutRenderer.Register<PluginActivityIdReanderer>("plugin_activityId");
+
                     services.AddHBKStorageService();
 
                     services.AddSingleton<ImageCompressTaskManager>();
                     services.AddHostedService<TaskWorker>();
-                });
+                })
+                .UseNLog();
     }
 }
