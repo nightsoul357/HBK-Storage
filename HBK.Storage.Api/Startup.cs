@@ -225,8 +225,7 @@ namespace HBK.Storage.Api
         /// <param name="env"></param>
         /// <param name="authorizeKeyService"></param>
         /// <param name="storageProviderService"></param>
-        /// <param name="db"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AuthorizeKeyService authorizeKeyService, StorageProviderService storageProviderService, HBKStorageContext db)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AuthorizeKeyService authorizeKeyService, StorageProviderService storageProviderService)
         {
             if (env.IsDevelopment())
             {

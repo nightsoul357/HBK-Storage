@@ -1,5 +1,7 @@
 FROM mcr.microsoft.com/mssql/server:2019-latest
 COPY mssql2019_initialization.sql .
-COPY entrypoint_db.sh .
-RUN ["chmod", "+x", "entrypoint_db.sh"]
-ENTRYPOINT ["sh" ,"entrypoint_db.sh"] 
+ENV ACCEPT_EULA=Y
+ENV SA_PASSWORD=MGG2hZPxtW22@
+RUN ( /opt/mssql/bin/sqlservr --accept-eula & ) | grep -q "Service Broker manager has started" \
+    && /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'MGG2hZPxtW22@' -i mssql2019_initialization.sql \
+    && pkill sqlservr 
