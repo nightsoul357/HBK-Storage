@@ -7,6 +7,9 @@ services:
       dockerfile: Dockerfile_DB
     ports:
       - "1433:1433"
+    environment:
+      "ACCEPT_EULA": "Y"
+      "SA_PASSWORD": "MGG2hZPxtW22@"
 
   api:
     build:

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace HBK.Storage.Sync
 {
     /// <summary>
-    /// ¥ô°È°õ¦æªÌ
+    /// ä»»å‹™åŸ·è¡Œè€…
     /// </summary>
     public class TaskWorker : BackgroundService
     {
@@ -22,7 +22,7 @@ namespace HBK.Storage.Sync
         private readonly IHostEnvironment _hostEnvironment;
 
         /// <summary>
-        /// «Ø¥ß¤@­Ó·sªº°õ¦æ­ÓÅé
+        /// å»ºç«‹ä¸€å€‹æ–°çš„åŸ·è¡Œå€‹é«”
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="serviceProvider"></param>
@@ -41,7 +41,7 @@ namespace HBK.Storage.Sync
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("ªA°È°õ¦æ(ExecuteAsync)");
+            _logger.LogInformation("æœå‹™åŸ·è¡Œ(ExecuteAsync)");
 
             try
             {
@@ -51,26 +51,26 @@ namespace HBK.Storage.Sync
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "ªA°Èµo¥Í¥¼¹w´Áªº¨Ò¥~");
+                _logger.LogError(ex, "æœå‹™ç™¼ç”Ÿæœªé æœŸçš„ä¾‹å¤–");
             }
             return Task.CompletedTask;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("ªA°È±Ò°Ê(StartAsync)");
+            _logger.LogInformation("æœå‹™å•Ÿå‹•(StartAsync)");
             return base.StartAsync(cancellationToken);
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("ªA°È¼È°±(StopAsync)");
+            _logger.LogInformation("æœå‹™æš«åœ(StopAsync)");
             return base.StopAsync(cancellationToken);
         }
 
         public override void Dispose()
         {
-            _logger.LogInformation("ªA°ÈÄÀ©ñ(Dispose)");
+            _logger.LogInformation("æœå‹™é‡‹æ”¾(Dispose)");
             base.Dispose();
         }
 
