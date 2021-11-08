@@ -42,6 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F9B2CA6C
 		docker-compose.yml = docker-compose.yml
 		Dockerfile_Api = Dockerfile_Api
 		Dockerfile_DB = Dockerfile_DB
+		Dockerfile_Plugin = Dockerfile_Plugin
 		Dockerfile_Sync = Dockerfile_Sync
 		Dockerfile_Web = Dockerfile_Web
 		entrypoint_web.sh = entrypoint_web.sh
