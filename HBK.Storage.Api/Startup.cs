@@ -297,6 +297,7 @@ namespace HBK.Storage.Api
                     {
                         new StorageGroup()
                         {
+                            StorageGroupId = Guid.NewGuid(),
                             Name = this.Configuration["DefaultStorageProvider:StorageGroupName"],
                             Type = Adapter.Enums.StorageTypeEnum.Local,
                             Status = Adapter.Enums.StorageGroupStatusEnum.None,
@@ -307,6 +308,7 @@ namespace HBK.Storage.Api
                             {
                                 new Adapter.Storages.Storage()
                                 {
+                                    StorageId = Guid.NewGuid(),
                                     Name =  this.Configuration["DefaultStorageProvider:StorageName"],
                                     SizeLimit = this.Configuration.GetValue<long>("DefaultStorageProvider:SizeLimit"),
                                     Status = Adapter.Enums.StorageStatusEnum.None,
