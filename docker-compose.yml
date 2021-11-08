@@ -25,7 +25,6 @@ services:
       "DefaultStorageProvider:Location": "/app/default_storage"
       "DefaultStorageProvider:SizeLimit": "5368709120"
       "NLog:LogstashUrl": "http://192.168.222.102:5046/dev-hbk-storage-api"
-      "NLog:WriteTo": "File, Logstash"
 
   web:
     build:
@@ -47,4 +46,3 @@ services:
     environment:
       "Database:ConnectionString": "Data Source=192.168.222.104;Initial Catalog=HBKStorage;Persist Security Info=True;User ID=sa;Password=MGG2hZPxtW22@"
       "NLog:LogstashUrl": "http://192.168.222.102:5046/dev-hbk-storage-sync"
-      "NLog:WriteTo": "File, Logstash"

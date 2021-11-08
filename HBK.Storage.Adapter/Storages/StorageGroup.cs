@@ -25,6 +25,7 @@ namespace HBK.Storage.Adapter.Storages
         {
             this.Storage = new HashSet<Storage>();
             this.FileAccessToken = new HashSet<FileAccessToken>();
+            this.SyncPolicy = new SyncPolicy();
         }
         /// <summary>
         /// 取得或設定儲存個體群組 ID
