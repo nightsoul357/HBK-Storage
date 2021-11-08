@@ -223,9 +223,9 @@ namespace HBK.Storage.Api
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        /// <param name="db"></param>
         /// <param name="authorizeKeyService"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, HBKStorageContext db, AuthorizeKeyService authorizeKeyService)
+        /// <param name="storageProviderService"></param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AuthorizeKeyService authorizeKeyService, StorageProviderService storageProviderService)
         {
             if (env.IsDevelopment())
             {
@@ -271,14 +271,56 @@ namespace HBK.Storage.Api
                 }
             });
 
-            if (authorizeKeyService.FindByKeyValueAsync(this.Configuration["RootKey:Key"]).Result == null)
+            this.GenerateInitializationDataAsync(authorizeKeyService, storageProviderService).Wait();
+        }
+
+        private async Task GenerateInitializationDataAsync(AuthorizeKeyService authorizeKeyService, StorageProviderService storageProviderService)
+        {
+            if (this.Configuration.GetValue<bool>("RootKey:EnsureCreated") && (await authorizeKeyService.FindByKeyValueAsync(this.Configuration["RootKey:Key"])) == null)
             {
-                authorizeKeyService.AddAsync(new AuthorizeKey()
+                await authorizeKeyService.AddAsync(new AuthorizeKey()
                 {
                     KeyValue = this.Configuration["RootKey:Key"],
                     Name = this.Configuration["RootKey:Name"],
                     Type = Adapter.Enums.AuthorizeKeyTypeEnum.Root
-                }).Wait();
+                });
+            }
+
+            if (this.Configuration.GetValue<bool>("DefaultStorageProvider:EnsureCreated") && (await storageProviderService.FindByIdAsync(this.Configuration.GetValue<Guid>("DefaultStorageProvider:ProviderId"))) == null)
+            {
+                await storageProviderService.AddAsync(new StorageProvider()
+                {
+                    StorageProviderId = this.Configuration.GetValue<Guid>("DefaultStorageProvider:ProviderId"),
+                    Name = this.Configuration["DefaultStorageProvider:ProviderName"],
+                    Status = Adapter.Enums.StorageProviderStatusEnum.None,
+                    StorageGroup = new List<StorageGroup>()
+                    {
+                        new StorageGroup()
+                        {
+                            Name = this.Configuration["DefaultStorageProvider:StorageGroupName"],
+                            Type = Adapter.Enums.StorageTypeEnum.Local,
+                            Status = Adapter.Enums.StorageGroupStatusEnum.None,
+                            SyncMode = Adapter.Enums.SyncModeEnum.Never,
+                            UploadPriority = 1,
+                            DownloadPriority = 1,
+                            Storage = new List<Adapter.Storages.Storage>()
+                            {
+                                new Adapter.Storages.Storage()
+                                {
+                                    Name =  this.Configuration["DefaultStorageProvider:StorageName"],
+                                    SizeLimit = this.Configuration.GetValue<long>("DefaultStorageProvider:SizeLimit"),
+                                    Status = Adapter.Enums.StorageStatusEnum.None,
+                                    Type = Adapter.Enums.StorageTypeEnum.Local,
+                                    Credentials = new Adapter.StorageCredentials.LocalStorageCredentials()
+                                    {
+                                        StorageType = Adapter.Enums.StorageTypeEnum.Local,
+                                        Directory = this.Configuration["DefaultStorageProvider:Location"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
             }
         }
 

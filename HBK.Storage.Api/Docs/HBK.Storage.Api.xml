@@ -1916,14 +1916,14 @@
             </summary>
             <param name="services"></param>
         </member>
-        <member name="M:HBK.Storage.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,HBK.Storage.Adapter.Storages.HBKStorageContext,HBK.Storage.Core.Services.AuthorizeKeyService)">
+        <member name="M:HBK.Storage.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,HBK.Storage.Core.Services.AuthorizeKeyService,HBK.Storage.Core.Services.StorageProviderService)">
             <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
             </summary>
             <param name="app"></param>
             <param name="env"></param>
-            <param name="db"></param>
             <param name="authorizeKeyService"></param>
+            <param name="storageProviderService"></param>
         </member>
         <member name="M:HBK.Storage.Api.Startup.GetEdmModel(System.IServiceProvider)">
             <summary>
