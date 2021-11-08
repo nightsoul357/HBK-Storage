@@ -29,7 +29,7 @@ services:
     ports:
       - "1080:80"
     environment:
-      "HBKStorageUrl": "http://192.168.222.104:2080"
+      "HBKStorageUrl": "http://192.168.222.104:2080/"
 
   sync:
     build:
