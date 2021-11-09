@@ -244,11 +244,6 @@ namespace HBK.Storage.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HBK Storage Api v1"));
             }
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor
-            });
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
