@@ -40,6 +40,7 @@ using HBK.Storage.Api.OData;
 using HBK.Storage.Api.Factories;
 using HBK.Storage.Api.FileAccessHandlers;
 using System.IO;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace HBK.Storage.Api
 {
@@ -242,6 +243,11 @@ namespace HBK.Storage.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HBK Storage Api v1"));
             }
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor
+            });
 
             app.UseHttpsRedirection();
 
