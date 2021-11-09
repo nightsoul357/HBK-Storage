@@ -67,6 +67,7 @@ namespace HBK.Storage.Web
 
             builder.Services.AddScoped<HBKDialogService>();
             builder.Services.AddScoped<ClipboardService>();
+            builder.Services.AddScoped<NavigationSerivce>();
 
             builder.Services.AddBlazorDownloadFile();
 

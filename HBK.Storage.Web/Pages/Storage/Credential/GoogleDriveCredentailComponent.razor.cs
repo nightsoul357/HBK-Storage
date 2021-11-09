@@ -1,6 +1,16 @@
-﻿using HBK.Storage.Web.DataSource;
+﻿using Blazored.LocalStorage;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Flows;
+using Google.Apis.Auth.OAuth2.Web;
+using Google.Apis.Drive.v3;
+using Google.Apis.Util.Store;
+using HBK.Storage.Web.DataSource;
 using HBK.Storage.Web.DataSource.Models;
+using HBK.Storage.Web.Features;
+using HBK.Storage.Web.Models;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace HBK.Storage.Web.Pages.Storage.Credential
 {
-    public partial class GoogleDriveCredentailComponent : ICredentialsComponent
+    public partial class GoogleDriveCredentailComponent : ICredentialsComponent, IDisposable
     {
         /// <summary>
         /// 取得或設定父資料夾 ID
@@ -30,6 +40,19 @@ namespace HBK.Storage.Web.Pages.Storage.Credential
         /// 取得或設定 Token 資訊
         /// </summary>
         public Dictionary<string, string> Tokens { get; set; }
+        public string RedirectUri { get; set; }
+
+        public IAuthorizationCodeFlow Flow { get; set; }
+        [Inject]
+        public ISyncLocalStorageService SyncLocalStorageService { get; set; }
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
+        [Inject]
+        public NavigationSerivce NavigationSerivce { get; set; }
+        public System.Timers.Timer Timer { get; set; }
+        public string TokenMessage { get; set; }
+        [Inject]
+        protected ISnackbar Snackbar { get; set; }
         [Parameter]
         public StorageCredentialsBase Credential
         {
@@ -47,7 +70,7 @@ namespace HBK.Storage.Web.Pages.Storage.Credential
             }
             set
             {
-                if(value != null)
+                if (value != null)
                 {
                     this.ClientId = ((GoogleDriveCredentials)value).ClientId;
                     this.ClientSecret = ((GoogleDriveCredentials)value).ClientSecret;
@@ -56,6 +79,82 @@ namespace HBK.Storage.Web.Pages.Storage.Credential
                     this.User = ((GoogleDriveCredentials)value).User;
                 }
             }
+        }
+        protected override void OnInitialized()
+        {
+            this.RedirectUri = this.NavigationManager.BaseUri + "signin-google";
+            this.Timer = new System.Timers.Timer(1000);
+            this.Timer.Elapsed += Timer_Elapsed;
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            _ = base.InvokeAsync(async () =>
+            {
+                var result = this.SyncLocalStorageService.GetItem<UpdateGoogleTokenResponse>(nameof(UpdateGoogleTokenResponse));
+                if (result != null)
+                {
+                    try
+                    {
+                        var token = await this.Flow.ExchangeCodeForTokenAsync(this.User, result.Code, this.RedirectUri, System.Threading.CancellationToken.None);
+                        this.Tokens = new Dictionary<string, string>()
+                        {
+                            ["HBKStorage"] = JsonConvert.SerializeObject(token)
+                        };
+                        this.TokenMessage = string.Empty;
+                    }
+                    catch (Exception ex)
+                    {
+                        this.TokenMessage = $"更新失敗 {ex.Message}";
+                    }
+                    finally
+                    {
+                        this.Timer.Stop();
+                        this.StateHasChanged();
+                    }
+                    this.SyncLocalStorageService.RemoveItem(nameof(UpdateGoogleTokenResponse));
+                }
+            });
+
+        }
+        public void GetToken()
+        {
+            if (string.IsNullOrEmpty(this.ClientId) || string.IsNullOrEmpty(this.ClientSecret) || string.IsNullOrEmpty(this.User))
+            {
+                this.Snackbar.Add("請先填寫 Client ID、Client Secret 以及 User", Severity.Warning);
+                return;
+            }
+            this.Flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
+            {
+                ClientSecrets = new ClientSecrets
+                {
+                    ClientId = this.ClientId,
+                    ClientSecret = this.ClientSecret
+                },
+                Scopes = new[] { DriveService.Scope.Drive },
+                DataStore = new FileDataStore("Drive.Api.Auth.Store")
+            });
+
+            AuthorizationCodeWebApp authorizationCodeWebApp = new AuthorizationCodeWebApp(this.Flow, this.RedirectUri, string.Empty);
+            var result = authorizationCodeWebApp.AuthorizeAsync(this.User, System.Threading.CancellationToken.None).Result;
+            if (result.Credential != null)
+            {
+                this.Tokens = new Dictionary<string, string>()
+                {
+                    ["HBKStorage"] = JsonConvert.SerializeObject(result.Credential.Token)
+                };
+                base.StateHasChanged();
+            }
+            else
+            {
+                this.Timer.Start();
+                this.NavigationSerivce.NavigateToAsync(result.RedirectUri);
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Timer.Dispose();
         }
     }
 }
