@@ -20,7 +20,7 @@ namespace HBK.Storage.Adapter.StorageCredentials
         /// </summary>
         public string SecretKey { get; set; }
         /// <summary>
-        /// 取得或設定Bucket 名稱
+        /// 取得或設定 Bucket 名稱
         /// </summary>
         public string BucketName { get; set; }
         /// <summary>

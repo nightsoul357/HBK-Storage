@@ -94,12 +94,13 @@ namespace HBK.Storage.Web.Pages.Storage.Credential
                 var result = this.SyncLocalStorageService.GetItem<UpdateGoogleTokenResponse>(nameof(UpdateGoogleTokenResponse));
                 if (result != null)
                 {
+                    this.Timer.Stop();
                     try
                     {
                         var token = await this.Flow.ExchangeCodeForTokenAsync(this.User, result.Code, this.RedirectUri, System.Threading.CancellationToken.None);
                         this.Tokens = new Dictionary<string, string>()
                         {
-                            ["HBKStorage"] = JsonConvert.SerializeObject(token)
+                            [this.User] = JsonConvert.SerializeObject(token)
                         };
                         this.TokenMessage = string.Empty;
                     }
@@ -109,7 +110,6 @@ namespace HBK.Storage.Web.Pages.Storage.Credential
                     }
                     finally
                     {
-                        this.Timer.Stop();
                         this.StateHasChanged();
                     }
                     this.SyncLocalStorageService.RemoveItem(nameof(UpdateGoogleTokenResponse));
@@ -132,7 +132,7 @@ namespace HBK.Storage.Web.Pages.Storage.Credential
                     ClientSecret = this.ClientSecret
                 },
                 Scopes = new[] { DriveService.Scope.Drive },
-                DataStore = new FileDataStore("Drive.Api.Auth.Store")
+                DataStore = new NullDataStore()
             });
 
             AuthorizationCodeWebApp authorizationCodeWebApp = new AuthorizationCodeWebApp(this.Flow, this.RedirectUri, string.Empty);
@@ -141,7 +141,7 @@ namespace HBK.Storage.Web.Pages.Storage.Credential
             {
                 this.Tokens = new Dictionary<string, string>()
                 {
-                    ["HBKStorage"] = JsonConvert.SerializeObject(result.Credential.Token)
+                    [this.User] = JsonConvert.SerializeObject(result.Credential.Token)
                 };
                 base.StateHasChanged();
             }
