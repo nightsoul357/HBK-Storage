@@ -66,6 +66,10 @@ namespace HBK.Storage.Adapter.Storages
         [Sortable]
         public string MimeType { get; set; }
         /// <summary>
+        /// 取得或設定存取模式
+        /// </summary>
+        public AccessTypeEnum AccessType { get; set; }
+        /// <summary>
         /// 取得或設定是否標記刪除
         /// </summary>
         public bool IsMarkDelete { get; set; }

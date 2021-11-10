@@ -8,14 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HBK.Storage.Api.FileAccessHandlers
+namespace HBK.Storage.Api.FileProcessHandlers
 {
     /// <summary>
     /// 處理使用 M3U8 影片轉換插件轉換完成的 M3U8 檔案實體
     /// </summary>
-    public class M3U8FileAccessHandler : FileAccessHandlerBase
+    public class M3U8FileProcessHandler : FileProcessHandlerBase
     {
-        private readonly ILogger<M3U8FileAccessHandler> _logger;
+        private readonly ILogger<M3U8FileProcessHandler> _logger;
         private readonly FileEntityService _fileEntityService;
         private readonly FileAccessTokenService _fileAccessTokenService;
         /// <summary>
@@ -24,7 +24,7 @@ namespace HBK.Storage.Api.FileAccessHandlers
         /// <param name="logger"></param>
         /// <param name="fileEntityService"></param>
         /// <param name="fileAccessTokenService"></param>
-        public M3U8FileAccessHandler(ILogger<M3U8FileAccessHandler> logger, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService)
+        public M3U8FileProcessHandler(ILogger<M3U8FileProcessHandler> logger, FileEntityService fileEntityService, FileAccessTokenService fileAccessTokenService)
         {
             _logger = logger;
             _fileEntityService = fileEntityService;
@@ -32,7 +32,7 @@ namespace HBK.Storage.Api.FileAccessHandlers
         }
 
         /// <inheritdoc/>
-        public override async Task<FileAccessTaskModel> ProcessAsync(FileAccessTaskModel taskModel)
+        public override async Task<FileProcessTaskModel> ProcessAsync(FileProcessTaskModel taskModel)
         {
             if (taskModel.FileEntity.MimeType != "application/x-mpegURL")
             {

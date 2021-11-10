@@ -94,19 +94,15 @@
             外部檔案存取控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService,HBK.Storage.Core.Services.FileEntityStorageService,HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy)">
+        <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.#ctor(HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy)">
             <summary>
             建構一個新的執行個體
             </summary>
-            <param name="storageProviderService"></param>
-            <param name="fileEntityService"></param>
-            <param name="fileAccessTokenService"></param>
-            <param name="fileEntityStorageService"></param>
             <param name="fileAccessHandlerProxy"></param>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.Guid,System.String)">
             <summary>
-            下載檔案
+            下載檔案(未帶入 esic 為下載公開檔案)
             </summary>
             <param name="fileEntityId">檔案實體 ID</param>
             <param name="esic">存取權杖(該參數可於 Query 或 Header 內則一處帶入)</param>
@@ -114,7 +110,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.ExternalFileAccessController.DirectDownload(System.Guid,System.String,System.String)">
             <summary>
-            下載檔案
+            下載檔案(未帶入 esic 為下載公開檔案)
             </summary>
             <param name="fileEntityId">檔案實體 ID</param>
             <param name="fileName">檔案名稱</param>
@@ -753,35 +749,278 @@
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase">
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.AddTokenAccessTimesAccessHandler">
             <summary>
-            存取檔案處理器基底
+            新增 Token 存取次數檔案存取處理器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel)">
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.AddTokenAccessTimesAccessHandler.#ctor(HBK.Storage.Core.Services.FileAccessTokenService)">
+            <summary>
+            初始化新增存取次數檔案存取處理器
+            </summary>
+            <param name="fileAccessTokenService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.AddTokenAccessTimesAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.FetchFileInfoAccessHandler">
+            <summary>
+            取得檔案資訊的檔案存取處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FetchFileInfoAccessHandler.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityStorageService,HBK.Storage.Core.Services.FileEntityService)">
+            <summary>
+            初始化取得檔案資訊的檔案存取處理器
+            </summary>
+            <param name="storageProviderService"></param>
+            <param name="fileEntityStorageService"></param>
+            <param name="fileEntityService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FetchFileInfoAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy">
+            <summary>
+            檔案存取處理器代理執行者
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy.#ctor(HBK.Storage.Core.Services.FileAccessTokenService,HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerProxy,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityStorageService)">
+            <summary>
+            初始化檔案存取處理器代理執行者
+            </summary>
+            <param name="fileAccessTokenService"></param>
+            <param name="fileProcessHandlerProxy"></param>
+            <param name="fileEntityService"></param>
+            <param name="storageProviderService"></param>
+            <param name="fileEntityStorageService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy.DoDirectDownloadAsync(System.String)">
+            <summary>
+            執行一般下載
+            </summary>
+            <param name="esic"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy.DoDirectForFileEntityIdDownloadAsync(System.Guid,System.String)">
+            <summary>
+            執行對於指定檔案實體 ID 之下載
+            </summary>
+            <param name="fileEntityId"></param>
+            <param name="esic"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy.DoDirectForPublicFileEntityDownloadAsync(System.Guid)">
+            <summary>
+            下載公開的檔案
+            </summary>
+            <param name="fileEntityId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileEntityAccessHandler">
+            <summary>
+            處理檔案實體的檔案存取處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileEntityAccessHandler.#ctor(HBK.Storage.Core.Services.FileEntityService)">
+            <summary>
+            初始化處理檔案實體的檔案存取處理器
+            </summary>
+            <param name="fileEntityService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileEntityAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileProcessAccessHandler">
+            <summary>
+            處理檔案處理器代理執行者檔案存取處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileProcessAccessHandler.#ctor(HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerProxy)">
+            <summary>
+            初始化處理檔案處理器代理執行者檔案存取處理器
+            </summary>
+            <param name="fileProcessHandlerProxy"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileProcessAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.IFileAccessHandler">
+            <summary>
+            檔案存取處理器介面
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.IFileAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
             <summary>
             處理檔案
             </summary>
             <param name="taskModel"></param>
             <returns></returns>
         </member>
-        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase.Name">
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.JwtSecurityTokenAccessHandler">
+            <summary>
+            處理 JWT 的檔案存取處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.JwtSecurityTokenAccessHandler.#ctor(HBK.Storage.Core.Services.FileAccessTokenService,HBK.Storage.Core.Enums.FileAccessTokenTypeEnum[])">
+            <summary>
+            初始化處理 JWT 的檔案存取處理器
+            </summary>
+            <param name="fileAccessTokenService"></param>
+            <param name="fileAccessTokenTypes"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.JwtSecurityTokenAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessMiddleData">
+            <summary>
+            檔案存取中繼資料
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessMiddleData.JwtSecurityToken">
+            <summary>
+            取得或設定 JWT
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessMiddleData.FileEntity">
+            <summary>
+            取得或設定檔案實體
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessMiddleData.FileAccessToken">
+            <summary>
+            取得或設定檔案存取權杖
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessMiddleData.FileEntityStorage">
+            <summary>
+            取得或設定檔案位於儲存個體上的橋接資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessMiddleData.FileInfo">
+            <summary>
+            取得或設定儲存服務檔案資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessMiddleData.FileProcessTaskModel">
+            <summary>
+            取得或設定處理檔案任務模型
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessRequest">
+            <summary>
+            檔案處理請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessRequest.Esic">
+            <summary>
+            取得或設定驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessRequest.FileEntityId">
+            <summary>
+            取得或設定檔案實體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessRequest.HttpRequest">
+            <summary>
+            取得或設定 HTTP 請求內容
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel">
+            <summary>
+            存取檔案任務模型
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel.#ctor(System.String)">
+            <summary>
+            初始化存取檔案任務模型
+            </summary>
+            <param name="esic"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel.#ctor(System.Guid,System.String)">
+            <summary>
+            初始化存取檔案任務模型
+            </summary>
+            <param name="fileEntityId"></param>
+            <param name="esic"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel.#ctor(System.Guid)">
+            <summary>
+            初始化存取檔案任務模型
+            </summary>
+            <param name="fileEntityId"></param>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel.Request">
+            <summary>
+            取得或設定檔案處理請求內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel.MiddleData">
+            <summary>
+            取得或設定檔案存取中繼資料
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel.ErrorObject">
+            <summary>
+            取得或設定錯誤回應內容
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel.FileInfo">
+            <summary>
+            取得或設定回應檔案
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.ValidateFileEntityAccessTypeAccessHandler">
+            <summary>
+            驗證檔案存取類型的檔案存取處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.ValidateFileEntityAccessTypeAccessHandler.#ctor(HBK.Storage.Adapter.Enums.AccessTypeEnum)">
+            <summary>
+            初始化驗證檔案存取類型的檔案存取處理器
+            </summary>
+            <param name="accessType"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.ValidateFileEntityAccessTypeAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.FileAccessHandlers.ValidateTagPatternAccessHandler">
+            <summary>
+            驗證 Tag 格式的檔案存取處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileAccessHandlers.ValidateTagPatternAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerBase">
+            <summary>
+            處理檔案處理器基底
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerBase.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
+            <summary>
+            處理檔案
+            </summary>
+            <param name="taskModel"></param>
+            <returns></returns>
+        </member>
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerBase.Name">
             <summary>
             取得處理器名稱
             </summary>
         </member>
-        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy">
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerProxy">
             <summary>
-            存取檔案處理器代理執行者
+            處理檔案處理器代理執行者
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerBase})">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerProxy.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerBase})">
             <summary>
             建立一個新的執行個體
             </summary>
             <param name="fileAccessHandlers"></param>
         </member>
-        <member name="M:HBK.Storage.Api.FileAccessHandlers.FileAccessHandlerProxy.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel,System.String)">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerProxy.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel,System.String)">
             <summary>
             根據對應的處理器指示字串執行存取檔案處理器
             </summary>
@@ -789,37 +1028,37 @@
             <param name="handlerIndicate">處理器指示字串</param>
             <returns></returns>
         </member>
-        <member name="T:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel">
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel">
             <summary>
-            存取檔案任務模型
+            處理檔案任務模型
             </summary>
         </member>
-        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.StorageProviderId">
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel.StorageProviderId">
             <summary>
             取得或設定檔案服務 ID
             </summary>
         </member>
-        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.FileEntity">
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel.FileEntity">
             <summary>
             取得或設定檔案實體
             </summary>
         </member>
-        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.FileInfo">
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel.FileInfo">
             <summary>
             取得或設定檔案資訊
             </summary>
         </member>
-        <member name="P:HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel.Token">
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel.Token">
             <summary>
             取得或設定存取用的權杖
             </summary>
         </member>
-        <member name="T:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler">
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.M3U8FileProcessHandler">
             <summary>
             處理使用 M3U8 影片轉換插件轉換完成的 M3U8 檔案實體
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler.#ctor(Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler},HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService)">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.M3U8FileProcessHandler.#ctor(Microsoft.Extensions.Logging.ILogger{HBK.Storage.Api.FileProcessHandlers.M3U8FileProcessHandler},HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileAccessTokenService)">
             <summary>
             建立一個新的執行個體
             </summary>
@@ -827,10 +1066,10 @@
             <param name="fileEntityService"></param>
             <param name="fileAccessTokenService"></param>
         </member>
-        <member name="M:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.FileAccessTaskModel)">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.M3U8FileProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
             <inheritdoc/>
         </member>
-        <member name="P:HBK.Storage.Api.FileAccessHandlers.M3U8FileAccessHandler.Name">
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.M3U8FileProcessHandler.Name">
             <inheritdoc/>
         </member>
         <member name="T:HBK.Storage.Api.Filters.DisableFormValueModelBindingFilter">
@@ -1274,6 +1513,11 @@
             擴充資訊
             </summary>
         </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.FileEntityUpdateRequest.AccessType">
+            <summary>
+            存取模式
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Api.Models.FileService.GetExternalDirectLinkResponse">
             <summary>
             取得外部檔案直連位置回應內容
@@ -1419,6 +1663,20 @@
             <summary>
             檔案串流
             </summary>
+        </member>
+        <member name="T:HBK.Storage.Api.Models.MapHeaderFileStreamResult">
+            <summary>
+            附加對應 Header 的 File Stream Result
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.Models.MapHeaderFileStreamResult.#ctor(System.IO.Stream,System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.Models.MapHeaderFileStreamResult.#ctor(System.IO.Stream,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.Models.MapHeaderFileStreamResult.ExecuteResultAsync(Microsoft.AspNetCore.Mvc.ActionContext)">
+            <inheritdoc/>
         </member>
         <member name="T:HBK.Storage.Api.Models.PagedResponse`1">
             <summary>

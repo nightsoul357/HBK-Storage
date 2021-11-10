@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HBK.Storage.Adapter.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -21,5 +22,10 @@ namespace HBK.Storage.Api.Models.FileService
         /// </summary>
         [Required]
         public string ExtendProperty { get; set; }
+        /// <summary>
+        /// 存取模式
+        /// </summary>
+        [Required]
+        public AccessTypeEnum AccessType { get; set; }
     }
 }

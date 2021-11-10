@@ -292,7 +292,8 @@ namespace HBK.Storage.Api.Controllers
                         Name = request.Filename,
                         Size = base.HttpContext.Request.ContentLength.Value,
                         Status = FileEntityStatusEnum.None,
-                        FileEntityTag = request.Tags.Select(x => new FileEntityTag() { Value = x }).ToList()
+                        FileEntityTag = request.Tags.Select(x => new FileEntityTag() { Value = x }).ToList(),
+                        AccessType = AccessTypeEnum.Private
                     },
                     request.FileStream, "Uploda Service");
             return FileEntityController.BuildFileEntityResponse(fileEntity, _fileEntityService);

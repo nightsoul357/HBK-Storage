@@ -6,12 +6,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HBK.Storage.Api.FileAccessHandlers
+namespace HBK.Storage.Api.FileProcessHandlers
 {
     /// <summary>
-    /// 存取檔案任務模型
+    /// 處理檔案任務模型
     /// </summary>
-    public class FileAccessTaskModel
+    public class FileProcessTaskModel
     {
         /// <summary>
         /// 取得或設定檔案服務 ID

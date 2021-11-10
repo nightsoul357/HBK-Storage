@@ -83,6 +83,9 @@ namespace HBK.Storage.Api.Controllers
             FileEntityUpdateRequest request)
         {
             var fileEntity = await _fileEntityService.FindByIdAsync(fileEntityId);
+            fileEntity.Name = request.Filename;
+            fileEntity.ExtendProperty = request.ExtendProperty;
+            fileEntity.AccessType = request.AccessType;
             fileEntity = await _fileEntityService.UpdateAsync(fileEntity);
             return FileEntityController.BuildFileEntityResponse(fileEntity, _fileEntityService);
         }

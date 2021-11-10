@@ -60,6 +60,7 @@ namespace HBK.Storage.Core.Services
             original.Name = data.Name;
             original.Size = data.Size;
             original.Status = data.Status;
+            original.AccessType = data.AccessType;
             await _dbContext.SaveChangesAsync();
             return await this.FindByIdAsync(data.FileEntityId);
         }
@@ -80,6 +81,7 @@ namespace HBK.Storage.Core.Services
                 original.Name = data.Name;
                 original.Size = data.Size;
                 original.Status = data.Status;
+                original.AccessType = data.AccessType;
                 result.Add(original);
             }
             await _dbContext.SaveChangesAsync();

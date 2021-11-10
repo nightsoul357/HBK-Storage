@@ -30,6 +30,21 @@
             允許欄位可被排序
             </summary>
         </member>
+        <member name="T:HBK.Storage.Adapter.Enums.AccessTypeEnum">
+            <summary>
+            存取模式列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AccessTypeEnum.Private">
+            <summary>
+            私人
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AccessTypeEnum.Public">
+            <summary>
+            公開
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum">
             <summary>
             金鑰使用範圍之操作類型
@@ -723,6 +738,11 @@
             取得或設定檔案的網際網路媒體型式
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.AccessType">
+            <summary>
+            取得或設定存取模式
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.FileEntity.IsMarkDelete">
             <summary>
             取得或設定是否標記刪除
@@ -1295,7 +1315,7 @@
         </member>
         <member name="P:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials.BucketName">
             <summary>
-            取得或設定Bucket 名稱
+            取得或設定 Bucket 名稱
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials.Region">

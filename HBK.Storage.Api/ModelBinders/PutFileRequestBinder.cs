@@ -107,6 +107,10 @@ namespace HBK.Storage.Api.ModelBinders
             {
                 model.MimeType = section.ContentType;
             }
+            if (String.IsNullOrWhiteSpace(model.MimeType)) // 如果仍然是空值
+            {
+                model.MimeType = "application/octet-stream";
+            }
             if (String.IsNullOrWhiteSpace(model.Filename))
             {
                 model.Filename = section.AsFileSection().FileName;
