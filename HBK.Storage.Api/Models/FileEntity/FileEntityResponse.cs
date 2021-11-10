@@ -38,6 +38,10 @@ namespace HBK.Storage.Api.Models.FileEntity
         /// </summary>
         public string MimeType { get; set; }
         /// <summary>
+        /// 存取模式
+        /// </summary>
+        public AccessTypeEnum AccessType { get; set; }
+        /// <summary>
         /// 建立時間
         /// </summary>
         public DateTime CreateDateTime { get; internal set; }

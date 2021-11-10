@@ -220,6 +220,7 @@ namespace HBK.Storage.Api.Controllers
                 ExtendProperty = fileEntity.ExtendProperty,
                 FileEntityId = fileEntity.FileEntityId,
                 MimeType = fileEntity.MimeType,
+                AccessType = fileEntity.AccessType,
                 Name = fileEntity.Name,
                 Size = fileEntity.Size,
                 Status = fileEntity.Status.FlattenFlags(),
