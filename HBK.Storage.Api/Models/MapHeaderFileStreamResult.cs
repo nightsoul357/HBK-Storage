@@ -19,12 +19,14 @@ namespace HBK.Storage.Api.Models
             : base(fileStream, contentType)
         {
             _overwriteFilename = overwriteFilename;
+            base.EnableRangeProcessing = true;
         }
 
         /// <inheritdoc/>
         public MapHeaderFileStreamResult(Stream fileStream, string contentType)
             : base(fileStream, contentType)
         {
+            base.EnableRangeProcessing = true;
         }
 
         /// <inheritdoc/>

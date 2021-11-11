@@ -73,7 +73,7 @@ namespace HBK.Storage.Api.Controllers
             }
             return new MapHeaderFileStreamResult(result.FileInfo.CreateReadStream(), result.MiddleData.FileEntity.MimeType)
             {
-                FileDownloadName = result.MiddleData.FileEntity.Name
+                FileDownloadName = result.MiddleData.FileEntity.Name,
             };
         }
         /// <summary>
