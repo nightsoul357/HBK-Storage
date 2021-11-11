@@ -1443,6 +1443,11 @@
             檔案的網際網路媒體型式
             </summary>
         </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.AccessType">
+            <summary>
+            存取模式
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.CreateDateTime">
             <summary>
             建立時間

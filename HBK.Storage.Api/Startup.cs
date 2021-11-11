@@ -42,6 +42,7 @@ using HBK.Storage.Api.FileProcessHandlers;
 using System.IO;
 using Microsoft.AspNetCore.HttpOverrides;
 using HBK.Storage.Api.FileAccessHandlers;
+using Microsoft.IdentityModel.Logging;
 
 namespace HBK.Storage.Api
 {
@@ -234,6 +235,7 @@ namespace HBK.Storage.Api
         {
             if (env.IsDevelopment())
             {
+                IdentityModelEventSource.ShowPII = true;
                 app.UseDeveloperExceptionPage();
             }
             else
