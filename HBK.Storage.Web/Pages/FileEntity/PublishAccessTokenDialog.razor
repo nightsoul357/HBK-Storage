@@ -25,6 +25,12 @@
                     <MudNumericField @bind-Value="this.ExpireAfterMinute" Label="過期時間" Variant="Variant.Text" Min="0" Max="int.MaxValue" AdornmentText="分鐘" />
                 </MudItem>
             }
+            else if (this.FileAccessTokenType == FileAccessTokenType.Normal_no_limit)
+            {
+                <MudItem xs="12" sm="8" md="6">
+                    <MudNumericField @bind-Value="this.ExpireAfterMinute" Label="過期時間" Variant="Variant.Text" Min="0" Max="int.MaxValue" AdornmentText="分鐘" />
+                </MudItem>
+            }
             @if (!String.IsNullOrEmpty(this.FileLink))
             {
                 <MudItem xs="12" sm="12" md="12">

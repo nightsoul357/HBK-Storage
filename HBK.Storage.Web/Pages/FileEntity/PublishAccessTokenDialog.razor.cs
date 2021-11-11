@@ -68,7 +68,8 @@ namespace HBK.Storage.Web.Pages.FileEntity
                 {
                     File_access_token_type = FileAccessTokenType.Normal_no_limit,
                     File_entity_id = this.FileEntity.File_entity_id,
-                    Handler_indicate = this.HandlerIndicate
+                    Handler_indicate = this.HandlerIndicate,
+                    Expire_after_minutes = this.ExpireAfterMinute
                 });
             }
             if (result != null)
