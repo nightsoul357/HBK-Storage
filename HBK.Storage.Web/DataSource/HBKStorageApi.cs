@@ -14,6 +14,7 @@
 
 namespace HBK.Storage.Web.DataSource
 {
+    using System.Threading;
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.13.2.0 (NJsonSchema v10.5.2.0 (Newtonsoft.Json v12.0.0.0))")]

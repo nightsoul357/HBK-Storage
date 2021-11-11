@@ -63,7 +63,7 @@ namespace HBK.Storage.Api.Controllers
             var fileEntityStorage = await _storageProviderService.GetFileEntityStorageAsync(storageProviderId, storageGroupId, fileEntityId);
             var fileInfo = await _fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId);
 
-            return new FileStreamResult(fileInfo.CreateReadStream(), new MediaTypeHeaderValue(fileEntity.MimeType))
+            return new MapHeaderFileStreamResult(fileInfo.CreateReadStream(), fileEntity.MimeType)
             {
                 FileDownloadName = fileEntity.Name
             };

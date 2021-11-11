@@ -17,6 +17,7 @@ using HBK.Storage.Web.Features;
 using Blazored.LocalStorage;
 using HBK.Storage.Web.StorageServices;
 using BlazorDownloadFile;
+using System.Threading;
 
 namespace HBK.Storage.Web
 {
@@ -62,7 +63,7 @@ namespace HBK.Storage.Web
             {
                 var config = sp.GetRequiredService<IConfiguration>();
                 var stateContainer = sp.GetRequiredService<StateContainer>();
-                return new HBKStorageApi(config["HBKStorage:Url"], new HttpClient(), stateContainer);
+                return new HBKStorageApi(config["HBKStorage:Url"], new HttpClient() { Timeout = Timeout.InfiniteTimeSpan }, stateContainer);
             });
 
             builder.Services.AddScoped<HBKDialogService>();
