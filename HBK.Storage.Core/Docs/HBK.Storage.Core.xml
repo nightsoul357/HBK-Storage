@@ -593,6 +593,12 @@
         <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Write(System.Byte[],System.Int32,System.Int32)">
             <inheritdoc/>
         </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream.CanRead">
             <inheritdoc/>
         </member>

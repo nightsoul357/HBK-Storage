@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HBK.Storage.Core.FileSystem.GoogleDrive
@@ -21,7 +22,9 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
         private Google.Apis.Drive.v3.Data.File _file;
         private BlockingCollection<MemoryStream> _commonBuffer;
         private MemoryStream _currentBuffer;
-
+        private Task _fetchTask;
+        private CancellationTokenSource _fetchTaskCancellationTokenSource;
+        private bool _isDisopsed = false;
         /// <summary>
         /// 建立一個新的執行個體
         /// </summary>
@@ -29,16 +32,17 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
         /// <param name="file"></param>
         /// <param name="bufferCount"></param>
         /// <param name="bufferSize"></param>
-        public GoogleDriveFileStream(DriveService driveService, Google.Apis.Drive.v3.Data.File file, int bufferSize = 1024 * 1024 * 10, int bufferCount = 10)
+        public GoogleDriveFileStream(DriveService driveService, Google.Apis.Drive.v3.Data.File file, int bufferSize = 1024 * 1024 * 10, int bufferCount = 2)
         {
             _file = file;
             _driveService = driveService;
             _length = file.Size.Value;
             _position = 0;
+            _fetchTaskCancellationTokenSource = new CancellationTokenSource();
             _commonBuffer = new BlockingCollection<MemoryStream>(new ConcurrentQueue<MemoryStream>(), this.BufferCount);
             this.BufferSize = bufferSize;
             this.BufferCount = bufferCount;
-            Task.Factory.StartNew(this.FetchDataTask);
+
         }
 
         /// <inheritdoc/>
@@ -50,6 +54,11 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
         /// <inheritdoc/>
         public override int Read(byte[] buffer, int offset, int count)
         {
+            if (_fetchTask == null)
+            {
+                _fetchTask = Task.Factory.StartNew(this.FetchDataTaskAsync, _fetchTaskCancellationTokenSource.Token);
+            }
+
             if (_commonBuffer.IsAddingCompleted && _currentBuffer == null && _commonBuffer.Count == 0) // 特殊狀況，目標檔案為 0Bytes 時
             {
                 return 0;
@@ -96,7 +105,24 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
         /// <inheritdoc/>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new NotImplementedException();
+            if (_fetchTask != null)
+            {
+                throw new ApplicationException("開始讀取後禁止重新設定 Seek");
+            }
+
+            switch (origin)
+            {
+                case SeekOrigin.Begin:
+                    _position = offset;
+                    break;
+                case SeekOrigin.Current:
+                    _position += offset;
+                    break;
+                case SeekOrigin.End:
+                    _position = _length + offset;
+                    break;
+            }
+            return this.Position;
         }
 
         /// <inheritdoc/>
@@ -111,25 +137,60 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
             throw new NotImplementedException();
         }
 
-        private void FetchDataTask()
+        private async Task FetchDataTaskAsync()
         {
-            var request = _driveService.Files.Get(_file.Id);
-            long ps = 0;
-            while (ps != this.Length)
+            MemoryStream memoryStream = null;
+            try
             {
-                MemoryStream memoryStream = new MemoryStream();
-                var read = request.DownloadRange(memoryStream, new RangeHeaderValue(ps, ps + this.BufferSize - 1));
-                _commonBuffer.Add(memoryStream);
-                ps += read.BytesDownloaded;
+                var request = _driveService.Files.Get(_file.Id);
+                long ps = _position;
+                while (ps < this.Length && !_fetchTaskCancellationTokenSource.IsCancellationRequested)
+                {
+                    memoryStream = new MemoryStream();
+                    var read = await request.DownloadRangeAsync(memoryStream, new RangeHeaderValue(ps, ps + this.BufferSize - 1), _fetchTaskCancellationTokenSource.Token);
+                    _commonBuffer.Add(memoryStream, _fetchTaskCancellationTokenSource.Token);
+                    ps += read.BytesDownloaded;
+                }
+
+                _commonBuffer.CompleteAdding();
             }
-            _commonBuffer.CompleteAdding();
+            catch (Exception ex) when (ex is ObjectDisposedException || ex is OperationCanceledException) // 中斷快取操作
+            {
+                if (memoryStream != null && memoryStream.Length != 0)
+                {
+                    memoryStream.Dispose();
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void Close()
+        {
+            _fetchTaskCancellationTokenSource.Cancel();
+            base.Close();
+        }
+
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
+        {
+            if (!_isDisopsed)
+            {
+                _commonBuffer.Dispose();
+                _currentBuffer.Dispose();
+                _driveService.Dispose();
+                _file = null;
+                _commonBuffer = null;
+                _currentBuffer = null;
+                _isDisopsed = true;
+            }
+            base.Dispose(disposing);
         }
 
         /// <inheritdoc/>
         public override bool CanRead => true;
 
         /// <inheritdoc/>
-        public override bool CanSeek => false;
+        public override bool CanSeek => true;
 
         /// <inheritdoc/>
         public override bool CanWrite => false;
