@@ -176,7 +176,10 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
             if (!_isDisopsed)
             {
                 _commonBuffer.Dispose();
-                _currentBuffer.Dispose();
+                if (_currentBuffer != null)
+                {
+                    _currentBuffer.Dispose();
+                }
                 _driveService.Dispose();
                 _file = null;
                 _commonBuffer = null;

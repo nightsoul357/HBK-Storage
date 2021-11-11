@@ -1,4 +1,5 @@
 ﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
@@ -42,15 +43,18 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
             : base(name)
         {
             this.Parent = parent;
-            UserCredential credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                   new ClientSecrets()
-                   {
-                       ClientId = clientId,
-                       ClientSecret = clientSecret
-                   }, new string[] { DriveService.Scope.Drive },
-                   user,
-                   CancellationToken.None,
-                   dataStore).Result;
+            var token = dataStore.GetAsync<Google.Apis.Auth.OAuth2.Responses.TokenResponse>(user).Result;
+            var flow = new GoogleAuthorizationCodeFlow(new GoogleAuthorizationCodeFlow.Initializer
+            {
+                ClientSecrets = new ClientSecrets
+                {
+                    ClientId = clientId,
+                    ClientSecret = clientSecret
+                },
+                Scopes = new[] { DriveService.Scope.Drive },
+                DataStore = dataStore
+            });
+            UserCredential credential = new UserCredential(flow, user, token);
 
             _driveService = new DriveService(new BaseClientService.Initializer()
             {
