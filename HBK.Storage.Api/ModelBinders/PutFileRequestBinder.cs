@@ -77,7 +77,7 @@ namespace HBK.Storage.Api.ModelBinders
                                 {
                                     prop.SetValue(model, value);
                                 }
-                                else if (prop.PropertyType == typeof(Guid))
+                                else if (prop.PropertyType == typeof(Guid) || prop.PropertyType == typeof(Guid?))
                                 {
                                     prop.SetValue(model, Guid.Parse(value));
                                 }
@@ -116,7 +116,6 @@ namespace HBK.Storage.Api.ModelBinders
                 model.Filename = section.AsFileSection().FileName;
             }
             bindingContext.Result = ModelBindingResult.Success(model);
-
             return;
         }
 

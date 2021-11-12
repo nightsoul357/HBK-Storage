@@ -64,8 +64,13 @@ namespace HBK.Storage.Core.FileSystem.Mega
         public async override Task<IAsyncFileInfo> PutAsync(string subpath, Stream fileStream)
         {
             var parent = await this.FindNodeByIdAsync(this.ParentId);
-            var node = await _megaApiClient.UploadAsync(fileStream, subpath, parent);
-            return new MegaFileInfo(_megaApiClient, node);
+            using (MemoryStream memoryStream = new MemoryStream()) // Mega 必須事先知道上傳檔案的大小才能進行上傳
+            {
+                await fileStream.CopyToAsync(memoryStream);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                var node = await _megaApiClient.UploadAsync(memoryStream, subpath, parent, modificationDate: DateTime.Now);
+                return new MegaFileInfo(_megaApiClient, node);
+            }
         }
 
         /// <inheritdoc/>

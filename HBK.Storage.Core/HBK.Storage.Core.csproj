@@ -21,7 +21,7 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.7.0.9" />
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.51.0.2265" />
-    <PackageReference Include="MegaApiClient" Version="1.9.0" />
+    <PackageReference Include="MegaApiClient" Version="1.10.0" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="5.0.0" />
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.13" />
   </ItemGroup>

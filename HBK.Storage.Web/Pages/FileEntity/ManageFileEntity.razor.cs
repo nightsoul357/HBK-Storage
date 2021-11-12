@@ -115,14 +115,25 @@ namespace HBK.Storage.Web.Pages.FileEntity
                 }
                 var fileName = Path.Combine(Directory.GetCurrentDirectory(), Path.GetTempFileName());
 
-                await using FileStream fs = new FileStream(fileName, FileMode.Create);
-                await file.OpenReadStream(long.MaxValue).CopyToAsync(fs);
-                fs.Seek(0, SeekOrigin.Begin);
-                await this.HBKStorageApi.FileentitiesPOSTAsync(this.StateContainer.StorageProvider.Storage_provider_id, file.Name, null, null, tags,
-                    file.ContentType,
-                    new FileParameter(fs));
-                await _table.ReloadServerData();
-                base.Snackbar.Add("上傳完成", Severity.Info);
+                try
+                {
+                    await using FileStream fs = new FileStream(fileName, FileMode.Create);
+                    await file.OpenReadStream(long.MaxValue).CopyToAsync(fs);
+                    fs.Seek(0, SeekOrigin.Begin);
+                    await this.HBKStorageApi.FileentitiesPOSTAsync(this.StateContainer.StorageProvider.Storage_provider_id, file.Name, null, null, tags,
+                        file.ContentType,
+                        new FileParameter(fs));
+                    await _table.ReloadServerData();
+                    base.Snackbar.Add("上傳完成", Severity.Info);
+                }
+                catch (Exception ex)
+                {
+                    base.Snackbar.Add($"上傳失敗：{ex.Message}", Severity.Error);
+                }
+                finally
+                {
+                    File.Delete(fileName);
+                }
             }
         }
 
