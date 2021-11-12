@@ -69,6 +69,7 @@ namespace HBK.Storage.Core.FileSystem.Mega
                 await fileStream.CopyToAsync(memoryStream);
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 var node = await _megaApiClient.UploadAsync(memoryStream, subpath, parent, modificationDate: DateTime.Now);
+                fileStream.Close();
                 return new MegaFileInfo(_megaApiClient, node);
             }
         }

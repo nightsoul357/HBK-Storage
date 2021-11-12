@@ -208,6 +208,7 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
             completeRequest.AddPartETags(uploadResponses);
             CompleteMultipartUploadResponse completeUploadResponse =
                     await _client.CompleteMultipartUploadAsync(completeRequest);
+            fileStream.Close();
 
             return await this.GetFileInfoAsync(subpath);
         }

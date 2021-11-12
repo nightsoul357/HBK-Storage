@@ -104,6 +104,7 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
 
             FilesResource.CreateMediaUpload request = _driveService.Files.Create(fileMetadata, fileStream, "application/unknown");
             var progress = await request.UploadAsync();
+            fileStream.Close();
 
             if (progress.Status != Google.Apis.Upload.UploadStatus.Completed)
             {
