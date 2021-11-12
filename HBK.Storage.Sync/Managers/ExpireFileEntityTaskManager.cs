@@ -45,7 +45,7 @@ namespace HBK.Storage.Sync.Managers
                     }
                     if (shouldMarkDeleteFileEntity.Count == 0)
                     {
-                        SpinWait.SpinUntil(() => false, 1000);
+                        SpinWait.SpinUntil(() => false, base.Option.Interval);
                     }
                 }
             }

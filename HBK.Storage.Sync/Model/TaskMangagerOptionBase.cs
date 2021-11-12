@@ -23,5 +23,9 @@ namespace HBK.Storage.Sync.Model
         /// 取得或設定自動重試間隔
         /// </summary>
         public int AutoRetryInterval { get; set; } = 10000;
+        /// <summary>
+        /// 取得或設定執行間隔
+        /// </summary>
+        public int Interval { get; set; } = 1000;
     }
 }

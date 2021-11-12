@@ -42,7 +42,7 @@ namespace HBK.Storage.Sync.Managers
                 }
                 else
                 {
-                    SpinWait.SpinUntil(() => false, 1000);
+                    SpinWait.SpinUntil(() => false, base.Option.Interval);
                 }
             }
         }
