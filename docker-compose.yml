@@ -25,6 +25,7 @@ services:
       "DefaultStorageProvider:EnsureCreated": "true"
       "DefaultStorageProvider:Location": "/app/default_storage"
       "DefaultStorageProvider:SizeLimit": "5368709120"
+      "RootKey:Key": "ThisIsKeyForRoot_60990e6c-95f2-412e-8708-1961777e88fc"
       "NLog:LogstashUrl": "http://192.168.222.102:5046/dev-hbk-storage-api"
       "NLog:LogstashMinLevel": "Trace"
 

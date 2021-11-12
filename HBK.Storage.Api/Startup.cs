@@ -309,6 +309,7 @@ namespace HBK.Storage.Api
                             Type = Adapter.Enums.StorageTypeEnum.Local,
                             Status = Adapter.Enums.StorageGroupStatusEnum.None,
                             SyncMode = Adapter.Enums.SyncModeEnum.Never,
+                            ClearMode = Adapter.Enums.ClearModeEnum.Stop,
                             UploadPriority = 1,
                             DownloadPriority = 1,
                             Storage = new List<Adapter.Storages.Storage>()

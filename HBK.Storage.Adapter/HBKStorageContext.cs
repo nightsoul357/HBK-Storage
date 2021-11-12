@@ -312,6 +312,9 @@ namespace HBK.Storage.Adapter.Storages
                 entity.Property(e => e.SyncPolicy)
                     .HasConversion(new JsonParseConverter<SyncPolicy>());
 
+                entity.Property(e => e.ClearPolicy)
+                    .HasConversion(new JsonParseConverter<ClearPolicy>());
+
                 entity.HasOne(d => d.StorageProvider)
                     .WithMany(p => p.StorageGroup)
                     .HasForeignKey(d => d.StorageProviderId)

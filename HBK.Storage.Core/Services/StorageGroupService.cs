@@ -1,6 +1,7 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.Models;
+using HBK.Storage.Core.Strategies;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,8 @@ namespace HBK.Storage.Core.Services
             original.SyncMode = data.SyncMode;
             original.SyncPolicy = data.SyncPolicy;
             original.Type = data.Type;
+            original.ClearPolicy = data.ClearPolicy;
+            original.ClearMode = data.ClearMode;
             await _dbContext.SaveChangesAsync();
             return await this.FindByIdAsync(original.StorageGroupId);
         }

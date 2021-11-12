@@ -74,6 +74,14 @@ namespace HBK.Storage.Sync
                         return option;
                     });
 
+                    var configForClearTaskManagerOption = configuration.GetSection("ClearTaskManagerOption");
+                    services.AddSingleton(sp =>
+                    {
+                        var option = new ClearTaskManagerOption();
+                        configForClearTaskManagerOption.Bind(option);
+                        return option;
+                    });
+
                     LayoutRenderer.Register<PluginIdentityLayoutRenderer>("plugin_identity");
                     LayoutRenderer.Register<PluginFileEntityFilenameLayoutRenderer>("plugin_file_entity_filename");
                     LayoutRenderer.Register<PluginFileEntityIdLayoutRenderer>("plugin_file_entity_id");
@@ -82,6 +90,7 @@ namespace HBK.Storage.Sync
                     services.AddSingleton<SyncTaskManager>();
                     services.AddSingleton<DeleteFileEntityTaskManager>();
                     services.AddSingleton<ExpireFileEntityTaskManager>();
+                    services.AddSingleton<ClearTaskManager>();
 
                     services.AddHostedService<TaskWorker>();
                 })

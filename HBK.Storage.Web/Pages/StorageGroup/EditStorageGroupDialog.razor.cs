@@ -24,6 +24,8 @@ namespace HBK.Storage.Web.Pages.StorageGroup
         public string Name { get; set; }
         public StorageType StorageType { get; set; }
         public SyncMode SyncMode { get; set; }
+        public ClearMode ClearMode { get; set; }
+        public string ClearPolicyRule { get; set; }
         public string SyncPolicyRule { get; set; }
         public bool IsEditMode
         {
@@ -43,9 +45,14 @@ namespace HBK.Storage.Web.Pages.StorageGroup
                 this.SyncMode = this.EditStorageGroup.Sync_mode;
                 this.UploadPriority = this.EditStorageGroup.Upload_priority;
                 this.DownloadPriority = this.EditStorageGroup.Download_priority;
+                this.ClearMode = this.EditStorageGroup.Clear_mode;
                 if (this.EditStorageGroup.Sync_policy != null)
                 {
                     this.SyncPolicyRule = this.EditStorageGroup.Sync_policy.Rule;
+                }
+                if (this.EditStorageGroup.Clear_policy != null)
+                {
+                    this.ClearPolicyRule = this.EditStorageGroup.Clear_policy.Rule;
                 }
             }
         }
@@ -68,13 +75,18 @@ namespace HBK.Storage.Web.Pages.StorageGroup
                         Rule = this.SyncPolicyRule
                     },
                     Type = this.StorageType,
-                    Upload_priority = this.UploadPriority
+                    Upload_priority = this.UploadPriority,
+                    Clear_mode = this.ClearMode,
+                    Clear_policy = new ClearPolicyRequest()
+                    {
+                        Rule = this.ClearPolicyRule
+                    }
                 });
                 this.MudDialog.Close(DialogResult.Ok(true));
             }
             else
             {
-                _ = await this.HBKStorageApi.StoragegroupsPOSTAsync(this.StateContainer.StorageProvider.Storage_provider_id, new StorageGroupAddRequest() 
+                _ = await this.HBKStorageApi.StoragegroupsPOSTAsync(this.StateContainer.StorageProvider.Storage_provider_id, new StorageGroupAddRequest()
                 {
                     Download_priority = this.DownloadPriority,
                     Name = this.Name,
@@ -83,6 +95,11 @@ namespace HBK.Storage.Web.Pages.StorageGroup
                     Sync_policy = new SyncPolicyRequest()
                     {
                         Rule = this.SyncPolicyRule
+                    },
+                    Clear_mode = this.ClearMode,
+                    Clear_policy = new ClearPolicyRequest()
+                    {
+                        Rule = this.ClearPolicyRule
                     },
                     Type = this.StorageType,
                     Upload_priority = this.UploadPriority
@@ -103,6 +120,11 @@ namespace HBK.Storage.Web.Pages.StorageGroup
                 Sync_policy = new SyncPolicyRequest()
                 {
                     Rule = this.EditStorageGroup.Sync_policy?.Rule
+                },
+                Clear_mode = this.EditStorageGroup.Clear_mode,
+                Clear_policy = new ClearPolicyRequest() 
+                {
+                    Rule = this.EditStorageGroup.Clear_policy?.Rule
                 },
                 Type = this.EditStorageGroup.Type,
                 Upload_priority = this.EditStorageGroup.Upload_priority

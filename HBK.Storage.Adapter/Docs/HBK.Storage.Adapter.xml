@@ -100,6 +100,21 @@
             一般的金鑰，根據 Scope 的定義存取服務
             </summary>
         </member>
+        <member name="T:HBK.Storage.Adapter.Enums.ClearModeEnum">
+            <summary>
+            清除模式列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.ClearModeEnum.Start">
+            <summary>
+            啟動
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.ClearModeEnum.Stop">
+            <summary>
+            關閉
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Enums.FileAccessTokenStatusEnum">
             <summary>
             檔案存取權杖狀態列舉
@@ -1098,6 +1113,16 @@
             取得或設定同步策略
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.ClearMode">
+            <summary>
+            取得或設定清除模式
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.ClearPolicy">
+            <summary>
+            取得或設定清除策略
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.UploadPriority">
             <summary>
             取得或設定上傳優先權
@@ -1286,6 +1311,16 @@
         <member name="P:HBK.Storage.Adapter.Interfaces.ITimeStampModel.UpdateDateTime">
             <summary>
             取得或設定更新時間
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Models.ClearPolicy">
+            <summary>
+            清除策略資料
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Models.ClearPolicy.Rule">
+            <summary>
+            取得或設定規則
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.Models.SyncPolicy">

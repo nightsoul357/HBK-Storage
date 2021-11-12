@@ -31,6 +31,20 @@
                     <MudTextField T="string" @bind-Value="this.SyncPolicyRule" Label="同步規則" Variant="Variant.Outlined" Lines="3" />
                 </MudItem>
             }
+            <MudItem xs="12" sm="12" md="12">
+                <MudSelect @bind-Value="this.ClearMode" T="ClearMode" Label="清除模式" Variant="Variant.Outlined">
+                    @foreach (ClearMode item in Enum.GetValues(typeof(ClearMode)))
+                    {
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            @if (this.ClearMode == ClearMode.Start)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" @bind-Value="this.ClearPolicyRule" Label="清除規則" Variant="Variant.Outlined" Lines="3" />
+                </MudItem>
+            }
             <MudItem xs="12" sm="8" md="6">
                 <MudNumericField @bind-Value="this.UploadPriority" Label="上傳優先度" Variant="Variant.Text" Min="0" Max="1000" />
             </MudItem>

@@ -305,6 +305,44 @@ namespace HBK.Storage.Core.Services
             return result;
         }
         /// <summary>
+        /// 取得需執行刪除策略的檔案實體位於檔案檔案儲存群組的資訊
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="takeCount">取得數量上限</param>
+        /// <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+        /// <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+        /// <returns></returns>
+        public async Task<List<FileEntityInStorageGroup>> GetClearFileEntityInStorageGroupAsync(Guid storageProviderId, int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
+        {
+            List<FileEntityInStorageGroup> result = new List<FileEntityInStorageGroup>();
+            var storageProvider = await this.FindByIdAsync(storageProviderId);
+            var storageGroups = storageProvider.StorageGroup.Where(x => !x.Status.HasFlag(StorageGroupStatusEnum.Disable) && x.ClearMode == ClearModeEnum.Start).ToList();
+
+            for (int i = 0; i < storageGroups.Count; i++)
+            {
+                var fileEntityInStorageGroups = await _dbContext.FileEntity
+                    .Where(x => x.FileEntityStroage.Any(x => x.Storage.StorageGroup.StorageGroupId == storageGroups[i].StorageGroupId) && !x.IsMarkDelete && x.Status == FileEntityStatusEnum.None && x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder)
+                    .Select(x => new FileEntityInStorageGroup()
+                    {
+                        FileEntity = x,
+                        FileEntityStorage = _dbContext.FileEntityStorage
+                        .Include(t => t.Storage)
+                        .ThenInclude(t => t.StorageGroup)
+                        .FirstOrDefault(t => t.FileEntityId == x.FileEntityId && t.Storage.StorageGroupId == storageGroups[i].StorageGroupId),
+                        ValidFileEntityStorageCount = _dbContext.FileEntityStorage.Count(t => t.FileEntityId == x.FileEntityId && t.Status == FileEntityStorageStatusEnum.None && !t.IsMarkDelete)
+                    })
+                    .ApplyPolicy(storageGroups[i].ClearPolicy)
+                    .Take(takeCount - result.Count).ToListAsync();
+
+                result.AddRange(fileEntityInStorageGroups);
+                if (result.Count >= takeCount)
+                {
+                    return result;
+                }
+            }
+            return result;
+        }
+        /// <summary>
         /// 取得儲存服務內不包含 Tag 且 MineType 為指定格式的檔案實體
         /// </summary>
         /// <param name="storageProviderId">儲存服務 ID</param>

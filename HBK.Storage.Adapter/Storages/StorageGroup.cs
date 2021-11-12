@@ -26,6 +26,7 @@ namespace HBK.Storage.Adapter.Storages
             this.Storage = new HashSet<Storage>();
             this.FileAccessToken = new HashSet<FileAccessToken>();
             this.SyncPolicy = new SyncPolicy();
+            this.ClearPolicy = new ClearPolicy();
         }
         /// <summary>
         /// 取得或設定儲存個體群組 ID
@@ -67,6 +68,15 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         [StringLength(511)]
         public SyncPolicy SyncPolicy { get; set; }
+        /// <summary>
+        /// 取得或設定清除模式
+        /// </summary>
+        public ClearModeEnum ClearMode { get; set; }
+        /// <summary>
+        /// 取得或設定清除策略
+        /// </summary>
+        [StringLength(511)]
+        public ClearPolicy ClearPolicy { get; set; }
         /// <summary>
         /// 取得或設定上傳優先權
         /// </summary>

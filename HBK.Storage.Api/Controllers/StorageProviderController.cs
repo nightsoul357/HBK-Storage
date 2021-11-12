@@ -176,6 +176,11 @@ namespace HBK.Storage.Api.Controllers
                 {
                     Rule = request.SyncPolicy.Rule
                 },
+                ClearMode = request.ClearMode,
+                ClearPolicy = new Adapter.Models.ClearPolicy()
+                {
+                    Rule = request.ClearPolicy.Rule
+                },
                 UploadPriority = request.UploadPriority,
                 DownloadPriority = request.DownloadPriority,
                 Type = request.Type

@@ -302,6 +302,17 @@ namespace HBK.Storage.Core.Services
 
             return shouldRemove.Count;
         }
+        /// <summary>
+        /// 將檔案位於儲存個體上的橋接資訊註記為刪除
+        /// </summary>
+        /// <param name="fileEntityStorageId">檔案位於儲存個體上的資訊 ID</param>
+        /// <returns></returns>
+        public async Task MarkFileEntityStorageDeleteAsync(Guid fileEntityStorageId)
+        {
+            var fileEntityStorage = await this.FindByIdAsync(fileEntityStorageId);
+            fileEntityStorage.IsMarkDelete = true;
+            await _dbContext.SaveChangesAsync();
+        }
         #endregion
     }
 }

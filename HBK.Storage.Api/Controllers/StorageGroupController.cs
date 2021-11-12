@@ -85,6 +85,11 @@ namespace HBK.Storage.Api.Controllers
             };
             storageGroup.UploadPriority = request.UploadPriority;
             storageGroup.DownloadPriority = request.DownloadPriority;
+            storageGroup.ClearMode = request.ClearMode;
+            storageGroup.ClearPolicy = new Adapter.Models.ClearPolicy()
+            {
+                Rule = request.ClearPolicy.Rule
+            };
             storageGroup.Type = request.Type;
             var result = await _storageGroupService.UpdateAsync(storageGroup);
             return StorageGroupController.BuildStorageGroupResponse(result);
@@ -246,6 +251,8 @@ namespace HBK.Storage.Api.Controllers
                 StorageProviderId = storageGroup.StorageProviderId,
                 SyncMode = storageGroup.SyncMode,
                 SyncPolicy = storageGroup.SyncPolicy,
+                ClearMode = storageGroup.ClearMode,
+                ClearPolicy = storageGroup.ClearPolicy,
                 DownloadPriority = storageGroup.DownloadPriority,
                 UploadPriority = storageGroup.UploadPriority,
                 Type = storageGroup.Type,
@@ -269,6 +276,8 @@ namespace HBK.Storage.Api.Controllers
                 StorageProviderId = storageGroupExtendProperty.StorageGroup.StorageProviderId,
                 SyncMode = storageGroupExtendProperty.StorageGroup.SyncMode,
                 SyncPolicy = storageGroupExtendProperty.StorageGroup.SyncPolicy,
+                ClearPolicy = storageGroupExtendProperty.StorageGroup.ClearPolicy,
+                ClearMode = storageGroupExtendProperty.StorageGroup.ClearMode,
                 DownloadPriority = storageGroupExtendProperty.StorageGroup.DownloadPriority,
                 UploadPriority = storageGroupExtendProperty.StorageGroup.UploadPriority,
                 Type = storageGroupExtendProperty.StorageGroup.Type,
