@@ -2,6 +2,7 @@
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using HBK.Storage.Core.Helpers;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -146,8 +147,10 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
             InitiateMultipartUploadResponse initResponse = await _client.InitiateMultipartUploadAsync(initiateRequest);
             List<UploadPartResponse> uploadResponses = new List<UploadPartResponse>();
 
+            bool isFail = false;
+            Action<Exception> faileHandler = new Action<Exception>(ex => isFail = true);
             BlockingCollection<byte[]> commonBuffer = new BlockingCollection<byte[]>(new ConcurrentQueue<byte[]>(), this.BufferCount);
-            Task readTask = new Task(() =>
+            var readTask = Task.Factory.StartNewSafety(() =>
             {
                 byte[] buffer = new byte[this.BufferSize];
                 int read;
@@ -168,9 +171,9 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
                     commonBuffer.Add(buffer.Take(position).ToArray());
                 }
                 commonBuffer.CompleteAdding();
-            });
+            }, TaskCreationOptions.AttachedToParent, faileHandler);
 
-            Task writeTask = new Task(() =>
+            var writeTask = Task.Factory.StartNewSafety(() =>
             {
                 int partNum = 1;
                 while (!commonBuffer.IsAddingCompleted || commonBuffer.Count != 0)
@@ -194,21 +197,34 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
                     uploadResponses.Add(_client.UploadPartAsync(uploadRequest).Result);
                     partNum++;
                 }
-            });
+            }, TaskCreationOptions.AttachedToParent, faileHandler);
 
-            readTask.Start();
-            writeTask.Start();
             Task.WaitAll(readTask, writeTask);
 
-            CompleteMultipartUploadRequest completeRequest = new CompleteMultipartUploadRequest
+            if (!isFail)
             {
-                BucketName = this.BucketName,
-                Key = subpath,
-                UploadId = initResponse.UploadId
-            };
-            completeRequest.AddPartETags(uploadResponses);
-            CompleteMultipartUploadResponse completeUploadResponse =
-                    await _client.CompleteMultipartUploadAsync(completeRequest);
+                CompleteMultipartUploadRequest completeRequest = new CompleteMultipartUploadRequest
+                {
+                    BucketName = this.BucketName,
+                    Key = subpath,
+                    UploadId = initResponse.UploadId
+                };
+                completeRequest.AddPartETags(uploadResponses);
+                CompleteMultipartUploadResponse completeUploadResponse =
+                        await _client.CompleteMultipartUploadAsync(completeRequest);
+            }
+            else
+            {
+                AbortMultipartUploadRequest abortMultipartUploadRequest = new AbortMultipartUploadRequest()
+                {
+                    BucketName = this.BucketName,
+                    Key = subpath,
+                    UploadId = initResponse.UploadId
+                };
+                AbortMultipartUploadResponse abortMultipartUploadResponse =
+                    await _client.AbortMultipartUploadAsync(abortMultipartUploadRequest);
+            }
+
             fileStream.Close();
 
             return await this.GetFileInfoAsync(subpath);

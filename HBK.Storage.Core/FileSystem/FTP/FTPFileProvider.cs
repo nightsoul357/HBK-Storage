@@ -106,18 +106,31 @@ namespace HBK.Storage.Core.FileSystem.FTP
         /// <returns></returns>
         public override async Task<IAsyncFileInfo> PutAsync(string subpath, Stream fileStream)
         {
-            var request = this.BuildFTPWebRequest(subpath);
-            request.Method = WebRequestMethods.Ftp.UploadFile;
-
-            Stream writeStream = await request.GetRequestStreamAsync();
-            byte[] buffer = new byte[_ftpOption.UploadBufferSize];
-            int read;
-            while ((read = await fileStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+            try
             {
-                writeStream.Write(buffer, 0, read);
+                var request = this.BuildFTPWebRequest(subpath);
+                request.Method = WebRequestMethods.Ftp.UploadFile;
+
+                Stream writeStream = await request.GetRequestStreamAsync();
+                byte[] buffer = new byte[_ftpOption.UploadBufferSize];
+                int read;
+                while ((read = await fileStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+                {
+                    writeStream.Write(buffer, 0, read);
+                }
+                writeStream.Flush();
+                writeStream.Close();
             }
-            writeStream.Flush();
-            writeStream.Close();
+            catch (Exception) // 失敗的話，嘗試刪除
+            {
+                try
+                {
+                    await this.DeleteAsync(subpath);
+                }
+                catch (Exception) { }
+                throw;
+            }
+
             fileStream.Close();
 
             return await this.GetFileInfoAsync(subpath);
