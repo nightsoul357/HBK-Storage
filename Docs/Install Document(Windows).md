@@ -1,4 +1,4 @@
-# Install Document
+# Install Document(Windows)
 
 ## 環境
 

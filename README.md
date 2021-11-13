@@ -79,10 +79,6 @@ HBK Storage 提供了建立儲存個體集合的方式，可以組合不同總�
 | Never Sync | 無論如何都不會將任何檔案同步至此 Storage Group，上傳至此 Storage Group 的所有檔案也都不會同步到其他 Storage Group|
 | Sync By Policy | 根據設置的規則進行同步 |
 
-### Sync Policy
-
-TODO
-
 ## 發行外部存取連結類型
 
 | 名稱 | 說明 |
@@ -99,13 +95,3 @@ TODO
 * FTP
 * AWS S3(minio)
 * Mega
-
-## 插件
-
-### 取得多媒體 Metadata 插件
-
-### 取得圖片壓縮副本插件
-
-### 合併影片與字幕軌(強制渲染)插件
-
-### 串流影音(m3u8)插件
