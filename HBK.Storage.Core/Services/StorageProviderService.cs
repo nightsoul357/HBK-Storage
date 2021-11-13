@@ -1,5 +1,7 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.Enums;
+using HBK.Storage.Core.Exceptions;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Strategies;
@@ -131,9 +133,14 @@ namespace HBK.Storage.Core.Services
         /// <param name="fileEntity">檔案實體</param>
         /// <param name="fileStream">檔案流</param>
         /// <param name="creatorIdentity">建立者識別</param>
+        /// <param name="storageTypes">僅使用指定類型清單的儲存個體<c>null</c> 表示全部使用</param>
         /// <returns></returns>
-        public async Task<FileEntity> UploadFileEntityAsync(Guid storageProviderId, Guid? storageGroupId, FileEntity fileEntity, Stream fileStream, string creatorIdentity)
+        public async Task<FileEntity> UploadFileEntityAsync(Guid storageProviderId, Guid? storageGroupId, FileEntity fileEntity, Stream fileStream, string creatorIdentity, List<StorageTypeEnum> storageTypes = null)
         {
+            if (storageTypes == null)
+            {
+                storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            }
             var storageProvider = await this.FindByIdAsync(storageProviderId);
             StorageGroup storageGroup = null;
             StorageExtendProperty storageExtendProperty = null;
@@ -142,7 +149,7 @@ namespace HBK.Storage.Core.Services
             if (storageGroupId != null)
             {
                 storageGroup = storageProvider.StorageGroup.FirstOrDefault(x => x.StorageGroupId == storageGroupId.Value);
-                storageExtendProperty = await _storageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(storageGroup.StorageGroupId);
+                storageExtendProperty = await _storageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(storageGroup.StorageGroupId, storageTypes);
             }
             else if (storageGroupId == null)
             {
@@ -152,7 +159,7 @@ namespace HBK.Storage.Core.Services
                         new
                         {
                             StorageGroup = x,
-                            StoragExtendProperty = _storageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(x.StorageGroupId).Result
+                            StoragExtendProperty = _storageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(x.StorageGroupId, storageTypes).Result
                         })
                     .Where(x => x.StoragExtendProperty?.RemainSize >= fileEntity.Size) // 過濾掉剩餘空間不足
                     .OrderByDescending(x => x.StorageGroup.UploadPriority) // 先根據上傳優先度排序
@@ -209,14 +216,23 @@ namespace HBK.Storage.Core.Services
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="storageGroupId">強制指定儲存個體群組 ID</param>
         /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <param name="storageTypes">指定有效的儲存服務類型清單，<c>null</c> 表示指定所有</param>
         /// <returns></returns>
-        public async Task<FileEntityStorage> GetFileEntityStorageAsync(Guid storageProviderId, Guid? storageGroupId, Guid fileEntityId)
+        public async Task<FileEntityStorage> GetFileEntityStorageAsync(Guid storageProviderId, Guid? storageGroupId, Guid fileEntityId, List<StorageTypeEnum> storageTypes = null)
         {
+            if (storageTypes == null)
+            {
+                storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            }
+
             var query = _dbContext.FileEntityStorage
                 .Include(x => x.Storage)
                 .ThenInclude(x => x.StorageGroup)
                 .Include(x => x.FileEntity)
-                .Where(x => x.Storage.StorageGroup.StorageProviderId == storageProviderId && x.FileEntityId == fileEntityId);
+                .Where(x => x.Storage.StorageGroup.StorageProviderId == storageProviderId &&
+                    x.FileEntityId == fileEntityId &&
+                    storageTypes.Contains(x.Storage.Type) &&
+                    x.Status == FileEntityStorageStatusEnum.None);
 
             if (storageGroupId != null)
             {
@@ -237,7 +253,7 @@ namespace HBK.Storage.Core.Services
 
             if (fileStorage == null)
             {
-                throw new InvalidOperationException("Could't find valid storage.");
+                throw new OperationFailedException(ResultCodeEnum.NotExistValidFileEntityStorage, "Could't find valid storage.");
             }
             return fileStorage;
         }
@@ -349,11 +365,12 @@ namespace HBK.Storage.Core.Services
         /// <param name="tag">不包含的 Tag</param>
         /// <param name="mimeTypeParten">指定的 MineType 範本</param>
         /// <param name="isRootFileEntity">是否為跟檔案實體</param>
+        /// <param name="validStorageTypes">驗證檔案實體是否擁有任一有效的檔案實體位於指定儲存類型的儲存個體上的資訊</param>
         /// <param name="takeCount">取得數量上限</param>
         /// <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
         /// <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
         /// <returns></returns>
-        public Task<List<FileEntity>> GetFileEntityWithoutTagAsync(Guid storageProviderId, string tag, string mimeTypeParten, bool isRootFileEntity, int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
+        public Task<List<FileEntity>> GetFileEntityWithoutTagAsync(Guid storageProviderId, string tag, string mimeTypeParten, bool isRootFileEntity, List<StorageTypeEnum> validStorageTypes, int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
         {
             var query = _dbContext.FileEntity.Where(x =>
                 x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder &&
@@ -361,6 +378,7 @@ namespace HBK.Storage.Core.Services
                 x.FileEntityTag.All(t => t.Value != tag) &&
                 !x.Status.HasFlag(FileEntityStatusEnum.Processing) &&
                 !x.Status.HasFlag(FileEntityStatusEnum.Uploading) &&
+                x.FileEntityStroage.Any(fes => validStorageTypes.Contains(fes.Storage.Type) && fes.Status == FileEntityStorageStatusEnum.None) &&
                 EF.Functions.Like(x.MimeType, mimeTypeParten));
 
             if (isRootFileEntity)
@@ -377,11 +395,12 @@ namespace HBK.Storage.Core.Services
         /// <param name="tag">不包含的 Tag</param>
         /// <param name="mimeTypeParten">指定的 MineType 範本</param>
         /// <param name="isRootFileEntity">是否為跟檔案實體</param>
+        /// <param name="validStorageTypes">驗證檔案實體是否擁有任一有效的檔案實體位於指定儲存類型的儲存個體上的資訊</param>
         /// <param name="takeCount">取得數量上限</param>
         /// <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
         /// <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
         /// <returns></returns>
-        public Task<List<FileEntity>> GetFileEntityWithTagAsync(Guid storageProviderId, string tag, string mimeTypeParten, bool isRootFileEntity, int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
+        public Task<List<FileEntity>> GetFileEntityWithTagAsync(Guid storageProviderId, string tag, string mimeTypeParten, bool isRootFileEntity, List<StorageTypeEnum> validStorageTypes, int takeCount, int fileEntityNoDivisor, int fileEntityNoRemainder)
         {
             var query = _dbContext.FileEntity.Where(x =>
                 x.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder &&
@@ -389,6 +408,7 @@ namespace HBK.Storage.Core.Services
                 x.FileEntityTag.Any(t => t.Value == tag) &&
                 !x.Status.HasFlag(FileEntityStatusEnum.Processing) &&
                 !x.Status.HasFlag(FileEntityStatusEnum.Uploading) &&
+                x.FileEntityStroage.Any(fes => validStorageTypes.Contains(fes.Storage.Type) && fes.Status == FileEntityStorageStatusEnum.None) &&
                 EF.Functions.Like(x.MimeType, mimeTypeParten));
 
             if (isRootFileEntity)

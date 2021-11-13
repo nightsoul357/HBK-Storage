@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.Enums;
+using HBK.Storage.Core.Exceptions;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
 using HBK.Storage.PluginCore.NLog;
@@ -101,6 +103,11 @@ namespace HBK.Storage.PluginCore
             {
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 List<StorageProvider> storageProviders = new List<StorageProvider>();
+                List<StorageTypeEnum> storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+                if (!this.Options.IsExecuteOnLocalStorage)
+                {
+                    storageTypes.Remove(StorageTypeEnum.Local);
+                }
                 if (this.Options.IsExecutOnAllStoragProvider)
                 {
                     storageProviders.AddRange(storageProviderService.GetAllStorageProviderAsync().Result);
@@ -120,6 +127,7 @@ namespace HBK.Storage.PluginCore
                         tag: this.Options.IdentityTag,
                         mimeTypeParten: this.Options.MimeTypePartten,
                         isRootFileEntity: this.Options.JustExecuteOnRootFileEntity,
+                        validStorageTypes: storageTypes,
                         takeCount: this.Options.FetchLimit - _pendingQueue.Count,
                         fileEntityNoDivisor: this.Options.FileEntityNoDivisor,
                         fileEntityNoRemainder: this.Options.FileEntityNoRemainder).Result;
@@ -131,6 +139,7 @@ namespace HBK.Storage.PluginCore
                         tag: this.Options.IdentityTag,
                         mimeTypeParten: this.Options.MimeTypePartten,
                         isRootFileEntity: this.Options.JustExecuteOnRootFileEntity,
+                        validStorageTypes: storageTypes,
                         takeCount: this.Options.FetchLimit - _pendingQueue.Count,
                         fileEntityNoDivisor: this.Options.FileEntityNoDivisor,
                         fileEntityNoRemainder: this.Options.FileEntityNoRemainder).Result;
@@ -165,6 +174,10 @@ namespace HBK.Storage.PluginCore
                     else if (result == ExecuteResultEnum.FailedWithForce)
                     {
                         k = this.ErrorFileEntity(task, true);
+                    }
+                    else if (result == ExecuteResultEnum.WaitNextTimeFetch)
+                    {
+                        continue;
                     }
 
                     if (result == ExecuteResultEnum.Successful || k == -1)
@@ -239,7 +252,7 @@ namespace HBK.Storage.PluginCore
                 }
                 else if (this.Options.FetchMode == FetchModeEnum.WithTag)
                 {
-                    fileEntityService.AppendTagAsync(pluginTaskModel.FileEntity.FileEntityId, this.Options.ExceptionTag).Wait();
+                    fileEntityService.RemoveTagAsync(pluginTaskModel.FileEntity.FileEntityId, this.Options.ExceptionTag).Wait();
                 }
             }
             return -1;

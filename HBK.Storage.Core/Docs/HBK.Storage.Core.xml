@@ -29,6 +29,39 @@
             無限制的允許指定的 Tag
             </summary>
         </member>
+        <member name="T:HBK.Storage.Core.Enums.ResultCodeEnum">
+            <summary>
+            操作結果列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.ResultCodeEnum.NotExistValidFileEntityStorage">
+            <summary>
+            不存在有效的檔案在儲存個體上的資訊
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.Exceptions.OperationFailedException">
+            <summary>
+            操作失敗時擲出的例外
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Exceptions.OperationFailedException.#ctor(HBK.Storage.Core.Enums.ResultCodeEnum)">
+            <summary>
+            初始化操作失敗時擲出的例外
+            </summary>
+            <param name="resultCode"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.Exceptions.OperationFailedException.#ctor(HBK.Storage.Core.Enums.ResultCodeEnum,System.String)">
+            <summary>
+            初始化操作失敗時擲出的例外
+            </summary>
+            <param name="resultCode"></param>
+            <param name="message"></param>
+        </member>
+        <member name="P:HBK.Storage.Core.Exceptions.OperationFailedException.ResultCode">
+            <summary>
+            取得操作結果列舉
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream">
             <summary>
             AWS S3 檔案使用的流
@@ -376,6 +409,9 @@
             <inheritdoc/>
         </member>
         <member name="M:HBK.Storage.Core.FileSystem.BufferStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.BufferStream.Dispose(System.Boolean)">
             <inheritdoc/>
         </member>
         <member name="P:HBK.Storage.Core.FileSystem.BufferStream.CanRead">
@@ -961,6 +997,21 @@
             取得隨機英數字字串
             </summary>
             <param name="length">字串長度</param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.Helpers.TaskFactoryExtensions">
+            <summary>
+            Task Factory 擴充類別
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Helpers.TaskFactoryExtensions.StartNewSafety(System.Threading.Tasks.TaskFactory,System.Action,System.Threading.Tasks.TaskCreationOptions,System.Action{System.Exception})">
+            <summary>
+            具有例外攔截的啟動方式
+            </summary>
+            <param name="taskFactory"></param>
+            <param name="action"></param>
+            <param name="creationOptions"></param>
+            <param name="errorHandler"></param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Core.Models.ChildFileEntity">
@@ -1637,11 +1688,12 @@
             <param name="storageGroupId">儲存個體集合 ID</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.StorageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(System.Guid)">
+        <member name="M:HBK.Storage.Core.Services.StorageGroupService.GetMaxRemainSizeStorageByStorageGroupIdAsync(System.Guid,System.Collections.Generic.List{HBK.Storage.Adapter.Enums.StorageTypeEnum})">
             <summary>
             取得儲存個體群組內剩餘容量最多的儲存個體延展資訊
             </summary>
             <param name="storageGroupId">儲存個體群組 ID</param>
+            <param name="storageTypes">僅使用指定類型清單的儲存個體<c>null</c> 表示全部使用</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Core.Services.StorageProviderService">
@@ -1704,7 +1756,7 @@
             <param name="storageProviderId">儲存服務 ID</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.StorageProviderService.UploadFileEntityAsync(System.Guid,System.Nullable{System.Guid},HBK.Storage.Adapter.Storages.FileEntity,System.IO.Stream,System.String)">
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.UploadFileEntityAsync(System.Guid,System.Nullable{System.Guid},HBK.Storage.Adapter.Storages.FileEntity,System.IO.Stream,System.String,System.Collections.Generic.List{HBK.Storage.Adapter.Enums.StorageTypeEnum})">
             <summary>
             上傳檔案至指定的儲存服務
             </summary>
@@ -1713,15 +1765,17 @@
             <param name="fileEntity">檔案實體</param>
             <param name="fileStream">檔案流</param>
             <param name="creatorIdentity">建立者識別</param>
+            <param name="storageTypes">僅使用指定類型清單的儲存個體<c>null</c> 表示全部使用</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityStorageAsync(System.Guid,System.Nullable{System.Guid},System.Guid)">
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityStorageAsync(System.Guid,System.Nullable{System.Guid},System.Guid,System.Collections.Generic.List{HBK.Storage.Adapter.Enums.StorageTypeEnum})">
             <summary>
             取得指定儲存服務內的指定檔案實體的橋接資訊
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="storageGroupId">強制指定儲存個體群組 ID</param>
             <param name="fileEntityId">檔案實體 ID</param>
+            <param name="storageTypes">指定有效的儲存服務類型清單，<c>null</c> 表示指定所有</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetSyncFileEntitiesAsync(System.Guid,System.Int32,System.Int32,System.Int32)">
@@ -1744,7 +1798,7 @@
             <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityWithoutTagAsync(System.Guid,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32)">
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityWithoutTagAsync(System.Guid,System.String,System.String,System.Boolean,System.Collections.Generic.List{HBK.Storage.Adapter.Enums.StorageTypeEnum},System.Int32,System.Int32,System.Int32)">
             <summary>
             取得儲存服務內不包含 Tag 且 MineType 為指定格式的檔案實體
             </summary>
@@ -1752,12 +1806,13 @@
             <param name="tag">不包含的 Tag</param>
             <param name="mimeTypeParten">指定的 MineType 範本</param>
             <param name="isRootFileEntity">是否為跟檔案實體</param>
+            <param name="validStorageTypes">驗證檔案實體是否擁有任一有效的檔案實體位於指定儲存類型的儲存個體上的資訊</param>
             <param name="takeCount">取得數量上限</param>
             <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
             <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
             <returns></returns>
         </member>
-        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityWithTagAsync(System.Guid,System.String,System.String,System.Boolean,System.Int32,System.Int32,System.Int32)">
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.GetFileEntityWithTagAsync(System.Guid,System.String,System.String,System.Boolean,System.Collections.Generic.List{HBK.Storage.Adapter.Enums.StorageTypeEnum},System.Int32,System.Int32,System.Int32)">
             <summary>
             取得儲存服務內包含 Tag 且 MineType 為指定格式的檔案實體
             </summary>
@@ -1765,6 +1820,7 @@
             <param name="tag">不包含的 Tag</param>
             <param name="mimeTypeParten">指定的 MineType 範本</param>
             <param name="isRootFileEntity">是否為跟檔案實體</param>
+            <param name="validStorageTypes">驗證檔案實體是否擁有任一有效的檔案實體位於指定儲存類型的儲存個體上的資訊</param>
             <param name="takeCount">取得數量上限</param>
             <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
             <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>

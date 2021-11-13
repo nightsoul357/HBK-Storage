@@ -19,9 +19,15 @@ namespace HBK.Storage.ImageCompressPlugin
 {
     public class ImageCompressTaskManager : PluginTaskManagerBase<ImageCompressTaskManager, ImageCompressTaskOptions>
     {
+        private readonly List<StorageTypeEnum> _storageTypes;
         public ImageCompressTaskManager(ILogger<ImageCompressTaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
+            _storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            if (!base.Options.IsExecuteOnLocalStorage)
+            {
+                _storageTypes.Remove(StorageTypeEnum.Local);
+            }
         }
         protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
         {
@@ -32,7 +38,7 @@ namespace HBK.Storage.ImageCompressPlugin
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId).Result;
+                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId, _storageTypes).Result;
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
 
@@ -68,7 +74,7 @@ namespace HBK.Storage.ImageCompressPlugin
                             },
                             ParentFileEntityID = taskModel.FileEntity.FileEntityId
                         },
-                        result, this.Options.Identity).Result;
+                        result, this.Options.Identity, _storageTypes).Result;
 
                     processFileEntities.Add(compressFileEntity);
                 }

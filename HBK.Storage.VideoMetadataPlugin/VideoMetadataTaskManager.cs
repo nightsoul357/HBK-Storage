@@ -23,9 +23,15 @@ namespace HBK.Storage.VideoMetadataPlugin
 {
     public class VideoMetadataTaskManager : PluginTaskManagerBase<VideoMetadataTaskManager, VideoMetadataTaskManagerOptions>
     {
+        private readonly List<StorageTypeEnum> _storageTypes;
         public VideoMetadataTaskManager(ILogger<VideoMetadataTaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
+            _storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            if (!base.Options.IsExecuteOnLocalStorage)
+            {
+                _storageTypes.Remove(StorageTypeEnum.Local);
+            }
         }
 
         protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
@@ -41,11 +47,11 @@ namespace HBK.Storage.VideoMetadataPlugin
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId).Result;
+                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId, _storageTypes).Result;
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
 
-                base.LogInformation(taskModel, new { Test = "AAA" }, "任務開始 - 處理 Metadata");
+                base.LogInformation(taskModel, null, "任務開始 - 處理 Metadata");
 
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)
@@ -125,7 +131,7 @@ namespace HBK.Storage.VideoMetadataPlugin
                                     },
                                     ParentFileEntityID = taskModel.FileEntity.FileEntityId
                                 },
-                                previewfs, this.Options.Identity).Result;
+                                previewfs, this.Options.Identity, _storageTypes).Result;
 
                         base.LogInformation(taskModel, null, "上傳第 {0} 張預覽圖完成", i);
                         processingFileEntities.Add(preFileEntity);

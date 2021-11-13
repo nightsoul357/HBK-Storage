@@ -134,12 +134,17 @@ namespace HBK.Storage.Core.Services
         /// 取得儲存個體群組內剩餘容量最多的儲存個體延展資訊
         /// </summary>
         /// <param name="storageGroupId">儲存個體群組 ID</param>
+        /// <param name="storageTypes">僅使用指定類型清單的儲存個體<c>null</c> 表示全部使用</param>
         /// <returns></returns>
-        public async Task<StorageExtendProperty> GetMaxRemainSizeStorageByStorageGroupIdAsync(Guid storageGroupId)
+        public async Task<StorageExtendProperty> GetMaxRemainSizeStorageByStorageGroupIdAsync(Guid storageGroupId, List<StorageTypeEnum> storageTypes = null)
         {
+            if (storageTypes == null)
+            {
+                storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            }
             var storageGroup = await this.FindByIdAsync(storageGroupId);
             return storageGroup.Storage
-                .Where(x => !x.Status.HasFlag(StorageStatusEnum.Disable))
+                .Where(x => !x.Status.HasFlag(StorageStatusEnum.Disable) && storageTypes.Contains(x.Type))
                 .Select(x => _storageService.GetStorageExtendPropertyAsync(x.StorageId).Result)
                 .OrderByDescending(x => x.RemainSize)
                 .FirstOrDefault();

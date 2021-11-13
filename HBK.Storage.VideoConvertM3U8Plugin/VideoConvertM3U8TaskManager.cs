@@ -26,11 +26,16 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
             [UploadFileTypeEnum.TS] = "video/MP2T",
             [UploadFileTypeEnum.VTT] = "text/vtt"
         };
+        private readonly List<StorageTypeEnum> _storageTypes;
         public VideoConvertM3U8TaskManager(ILogger<VideoConvertM3U8TaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
+            _storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            if (!base.Options.IsExecuteOnLocalStorage)
+            {
+                _storageTypes.Remove(StorageTypeEnum.Local);
+            }
         }
-
         protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
         {
             using (var scope = base._serviceProvider.CreateScope())
@@ -38,7 +43,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId).Result;
+                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId, _storageTypes).Result;
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
                 base.LogInformation(taskModel, null, "任務開始 - 轉換 M3U8");
@@ -129,7 +134,7 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                                 },
                             ParentFileEntityID = taskModel.FileEntity.FileEntityId
                         },
-                        fs, this.Options.Identity).Result;
+                        fs, this.Options.Identity, _storageTypes).Result;
 
             processingFileEntities.Add(m3u8File);
             base.LogInformation(taskModel, null, "M3U8 檔案 上傳完成");

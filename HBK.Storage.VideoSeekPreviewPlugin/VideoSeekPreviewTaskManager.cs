@@ -24,9 +24,15 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
 {
     public class VideoSeekPreviewTaskManager : PluginTaskManagerBase<VideoSeekPreviewTaskManager, VideoSeekPreviewTaskManagerOptions>
     {
+        private readonly List<StorageTypeEnum> _storageTypes;
         public VideoSeekPreviewTaskManager(ILogger<VideoSeekPreviewTaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
+            _storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            if (!base.Options.IsExecuteOnLocalStorage)
+            {
+                _storageTypes.Remove(StorageTypeEnum.Local);
+            }
         }
 
         protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
@@ -36,7 +42,7 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId).Result;
+                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId, _storageTypes).Result;
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
 
@@ -134,7 +140,7 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                             },
                             ParentFileEntityID = taskModel.FileEntity.FileEntityId
                         },
-                        fstream, this.Options.Identity).Result;
+                        fstream, this.Options.Identity, _storageTypes).Result;
 
                 base.LogInformation(taskModel, null, "第 {0} 秒 Seek Preview 上傳完成", previewImage.Second);
                 return fileEntity;

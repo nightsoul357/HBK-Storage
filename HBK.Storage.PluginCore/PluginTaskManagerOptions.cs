@@ -28,6 +28,10 @@ namespace HBK.Storage.PluginCore
         /// </summary>
         public List<Guid> StorageProviderIds { get; set; }
         /// <summary>
+        /// 取得或設定是否作用於 Local Storage
+        /// </summary>
+        public bool IsExecuteOnLocalStorage { get; set; } = false;
+        /// <summary>
         /// 取得或設定檔案實體流水號除數
         /// </summary>
         public int FileEntityNoDivisor { get; set; } = 1;

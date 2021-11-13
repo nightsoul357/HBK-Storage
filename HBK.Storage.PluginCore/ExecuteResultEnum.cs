@@ -22,6 +22,10 @@ namespace HBK.Storage.PluginCore
         /// <summary>
         /// 強制執行失敗
         /// </summary>
-        FailedWithForce = 3
+        FailedWithForce = 3,
+        /// <summary>
+        /// 等待下次執行
+        /// </summary>
+        WaitNextTimeFetch = 4
     }
 }

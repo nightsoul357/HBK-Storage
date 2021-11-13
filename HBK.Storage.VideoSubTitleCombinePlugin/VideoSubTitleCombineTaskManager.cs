@@ -22,10 +22,16 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
     public class VideoSubTitleCombineTaskManager : PluginTaskManagerBase<VideoSubTitleCombineTaskManager, VideoSubTitleCombineTaskOptions>
     {
         private readonly IHostEnvironment _hostEnvironment;
+        private readonly List<StorageTypeEnum> _storageTypes;
         public VideoSubTitleCombineTaskManager(ILogger<VideoSubTitleCombineTaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
             _hostEnvironment = base._serviceScope.ServiceProvider.GetRequiredService<IHostEnvironment>();
+            _storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            if (!base.Options.IsExecuteOnLocalStorage)
+            {
+                _storageTypes.Remove(StorageTypeEnum.Local);
+            }
         }
 
         protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
@@ -46,7 +52,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId).Result;
+                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId, _storageTypes).Result;
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
@@ -72,7 +78,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                 foreach (var subTitleTrack in extendProperty.SubTitleTrackInfos)
                 {
                     base.LogInformation(taskModel, null, "開始合併 {0} 字幕軌", subTitleTrack.TrackName);
-                    var subTitleFileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, subTitleTrack.SubTitleFileEntityId).Result;
+                    var subTitleFileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, subTitleTrack.SubTitleFileEntityId, _storageTypes).Result;
                     IAsyncFileInfo subTitleFileInfo = fileEntityStorageService.TryFetchFileInfoAsync(subTitleFileEntityStorage.FileEntityStorageId).Result;
                     if (subTitleFileInfo == null)
                     {
@@ -122,7 +128,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                                         FileEntityTag = tags,
                                         ParentFileEntityID = taskModel.FileEntity.FileEntityId
                                     },
-                                    fs, this.Options.Identity).Result;
+                                    fs, this.Options.Identity, _storageTypes).Result;
 
                             base.LogInformation(taskModel, null, "上傳 {0} 字幕軌合併後的檔案 完成", subTitleTrack.TrackName);
 
