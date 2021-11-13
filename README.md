@@ -76,7 +76,7 @@ HBK Storage 提供了建立儲存個體集合的方式，可以組合不同總�
 | 名稱 | 說明 |
 | -------- | -------- |
 | Alway Sync | 無論遇到什麼檔案都會同步至已設置為此的 Storage Group |
-| Never Sync | 無論如何都不會將任何檔案同步至此 Storage Group，上傳至此 Storage Group 的所有檔案也都不會同步到其他 Storage Group|
+| Never Sync | 無論如何都不會將任何檔案同步至此 Storage Group |
 | Sync By Policy | 根據設置的規則進行同步 |
 
 ## 發行外部存取連結類型
