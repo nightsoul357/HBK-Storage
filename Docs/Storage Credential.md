@@ -2,124 +2,124 @@
 
 ## Local Storage
 
-### ����
+### 說明
 
-�ϥΦs�����a�ɮת��覡�s���� Storage ������ơC
+使用存取本地檔案的方式存取該 Storage 內的資料。
 
-�Y Sync Service �� Plugin ��󤣦P�������W�A���ȳ]�w���]�t�q���W�١C
+若 Sync Service 或 Plugin 位於不同的機器上，此值設定應包含電腦名稱。
 
-### ���Ҹ�T
+### 驗證資訊
 
-| ��� | ���� | �d�� |
+| 欄位 | 說明 | 範例 |
 | -------- | -------- | -------- |
-| Directory | ���A���W�������Ƨ����| | `\\Win-N2\LocalStorage` |
+| Directory | 伺服器上的實體資料夾路徑 | `\\Win-N2\LocalStorage` or `/app/default_storage` |
 
-### �\��䴩
+### 功能支援
 
-| �\��W�� | ���A |
+| 功能名稱 | 狀態 |
 | -------- | -------- |
-| �U�� | �䴩 |
-| �W�� | �䴩 |
-| ���q�U�� | �䴩 |
-| ���q�W�� | ���䴩 |
+| 下載 | 支援 |
+| 上傳 | 支援 |
+| 分段下載 | 支援 |
+| 分段上傳 | 不支援 |
 
 ## FTP Storage
 
-�ϥ� FTP ��ĳ�s���� Storage ������ơC
+使用 FTP 協議存取該 Storage 內的資料。
 
-### ���Ҹ�T
+### 驗證資訊
 
-| ��� | ���� | �d�� |
+| 欄位 | 說明 | 範例 |
 | -------- | -------- | -------- |
-| Url | FTP �s�����| | `ftp://sample.hbk/FTPStorage` |
-| Username | �ϥΪ̦W�� | `username` |
-| Password | �K�X | `password` |
+| Url | FTP 存取路徑 | `ftp://sample.hbk/FTPStorage` |
+| Username | 使用者名稱 | `username` |
+| Password | 密碼 | `password` |
 
-### �\��䴩
+### 功能支援
 
-| �\��W�� | ���A |
+| 功能名稱 | 狀態 |
 | -------- | -------- |
-| �U�� | �䴩 |
-| �W�� | �䴩 |
-| ���q�U�� | ���䴩 |
-| ���q�W�� | ���䴩 |
+| 下載 | 支援 |
+| 上傳 | 支援 |
+| 分段下載 | 不支援 |
+| 分段上傳 | 不支援 |
 
 ## AWS S3 Storage
 
-### ����
+### 說明
 
-�ϥ� AWS S3 SDK(HTTP/HTPPS) �s���� Storage ������ơC
+使用 AWS S3 SDK(HTTP/HTPPS) 存取該 Storage 內的資料。
 
-### ���Ҹ�T
+### 驗證資訊
 
-| ��� | ���� | �d�� |
+| 欄位 | 說明 | 範例 |
 | -------- | -------- | -------- |
-| AccessKey | �s�����_ |  |
-| SecretKey | �s���K�_ |  |
-| BucketName | Bucket �W�� | `myBucket` |
-| Region | ��m | `us-east-2` |
-| ServiceURL | [�A�Ȧ�m](https://docs.aws.amazon.com/general/latest/gr/s3.html) | `http://s3.us-east-2.amazonaws.com` |
-| ForcePathStyle | �Y�ϥ� minio �������� true | `false` |
+| AccessKey | 存取金鑰 |  |
+| SecretKey | 存取密鑰 |  |
+| BucketName | Bucket 名稱 | `myBucket` |
+| Region | 位置 | `us-east-2` |
+| ServiceURL | [服務位置](https://docs.aws.amazon.com/general/latest/gr/s3.html) | `http://s3.us-east-2.amazonaws.com` |
+| ForcePathStyle | 若使用 minio 此值應為 true | `false` |
 
-### �\��䴩
+### 功能支援
 
-| �\��W�� | ���A |
+| 功能名稱 | 狀態 |
 | -------- | -------- |
-| �U�� | �䴩 |
-| �W�� | �䴩 |
-| ���q�U�� | �䴩 |
-| ���q�W�� | ���䴩 |
+| 下載 | 支援 |
+| 上傳 | 支援 |
+| 分段下載 | 支援 |
+| 分段上傳 | 不支援 |
 
 ## Google Drive Storage
 
-### ����
+### 說明
 
-�ϥ� Google Drive SDK(HTTP/HTPPS) �s���� Storage ������ơC
+使用 Google Drive SDK(HTTP/HTPPS) 存取該 Storage 內的資料。
 
-�z�L OAuth ���o�ϥΪ̨����v���i��s���C
+透過 OAuth 取得使用者身分權杖進行存取。
 
-OAuth ���� Redirect Url �ݥ[�J `{baseurl}/signin-google`�C
+OAuth 中的 Redirect Url 需加入 `{baseurl}/signin-google`。
 
-### ���Ҹ�T
+### 驗證資訊
 
-| ��� | ���� | �d�� |
+| 欄位 | 說明 | 範例 |
 | -------- | -------- | -------- |
-| ClientId | �s�����_ |  |
-| ClientSecret | �s���K�_ |  |
-| User | �ϥΪ̦W�� | `HBKStorage` |
-| Parent | ����Ƨ� ID | `1h-niepnwTGKA4x_eR8PEcAON3f34QFKI` |
-| Token | �v����T(�����Шϥ� Web �۰ʨ�s) | |
+| ClientId | 存取金鑰 |  |
+| ClientSecret | 存取密鑰 |  |
+| User | 使用者名稱 | `HBKStorage` |
+| Parent | 父資料夾 ID | `1h-niepnwTGKA4x_eR8PEcAON3f34QFKI` |
+| Token | 權杖資訊(此欄位請使用 Web 自動刷新) | |
 
-### �`�N
+### 注意
 
-**�@�ըϥΪ̨ϥΪ̽ШϥΤ@�� ClientId/ClientSecret**�A�Y�P�@�յo�� ClientId/ClientSecret �w��P�@�ӨϥΪ̵o��h�� Token�A�h�e���o�檺 Token �|�Q Revoke�C
+**一組使用者使用者請使用一組 ClientId/ClientSecret**，若同一組發行 ClientId/ClientSecret 針對同一個使用者發行多次 Token，則前次發行的 Token 會被 Revoke。
 
-### �\��䴩
+### 功能支援
 
-| �\��W�� | ���A |
+| 功能名稱 | 狀態 |
 | -------- | -------- |
-| �U�� | �䴩 |
-| �W�� | �䴩 |
-| ���q�U�� | �䴩 |
-| ���q�W�� | ���䴩 |
+| 下載 | 支援 |
+| 上傳 | 支援 |
+| 分段下載 | 支援 |
+| 分段上傳 | 不支援 |
 
 ## Mega Storage
 
-�ϥ� HTTP/HTPPS �s���� Storage ������ơC
+使用 HTTP/HTPPS 存取該 Storage 內的資料。
 
-### ���Ҹ�T
+### 驗證資訊
 
-| ��� | ���� | �d�� |
+| 欄位 | 說明 | 範例 |
 | -------- | -------- | -------- |
-| Username | �b�� |  |
-| Password | �K�X |  |
-| ParentId | �ϥΪ̦W�� | `zQ3W5QLY` |
+| Username | 帳號 |  |
+| Password | 密碼 |  |
+| ParentId | 使用者名稱 | `zQ3W5QLY` |
 
-### �\��䴩
+### 功能支援
 
-| �\��W�� | ���A |
+| 功能名稱 | 狀態 |
 | -------- | -------- |
-| �U�� | �䴩 |
-| �W�� | �䴩 |
-| ���q�U�� | �䴩 |
-| ���q�W�� | ���䴩 |
+| 下載 | 支援 |
+| 上傳 | 支援 |
+| 分段下載 | 支援 |
+| 分段上傳 | 不支援 |

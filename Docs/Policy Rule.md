@@ -2,76 +2,76 @@
 
 ## Sync Policy
 
-### ³W«h¼¶¼g½d¨Ò
+### è¦å‰‡æ’°å¯«ç¯„ä¾‹
 
-1. ¦P¨B©Ò¦³¤j©ó 100MB ¤§ÀÉ®×
+1. åŒæ­¥æ‰€æœ‰å¤§æ–¼ 100MB ä¹‹æª”æ¡ˆ
 ```
 Size > 104857600
 ```
 
-2. ¦P¨B©Ò¦³¼v¤ùÀÉ®×
+2. åŒæ­¥æ‰€æœ‰å½±ç‰‡æª”æ¡ˆ
 ```
 MimeType.StartsWith("video/")
 ```
 
-3. ¦P¨B©Ò¦³ Tag ¤º¥]§t Special File ¥B¤j©ó 100 MB ¤§ÀÉ®×
+3. åŒæ­¥æ‰€æœ‰ Tag å…§åŒ…å« Special File ä¸”å¤§æ–¼ 100 MB ä¹‹æª”æ¡ˆ
 
 ```
 FileEntityTag.Any(x => x.Value == "Special File") && Size > 104857600
 ```
 
-### Äæ¦ì¸ê°T
+### æ¬„ä½è³‡è¨Š
 
-| Äæ¦ì | »¡©ú | Ãş«¬ | ½d¨Ò |
+| æ¬„ä½ | èªªæ˜ | é¡å‹ | ç¯„ä¾‹ |
 | -------- | -------- | -------- | -------- |
-| Name | ÀÉ®×¦WºÙ | string | `test.mp4` |
-| Size | ÀÉ®×¤j¤p | string | `215486325` |
-| ExtendProperty | ÂX¥R¸ê°T | string | `video/mp4` |
-| MimeType | ºô»Úºô¸ô´CÅé«¬¦¡ | string  | `video/mp4` |
-| CreateDateTime | «Ø¥ß®É¶¡ | DateTimeOffset | `2019-11-12 22:01:33.8134699 +00:00` |
-| FileEntityTag | ¼ĞÅÒ²M³æ | `List<FileEntityTag>`  |  |
+| Name | æª”æ¡ˆåç¨± | string | `test.mp4` |
+| Size | æª”æ¡ˆå¤§å° | string | `215486325` |
+| ExtendProperty | æ“´å……è³‡è¨Š | string | `video/mp4` |
+| MimeType | ç¶²éš›ç¶²è·¯åª’é«”å‹å¼ | string  | `video/mp4` |
+| CreateDateTime | å»ºç«‹æ™‚é–“ | DateTimeOffset | `2019-11-12 22:01:33.8134699 +00:00` |
+| FileEntityTag | æ¨™ç±¤æ¸…å–® | `List<FileEntityTag>`  |  |
 
 #### FileEntityTag
 
-| Äæ¦ì | »¡©ú | Ãş«¬ | ½d¨Ò |
+| æ¬„ä½ | èªªæ˜ | é¡å‹ | ç¯„ä¾‹ |
 | -------- | -------- | -------- | -------- |
-| Value | ­È | string | `Special File` |
+| Value | å€¼ | string | `Special File` |
 
 ## Clear Policy
 
-### ³W«h¼¶¼g½d¨Ò
+### è¦å‰‡æ’°å¯«ç¯„ä¾‹
 
-1. ²M°£¤w¦³¨ä¥L°Æ¥»¤§ÀÉ®×
+1. æ¸…é™¤å·²æœ‰å…¶ä»–å‰¯æœ¬ä¹‹æª”æ¡ˆ
 ```
 ValidFileEntityStorageCount >= 2
 ```
 
-2. ²M°£©Ò¦³¼v¤ùÀÉ®×
+2. æ¸…é™¤æ‰€æœ‰å½±ç‰‡æª”æ¡ˆ
 ```
 FileEntity.MimeType.StartsWith("video/")
 ```
 
-3. ²M°£¤w¦³¨ä¥L°Æ¥»¥B¤j©ó 100 MB ¤§ÀÉ®×
+3. æ¸…é™¤å·²æœ‰å…¶ä»–å‰¯æœ¬ä¸”å¤§æ–¼ 100 MB ä¹‹æª”æ¡ˆ
 ```
 ValidFileEntityStorageCount >= 2 &&  FileEntity.Size > 104857600
 ```
 
-### Äæ¦ì¸ê°T
+### æ¬„ä½è³‡è¨Š
 
-| Äæ¦ì | »¡©ú | Ãş«¬ | ½d¨Ò |
+| æ¬„ä½ | èªªæ˜ | é¡å‹ | ç¯„ä¾‹ |
 | -------- | -------- | -------- | -------- |
-| FileEntity | ÀÉ®×¸ê°T | FileEntity |  |
-| FileEntityStorage | ¦¹ Storage Group ©ÒÀx¦sªº°Æ¥»¸ê°T | FileEntityStorage |  |
-| ValidFileEntityStorageCount | ¦³®Äªº°Æ¥»¼Æ¶q | int | `2` |
+| FileEntity | æª”æ¡ˆè³‡è¨Š | FileEntity |  |
+| FileEntityStorage | æ­¤ Storage Group æ‰€å„²å­˜çš„å‰¯æœ¬è³‡è¨Š | FileEntityStorage |  |
+| ValidFileEntityStorageCount | æœ‰æ•ˆçš„å‰¯æœ¬æ•¸é‡ | int | `2` |
 
-## ª`·N
+## æ³¨æ„
 
-ºÉ¶qÁ×§K Sync ¥H¤Î Clear ¦P®É±Ò°Êªºª¬ªp¡A­Yµ¦²¤¼¶¼g¿ù»~¥i¯à¾É­P¤£Â_¦P¨B¤Î²M°£¡C
-¦p¤U©Ò¥Ü¬°¿ù»~¤§³]¸m¤º®e:
+ç›¡é‡é¿å… Sync ä»¥åŠ Clear åŒæ™‚å•Ÿå‹•çš„ç‹€æ³ï¼Œè‹¥ç­–ç•¥æ’°å¯«éŒ¯èª¤å¯èƒ½å°è‡´ä¸æ–·åŒæ­¥åŠæ¸…é™¤ã€‚
+å¦‚ä¸‹æ‰€ç¤ºç‚ºéŒ¯èª¤ä¹‹è¨­ç½®å…§å®¹:
 
-| ¥\¯à | ³]©w |
+| åŠŸèƒ½ | è¨­å®š |
 | -------- | -------- |
 | Sync Mode | Always |
 | Clear Policy | `ValidFileEntityStorageCount >= 2` |
 
-¦¹³]©w·|¾É­P²M°£ÀÉ®×«á¡A¦P¨BªA°È·|¹Á¸Õ¦P¨B¸ÓÀÉ®×¡AÀH«á¦A³Q²M°£¡A¤£Â_´`Àô¡C
+æ­¤è¨­å®šæœƒå°è‡´æ¸…é™¤æª”æ¡ˆå¾Œï¼ŒåŒæ­¥æœå‹™æœƒå˜—è©¦åŒæ­¥è©²æª”æ¡ˆï¼Œéš¨å¾Œå†è¢«æ¸…é™¤ï¼Œä¸æ–·å¾ªç’°ã€‚
