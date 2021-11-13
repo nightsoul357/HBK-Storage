@@ -29,6 +29,50 @@
             無限制的允許指定的 Tag
             </summary>
         </member>
+        <member name="T:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream">
+            <summary>
+            AWS S3 檔案使用的流
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.#ctor(Amazon.S3.AmazonS3Client,System.String,System.String,System.Int64)">
+            <summary>
+            初始化 AWS S3 檔案使用的流
+            </summary>
+            <param name="amazonS3Client"></param>
+            <param name="key"></param>
+            <param name="bucketName"></param>
+            <param name="size"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.Position">
+            <inheritdoc/>
+        </member>
         <member name="T:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3DirectoryContents">
             <summary>
             AWS S3 目錄內容
@@ -306,6 +350,48 @@
             刪除多個檔案
             </summary>
             <param name="subpathes">檔案相對路徑集合</param>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.BufferStream">
+            <summary>
+            具有 Memory Buffer 的流
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.BufferStream.#ctor(System.IO.Stream,System.Int32)">
+            <summary>
+            初始化具有 Memory Buffer 的流
+            </summary>
+            <param name="innerStream"></param>
+            <param name="bufferSize"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.BufferStream.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.BufferStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.BufferStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.BufferStream.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.BufferStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.BufferStream.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.BufferStream.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.BufferStream.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.BufferStream.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.BufferStream.Position">
+            <inheritdoc/>
         </member>
         <member name="T:HBK.Storage.Core.FileSystem.FileSystemFactory">
             <summary>

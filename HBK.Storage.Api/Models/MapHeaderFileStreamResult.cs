@@ -16,17 +16,19 @@ namespace HBK.Storage.Api.Models
         private readonly string _overwriteFilename;
         /// <inheritdoc/>
         public MapHeaderFileStreamResult(Stream fileStream, string contentType, string overwriteFilename)
-            : base(fileStream, contentType)
+            : this(fileStream, contentType)
         {
             _overwriteFilename = overwriteFilename;
-            base.EnableRangeProcessing = true;
         }
 
         /// <inheritdoc/>
         public MapHeaderFileStreamResult(Stream fileStream, string contentType)
             : base(fileStream, contentType)
         {
-            base.EnableRangeProcessing = true;
+            if (fileStream.CanSeek)
+            {
+                base.EnableRangeProcessing = true;
+            }
         }
 
         /// <inheritdoc/>

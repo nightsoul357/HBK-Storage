@@ -11,7 +11,7 @@ namespace CG.Web.MegaApiClient
     /// <summary>
     /// 使用 HTTP Range 標頭分段讀取 <see cref="HttpRequestMessage"/> 的流 
     /// </summary>
-    public class HttpRangeStream : Stream
+    internal class HttpRangeStream : Stream
     {
         private long _position = 0;
         private readonly HttpClient _httpClient;
