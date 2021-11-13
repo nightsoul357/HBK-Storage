@@ -145,6 +145,11 @@ namespace HBK.Storage.Web.Pages.StorageGroup
                 {
                     Rule = this.EditStorageGroup.Sync_policy?.Rule
                 },
+                Clear_mode = this.EditStorageGroup.Clear_mode,
+                Clear_policy = new ClearPolicyRequest() 
+                {
+                    Rule = this.EditStorageGroup.Clear_policy?.Rule
+                },
                 Type = this.EditStorageGroup.Type,
                 Upload_priority = this.EditStorageGroup.Upload_priority
             });

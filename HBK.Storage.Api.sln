@@ -50,6 +50,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F9B2CA6C
 		nginx.conf = nginx.conf
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MegaApiClient", "MegaApiClient\MegaApiClient.csproj", "{DE738EC5-5DC1-4262-B64C-25124425BDB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,12 @@ Global
 		{8C5B27E4-207E-42BF-8AC4-AAA5B9023142}.DebugToConsole|Any CPU.Build.0 = Debug|Any CPU
 		{8C5B27E4-207E-42BF-8AC4-AAA5B9023142}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C5B27E4-207E-42BF-8AC4-AAA5B9023142}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE738EC5-5DC1-4262-B64C-25124425BDB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE738EC5-5DC1-4262-B64C-25124425BDB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE738EC5-5DC1-4262-B64C-25124425BDB2}.DebugToConsole|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE738EC5-5DC1-4262-B64C-25124425BDB2}.DebugToConsole|Any CPU.Build.0 = Debug|Any CPU
+		{DE738EC5-5DC1-4262-B64C-25124425BDB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE738EC5-5DC1-4262-B64C-25124425BDB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

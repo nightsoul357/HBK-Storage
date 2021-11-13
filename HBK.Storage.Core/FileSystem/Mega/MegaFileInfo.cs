@@ -38,7 +38,7 @@ namespace HBK.Storage.Core.FileSystem.Mega
             {
                 throw new FileNotFoundException();
             }
-            return _megaApiClient.DownloadAsync(_node);
+            return _megaApiClient.DownloadStreamAsync(_node);
         }
     }
 }
