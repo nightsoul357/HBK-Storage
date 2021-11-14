@@ -86,6 +86,33 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        public override void Close()
+        {
+            if (_fileStream != null)
+            {
+                _fileStream.Close();
+            }
+            base.Close();
+        }
+
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
+        {
+            if (_fileStream != null)
+            {
+                _fileStream.Dispose();
+                _fileStream = null;
+            }
+            if (_driveService != null)
+            {
+                _driveService.Dispose();
+                _driveService = null;
+            }
+            base.Dispose(disposing);
+        }
+
         /// <inheritdoc/>
         public override bool CanRead => true;
 
