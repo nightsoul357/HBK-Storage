@@ -43,7 +43,7 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
 
             return Task<Stream>.Run(() =>
             {
-                return (Stream)new GoogleDriveFileStream(_driveService, _file);
+                return (Stream)new GoogleDriveFileStreamV2(_driveService, _file);
             });
         }
     }

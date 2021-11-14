@@ -53,6 +53,7 @@ namespace HBK.Storage.Web.Pages.Storage.Credential
         public string TokenMessage { get; set; }
         [Inject]
         protected ISnackbar Snackbar { get; set; }
+        private bool isFirstRender = true;
         [Parameter]
         public StorageCredentialsBase Credential
         {
@@ -70,13 +71,14 @@ namespace HBK.Storage.Web.Pages.Storage.Credential
             }
             set
             {
-                if (value != null)
+                if (value != null && isFirstRender)
                 {
                     this.ClientId = ((GoogleDriveCredentials)value).ClientId;
                     this.ClientSecret = ((GoogleDriveCredentials)value).ClientSecret;
                     this.Parent = ((GoogleDriveCredentials)value).Parent;
                     this.Tokens = ((GoogleDriveCredentials)value).Tokens;
                     this.User = ((GoogleDriveCredentials)value).User;
+                    isFirstRender = false;
                 }
             }
         }
@@ -132,7 +134,7 @@ namespace HBK.Storage.Web.Pages.Storage.Credential
                     ClientSecret = this.ClientSecret
                 },
                 Scopes = new[] { DriveService.Scope.Drive },
-                DataStore = new NullDataStore()
+                DataStore = new NullDataStore(),
             });
 
             AuthorizationCodeWebApp authorizationCodeWebApp = new AuthorizationCodeWebApp(this.Flow, this.RedirectUri, string.Empty);

@@ -122,7 +122,7 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
                     _position = _length + offset;
                     break;
             }
-            return this.Position;
+            return _position;
         }
 
         /// <inheritdoc/>

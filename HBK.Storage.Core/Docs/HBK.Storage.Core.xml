@@ -746,6 +746,42 @@
             取得緩衝區數量
             </summary>
         </member>
+        <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.#ctor(Google.Apis.Drive.v3.DriveService,Google.Apis.Drive.v3.Data.File)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.Position">
+            <inheritdoc/>
+        </member>
         <member name="T:HBK.Storage.Core.FileSystem.IAsyncFileInfo">
             <summary>
             儲存服務檔案資訊介面
@@ -985,6 +1021,19 @@
             自動加入完整 HBK 儲存服務相關資源
             </summary>
             <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HBK.Storage.Core.Helpers.GoogleDriveServiceExtensions">
+            <summary>
+            Google Drive 服務擴充功能
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Helpers.GoogleDriveServiceExtensions.GetDownloadStreamAsync(Google.Apis.Drive.v3.FilesResource.GetRequest,System.Net.Http.Headers.RangeItemHeaderValue)">
+            <summary>
+            取得檔案流
+            </summary>
+            <param name="getRequest">檔案請求</param>
+            <param name="range">下載範圍</param>
             <returns></returns>
         </member>
         <member name="T:HBK.Storage.Core.Helpers.StringHelper">

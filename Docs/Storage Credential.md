@@ -92,8 +92,9 @@ OAuth 中的 Redirect Url 需加入 `{baseurl}/signin-google`。
 
 ### 注意
 
-**一組使用者使用者請使用一組 ClientId/ClientSecret**，若同一組發行 ClientId/ClientSecret 針對同一個使用者發行多次 Token，則前次發行的 Token 會被 Revoke。
+**一組使用者使用者請使用一組 ClientId/ClientSecret**，若同一組發行 ClientId/ClientSecret 針對同一個使用者發行 Token 時，只有首次發行能取得 Refresh Token，後續如需要重新取得 Refresh Token 則須先於[這裡](https://myaccount.google.com/u/1/permissions)撤銷存取權。
 
+若無 Refresh Token 時，該 Storage 會在 Access Token 過期(60分鐘)後進入 Disable 狀態。
 ### 功能支援
 
 | 功能名稱 | 狀態 |
