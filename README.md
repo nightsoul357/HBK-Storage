@@ -8,6 +8,7 @@ HBK Storage 提供了建立儲存個體集合的方式，可以組合不同總�
 ## Feature
 
 -   **管理多種儲存個體**: 在同一個系統裡建立並使用多種類型的儲存個體
+-   **組合儲存個體**: 將多個儲存個體組合為一個較大的儲存群組使用
 -   **自動備份**: 透過設置同步規則，自動在不同儲存群組內建立副本
 -   **自動清除**: 透過設置清除規則，自動清除不必要的檔案
 -   **發行存取權杖**: 發行多種具有存取規則限制的權杖
@@ -54,6 +55,16 @@ dokcer-compose up -d
 ## How it works
 
 ## Documentation
+
+- [Situational Presentation]()
+- [Storage Credential]()
+- [Policy Rule]()
+- [File Access Token]()
+- [Donwload Indicate]()
+- [Crtpto]()
+- [External Download File Endpoint]()
+- [Load Balance]()
+- [Plugin]()
 
 ## Coming Soon
 
