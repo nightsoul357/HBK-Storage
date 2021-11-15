@@ -44,7 +44,7 @@ dokcer-compose up -d
 ## Support Storage Type
 
 | 名稱 | 上傳 | 下載 | 分段上傳 | 分段下載 |
-| -------- | -------- | -------- | -------- |
+| -------- | -------- | -------- | -------- | -------- |
 | Local | O | O | X | O |
 | FTP | O | O | X | X |
 | Google Drive | O | O | X | O |
