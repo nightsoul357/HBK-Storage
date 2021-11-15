@@ -58,5 +58,6 @@ dokcer-compose up -d
 ## Coming Soon
 
 - 分段上傳
+- 掛載為網路硬碟
 
 ## License
