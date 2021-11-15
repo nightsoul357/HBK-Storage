@@ -79,7 +79,8 @@ namespace HBK.Storage.ImageCompressPlugin
                                     Value = compress.Name
                                 }
                             },
-                            ParentFileEntityID = taskModel.FileEntity.FileEntityId
+                            ParentFileEntityID = taskModel.FileEntity.FileEntityId,
+                            CryptoMode = taskModel.FileEntity.CryptoMode
                         },
                         result, this.Options.Identity, _storageTypes).Result;
 

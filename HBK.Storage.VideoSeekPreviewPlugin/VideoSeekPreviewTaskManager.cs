@@ -138,7 +138,8 @@ namespace HBK.Storage.VideoSeekPreviewPlugin
                                             Value = $"Seek-{ previewImage.Second }"
                                         }
                             },
-                            ParentFileEntityID = taskModel.FileEntity.FileEntityId
+                            ParentFileEntityID = taskModel.FileEntity.FileEntityId,
+                            CryptoMode = taskModel.FileEntity.CryptoMode
                         },
                         fstream, this.Options.Identity, _storageTypes).Result;
 

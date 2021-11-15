@@ -129,7 +129,8 @@ namespace HBK.Storage.VideoMetadataPlugin
                                             Value = "Require-Compress-Image"
                                         }
                                     },
-                                    ParentFileEntityID = taskModel.FileEntity.FileEntityId
+                                    ParentFileEntityID = taskModel.FileEntity.FileEntityId,
+                                    CryptoMode = taskModel.FileEntity.CryptoMode
                                 },
                                 previewfs, this.Options.Identity, _storageTypes).Result;
 

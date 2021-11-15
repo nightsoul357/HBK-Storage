@@ -126,7 +126,8 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                                         Size = fs.Length,
                                         Status = FileEntityStatusEnum.Processing,
                                         FileEntityTag = tags,
-                                        ParentFileEntityID = taskModel.FileEntity.FileEntityId
+                                        ParentFileEntityID = taskModel.FileEntity.FileEntityId,
+                                        CryptoMode = taskModel.FileEntity.CryptoMode
                                     },
                                     fs, this.Options.Identity, _storageTypes).Result;
 

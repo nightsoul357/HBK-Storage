@@ -132,7 +132,8 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                                         Value = this.Options.Identity
                                     }
                                 },
-                            ParentFileEntityID = taskModel.FileEntity.FileEntityId
+                            ParentFileEntityID = taskModel.FileEntity.FileEntityId,
+                            CryptoMode = taskModel.FileEntity.CryptoMode
                         },
                         fs, this.Options.Identity, _storageTypes).Result;
 
@@ -216,7 +217,8 @@ namespace HBK.Storage.VideoConvertM3U8Plugin
                                         Value = this.Options.Identity
                                     }
                                },
-                               ParentFileEntityID = uploadFile.M3U8FileEntityId
+                               ParentFileEntityID = uploadFile.M3U8FileEntityId,
+                               CryptoMode = taskModel.FileEntity.CryptoMode
                            },
                            file, this.Options.Identity).Result;
                 base.LogInformation(taskModel, null, "第 {0} 個 {1} 檔案 上傳完成", uploadFile.Number, uploadFile.Type.ToString());
