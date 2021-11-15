@@ -44,7 +44,7 @@ namespace HBK.Storage.Api.FileProcessHandlers
             var tsFiles = (await _fileEntityService.GetChildFileEntitiesAsync(taskModel.FileEntity.FileEntityId))
                 .Where(x => x.FileEntityTag.Any(t => t.Value.Contains("ts-")) && x.MimeType == "video/MP2T" && !x.Status.HasFlag(Adapter.Enums.FileEntityStatusEnum.Processing));
 
-            var token = _fileAccessTokenService.GenerateAllowTagNoLimitFileAccessToken(taskModel.StorageProviderId, null, "ts-", taskModel.Token.ValidTo, string.Empty);
+            var token = _fileAccessTokenService.GenerateAllowTagNoLimitFileAccessToken(taskModel.StorageProviderId, null, "ts-", taskModel.Token == null ? DateTime.MaxValue : taskModel.Token.ValidTo, string.Empty);
 
             using var sr = new StreamReader(taskModel.FileInfo.CreateReadStream());
             var m3u8Content = sr.ReadToEnd();

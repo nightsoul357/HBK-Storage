@@ -43,7 +43,7 @@ namespace HBK.Storage.Core.FileSystem
         /// <returns></returns>
         public virtual Stream CreateReadStream()
         {
-            return this.CreateReadStreamAsync().Result;
+            return this.CreateReadStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         /// <summary>

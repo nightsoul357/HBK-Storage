@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Api.Helpers;
+﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Api.Helpers;
 using HBK.Storage.Api.Models.FileService;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -81,6 +82,18 @@ namespace HBK.Storage.Api.ModelBinders
                                 {
                                     prop.SetValue(model, Guid.Parse(value));
                                 }
+                                else if (prop.PropertyType == typeof(CryptoModeEnum))
+                                {
+                                    switch (value) // TODO: 修正為自動判斷
+                                    {
+                                        case "aes":
+                                            prop.SetValue(model, CryptoModeEnum.AES);
+                                            break;
+                                        case "no_crypto":
+                                            prop.SetValue(model, CryptoModeEnum.NoCrypto);
+                                            break;
+                                    }
+                                }
                                 else
                                 {
                                     prop.SetValue(model, JsonConvert.DeserializeObject(value, prop.PropertyType));
@@ -115,6 +128,7 @@ namespace HBK.Storage.Api.ModelBinders
             {
                 model.Filename = section.AsFileSection().FileName;
             }
+
             bindingContext.Result = ModelBindingResult.Success(model);
             return;
         }

@@ -14,6 +14,7 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
     /// <summary>
     /// Google Drive 檔案使用的流
     /// </summary>
+    [Obsolete]
     public class GoogleDriveFileStream : Stream
     {
         private long _position;

@@ -27,6 +27,11 @@ namespace HBK.Storage.Api.FileProcessHandlers
         /// <returns></returns>
         public async Task<FileProcessTaskModel> ProcessAsync(FileProcessTaskModel taskModel, string handlerIndicate)
         {
+            if (String.IsNullOrEmpty(handlerIndicate))
+            {
+                return taskModel;
+            }
+
             List<FileProcessHandlerBase> currentHandlers = new List<FileProcessHandlerBase>();
             handlerIndicate.Split(',').ToList().ForEach(x =>
             {

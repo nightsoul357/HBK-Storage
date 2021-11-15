@@ -52,6 +52,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MegaApiClient", "MegaApiCli
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{C31C26B5-17A6-4776-BEB9-9C3254EC313F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{02BFC0E9-C3F0-4B57-864B-E0666BDC0F9C}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Install Document(Windows).md = Docs\Install Document(Windows).md
+		Docs\Policy Rule.md = Docs\Policy Rule.md
+		README.md = README.md
+		Docs\Storage Credential.md = Docs\Storage Credential.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{75823341-B904-4828-A4DF-5D2AD6024AFD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -171,20 +171,22 @@
             檔案實體控制器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileEntityStorageService)">
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.#ctor(HBK.Storage.Core.Services.StorageProviderService,HBK.Storage.Core.Services.FileEntityService,HBK.Storage.Core.Services.FileEntityStorageService,HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerProxy)">
             <summary>
             建構一個新的執行個體
             </summary>
             <param name="storageProviderService"></param>
             <param name="fileEntityService"></param>
             <param name="fileEntityStorageService"></param>
+            <param name="fileProcessHandlerProxy"></param>
         </member>
-        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.Get(System.Guid,System.Nullable{System.Guid})">
+        <member name="M:HBK.Storage.Api.Controllers.FileEntityController.Get(System.Guid,System.Nullable{System.Guid},System.String)">
             <summary>
             下載檔案
             </summary>
             <param name="fileEntityId">檔案實體 ID</param>
             <param name="storageGroupId">強制指定儲存個體群組 ID</param>
+            <param name="handlerIndicate">處理器指示字串</param>
             <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Controllers.FileEntityController.Put(System.Guid,HBK.Storage.Api.Models.FileService.FileEntityUpdateRequest)">
@@ -1005,6 +1007,23 @@
         <member name="M:HBK.Storage.Api.FileAccessHandlers.ValidateTagPatternAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
             <inheritdoc/>
         </member>
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler">
+            <summary>
+            處理加密後的檔案處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Core.Cryptography.ICryptoProvider})">
+            <summary>
+            初始化處理加密後的檔案處理器
+            </summary>
+            <param name="cryptoProviders"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler.Name">
+            <inheritdoc/>
+        </member>
         <member name="T:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerBase">
             <summary>
             處理檔案處理器基底
@@ -1471,6 +1490,21 @@
             最後更新時間
             </summary>
         </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.CryptoKey">
+             <summary>
+            加密使用的 Key
+             </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.CryptoIv">
+            <summary>
+            加密使用的 Iv
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.CryptoMode">
+            <summary>
+            加密模式
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Api.Models.FileEntity.FileEntityResponse.Status">
             <summary>
             狀態
@@ -1670,6 +1704,11 @@
         <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.MimeType">
             <summary>
             檔案的網際網路媒體型式，留空將會透過檔名自動判定
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.CryptoMode">
+            <summary>
+            加密方式
             </summary>
         </member>
         <member name="P:HBK.Storage.Api.Models.FileService.PutFileRequest.File">

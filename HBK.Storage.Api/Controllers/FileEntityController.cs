@@ -1,11 +1,14 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Api.DataAnnotations;
+using HBK.Storage.Api.FileProcessHandlers;
 using HBK.Storage.Api.Models;
 using HBK.Storage.Api.Models.FileAccessToken;
 using HBK.Storage.Api.Models.FileEntity;
 using HBK.Storage.Api.Models.FileService;
 using HBK.Storage.Api.OData;
+using HBK.Storage.Core.Cryptography;
+using HBK.Storage.Core.Enums;
 using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
 using Microsoft.AspNet.OData.Query;
@@ -16,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HBK.Storage.Api.Controllers
@@ -29,18 +33,20 @@ namespace HBK.Storage.Api.Controllers
         private readonly StorageProviderService _storageProviderService;
         private readonly FileEntityService _fileEntityService;
         private readonly FileEntityStorageService _fileEntityStorageService;
-
+        private readonly FileProcessHandlerProxy _fileProcessHandlerProxy;
         /// <summary>
         /// 建構一個新的執行個體
         /// </summary>
         /// <param name="storageProviderService"></param>
         /// <param name="fileEntityService"></param>
         /// <param name="fileEntityStorageService"></param>
-        public FileEntityController(StorageProviderService storageProviderService, FileEntityService fileEntityService, FileEntityStorageService fileEntityStorageService)
+        /// <param name="fileProcessHandlerProxy"></param>
+        public FileEntityController(StorageProviderService storageProviderService, FileEntityService fileEntityService, FileEntityStorageService fileEntityStorageService, FileProcessHandlerProxy fileProcessHandlerProxy)
         {
             _storageProviderService = storageProviderService;
             _fileEntityService = fileEntityService;
             _fileEntityStorageService = fileEntityStorageService;
+            _fileProcessHandlerProxy = fileProcessHandlerProxy;
         }
 
         /// <summary>
@@ -48,6 +54,7 @@ namespace HBK.Storage.Api.Controllers
         /// </summary>
         /// <param name="fileEntityId">檔案實體 ID</param>
         /// <param name="storageGroupId">強制指定儲存個體群組 ID</param>
+        /// <param name="handlerIndicate">處理器指示字串</param>
         /// <returns></returns>
         [HttpGet("{fileEntityId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -56,14 +63,21 @@ namespace HBK.Storage.Api.Controllers
         public async Task<FileStreamResult> Get(
             [ExampleParameter("ba337d2f-760b-473e-b077-d352277651e2")]
             [ExistInDatabase(typeof(FileEntity))]Guid fileEntityId,
-            [FromQuery] Guid? storageGroupId)
+            [FromQuery] Guid? storageGroupId,
+            [FromQuery] string handlerIndicate)
         {
             var storageProviderId = await _fileEntityService.GetStorageProviderIdByFileEntityIdAsync(fileEntityId);
             var fileEntity = await _fileEntityService.FindByIdAsync(fileEntityId);
             var fileEntityStorage = await _storageProviderService.GetFileEntityStorageAsync(storageProviderId, storageGroupId, fileEntityId);
             var fileInfo = await _fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId);
+            var processTask = await _fileProcessHandlerProxy.ProcessAsync(new FileProcessTaskModel()
+            {
+                FileEntity = fileEntity,
+                FileInfo = fileInfo,
+                StorageProviderId = storageProviderId
+            }, handlerIndicate);
 
-            return new MapHeaderFileStreamResult(fileInfo.CreateReadStream(), fileEntity.MimeType)
+            return new MapHeaderFileStreamResult(processTask.FileInfo.CreateReadStream(), fileEntity.MimeType)
             {
                 FileDownloadName = fileEntity.Name
             };
@@ -226,6 +240,9 @@ namespace HBK.Storage.Api.Controllers
                 Status = fileEntity.Status.FlattenFlags(),
                 Tags = fileEntity.FileEntityTag.Select(x => x.Value).ToList(),
                 UpdateDateTime = fileEntity.UpdateDateTime?.LocalDateTime,
+                CryptoMode = fileEntity.CryptoMode,
+                CryptoKey = fileEntity.CryptoKey == null ? string.Empty : Convert.ToBase64String(fileEntity.CryptoKey),
+                CryptoIv = fileEntity.CryptoIv == null ? string.Empty : Convert.ToBase64String(fileEntity.CryptoIv),
                 FileEntityStorageResponses = fileEntityStorages.Select(x => FileEntityController.BuildFileEntityStorageResponse(x)).ToList(),
             };
         }

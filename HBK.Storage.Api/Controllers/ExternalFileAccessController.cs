@@ -4,6 +4,7 @@ using HBK.Storage.Api.FileAccessHandlers;
 using HBK.Storage.Api.FileAccessHandlers.Models;
 using HBK.Storage.Api.FileProcessHandlers;
 using HBK.Storage.Api.Models;
+using HBK.Storage.Core.Cryptography;
 using HBK.Storage.Core.Enums;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
@@ -15,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -140,6 +142,7 @@ namespace HBK.Storage.Api.Controllers
             {
                 return base.BadRequest(result.ErrorObject);
             }
+
             return new MapHeaderFileStreamResult(result.FileInfo.CreateReadStream(), result.MiddleData.FileEntity.MimeType)
             {
                 FileDownloadName = result.MiddleData.FileEntity.Name

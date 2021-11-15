@@ -43,6 +43,7 @@ using System.IO;
 using Microsoft.AspNetCore.HttpOverrides;
 using HBK.Storage.Api.FileAccessHandlers;
 using Microsoft.IdentityModel.Logging;
+using HBK.Storage.Core.Cryptography;
 
 namespace HBK.Storage.Api
 {
@@ -219,7 +220,11 @@ namespace HBK.Storage.Api
 
             // 檔案處理器
             services.AddScoped<FileProcessHandlerBase, M3U8FileProcessHandler>();
+            services.AddScoped<FileProcessHandlerBase, CryptoProcessHandler>();
             services.AddScoped<FileProcessHandlerProxy>();
+
+            // 加密提供者
+            services.AddScoped<ICryptoProvider, AESCryptoProvider>();
 
             Directory.SetCurrentDirectory(this.HostingEnvironment.ContentRootPath);
         }

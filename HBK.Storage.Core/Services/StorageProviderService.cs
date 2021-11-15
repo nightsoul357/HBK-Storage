@@ -1,5 +1,6 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.Cryptography;
 using HBK.Storage.Core.Enums;
 using HBK.Storage.Core.Exceptions;
 using HBK.Storage.Core.FileSystem;
@@ -30,17 +31,20 @@ namespace HBK.Storage.Core.Services
         private readonly HBKStorageContext _dbContext;
         private readonly StorageGroupService _storageGroupService;
         private readonly FileSystemFactory _fileSystemFactory;
+        private readonly IEnumerable<Cryptography.ICryptoProvider> _cryptoProviders;
         /// <summary>
         /// 建構一個新的執行個體
         /// </summary>
         /// <param name="dbContext">資料庫實體</param>
         /// <param name="storageGroupService">儲存個體群組服務</param>
         /// <param name="fileSystemFactory">檔案系統工廠</param>
-        public StorageProviderService(HBKStorageContext dbContext, StorageGroupService storageGroupService, FileSystemFactory fileSystemFactory)
+        /// <param name="cryptoProviders"></param>
+        public StorageProviderService(HBKStorageContext dbContext, StorageGroupService storageGroupService, FileSystemFactory fileSystemFactory, IEnumerable<Cryptography.ICryptoProvider> cryptoProviders)
         {
             _dbContext = dbContext;
             _storageGroupService = storageGroupService;
             _fileSystemFactory = fileSystemFactory;
+            _cryptoProviders = cryptoProviders;
         }
 
         #region DAL
@@ -193,6 +197,14 @@ namespace HBK.Storage.Core.Services
             await _dbContext.SaveChangesAsync();
 
             var fileProvider = _fileSystemFactory.GetAsyncFileProvider(storageExtendProperty.Storage);
+            if (fileEntity.CryptoMode != CryptoModeEnum.NoCrypto)
+            {
+                var cryptoProvider = _cryptoProviders.FirstOrDefault(x => x.CryptoMode == fileEntity.CryptoMode);
+                fileEntity.CryptoKey = cryptoProvider.GenerateRandomKey();
+                fileEntity.CryptoIv = cryptoProvider.GenerateRandomIv();
+                fileStream = new CryptoStream(fileStream, cryptoProvider, fileEntity.CryptoKey, fileEntity.CryptoIv);
+            }
+
             var fileInfoResult = await fileProvider.PutAsync(taskId.ToString(), fileStream);
 
             var fileEntityStorage = new FileEntityStorage()

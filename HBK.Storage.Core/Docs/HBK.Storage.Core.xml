@@ -4,6 +4,121 @@
         <name>HBK.Storage.Core</name>
     </assembly>
     <members>
+        <member name="T:HBK.Storage.Core.Cryptography.AESCryptoProvider">
+            <summary>
+            使用 AES 的加密方法提供者
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.AESCryptoProvider.GenerateDecryptTransform(System.Byte[],System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.AESCryptoProvider.GenerateEncryptTransform(System.Byte[],System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.AESCryptoProvider.GenerateRandomIv">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.AESCryptoProvider.GenerateRandomKey">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.Cryptography.AESCryptoProvider.CryptoMode">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.Cryptography.CryptoStream">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.CryptoStream.#ctor(System.IO.Stream,HBK.Storage.Core.Cryptography.ICryptoProvider,System.Byte[],System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.CryptoStream.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.CryptoStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.CryptoStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.CryptoStream.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.CryptoStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.CryptoStream.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.CryptoStream.Close">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.Cryptography.CryptoStream.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.Cryptography.CryptoStream.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.Cryptography.CryptoStream.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.Cryptography.CryptoStream.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.Cryptography.CryptoStream.Position">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.Cryptography.ICryptoProvider">
+            <summary>
+            加密方法提供者
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.ICryptoProvider.GenerateRandomKey">
+            <summary>
+            產生亂數 Key
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.ICryptoProvider.GenerateRandomIv">
+            <summary>
+            產生亂數 Iv
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.ICryptoProvider.GenerateEncryptTransform(System.Byte[],System.Byte[])">
+            <summary>
+            產生加密用的方法
+            </summary>
+            <param name="key"></param>
+            <param name="iv"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.Cryptography.ICryptoProvider.GenerateDecryptTransform(System.Byte[],System.Byte[])">
+            <summary>
+            產生解密用的方法
+            </summary>
+            <param name="key"></param>
+            <param name="iv"></param>
+            <returns></returns>
+        </member>
+        <member name="P:HBK.Storage.Core.Cryptography.ICryptoProvider.CryptoMode">
+            <summary>
+            取得加密方式
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.Enums.CryptoDirectionEnum">
+            <summary>
+            加解密方向列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.CryptoDirectionEnum.Encrypt">
+            <summary>
+            加密
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Core.Enums.CryptoDirectionEnum.Decrypt">
+            <summary>
+            解密
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Core.Enums.FileAccessTokenTypeEnum">
             <summary>
             存取檔案權杖類型
@@ -767,6 +882,12 @@
         <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.Write(System.Byte[],System.Int32,System.Int32)">
             <inheritdoc/>
         </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="P:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStreamV2.CanRead">
             <inheritdoc/>
         </member>
@@ -1009,6 +1130,21 @@
             <param name="ms"></param>
         </member>
         <member name="M:HBK.Storage.Core.FileSystem.Memory.MemoryFileInfo.CreateReadStreamAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.StreamFileInfo">
+            <summary>
+            串流檔案資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.StreamFileInfo.#ctor(System.IO.Stream,System.Int64)">
+            <summary>
+            初始化串流檔案資訊
+            </summary>
+            <param name="stream"></param>
+            <param name="length"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.StreamFileInfo.CreateReadStreamAsync">
             <inheritdoc/>
         </member>
         <member name="T:HBK.Storage.Core.HBKStorageCoreDependencyInjectionExtensions">
@@ -1750,13 +1886,14 @@
             儲存服務服務
             </summary>
         </member>
-        <member name="M:HBK.Storage.Core.Services.StorageProviderService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext,HBK.Storage.Core.Services.StorageGroupService,HBK.Storage.Core.FileSystem.FileSystemFactory)">
+        <member name="M:HBK.Storage.Core.Services.StorageProviderService.#ctor(HBK.Storage.Adapter.Storages.HBKStorageContext,HBK.Storage.Core.Services.StorageGroupService,HBK.Storage.Core.FileSystem.FileSystemFactory,System.Collections.Generic.IEnumerable{HBK.Storage.Core.Cryptography.ICryptoProvider})">
             <summary>
             建構一個新的執行個體
             </summary>
             <param name="dbContext">資料庫實體</param>
             <param name="storageGroupService">儲存個體群組服務</param>
             <param name="fileSystemFactory">檔案系統工廠</param>
+            <param name="cryptoProviders"></param>
         </member>
         <member name="M:HBK.Storage.Core.Services.StorageProviderService.ListQuery">
             <summary>

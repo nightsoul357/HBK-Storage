@@ -10,6 +10,7 @@ using HBK.Storage.Api.Models.FileService;
 using HBK.Storage.Api.Models.StorageGroup;
 using HBK.Storage.Api.Models.StorageProvider;
 using HBK.Storage.Api.OData;
+using HBK.Storage.Core.Cryptography;
 using HBK.Storage.Core.Enums;
 using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
@@ -21,6 +22,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HBK.Storage.Api.Controllers
@@ -298,7 +300,8 @@ namespace HBK.Storage.Api.Controllers
                         Size = base.HttpContext.Request.ContentLength.Value,
                         Status = FileEntityStatusEnum.None,
                         FileEntityTag = request.Tags.Select(x => new FileEntityTag() { Value = x }).ToList(),
-                        AccessType = AccessTypeEnum.Private
+                        AccessType = AccessTypeEnum.Private,
+                        CryptoMode = request.CryptoMode
                     },
                     request.FileStream, "Uploda Service");
             return FileEntityController.BuildFileEntityResponse(fileEntity, _fileEntityService);

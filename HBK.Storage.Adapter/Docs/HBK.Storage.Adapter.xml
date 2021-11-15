@@ -115,6 +115,21 @@
             關閉
             </summary>
         </member>
+        <member name="T:HBK.Storage.Adapter.Enums.CryptoModeEnum">
+            <summary>
+            加密模式
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.CryptoModeEnum.NoCrypto">
+            <summary>
+            未加密
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.CryptoModeEnum.AES">
+            <summary>
+            AES 加密方式
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Enums.FileAccessTokenStatusEnum">
             <summary>
             檔案存取權杖狀態列舉
@@ -786,6 +801,21 @@
         <member name="P:HBK.Storage.Adapter.Storages.FileEntity.DeleteDateTime">
             <summary>
             取得刪除時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.CryptoKey">
+            <summary>
+            取得或設定加密使用的 Key
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.CryptoIv">
+            <summary>
+            取得或設定加密使用的 Iv
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.CryptoMode">
+            <summary>
+            取得或設定加密模式
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.FileEntity.Status">

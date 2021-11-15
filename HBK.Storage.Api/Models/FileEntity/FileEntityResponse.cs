@@ -44,11 +44,23 @@ namespace HBK.Storage.Api.Models.FileEntity
         /// <summary>
         /// 建立時間
         /// </summary>
-        public DateTime CreateDateTime { get; internal set; }
+        public DateTime CreateDateTime { get; set; }
         /// <summary>
         /// 最後更新時間
         /// </summary>
-        public DateTime? UpdateDateTime { get; internal set; }
+        public DateTime? UpdateDateTime { get; set; }
+        /// <summary>
+        ///加密使用的 Key
+        /// </summary>
+        public string CryptoKey { get; set; }
+        /// <summary>
+        /// 加密使用的 Iv
+        /// </summary>
+        public string CryptoIv { get; set; }
+        /// <summary>
+        /// 加密模式
+        /// </summary>
+        public CryptoModeEnum CryptoMode { get; set; }
         /// <summary>
         /// 狀態
         /// </summary>

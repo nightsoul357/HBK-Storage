@@ -25,6 +25,7 @@ namespace HBK.Storage.Adapter.Storages
             this.FileEntityStroage = new HashSet<FileEntityStorage>();
             this.FileAccessToken = new HashSet<FileAccessToken>();
             this.IsMarkDelete = false;
+            this.CryptoMode = CryptoModeEnum.NoCrypto;
         }
 
         /// <summary>
@@ -96,6 +97,20 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得刪除時間
         /// </summary>
         public DateTimeOffset? DeleteDateTime { get; internal set; }
+        /// <summary>
+        /// 取得或設定加密使用的 Key
+        /// </summary>
+        [MaxLength(16)]
+        public byte[] CryptoKey { get; set; }
+        /// <summary>
+        /// 取得或設定加密使用的 Iv
+        /// </summary>
+        [MaxLength(16)]
+        public byte[] CryptoIv { get; set; }
+        /// <summary>
+        /// 取得或設定加密模式
+        /// </summary>
+        public CryptoModeEnum CryptoMode { get; set; }
         /// <summary>
         /// 取得或設定狀態
         /// </summary>
