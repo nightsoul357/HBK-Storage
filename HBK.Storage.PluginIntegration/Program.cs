@@ -124,6 +124,8 @@ namespace HBK.Storage.PluginIntegration
                     services.AddSingleton<VideoSubTitleCombineTaskManager>();
                     services.AddSingleton<VideoSeekPreviewTaskManager>();
 
+                    services.AddScoped<ICryptoProvider, AESCryptoProvider>();
+
                     services.AddHostedService<TaskWorker>();
                 })
                 .UseWindowsService()

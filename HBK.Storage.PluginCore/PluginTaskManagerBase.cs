@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.Cryptography;
 using HBK.Storage.Core.Enums;
 using HBK.Storage.Core.Exceptions;
 using HBK.Storage.Core.FileSystem;
@@ -24,6 +25,7 @@ namespace HBK.Storage.PluginCore
         protected readonly ILogger<T> _logger;
         protected CancellationToken _cancellationToken;
         protected readonly IServiceScope _serviceScope;
+        private readonly IEnumerable<ICryptoProvider> _cryptoProviders;
 
         private ConcurrentQueue<PluginTaskModel> _pendingQueue;
         private Dictionary<Guid, int> _failCheck;
@@ -38,6 +40,7 @@ namespace HBK.Storage.PluginCore
             _pendingQueue = new ConcurrentQueue<PluginTaskModel>();
             _failCheck = new Dictionary<Guid, int>();
             _syncObj = new object();
+            _cryptoProviders = _serviceScope.ServiceProvider.GetRequiredService<IEnumerable<ICryptoProvider>>();
             this.Options = _serviceScope.ServiceProvider.GetRequiredService<TOption>();
             this.IsRunning = false;
         }
@@ -277,6 +280,10 @@ namespace HBK.Storage.PluginCore
         protected void DownloadFileEntity(Guid taskId, IAsyncFileInfo downloadfile, FileEntity fileEntity, string savePath)
         {
             var sourceStream = downloadfile.CreateReadStream();
+            if (fileEntity.CryptoMode != CryptoModeEnum.NoCrypto)
+            {
+                sourceStream = new CryptoStream(sourceStream, _cryptoProviders.FirstOrDefault(x => x.CryptoMode == fileEntity.CryptoMode), fileEntity.CryptoKey, fileEntity.CryptoIv);
+            }
             this.LogInformation(taskId, fileEntity, null, "開始下載檔案");
             using (var fstream = File.Create(savePath))
             {

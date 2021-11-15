@@ -1,5 +1,6 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.Cryptography;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
 using HBK.Storage.ImageCompressPlugin.Models;
@@ -39,6 +40,7 @@ namespace HBK.Storage.ImageCompressPlugin
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
                 var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId, _storageTypes).Result;
+                var cryptoProviders = scope.ServiceProvider.GetRequiredService<IEnumerable<ICryptoProvider>>();
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
 
@@ -48,7 +50,12 @@ namespace HBK.Storage.ImageCompressPlugin
                     return ExecuteResultEnum.Failed;
                 }
 
-                using var bmp = new Bitmap(fileInfo.CreateReadStream());
+                var fileStream = fileInfo.CreateReadStream();
+                if (taskModel.FileEntity.CryptoMode != CryptoModeEnum.NoCrypto)
+                {
+                    fileStream = new CryptoStream(fileStream, cryptoProviders.FirstOrDefault(x => x.CryptoMode == taskModel.FileEntity.CryptoMode), taskModel.FileEntity.CryptoKey, taskModel.FileEntity.CryptoIv);
+                }
+                using var bmp = new Bitmap(fileStream);
                 List<FileEntity> processFileEntities = new List<FileEntity>();
                 foreach (var compress in base.Options.CompressLevels)
                 {
