@@ -25,6 +25,7 @@
                     <MudTh><MudTableSortLabel SortLabel="storage_group/name" T="StorageGroupExtendPropertyResponse">名稱</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="storage_group/type" T="StorageGroupExtendPropertyResponse">類型</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="storage_group/sync_mode" T="StorageGroupExtendPropertyResponse">同步模式</MudTableSortLabel></MudTh>
+                    <MudTh>清除模式</MudTh>
                     <MudTh><MudTableSortLabel SortLabel="used_size" T="StorageGroupExtendPropertyResponse">已使用空間</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="storage_group/upload_priority" T="StorageGroupExtendPropertyResponse">上傳優先度</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="storage_group/download_priority" T="StorageGroupExtendPropertyResponse">下載優先度</MudTableSortLabel></MudTh>
@@ -37,6 +38,7 @@
                     <MudTd DataLabel="storage_group/name">@context.Name</MudTd>
                     <MudTd DataLabel="storage_group/type">@context.Type.ToString()</MudTd>
                     <MudTd DataLabel="storage_group/sync_mode">@context.Sync_mode.ToString()</MudTd>
+                    <MudTd>@context.Clear_mode.ToString()</MudTd>
                     <MudTd DataLabel="used_size">@DataUnitFormatHelper.Format(context.Used_size ?? 0) / @DataUnitFormatHelper.Format(context.Size_limit ?? 0)</MudTd>
                     <MudTd DataLabel="storage_group/upload_priority">@context.Upload_priority</MudTd>
                     <MudTd DataLabel="storage_group/download_priority">@context.Download_priority</MudTd>
@@ -44,10 +46,9 @@
                     <MudTd>
                         @foreach (var status in context.Status)
                         {
-                            <MudText>
-                                @status.ToString()
-                            </MudText>
-                        }
+<MudText>
+    @status.ToString()
+</MudText>}
                     </MudTd>
                     <MudTd>
                         <MudButton Variant="Variant.Outlined" Size="Size.Small" Color="Color.Info" OnClick="() => this.NavigateToManage(context)">管理</MudButton>

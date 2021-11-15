@@ -90,7 +90,7 @@ namespace HBK.Storage.Web.Pages.FileEntity
 
         public async Task DownloadFileAsync(FileEntityResponse fileEntity)
         {
-            var response = await this.HBKStorageApi.FileentitiesGETAsync(fileEntity.File_entity_id, null);
+            var response = await this.HBKStorageApi.FileentitiesGETAsync(fileEntity.File_entity_id, null, string.Empty);
             await this.DownloadFileService.DownloadFile(fileEntity.Name, response.Stream, fileEntity.Mime_type);
         }
         public async Task ShowDeleteDialogAsync(FileEntityResponse fileEntity)
@@ -122,6 +122,7 @@ namespace HBK.Storage.Web.Pages.FileEntity
                     fs.Seek(0, SeekOrigin.Begin);
                     await this.HBKStorageApi.FileentitiesPOSTAsync(this.StateContainer.StorageProvider.Storage_provider_id, file.Name, null, null, tags,
                         file.ContentType,
+                        CryptoMode.No_crypto,
                         new FileParameter(fs));
                     await _table.ReloadServerData();
                     base.Snackbar.Add("上傳完成", Severity.Info);

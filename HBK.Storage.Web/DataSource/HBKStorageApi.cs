@@ -1333,18 +1333,20 @@ namespace HBK.Storage.Web.DataSource
         /// <summary>下載檔案</summary>
         /// <param name="fileEntityId">檔案實體 ID</param>
         /// <param name="storageGroupId">強制指定儲存個體群組 ID</param>
+        /// <param name="handlerIndicate">處理器指示字串</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<FileResponse> FileentitiesGETAsync(System.Guid fileEntityId, System.Guid? storageGroupId)
+        public System.Threading.Tasks.Task<FileResponse> FileentitiesGETAsync(System.Guid fileEntityId, System.Guid? storageGroupId, string handlerIndicate)
         {
-            return FileentitiesGETAsync(fileEntityId, storageGroupId, System.Threading.CancellationToken.None);
+            return FileentitiesGETAsync(fileEntityId, storageGroupId, handlerIndicate, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>下載檔案</summary>
         /// <param name="fileEntityId">檔案實體 ID</param>
         /// <param name="storageGroupId">強制指定儲存個體群組 ID</param>
+        /// <param name="handlerIndicate">處理器指示字串</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<FileResponse> FileentitiesGETAsync(System.Guid fileEntityId, System.Guid? storageGroupId, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<FileResponse> FileentitiesGETAsync(System.Guid fileEntityId, System.Guid? storageGroupId, string handlerIndicate, System.Threading.CancellationToken cancellationToken)
         {
             if (fileEntityId == null)
                 throw new System.ArgumentNullException("fileEntityId");
@@ -1355,6 +1357,10 @@ namespace HBK.Storage.Web.DataSource
             if (storageGroupId != null)
             {
                 urlBuilder_.Append(System.Uri.EscapeDataString("storageGroupId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(storageGroupId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (handlerIndicate != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("handlerIndicate") + "=").Append(System.Uri.EscapeDataString(ConvertToString(handlerIndicate, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
 
@@ -4282,9 +4288,9 @@ namespace HBK.Storage.Web.DataSource
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<FileEntityResponse> FileentitiesPOSTAsync(System.Guid storageProviderId, string filename, System.Guid? storageGroupId, string extendProperty, System.Collections.Generic.IEnumerable<string> tags, string mimeType, FileParameter file)
+        public System.Threading.Tasks.Task<FileEntityResponse> FileentitiesPOSTAsync(System.Guid storageProviderId, string filename, System.Guid? storageGroupId, string extendProperty, System.Collections.Generic.IEnumerable<string> tags, string mimeType, CryptoMode? cryptoMode, FileParameter file)
         {
-            return FileentitiesPOSTAsync(storageProviderId, filename, storageGroupId, extendProperty, tags, mimeType, file, System.Threading.CancellationToken.None);
+            return FileentitiesPOSTAsync(storageProviderId, filename, storageGroupId, extendProperty, tags, mimeType, cryptoMode, file, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -4292,7 +4298,7 @@ namespace HBK.Storage.Web.DataSource
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<FileEntityResponse> FileentitiesPOSTAsync(System.Guid storageProviderId, string filename, System.Guid? storageGroupId, string extendProperty, System.Collections.Generic.IEnumerable<string> tags, string mimeType, FileParameter file, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<FileEntityResponse> FileentitiesPOSTAsync(System.Guid storageProviderId, string filename, System.Guid? storageGroupId, string extendProperty, System.Collections.Generic.IEnumerable<string> tags, string mimeType, CryptoMode? cryptoMode, FileParameter file, System.Threading.CancellationToken cancellationToken)
         {
             if (storageProviderId == null)
                 throw new System.ArgumentNullException("storageProviderId");
@@ -4340,6 +4346,12 @@ namespace HBK.Storage.Web.DataSource
                     else
                     {
                         content_.Add(new System.Net.Http.StringContent(ConvertToString(mimeType, System.Globalization.CultureInfo.InvariantCulture)), "MimeType");
+                    }
+                    if (cryptoMode == null)
+                    { }
+                    else
+                    {
+                        content_.Add(new System.Net.Http.StringContent(ConvertToString(cryptoMode, System.Globalization.CultureInfo.InvariantCulture)), "CryptoMode");
                     }
                     if (file == null)
                         throw new System.ArgumentNullException("file");
@@ -4940,6 +4952,18 @@ namespace HBK.Storage.Web.DataSource
         [Newtonsoft.Json.JsonProperty("update_date_time", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? Update_date_time { get; set; }
 
+        /// <summary>加密使用的 Key</summary>
+        [Newtonsoft.Json.JsonProperty("crypto_key", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Crypto_key { get; set; }
+
+        /// <summary>加密使用的 Iv</summary>
+        [Newtonsoft.Json.JsonProperty("crypto_iv", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Crypto_iv { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("crypto_mode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public CryptoMode Crypto_mode { get; set; }
+
         /// <summary>狀態</summary>
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public System.Collections.Generic.ICollection<FileEntityStatus> Status { get; set; }
@@ -5080,6 +5104,22 @@ namespace HBK.Storage.Web.DataSource
 
         [System.Runtime.Serialization.EnumMember(Value = @"stop")]
         Stop = 1,
+
+    }
+
+    /// <summary>加密模式
+    /// <br/>
+    /// <br/>* **no_crypto** - 未加密
+    /// <br/>* **aes** - AES 加密方式
+    /// <br/></summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.5.2.0 (Newtonsoft.Json v12.0.0.0)")]
+    public enum CryptoMode
+    {
+        [System.Runtime.Serialization.EnumMember(Value = @"no_crypto")]
+        No_crypto = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"aes")]
+        Aes = 1,
 
     }
 
@@ -5348,6 +5388,18 @@ namespace HBK.Storage.Web.DataSource
         /// <summary>最後更新時間</summary>
         [Newtonsoft.Json.JsonProperty("update_date_time", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.DateTimeOffset? Update_date_time { get; set; }
+
+        /// <summary>加密使用的 Key</summary>
+        [Newtonsoft.Json.JsonProperty("crypto_key", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Crypto_key { get; set; }
+
+        /// <summary>加密使用的 Iv</summary>
+        [Newtonsoft.Json.JsonProperty("crypto_iv", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Crypto_iv { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("crypto_mode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        public CryptoMode Crypto_mode { get; set; }
 
         /// <summary>狀態</summary>
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]

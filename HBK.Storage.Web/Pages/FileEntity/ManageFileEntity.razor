@@ -34,6 +34,7 @@
                     <MudTh><MudTableSortLabel SortLabel="name" T="FileEntityResponse">檔案名稱</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="size" T="FileEntityResponse">檔案大小</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortLabel="mime_type" T="FileEntityResponse">MimeType</MudTableSortLabel></MudTh>
+                    <MudTh>檔案加密</MudTh>
                     <MudTh>標籤</MudTh>
                     <MudTh><MudTableSortLabel SortLabel="create_date_time" T="FileEntityResponse">建立時間</MudTableSortLabel></MudTh>
                     <MudTh>狀態</MudTh>
@@ -44,6 +45,7 @@
                     <MudTd DataLabel="name">@context.Name</MudTd>
                     <MudTd DataLabel="size">@DataUnitFormatHelper.Format(context.Size)</MudTd>
                     <MudTd DataLabel="mime_type">@context.Mime_type</MudTd>
+                    <MudTd>@context.Crypto_mode</MudTd>
                     <MudTd>
                         @foreach (var tag in context.Tags)
                         {
