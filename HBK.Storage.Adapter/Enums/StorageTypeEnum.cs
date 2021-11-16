@@ -37,6 +37,11 @@ namespace HBK.Storage.Adapter.Enums
         /// Mega 的儲存個體
         /// </summary>
         [ConvertType(typeof(MegaStorageCredentials))]
-        Mega = 5
+        Mega = 5,
+        /// <summary>
+        /// Web DAV 的儲存個體
+        /// </summary>
+        [ConvertType(typeof(WebDAVStorageCredentials))]
+        WebDAV = 6
     }
 }

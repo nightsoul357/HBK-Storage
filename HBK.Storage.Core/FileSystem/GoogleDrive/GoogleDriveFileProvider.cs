@@ -18,7 +18,7 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
     /// <summary>
     /// Google Drive 儲存服務提供者
     /// </summary>
-    public class GoogleDriveFileProvider : AsyncFileProvider
+    public class GoogleDriveFileProvider : AsyncFileProvider, IDisposable
     {
         private DriveService _driveService;
         /// <summary>
@@ -117,6 +117,12 @@ namespace HBK.Storage.Core.FileSystem.GoogleDrive
         public override IChangeToken Watch(string filter)
         {
             throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            _driveService.Dispose();
         }
     }
 }

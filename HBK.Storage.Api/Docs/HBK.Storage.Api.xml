@@ -1007,21 +1007,35 @@
         <member name="M:HBK.Storage.Api.FileAccessHandlers.ValidateTagPatternAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
             <inheritdoc/>
         </member>
-        <member name="T:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler">
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler">
             <summary>
             處理加密後的檔案處理器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Core.Cryptography.ICryptoProvider})">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Core.Cryptography.ICryptoProvider})">
             <summary>
             初始化處理加密後的檔案處理器
             </summary>
             <param name="cryptoProviders"></param>
         </member>
-        <member name="M:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
             <inheritdoc/>
         </member>
-        <member name="P:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler.Name">
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler.Name">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.EncryptProcessHandler">
+            <summary>
+            加密檔案處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.EncryptProcessHandler.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Core.Cryptography.ICryptoProvider})">
+            <summary>
+            初始化加密檔案處理器
+            </summary>
+            <param name="cryptoProviders"></param>
+        </member>
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.EncryptProcessHandler.Name">
             <inheritdoc/>
         </member>
         <member name="T:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerBase">
@@ -1106,7 +1120,7 @@
         </member>
         <member name="T:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler">
             <summary>
-            加入預設浮水印的檔案處理器
+            預設浮水印的檔案處理器
             </summary>
         </member>
         <member name="M:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
@@ -1117,7 +1131,7 @@
             變更圖片透明度
             </summary>
             <param name="image">圖片</param>
-            <param name="opacity">透明度</param>
+            <param name="opacity">透明度(0~1)</param>
             <returns></returns>
         </member>
         <member name="P:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.Name">

@@ -310,6 +310,11 @@
             Mega 的儲存個體
             </summary>
         </member>
+        <member name="F:HBK.Storage.Adapter.Enums.StorageTypeEnum.WebDAV">
+            <summary>
+            Web DAV 的儲存個體
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Enums.SyncModeEnum">
             <summary>
             同步策略列舉
@@ -1491,6 +1496,31 @@
         <member name="P:HBK.Storage.Adapter.StorageCredentials.StorageCredentialsBase.StorageType">
             <summary>
             取得或設定儲存個體類型
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.StorageCredentials.WebDAVStorageCredentials">
+            <summary>
+            Web DAV 使用的驗證資訊
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.WebDAVStorageCredentials.Url">
+            <summary>
+            取得或設定 URL
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.WebDAVStorageCredentials.Username">
+            <summary>
+            取得或設定使用者名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.WebDAVStorageCredentials.Password">
+            <summary>
+            取得或設定密碼
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.StorageCredentials.WebDAVStorageCredentials.IsSupportPartialUpload">
+            <summary>
+            取得或設定是否支援分段上傳
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.ValueConversions.JsonParseConverter`1">
