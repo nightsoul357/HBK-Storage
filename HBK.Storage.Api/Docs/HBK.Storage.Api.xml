@@ -1104,6 +1104,25 @@
         <member name="P:HBK.Storage.Api.FileProcessHandlers.M3U8FileProcessHandler.Name">
             <inheritdoc/>
         </member>
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler">
+            <summary>
+            加入預設浮水印的檔案處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.ChangeOpacity(System.Drawing.Image,System.Single)">
+            <summary>
+            變更圖片透明度
+            </summary>
+            <param name="image">圖片</param>
+            <param name="opacity">透明度</param>
+            <returns></returns>
+        </member>
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.Name">
+            <inheritdoc/>
+        </member>
         <member name="T:HBK.Storage.Api.Filters.DisableFormValueModelBindingFilter">
             <summary>
             移除自動 Model Binding

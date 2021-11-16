@@ -54,7 +54,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{C31C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{02BFC0E9-C3F0-4B57-864B-E0666BDC0F9C}"
 	ProjectSection(SolutionItems) = preProject
+		Docs\Crypto.md = Docs\Crypto.md
+		Docs\Donwload Indicate.md = Docs\Donwload Indicate.md
+		Docs\External Download File Endpoint.md = Docs\External Download File Endpoint.md
+		Docs\File Access Token.md = Docs\File Access Token.md
 		Docs\Install Document(Windows).md = Docs\Install Document(Windows).md
+		Docs\Introduction.md = Docs\Introduction.md
 		Docs\Policy Rule.md = Docs\Policy Rule.md
 		README.md = README.md
 		Docs\Storage Credential.md = Docs\Storage Credential.md
