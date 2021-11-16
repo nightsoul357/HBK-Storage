@@ -39,6 +39,22 @@ namespace HBK.Storage.Api.Models.StorageGroup
         /// </summary>
         public SyncPolicy SyncPolicy { get; set; }
         /// <summary>
+        /// 清除模式
+        /// </summary>
+        public ClearModeEnum ClearMode { get; set; }
+        /// <summary>
+        /// 清除策略
+        /// </summary>
+        public ClearPolicy ClearPolicy { get; set; }
+        /// <summary>
+        /// 上傳優先度
+        /// </summary>
+        public int UploadPriority { get; set; }
+        /// <summary>
+        /// 下載優先度
+        /// </summary>
+        public int DownloadPriority { get; set; }
+        /// <summary>
         /// 建立時間
         /// </summary>
         public DateTimeOffset CreateDateTime { get; set; }

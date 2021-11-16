@@ -38,27 +38,32 @@ using Microsoft.OData;
 using Microsoft.AspNet.OData.Query.Expressions;
 using HBK.Storage.Api.OData;
 using HBK.Storage.Api.Factories;
+using HBK.Storage.Api.FileProcessHandlers;
+using System.IO;
+using Microsoft.AspNetCore.HttpOverrides;
 using HBK.Storage.Api.FileAccessHandlers;
+using Microsoft.IdentityModel.Logging;
+using HBK.Storage.Core.Cryptography;
 
 namespace HBK.Storage.Api
 {
     /// <summary>
-    /// ∫ÙØ∏∂i§J¬I
+    /// Á∂≤Á´ôÈÄ≤ÂÖ•Èªû
     /// </summary>
     public class Startup
     {
         private readonly string _corsPolicyName = "_corsPolicy";
         /// <summary>
-        /// ®˙±o≥]©w¿…
+        /// ÂèñÂæóË®≠ÂÆöÊ™î
         /// </summary>
         public IConfiguration Configuration { get; }
         /// <summary>
-        /// ®˙±o¿Ùπ“∏Í∞T
+        /// ÂèñÂæóÁí∞Â¢ÉË≥áË®ä
         /// </summary>
         public IWebHostEnvironment HostingEnvironment { get; }
 
         /// <summary>
-        /// ∫ÙØ∏∂i§J¬I´ÿ∫c®Á¶°
+        /// Á∂≤Á´ôÈÄ≤ÂÖ•ÈªûÂª∫ÊßãÂáΩÂºè
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="environment"></param>
@@ -80,9 +85,9 @@ namespace HBK.Storage.Api
             {
                 options.AddPolicy(_corsPolicyName, builder =>
                 {
-                    builder.WithOrigins(this.Configuration.GetSection("CorsOrigins").Get<string[]>())
+                    builder.AllowAnyOrigin()
                         .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                        .WithHeaders("Content-Type", "Authorization", "Cache-Control", "X-Requested-With", "Accept");
+                        .WithHeaders("Content-Type", "Authorization", "Cache-Control", "X-Requested-With", "Accept", "HBKey");
                 });
             });
             // HSTS
@@ -99,11 +104,11 @@ namespace HBK.Storage.Api
             services.AddControllers(options =>
             {
                 options.OutputFormatters.RemoveType<StringOutputFormatter>();
-                options.EnableEndpointRouting = false; // AllowAnonymous ¶b .Net Core 3.1 ∑|•¢Æƒ https://blog.csdn.net/elvismile/article/details/104003004
+                options.EnableEndpointRouting = false; // AllowAnonymous Âú® .Net Core 3.1 ÊúÉÂ§±Êïà https://blog.csdn.net/elvismile/article/details/104003004
             })
             .AddNewtonsoftJson(options =>
             {
-                // ±j®Ó®œ•Œ§pºg©≥Ωuƒ›© ¶W∫Ÿ
+                // Âº∑Âà∂‰ΩøÁî®Â∞èÂØ´Â∫ïÁ∑öÂ±¨ÊÄßÂêçÁ®±
                 var snakeCaseNamingStrategy = new SnakeCaseNamingStrategy();
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver() { NamingStrategy = snakeCaseNamingStrategy };
                 options.SerializerSettings.Converters.Add(new StringEnumConverter(snakeCaseNamingStrategy));
@@ -114,7 +119,7 @@ namespace HBK.Storage.Api
                 {
                     if (actionContext.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
                     {
-                        // ¬–ºg ExistInDatabaseAttribute ≈Á√“•¢±—™∫ø˘ª~•NΩX
+                        // Ë¶ÜÂØ´ ExistInDatabaseAttribute È©óË≠âÂ§±ÊïóÁöÑÈåØË™§‰ª£Á¢º
                         var parameters = controllerActionDescriptor.MethodInfo.GetParameters().Select(param => param.Name).ToList();
                         var invalidNames = actionContext.ModelState
                             .Where(state => state.Value.ValidationState == ModelValidationState.Invalid)
@@ -128,7 +133,7 @@ namespace HBK.Storage.Api
                 };
             });
 
-            // ∏Ù•—
+            // Ë∑ØÁî±
             services.AddRouting(options => options.LowercaseUrls = true);
 
             // ODATA
@@ -146,7 +151,7 @@ namespace HBK.Storage.Api
                 }
             });
 
-            // IIS ≥]©w
+            // IIS Ë®≠ÂÆö
             services.Configure<IISServerOptions>(options =>
             {
                 options.MaxRequestBodySize = int.MaxValue;
@@ -157,18 +162,18 @@ namespace HBK.Storage.Api
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "HBK Storage Api", Version = "v1" });
 
-                // •[§J XML µ˘∏—
-                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, $"HBK.Storage.Api.xml"));
-                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, $"HBK.Storage.Core.xml"));
-                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, $"HBK.Storage.Adapter.xml"));
+                // Âä†ÂÖ• XML Ë®ªËß£
+                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, "HBK.Storage.Api.xml"));
+                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, "HBK.Storage.Core.xml"));
+                options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, "HBK.Storage.Adapter.xml"));
 
-                // •[§J≈Á√“
+                // Âä†ÂÖ•È©óË≠â
                 options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme()
                 {
                     Type = SecuritySchemeType.ApiKey,
                     In = ParameterLocation.Header,
                     Name = "HBKey",
-                    Description = "¶s®˙ HBK Storage Api Æ…ª›±a§J™∫ API Key",
+                    Description = "Â≠òÂèñ HBK Storage Api ÊôÇÈúÄÂ∏∂ÂÖ•ÁöÑ API Key",
                 });
 
                 options.CustomSchemaIds(SwaggerSchemaIdGenerator.SchemaIdSelector);
@@ -177,20 +182,22 @@ namespace HBK.Storage.Api
                 options.OperationFilter<ModelValidationOperationFilter>();
                 options.OperationFilter<ExampleParameterOperationFilter>();
                 options.OperationFilter<ODataOperationFilter>();
+                options.OperationFilter<FileStreamTypeOperationFilter>();
+                options.OperationFilter<HeaderParameterOperationFilter>();
                 options.SchemaFilter<FlagEnumSchemaFilter>();
                 options.SchemaFilter<EnumDescriptorSchemaFilter>();
                 options.SchemaFilter<ExampleValueSchemaFilter>();
             });
             services.AddSwaggerGenNewtonsoftSupport();
 
-            // Form Ω–®D≥]©w
+            // Form Ë´ãÊ±ÇË®≠ÂÆö
             services.Configure<FormOptions>(x =>
             {
                 x.ValueLengthLimit = int.MaxValue;
                 x.MultipartBodyLengthLimit = int.MaxValue;
             });
 
-            // JWT ≥]©w¿…
+            // JWT Ë®≠ÂÆöÊ™î
             IConfiguration jwtConfiguration = this.Configuration.GetSection("JWTOption");
             services.AddSingleton<JWTOption>((sp) =>
             {
@@ -199,18 +206,27 @@ namespace HBK.Storage.Api
                 return jwtOption;
             });
 
-            // ∏ÍÆ∆Æw
+            // Ë≥áÊñôÂ∫´
             services.AddDbContext<HBKStorageContext>(options =>
                 options.UseSqlServer(this.Configuration["Database:ConnectionString"]));
 
-            // Æ÷§ﬂ≈ﬁøË
+            // Ê†∏ÂøÉÈÇèËºØ
             services.AddScoped<FileAccessTokenService>();
             services.AddScoped<FileAccessTokenFactory>();
             services.AddHBKStorageService();
 
-            // ¿…Æ◊≥B≤zæπ
-            services.AddScoped<FileAccessHandlerBase, M3U8FileAccessHandler>();
+            // Â≠òÂèñËôïÁêÜÂô®
             services.AddScoped<FileAccessHandlerProxy>();
+
+            // Ê™îÊ°àËôïÁêÜÂô®
+            services.AddScoped<FileProcessHandlerBase, M3U8FileProcessHandler>();
+            services.AddScoped<FileProcessHandlerBase, CryptoProcessHandler>();
+            services.AddScoped<FileProcessHandlerProxy>();
+
+            // Âä†ÂØÜÊèê‰æõËÄÖ
+            services.AddScoped<ICryptoProvider, AESCryptoProvider>();
+
+            Directory.SetCurrentDirectory(this.HostingEnvironment.ContentRootPath);
         }
 
         /// <summary>
@@ -218,14 +234,14 @@ namespace HBK.Storage.Api
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        /// <param name="db"></param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, HBKStorageContext db)
+        /// <param name="authorizeKeyService"></param>
+        /// <param name="storageProviderService"></param>
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AuthorizeKeyService authorizeKeyService, StorageProviderService storageProviderService)
         {
             if (env.IsDevelopment())
             {
+                IdentityModelEventSource.ShowPII = true;
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HBK Storage Api v1"));
             }
             else
             {
@@ -233,9 +249,17 @@ namespace HBK.Storage.Api
                 app.UseMiddleware<GlobalExceptionMiddleware>();
             }
 
+            if (env.IsDevelopment() || env.IsStaging())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HBK Storage Api v1"));
+            }
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(_corsPolicyName);
 
             app.UseAuthorization();
 
@@ -259,13 +283,66 @@ namespace HBK.Storage.Api
                 }
             });
 
-            db.Database.EnsureCreated();
+            this.GenerateInitializationDataAsync(authorizeKeyService, storageProviderService).Wait();
+        }
+
+        private async Task GenerateInitializationDataAsync(AuthorizeKeyService authorizeKeyService, StorageProviderService storageProviderService)
+        {
+            if (this.Configuration.GetValue<bool>("RootKey:EnsureCreated") && (await authorizeKeyService.FindByKeyValueAsync(this.Configuration["RootKey:Key"])) == null)
+            {
+                await authorizeKeyService.AddAsync(new AuthorizeKey()
+                {
+                    KeyValue = this.Configuration["RootKey:Key"],
+                    Name = this.Configuration["RootKey:Name"],
+                    Type = Adapter.Enums.AuthorizeKeyTypeEnum.Root
+                });
+            }
+
+            if (this.Configuration.GetValue<bool>("DefaultStorageProvider:EnsureCreated") && (await storageProviderService.FindByIdAsync(this.Configuration.GetValue<Guid>("DefaultStorageProvider:ProviderId"))) == null)
+            {
+                await storageProviderService.AddAsync(new StorageProvider()
+                {
+                    StorageProviderId = this.Configuration.GetValue<Guid>("DefaultStorageProvider:ProviderId"),
+                    Name = this.Configuration["DefaultStorageProvider:ProviderName"],
+                    Status = Adapter.Enums.StorageProviderStatusEnum.None,
+                    StorageGroup = new List<StorageGroup>()
+                    {
+                        new StorageGroup()
+                        {
+                            StorageGroupId = Guid.NewGuid(),
+                            Name = this.Configuration["DefaultStorageProvider:StorageGroupName"],
+                            Type = Adapter.Enums.StorageTypeEnum.Local,
+                            Status = Adapter.Enums.StorageGroupStatusEnum.None,
+                            SyncMode = Adapter.Enums.SyncModeEnum.Never,
+                            ClearMode = Adapter.Enums.ClearModeEnum.Stop,
+                            UploadPriority = 1,
+                            DownloadPriority = 1,
+                            Storage = new List<Adapter.Storages.Storage>()
+                            {
+                                new Adapter.Storages.Storage()
+                                {
+                                    StorageId = Guid.NewGuid(),
+                                    Name =  this.Configuration["DefaultStorageProvider:StorageName"],
+                                    SizeLimit = this.Configuration.GetValue<long>("DefaultStorageProvider:SizeLimit"),
+                                    Status = Adapter.Enums.StorageStatusEnum.None,
+                                    Type = Adapter.Enums.StorageTypeEnum.Local,
+                                    Credentials = new Adapter.StorageCredentials.LocalStorageCredentials()
+                                    {
+                                        StorageType = Adapter.Enums.StorageTypeEnum.Local,
+                                        Directory = this.Configuration["DefaultStorageProvider:Location"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         /// <summary>
-        /// ´ÿ•ﬂ OData ™∫ EDM º“´¨
+        /// Âª∫Á´ã OData ÁöÑ EDM Ê®°Âûã
         /// </summary>
-        /// <param name="serviceProvider">™A∞»¥£®—™Ã</param>
+        /// <param name="serviceProvider">ÊúçÂãôÊèê‰æõËÄÖ</param>
         /// <returns></returns>
         private IEdmModel GetEdmModel(IServiceProvider serviceProvider)
         {
@@ -275,18 +352,22 @@ namespace HBK.Storage.Api
             // Models
             builder.EntitySet<StorageProvider>("StorageProviders");
 
-            // ODataConventionModelBuilder ∑|¶€∞ •[§J¨€√ˆ¡p™∫º“´¨
+            builder.EntitySet<ChildFileEntity>("ChildFileEntitys");
+            builder.EntitySet<StorageGroupExtendProperty>("StorageGroupExtendProperties");
+            builder.EntitySet<StorageExtendProperty>("StorageExtendProperties");
+
+            // ODataConventionModelBuilder ÊúÉËá™ÂãïÂä†ÂÖ•Áõ∏ÈóúËÅØÁöÑÊ®°Âûã
             builder.OnModelCreating = builder =>
             {
                 foreach (var type in builder.EnumTypes.Where(type => type.Namespace == "HBK.Storage.Adapter.Enums" || type.Namespace == "HBK.Storage.Core.Enums"))
                 {
                     type.Namespace = "Enums";
-                    // ≤æ∞£ Enum µ≤ß¿
+                    // ÁßªÈô§ Enum ÁµêÂ∞æ
                     if (type.Name.EndsWith("Enum"))
                     {
                         type.Name = type.Name[0..^4];
                     }
-                    // ßÔ¨∞§pºg©≥Ωu©R¶W
+                    // ÊîπÁÇ∫Â∞èÂØ´Â∫ïÁ∑öÂëΩÂêç
                     foreach (var member in type.Members)
                     {
                         member.Name = snakeCaseNamingStrategy.GetPropertyName(member.Name, false);

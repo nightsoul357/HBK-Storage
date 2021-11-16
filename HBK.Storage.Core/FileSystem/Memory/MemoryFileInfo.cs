@@ -20,6 +20,7 @@ namespace HBK.Storage.Core.FileSystem.Memory
         public MemoryFileInfo(MemoryStream ms)
         {
             _ms = ms;
+            this.Length = ms.Length;
         }
 
         /// <inheritdoc/>

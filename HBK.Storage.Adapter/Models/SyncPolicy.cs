@@ -16,13 +16,5 @@ namespace HBK.Storage.Adapter.Models
         /// 取得或設定規則
         /// </summary>
         public string Rule { get; set; }
-        /// <summary>
-        /// 取得或設定標籤驗證規則
-        /// </summary>
-        public string TagRule { get; set; }
-        /// <summary>
-        /// 取得或設定標籤驗證模式
-        /// </summary>
-        public TagMatchModeEnum TagMatchMode { get; set; }
     }
 }

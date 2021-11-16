@@ -7,8 +7,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.Cryptography;
+using HBK.Storage.Core.Enums;
+using HBK.Storage.Core.Exceptions;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
+using HBK.Storage.PluginCore.NLog;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -21,17 +25,22 @@ namespace HBK.Storage.PluginCore
         protected readonly ILogger<T> _logger;
         protected CancellationToken _cancellationToken;
         protected readonly IServiceScope _serviceScope;
+        private readonly IEnumerable<ICryptoProvider> _cryptoProviders;
 
         private ConcurrentQueue<PluginTaskModel> _pendingQueue;
+        private Dictionary<Guid, int> _failCheck;
         private readonly object _syncObj;
         private bool _isDisposed = false;
+        private Guid _executeId;
         public PluginTaskManagerBase(ILogger<T> logger, IServiceProvider serviceProvider)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
             _serviceScope = serviceProvider.CreateScope();
             _pendingQueue = new ConcurrentQueue<PluginTaskModel>();
+            _failCheck = new Dictionary<Guid, int>();
             _syncObj = new object();
+            _cryptoProviders = _serviceScope.ServiceProvider.GetRequiredService<IEnumerable<ICryptoProvider>>();
             this.Options = _serviceScope.ServiceProvider.GetRequiredService<TOption>();
             this.IsRunning = false;
         }
@@ -43,6 +52,8 @@ namespace HBK.Storage.PluginCore
                 {
                     if (!this.IsRunning)
                     {
+                        _executeId = Guid.NewGuid();
+                        this.LogInformation(_executeId, null, null, "插件啟動");
                         _cancellationToken = cancellationToken;
                         Task.Factory.StartNewSafety(this.StartInternal,
                             TaskCreationOptions.LongRunning,
@@ -50,6 +61,17 @@ namespace HBK.Storage.PluginCore
                             {
                                 this.ExcetpionHandle(ex);
                                 this.IsRunning = false;
+                                _failCheck.Clear();
+                                if (this.Options.IsAutoRetry)
+                                {
+                                    this.LogInformation(_executeId, null, null, $"{this.Options.AutoRetryInterval / 1000} 秒後嘗試重新啟動...");
+                                    SpinWait.SpinUntil(() => false, this.Options.AutoRetryInterval);
+                                    this.Start(cancellationToken);
+                                }
+                                else
+                                {
+                                    this.LogInformation(_executeId, null, null, "插件終止");
+                                }
                             });
 
                         this.IsRunning = true;
@@ -84,6 +106,11 @@ namespace HBK.Storage.PluginCore
             {
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 List<StorageProvider> storageProviders = new List<StorageProvider>();
+                List<StorageTypeEnum> storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+                if (!this.Options.IsExecuteOnLocalStorage)
+                {
+                    storageTypes.Remove(StorageTypeEnum.Local);
+                }
                 if (this.Options.IsExecutOnAllStoragProvider)
                 {
                     storageProviders.AddRange(storageProviderService.GetAllStorageProviderAsync().Result);
@@ -103,6 +130,7 @@ namespace HBK.Storage.PluginCore
                         tag: this.Options.IdentityTag,
                         mimeTypeParten: this.Options.MimeTypePartten,
                         isRootFileEntity: this.Options.JustExecuteOnRootFileEntity,
+                        validStorageTypes: storageTypes,
                         takeCount: this.Options.FetchLimit - _pendingQueue.Count,
                         fileEntityNoDivisor: this.Options.FileEntityNoDivisor,
                         fileEntityNoRemainder: this.Options.FileEntityNoRemainder).Result;
@@ -114,6 +142,7 @@ namespace HBK.Storage.PluginCore
                         tag: this.Options.IdentityTag,
                         mimeTypeParten: this.Options.MimeTypePartten,
                         isRootFileEntity: this.Options.JustExecuteOnRootFileEntity,
+                        validStorageTypes: storageTypes,
                         takeCount: this.Options.FetchLimit - _pendingQueue.Count,
                         fileEntityNoDivisor: this.Options.FileEntityNoDivisor,
                         fileEntityNoRemainder: this.Options.FileEntityNoRemainder).Result;
@@ -121,6 +150,7 @@ namespace HBK.Storage.PluginCore
 
                     fileEntites.ForEach(x => _pendingQueue.Enqueue(new PluginTaskModel()
                     {
+                        TaskId = Guid.NewGuid(),
                         FileEntity = x,
                         StorageProviderId = storageProvider.StorageProviderId
                     }));
@@ -138,24 +168,43 @@ namespace HBK.Storage.PluginCore
             {
                 try
                 {
-                    if (!this.ExecuteInternal(task))
+                    ExecuteResultEnum result = this.ExecuteInternal(task);
+                    int k = -1;
+                    if (result == ExecuteResultEnum.Failed)
                     {
-                        this.ErrorFileEntity(task.FileEntity.FileEntityId);
+                        k = this.ErrorFileEntity(task);
+                    }
+                    else if (result == ExecuteResultEnum.FailedWithForce)
+                    {
+                        k = this.ErrorFileEntity(task, true);
+                    }
+                    else if (result == ExecuteResultEnum.WaitNextTimeFetch)
+                    {
+                        continue;
+                    }
+
+                    if (result == ExecuteResultEnum.Successful || k == -1)
+                    {
+                        this.CompleteFileEntity(task.FileEntity.FileEntityId);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "[{0}] 檔案 ID -> {1} 執行時發生未預期的例外", this.Options.Identity, task.FileEntity.FileEntityId);
-                    this.ErrorFileEntity(task.FileEntity.FileEntityId);
-                }
-                finally
-                {
-                    this.CompleteFileEntity(task.FileEntity.FileEntityId);
+                    this.LogError(task, null, ex, "執行時發生未預期的例外");
+                    if (this.ErrorFileEntity(task) == -1)
+                    {
+                        this.CompleteFileEntity(task.FileEntity.FileEntityId);
+                    }
                 }
             }
         }
         protected void CompleteFileEntity(Guid fileEntityId)
         {
+            if (_failCheck.ContainsKey(fileEntityId))
+            {
+                _failCheck.Remove(fileEntityId);
+            }
+
             using (var scope = _serviceProvider.CreateScope())
             {
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
@@ -170,21 +219,46 @@ namespace HBK.Storage.PluginCore
                 }
             }
         }
-        protected void ErrorFileEntity(Guid fileEntityId)
+        protected int ErrorFileEntity(PluginTaskModel pluginTaskModel, bool force = false)
         {
+            if (_failCheck.ContainsKey(pluginTaskModel.FileEntity.FileEntityId))
+            {
+                _failCheck[pluginTaskModel.FileEntity.FileEntityId]++;
+            }
+            else
+            {
+                _failCheck[pluginTaskModel.FileEntity.FileEntityId] = 1;
+            }
+
+            if (!force)
+            {
+                if (_failCheck[pluginTaskModel.FileEntity.FileEntityId] < this.Options.FailTimes)
+                {
+                    this.LogError(pluginTaskModel, null, null, "執行此檔案第 {0} 次發生錯誤，{1} 次錯誤之後會註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId], this.Options.FailTimes);
+                    return _failCheck[pluginTaskModel.FileEntity.FileEntityId];
+                }
+                this.LogError(pluginTaskModel, null, null, "執行此檔案第 {0} 次發生錯誤，註記此檔案不再執行", _failCheck[pluginTaskModel.FileEntity.FileEntityId]);
+            }
+            else
+            {
+                this.LogInformation(pluginTaskModel, null, "註記此檔案不再執行");
+            }
+
+            // 失敗三次以上才不繼續執行
             using (var scope = _serviceProvider.CreateScope())
             {
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
 
                 if (this.Options.FetchMode == FetchModeEnum.WithoutTag)
                 {
-                    fileEntityService.AppendTagAsync(fileEntityId, this.Options.ExceptionTag).Wait();
+                    fileEntityService.AppendTagAsync(pluginTaskModel.FileEntity.FileEntityId, this.Options.ExceptionTag).Wait();
                 }
                 else if (this.Options.FetchMode == FetchModeEnum.WithTag)
                 {
-                    fileEntityService.AppendTagAsync(fileEntityId, this.Options.ExceptionTag).Wait();
+                    fileEntityService.RemoveTagAsync(pluginTaskModel.FileEntity.FileEntityId, this.Options.ExceptionTag).Wait();
                 }
             }
+            return -1;
         }
         /// <summary>
         /// 移除殘留檔案
@@ -199,28 +273,76 @@ namespace HBK.Storage.PluginCore
             if (remove.Count() != 0)
             {
                 fileEntityService.MarkFileEntityDeleteBatchAsync(remove.Select(x => x.FileEntityId).ToList()).Wait();
-                _logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 在處理的過程中發現了 {3} 個殘留的檔案，以標記為移除", this.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, remove.Count());
+                this.LogInformation(taskModel, null, "在處理的過程中發現了 {0} 個殘留的檔案，以標記為移除", remove.Count());
             }
         }
 
-        protected void DownloadFileEntity(IAsyncFileInfo downloadfile, FileEntity fileEntity, string savePath)
+        protected void DownloadFileEntity(Guid taskId, IAsyncFileInfo downloadfile, FileEntity fileEntity, string savePath)
         {
             var sourceStream = downloadfile.CreateReadStream();
-            _logger.LogInformation("[{0}] 開始下載檔案 ID {1} 的 {2} 檔案", this.Options.Identity, fileEntity.FileEntityId, fileEntity.Name);
+            if (fileEntity.CryptoMode != CryptoModeEnum.NoCrypto)
+            {
+                sourceStream = new CryptoStream(sourceStream, _cryptoProviders.FirstOrDefault(x => x.CryptoMode == fileEntity.CryptoMode), fileEntity.CryptoKey, fileEntity.CryptoIv);
+            }
+            this.LogInformation(taskId, fileEntity, null, "開始下載檔案");
             using (var fstream = File.Create(savePath))
             {
                 sourceStream.CopyTo(fstream);
             }
-            _logger.LogInformation("[{0}] 檔案 ID {1} 的 {2} 檔案 下載完成", this.Options.Identity, fileEntity.FileEntityId, fileEntity.Name);
+            this.LogInformation(taskId, fileEntity, null, "檔案下載完成");
         }
-        protected abstract bool ExecuteInternal(PluginTaskModel taskModel);
+        protected abstract ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel);
         /// <summary>
         /// 未攔截的例外處理方式
         /// </summary>
         /// <param name="ex"></param>
         protected virtual void ExcetpionHandle(Exception ex)
         {
-            _logger.LogError(ex, "發生未預期的例外");
+            this.LogError(_executeId, null, null, ex, "發生未預期的例外");
+        }
+        /// <summary>
+        /// 紀錄 Info 等級的訊息
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="extendProperty"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        protected void LogInformation(PluginTaskModel task, object extendProperty, string message, params object[] args)
+        {
+            this.LogInformation(task.TaskId, task.FileEntity, extendProperty, message, args);
+        }
+        /// <summary>
+        /// 紀錄 Info 等級的訊息
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="extendProperty"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        protected void LogInformation(Guid taskId, FileEntity fileEntity, object extendProperty, string message, params object[] args)
+        {
+            _logger.LogInformation(LogEvent.BuildPluginLogEvent(this.Options.Identity, taskId, fileEntity, extendProperty), message, args);
+        }
+        /// <summary>
+        /// 紀錄 Error 等級的訊息
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="extendProperty"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        protected void LogError(PluginTaskModel task, object extendProperty, Exception ex, string message, params object[] args)
+        {
+            this.LogError(task.TaskId, task.FileEntity, extendProperty, ex, message, args);
+        }
+        /// <summary>
+        /// 紀錄 Error 等級的訊息
+        /// </summary>
+        /// <param name="task"></param>
+        /// <param name="extendProperty"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        protected void LogError(Guid taskId, FileEntity fileEntity, object extendProperty, Exception ex, string message, params object[] args)
+        {
+            _logger.LogError(LogEvent.BuildPluginLogEvent(this.Options.Identity, taskId, fileEntity, extendProperty), ex, message, args);
         }
 
         public virtual void Dispose()

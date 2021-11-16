@@ -1,0 +1,87 @@
+﻿using HBK.Storage.Web.Containers;
+using HBK.Storage.Web.DataSource;
+using HBK.Storage.Web.Features;
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace HBK.Storage.Web.Pages.FileEntity
+{
+    public partial class PublishAccessTokenDialog
+    {
+        /// <summary>
+        /// 取得或設定 Dialog 中使用的字定義屬性(解決 Dialog 無法反白選取的問題)
+        /// <seealso cref="https://github.com/MudBlazor/MudBlazor/issues/1186"/>
+        /// </summary>
+        public Dictionary<string, object> DialogAttributes { get; set; } =
+        new()
+        {
+            { "tabindex", "10" },
+        };
+        [CascadingParameter]
+        public MudDialogInstance MudDialog { get; set; }
+        [Inject]
+        public HBKStorageApi HBKStorageApi { get; set; }
+        [Inject]
+        public HBKDialogService HBKDialogService { get; set; }
+        [Inject]
+        public StateContainer StateContainer { get; set; }
+        [Inject]
+        public ClipboardService ClipboardService { get; set; }
+        [Inject]
+        public ISnackbar Snackbar { get; set; }
+        [Parameter]
+        public FileEntityResponse FileEntity { get; set; }
+
+        public FileAccessTokenType FileAccessTokenType { get; set; }
+        public string FileLink { get; set; }
+
+        public string HandlerIndicate { get; set; } = string.Empty;
+        public int AccessTimesLimit { get; set; } = 10;
+        public int ExpireAfterMinute { get; set; } = 60;
+
+        public void Cancel()
+        {
+            this.MudDialog.Cancel();
+        }
+
+        public async Task PublishAsync()
+        {
+            PostFileAccessTokenResponse result = null;
+            if (this.FileAccessTokenType == FileAccessTokenType.Normal)
+            {
+                result = await this.HBKStorageApi.FileaccesstokensPOSTAsync(this.StateContainer.StorageProvider.Storage_provider_id, new PostFileAccessTokenRequest()
+                {
+                    Access_times_limit = this.AccessTimesLimit,
+                    Expire_after_minutes = this.ExpireAfterMinute,
+                    File_access_token_type = FileAccessTokenType.Normal,
+                    File_entity_id = this.FileEntity.File_entity_id,
+                    Handler_indicate = this.HandlerIndicate
+                });
+            }
+            else if (this.FileAccessTokenType == FileAccessTokenType.Normal_no_limit)
+            {
+                result = await this.HBKStorageApi.FileaccesstokensPOSTAsync(this.StateContainer.StorageProvider.Storage_provider_id, new PostFileAccessTokenRequest()
+                {
+                    File_access_token_type = FileAccessTokenType.Normal_no_limit,
+                    File_entity_id = this.FileEntity.File_entity_id,
+                    Handler_indicate = this.HandlerIndicate,
+                    Expire_after_minutes = this.ExpireAfterMinute
+                });
+            }
+            if (result != null)
+            {
+                this.FileLink = this.HBKStorageApi.BaseUrl + $"docs?esic={result.Token}";
+            }
+        }
+
+        public async Task CopyLinkToClipboardAsync()
+        {
+            await this.ClipboardService.WriteTextAsync(this.FileLink);
+            this.Snackbar.Add("已複製到剪貼簿", Severity.Success);
+        }
+    }
+}

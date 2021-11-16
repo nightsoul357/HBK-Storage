@@ -25,6 +25,7 @@ namespace HBK.Storage.Adapter.Storages
             this.FileEntityStroage = new HashSet<FileEntityStorage>();
             this.FileAccessToken = new HashSet<FileAccessToken>();
             this.IsMarkDelete = false;
+            this.CryptoMode = CryptoModeEnum.NoCrypto;
         }
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         [Key]
         [Column("FileEntityID")]
+        [Filterable]
         public Guid FileEntityId { get; set; }
         /// <summary>
         /// 取得或設定檔案實體流水號
@@ -62,7 +64,12 @@ namespace HBK.Storage.Adapter.Storages
         [Required]
         [StringLength(255)]
         [Filterable]
+        [Sortable]
         public string MimeType { get; set; }
+        /// <summary>
+        /// 取得或設定存取模式
+        /// </summary>
+        public AccessTypeEnum AccessType { get; set; }
         /// <summary>
         /// 取得或設定是否標記刪除
         /// </summary>
@@ -90,6 +97,20 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得刪除時間
         /// </summary>
         public DateTimeOffset? DeleteDateTime { get; internal set; }
+        /// <summary>
+        /// 取得或設定加密使用的 Key
+        /// </summary>
+        [MaxLength(16)]
+        public byte[] CryptoKey { get; set; }
+        /// <summary>
+        /// 取得或設定加密使用的 Iv
+        /// </summary>
+        [MaxLength(16)]
+        public byte[] CryptoIv { get; set; }
+        /// <summary>
+        /// 取得或設定加密模式
+        /// </summary>
+        public CryptoModeEnum CryptoMode { get; set; }
         /// <summary>
         /// 取得或設定狀態
         /// </summary>
@@ -120,6 +141,7 @@ namespace HBK.Storage.Adapter.Storages
         /// 取得或設定檔案實體標籤集合
         /// </summary>
         [InverseProperty("FileEntity")]
+        [Filterable]
         public virtual ICollection<FileEntityTag> FileEntityTag { get; set; }
 
         DateTimeOffset? ITimeStampModel.UpdateDateTime { get => this.UpdateDateTime; set => this.UpdateDateTime = value; }

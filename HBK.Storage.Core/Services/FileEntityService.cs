@@ -1,4 +1,6 @@
-﻿using HBK.Storage.Adapter.Storages;
+﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -58,6 +60,7 @@ namespace HBK.Storage.Core.Services
             original.Name = data.Name;
             original.Size = data.Size;
             original.Status = data.Status;
+            original.AccessType = data.AccessType;
             await _dbContext.SaveChangesAsync();
             return await this.FindByIdAsync(data.FileEntityId);
         }
@@ -78,13 +81,56 @@ namespace HBK.Storage.Core.Services
                 original.Name = data.Name;
                 original.Size = data.Size;
                 original.Status = data.Status;
+                original.AccessType = data.AccessType;
                 result.Add(original);
             }
             await _dbContext.SaveChangesAsync();
             return result;
         }
+        /// <summary>
+        /// 取得指定檔案的所有子檔案清單(遞迴查詢)
+        /// </summary>
+        /// <param name="rootFileEntityId">根檔案 ID</param>
+        /// <returns></returns>
+        public IQueryable<ChildFileEntity> GetChildFileEntitiesQuery(Guid rootFileEntityId)
+        {
+            var query = _dbContext.FileEntity
+                .Include(x => x.FileEntityTag)
+                .Join(
+                _dbContext.VwFileEntityRecursive,
+                fileEntity => fileEntity.FileEntityId,
+                child => child.FileEntityId,
+                (fileEntity, child) => new ChildFileEntity()
+                {
+                    ChildLevel = child.ChildLevel,
+                    FileEntity = fileEntity,
+                    RootFileEntityId = child.RootFileEntityId
+                })
+                .Where(x => x.RootFileEntityId == rootFileEntityId);
+
+            return query;
+        }
         #endregion
         #region BAL
+        /// <summary>
+        /// 取得檔案的存取權杖列表
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <returns></returns>
+        public IQueryable<FileAccessToken> GetFileAccessTokenQuery(Guid fileEntityId)
+        {
+            return _dbContext.FileAccessToken.Where(x => x.FileEntityId == fileEntityId);
+        }
+        /// <summary>
+        /// 取得檔案總存取次數
+        /// </summary>
+        /// <param name="fileEntityId">檔案 ID</param>
+        /// <returns></returns>
+        public Task<int> GetAccessTimesAsync(Guid fileEntityId)
+        {
+            return _dbContext.FileEntityStroageOperation
+                .CountAsync(x => x.FileEntityStroage.FileEntityId == fileEntityId && x.Type == FileEntityStorageOperationTypeEnum.AccessSuccessfully);
+        }
         /// <summary>
         /// 將檔案實體註記為刪除
         /// </summary>
@@ -105,7 +151,7 @@ namespace HBK.Storage.Core.Services
         /// <returns></returns>
         public async Task MarkFileEntityDeleteBatchAsync(List<Guid> fileEntityIds)
         {
-            foreach(var fileEntityId in fileEntityIds)
+            foreach (var fileEntityId in fileEntityIds)
             {
                 var fileEntity = await _dbContext.FileEntity
                 .Include(x => x.FileEntityStroage)
@@ -129,8 +175,9 @@ namespace HBK.Storage.Core.Services
                 .Include(x => x.FileEntity)
                 .Include(x => x.Storage)
                 .ThenInclude(x => x.StorageGroup)
-                .Where(x => x.IsMarkDelete && x.FileEntity.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder)
+                .Where(x => x.IsMarkDelete && x.FileEntity.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder && x.DeleteDateTime == null) // 手動判斷 Soft-Delete
                 .Take(takeCount)
+                .IgnoreQueryFilters() // 需處理 Storage Group 已被移除的狀況
                 .ToListAsync();
         }
         /// <summary>
@@ -181,6 +228,19 @@ namespace HBK.Storage.Core.Services
             return _dbContext.Storage
                 .Include(x => x.StorageGroup)
                 .Where(x => x.FileEntityStroage.Any(f => f.FileEntityId == fileEntityId))
+                .ToListAsync();
+        }
+        /// <summary>
+        /// 取得檔案存在的儲存個體橋接資訊集合
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <returns></returns>
+        public Task<List<FileEntityStorage>> GetFileEntityStroageAsync(Guid fileEntityId)
+        {
+            return _dbContext.FileEntityStorage
+                .Include(x => x.Storage)
+                .ThenInclude(x => x.StorageGroup)
+                .Where(x => x.FileEntityId == fileEntityId)
                 .ToListAsync();
         }
         /// <summary>

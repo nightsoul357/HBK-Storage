@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Api.ModelBinders;
+﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Api.ModelBinders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,6 +23,7 @@ namespace HBK.Storage.Api.Models.FileService
         public PutFileRequest()
         {
             this.Tags = new List<string>();
+            this.CryptoMode = CryptoModeEnum.NoCrypto;
         }
         /// <summary>
         /// 檔案名稱
@@ -43,6 +45,14 @@ namespace HBK.Storage.Api.Models.FileService
         /// 檔案的網際網路媒體型式，留空將會透過檔名自動判定
         /// </summary>
         public string MimeType { get; set; }
+        /// <summary>
+        /// 加密方式
+        /// </summary>
+        public CryptoModeEnum CryptoMode { get; set; }
+        /// <summary>
+        /// 檔案
+        /// </summary>
+        public IFormFile File { get; set; } // 用於 Swagger 自動產生對應資訊
         /// <summary>
         /// 檔案串流
         /// </summary>

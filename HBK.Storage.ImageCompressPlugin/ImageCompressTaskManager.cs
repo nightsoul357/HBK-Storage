@@ -1,5 +1,6 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
+using HBK.Storage.Core.Cryptography;
 using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Services;
 using HBK.Storage.ImageCompressPlugin.Models;
@@ -19,33 +20,42 @@ namespace HBK.Storage.ImageCompressPlugin
 {
     public class ImageCompressTaskManager : PluginTaskManagerBase<ImageCompressTaskManager, ImageCompressTaskOptions>
     {
+        private readonly List<StorageTypeEnum> _storageTypes;
         public ImageCompressTaskManager(ILogger<ImageCompressTaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
+            _storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            if (!base.Options.IsExecuteOnLocalStorage)
+            {
+                _storageTypes.Remove(StorageTypeEnum.Local);
+            }
         }
-        protected override bool ExecuteInternal(PluginTaskModel taskModel)
+        protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
         {
-            base._logger.LogInformation("[{0}] 開始壓縮圖片檔案 ID 為 {1} 的檔案 {2}",
-                base.Options.Identity,
-                taskModel.FileEntity.FileEntityId,
-                taskModel.FileEntity.Name);
+            base.LogInformation(taskModel, null, "任務開始 - 壓縮圖片");
 
             using (var scope = base._serviceProvider.CreateScope())
             {
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId).Result;
+                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId, _storageTypes).Result;
+                var cryptoProviders = scope.ServiceProvider.GetRequiredService<IEnumerable<ICryptoProvider>>();
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
 
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
                 if (fileInfo == null)
                 {
-                    return false;
+                    return ExecuteResultEnum.Failed;
                 }
 
-                using var bmp = new Bitmap(fileInfo.CreateReadStream());
+                var fileStream = fileInfo.CreateReadStream();
+                if (taskModel.FileEntity.CryptoMode != CryptoModeEnum.NoCrypto)
+                {
+                    fileStream = new CryptoStream(fileStream, cryptoProviders.FirstOrDefault(x => x.CryptoMode == taskModel.FileEntity.CryptoMode), taskModel.FileEntity.CryptoKey, taskModel.FileEntity.CryptoIv);
+                }
+                using var bmp = new Bitmap(fileStream);
                 List<FileEntity> processFileEntities = new List<FileEntity>();
                 foreach (var compress in base.Options.CompressLevels)
                 {
@@ -56,7 +66,7 @@ namespace HBK.Storage.ImageCompressPlugin
                         new FileEntity()
                         {
                             MimeType = "image/jpeg",
-                            Name = Path.GetFileNameWithoutExtension(taskModel.FileEntity.Name) + $"-{ compress.Name }" + Path.GetExtension(taskModel.FileEntity.Name),
+                            Name = Path.GetFileNameWithoutExtension(taskModel.FileEntity.Name) + $"-{ compress.Name }.jpeg",
                             Size = result.Length,
                             Status = FileEntityStatusEnum.Processing,
                             FileEntityTag = new List<FileEntityTag>() {
@@ -69,22 +79,19 @@ namespace HBK.Storage.ImageCompressPlugin
                                     Value = compress.Name
                                 }
                             },
-                            ParentFileEntityID = taskModel.FileEntity.FileEntityId
+                            ParentFileEntityID = taskModel.FileEntity.FileEntityId,
+                            CryptoMode = taskModel.FileEntity.CryptoMode
                         },
-                        result, this.Options.Identity).Result;
+                        result, this.Options.Identity, _storageTypes).Result;
 
                     processFileEntities.Add(compressFileEntity);
-
-                    base._logger.LogInformation("[{0}] 成功將 {1} 檔案壓縮成 {2} 完成",
-                        base.Options.Identity,
-                        taskModel.FileEntity.Name,
-                        compress.Name);
                 }
 
+                base.LogInformation(taskModel, null, "任務結束 - 壓縮圖片");
                 processFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);
                 fileEntityService.UpdateBatchAsync(processFileEntities).Wait();
             }
-            return true;
+            return ExecuteResultEnum.Successful;
         }
 
         private Stream CompressImage(Bitmap bmp, long quantity)

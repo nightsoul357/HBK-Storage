@@ -32,6 +32,12 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         public long AuthorizeKeyNo { get; set; }
         /// <summary>
+        /// 取得或設定名稱
+        /// </summary>
+        [Required]
+        [StringLength(4000)]
+        public string Name { get; set; }
+        /// <summary>
         /// 取得或設定金鑰值
         /// </summary>
         [Required]

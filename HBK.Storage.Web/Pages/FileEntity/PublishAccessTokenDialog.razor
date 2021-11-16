@@ -1,0 +1,46 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudGrid @attributes="this.DialogAttributes">
+            <MudItem xs="12" sm="8" md="6">
+                <MudTextField @bind-Value="this.FileEntity.Name" Label="檔案名稱" Variant="Variant.Outlined" ReadOnly="true" />
+            </MudItem>
+            <MudItem xs="12" sm="8" md="6">
+                <MudTextField Value="@DataUnitFormatHelper.Format(this.FileEntity.Size)" Label="檔案大小" Variant="Variant.Outlined" ReadOnly="true" />
+            </MudItem>
+            <MudItem xs="12" sm="8" md="6">
+                <MudSelect @bind-Value="this.FileAccessTokenType" T="FileAccessTokenType" Label="類型" Variant="Variant.Outlined">
+                    <MudSelectItem Value="FileAccessTokenType.Normal">@FileAccessTokenType.Normal</MudSelectItem>
+                    <MudSelectItem Value="FileAccessTokenType.Normal_no_limit">@FileAccessTokenType.Normal_no_limit</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="8" md="6">
+                <MudTextField @bind-Value="this.HandlerIndicate" Label="處理器指示" Variant="Variant.Outlined" />
+            </MudItem>
+            @if (this.FileAccessTokenType == FileAccessTokenType.Normal)
+            {
+                <MudItem xs="12" sm="8" md="6">
+                    <MudNumericField @bind-Value="this.AccessTimesLimit" Label="存取次數限制" Variant="Variant.Text" Min="0" Max="int.MaxValue" />
+                </MudItem>
+                <MudItem xs="12" sm="8" md="6">
+                    <MudNumericField @bind-Value="this.ExpireAfterMinute" Label="過期時間" Variant="Variant.Text" Min="0" Max="int.MaxValue" AdornmentText="分鐘" />
+                </MudItem>
+            }
+            else if (this.FileAccessTokenType == FileAccessTokenType.Normal_no_limit)
+            {
+                <MudItem xs="12" sm="8" md="6">
+                    <MudNumericField @bind-Value="this.ExpireAfterMinute" Label="過期時間" Variant="Variant.Text" Min="0" Max="int.MaxValue" AdornmentText="分鐘" />
+                </MudItem>
+            }
+            @if (!String.IsNullOrEmpty(this.FileLink))
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="this.CopyLinkToClipboardAsync">複製網址到剪貼簿</MudButton>
+                </MudItem>
+            }
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="this.Cancel">取消</MudButton>
+        <MudButton Color="Color.Primary" OnClick="this.PublishAsync">發行</MudButton>
+    </DialogActions>
+</MudDialog>

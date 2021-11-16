@@ -1,4 +1,5 @@
 ﻿using HBK.Storage.VideoSubTitleCombinePlugin.Models;
+using MediaToolkit;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,19 +17,17 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin.CombineHandler
             _logger = logger;
             this.InternalCombineHandler = internalCombineHandler;
         }
-        public CombineHandlerExecuteResult Execute(CombineHandlerTaskModel taskModel)
+        public CombineHandlerExecuteResult Execute(CombineHandlerTaskModel taskModel, Action<object, ConvertProgressEventArgs> convertProgress, Action<object, ConversionCompleteEventArgs> conversionComplete)
         {
-            var result = this.ExecuteInternal(taskModel);
+            var result = this.ExecuteInternal(taskModel, convertProgress, conversionComplete);
             if (result.Success)
             {
-                _logger.LogInformation("[{0}] 合併成功", taskModel.Identity);
                 return result;
             }
-            _logger.LogInformation("[{0}] 合併失敗", taskModel.Identity);
 
             if (this.InternalCombineHandler != null)
             {
-                return this.InternalCombineHandler.Execute(taskModel);
+                return this.InternalCombineHandler.Execute(taskModel, convertProgress, conversionComplete);
             }
 
             return new CombineHandlerExecuteResult()
@@ -37,7 +36,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin.CombineHandler
             };
         }
 
-        protected abstract CombineHandlerExecuteResult ExecuteInternal(CombineHandlerTaskModel taskModel);
+        protected abstract CombineHandlerExecuteResult ExecuteInternal(CombineHandlerTaskModel taskModel, Action<object, ConvertProgressEventArgs> convertProgress, Action<object, ConversionCompleteEventArgs> conversionComplete);
         public CombineHandlerBase InternalCombineHandler { get; private set; }
 
     }

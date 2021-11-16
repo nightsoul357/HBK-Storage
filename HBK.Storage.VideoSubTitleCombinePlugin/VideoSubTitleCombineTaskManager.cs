@@ -22,46 +22,53 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
     public class VideoSubTitleCombineTaskManager : PluginTaskManagerBase<VideoSubTitleCombineTaskManager, VideoSubTitleCombineTaskOptions>
     {
         private readonly IHostEnvironment _hostEnvironment;
+        private readonly List<StorageTypeEnum> _storageTypes;
         public VideoSubTitleCombineTaskManager(ILogger<VideoSubTitleCombineTaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
             _hostEnvironment = base._serviceScope.ServiceProvider.GetRequiredService<IHostEnvironment>();
+            _storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            if (!base.Options.IsExecuteOnLocalStorage)
+            {
+                _storageTypes.Remove(StorageTypeEnum.Local);
+            }
         }
 
-        protected override bool ExecuteInternal(PluginTaskModel taskModel)
+        protected override ExecuteResultEnum ExecuteInternal(PluginTaskModel taskModel)
         {
             using (var scope = base._serviceProvider.CreateScope())
             {
                 if (taskModel.FileEntity.ExtendProperty == null)
                 {
-                    return false;
+                    base.LogInformation(taskModel, null, "因為 ExtendProperty 為 NULL 而無法正確執行影片字幕合併任務");
+                    return ExecuteResultEnum.Failed;
                 }
                 var extendProperty = JsonConvert.DeserializeObject<VideoSubTitleCombineExtendProperty>(taskModel.FileEntity.ExtendProperty);
                 if (extendProperty == null || extendProperty.SubTitleTrackInfos == null)
                 {
-                    return false;
+                    base.LogInformation(taskModel, null, "因為 ExtendProperty 為 NULL 或 SubTitleTrackInfos 而無法正確執行影片字幕合併任務");
+                    return ExecuteResultEnum.Failed;
                 }
                 var storageProviderService = scope.ServiceProvider.GetRequiredService<StorageProviderService>();
                 var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
-                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId).Result;
+                var fileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, taskModel.FileEntity.FileEntityId, _storageTypes).Result;
                 IAsyncFileInfo fileInfo = fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStorage.FileEntityStorageId).Result;
 
                 base.RemoveResidueFileEntity(fileEntityService, taskModel);
+                base.LogInformation(taskModel, null, "任務開始 - 合併影片跟字幕");
 
-                base._logger.LogInformation("[{0}] 開始合併檔案 ID {1} 的檔案 {2} 之影片和字幕檔案", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
-                Guid taskId = Guid.NewGuid();
-                string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskId.ToString());
+                string workingDirectory = Path.Combine(base.Options.WorkingDirectory, taskModel.TaskId.ToString());
                 string sourceDirecotry = Path.Combine(workingDirectory, "src");
                 Directory.CreateDirectory(sourceDirecotry);
 
                 if (fileInfo == null)
                 {
-                    return false;
+                    return ExecuteResultEnum.Failed;
                 }
 
                 string sourceVideoFile = Path.Combine(sourceDirecotry, Guid.NewGuid().ToString() + Path.GetExtension(taskModel.FileEntity.Name));
-                base.DownloadFileEntity(fileInfo, taskModel.FileEntity, sourceVideoFile);
+                base.DownloadFileEntity(taskModel.TaskId, fileInfo, taskModel.FileEntity, sourceVideoFile);
 
                 string newFFmpegLocation = Path.Combine(workingDirectory, "ffmpeg.exe");
                 File.Copy(base.Options.FFmpegLocation, newFFmpegLocation);
@@ -70,9 +77,8 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
 
                 foreach (var subTitleTrack in extendProperty.SubTitleTrackInfos)
                 {
-                    base._logger.LogInformation("[{0}] 開始合併檔案 ID {1} 的檔案 {2} 的 {3} 字幕軌", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, subTitleTrack.TrackName);
-
-                    var subTitleFileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, subTitleTrack.SubTitleFileEntityId).Result;
+                    base.LogInformation(taskModel, null, "開始合併 {0} 字幕軌", subTitleTrack.TrackName);
+                    var subTitleFileEntityStorage = storageProviderService.GetFileEntityStorageAsync(taskModel.StorageProviderId, null, subTitleTrack.SubTitleFileEntityId, _storageTypes).Result;
                     IAsyncFileInfo subTitleFileInfo = fileEntityStorageService.TryFetchFileInfoAsync(subTitleFileEntityStorage.FileEntityStorageId).Result;
                     if (subTitleFileInfo == null)
                     {
@@ -81,7 +87,7 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
 
                     string subTitleFile = Path.Combine(this.CurrentDirectory, Guid.NewGuid().ToString() + Path.GetExtension(subTitleFileEntityStorage.FileEntity.Name));
                     var subTitleFileEntity = fileEntityService.FindByIdAsync(subTitleTrack.SubTitleFileEntityId).Result;
-                    base.DownloadFileEntity(subTitleFileInfo, subTitleFileEntity, subTitleFile);
+                    base.DownloadFileEntity(taskModel.TaskId, subTitleFileInfo, subTitleFileEntity, subTitleFile);
 
                     string outputVideoFile = Path.Combine(workingDirectory, Guid.NewGuid().ToString() + Path.GetExtension(taskModel.FileEntity.Name));
                     var result = handler.Execute(new CombineHandlerTaskModel()
@@ -91,7 +97,14 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                         OutputFileName = outputVideoFile,
                         SubTitleFileName = Path.GetFileName(subTitleFile),
                         VideoFileName = sourceVideoFile
+                    }, (e, arg) =>
+                    {
+                        base.LogInformation(taskModel, arg, "正在合併 {0} 字幕軌 ...", subTitleTrack.TrackName);
+                    }, (e, arg) =>
+                    {
+                        base.LogInformation(taskModel, arg, "{0} 字幕軌合併完成", subTitleTrack.TrackName);
                     });
+
                     if (result.Success)
                     {
                         using (FileStream fs = File.OpenRead(outputVideoFile))
@@ -100,7 +113,8 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                             tags.AddRange(subTitleTrack.CompleteTags.Select(x => new FileEntityTag() { Value = x }));
                             tags.Add(new FileEntityTag() { Value = base.Options.Identity });
                             tags.Add(new FileEntityTag() { Value = subTitleTrack.TrackName });
-                            base._logger.LogInformation("[{0}] 開始上傳 ID {1} 的檔案 {2} 的 {3} 字幕軌 合併後的檔案", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, subTitleTrack.TrackName);
+
+                            base.LogInformation(taskModel, null, "開始上傳 {0} 字幕軌合併後的檔案", subTitleTrack.TrackName);
 
                             var combineFileEntity = storageProviderService
                                 .UploadFileEntityAsync(taskModel.StorageProviderId,
@@ -112,11 +126,12 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                                         Size = fs.Length,
                                         Status = FileEntityStatusEnum.Processing,
                                         FileEntityTag = tags,
-                                        ParentFileEntityID = taskModel.FileEntity.FileEntityId
+                                        ParentFileEntityID = taskModel.FileEntity.FileEntityId,
+                                        CryptoMode = taskModel.FileEntity.CryptoMode
                                     },
-                                    fs, this.Options.Identity).Result;
+                                    fs, this.Options.Identity, _storageTypes).Result;
 
-                            base._logger.LogInformation("[{0}] 上傳 ID {1} 的檔案 {2} 的 {3} 字幕軌 合併後的檔案 完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, subTitleTrack.TrackName);
+                            base.LogInformation(taskModel, null, "上傳 {0} 字幕軌合併後的檔案 完成", subTitleTrack.TrackName);
 
                             processFileEntities.Add(combineFileEntity);
                         }
@@ -124,19 +139,22 @@ namespace HBK.Storage.VideoSubTitleCombinePlugin
                     }
                     else
                     {
+                        base.LogInformation(taskModel, null, "字幕軌 {0} 合併失敗", subTitleTrack.TrackName);
                         fileEntityService.AppendTagAsync(taskModel.FileEntity.FileEntityId, $"Combine { subTitleTrack.TrackName } Failed");
                     }
                     FileOperator.DeleteSaftey(subTitleFile);
-                    base._logger.LogInformation("[{0}] 檔案 ID {1} 的檔案 {2} 的 {3} 字幕軌 合併完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name, subTitleTrack.TrackName);
+
+                    base.LogInformation(taskModel, null, "字幕軌 {0} 合併完成", subTitleTrack.TrackName);
                 }
 
-                processFileEntities.Select(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);
+                processFileEntities.ForEach(x => x.Status = x.Status & ~FileEntityStatusEnum.Processing);
                 fileEntityService.UpdateBatchAsync(processFileEntities).Wait();
 
                 DirectoryOperator.DeleteSaftey(workingDirectory, true);
             }
-            base._logger.LogInformation("[{0}] 合併檔案 ID {1} 的檔案 {2} 之影片和字幕檔案完成", base.Options.Identity, taskModel.FileEntity.FileEntityId, taskModel.FileEntity.Name);
-            return true;
+
+            base.LogInformation(taskModel, null, "任務完成 - 合併影片跟字幕");
+            return ExecuteResultEnum.Successful;
         }
 
         public string CurrentDirectory

@@ -1,0 +1,27 @@
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore "HBK.Storage.Api/HBK.Storage.Api.csproj"
+WORKDIR "/src/HBK.Storage.Api"
+RUN dotnet build "HBK.Storage.Api.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "HBK.Storage.Api.csproj" -c Release -o /app/publish
+WORKDIR /app/publish
+RUN apt-get update && \
+	apt-get install -y openssl && \
+	openssl genrsa -out key.pem 2048 && \
+	openssl req -new -sha256 -key key.pem -out csr.csr \
+	-subj "/C=TW/ST=NightSoul/L=Taipei/O=HBK/OU=IT Department/CN=nightsoul.com" && \
+	openssl req -x509 -sha256 -days 365 -key key.pem -in csr.csr -out certificate.pem && \
+	openssl pkcs12 -export -out certificate.p12 -inkey key.pem -in certificate.pem -password pass:develop123465
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "HBK.Storage.Api.dll"]

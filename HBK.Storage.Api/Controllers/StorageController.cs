@@ -5,10 +5,13 @@ using HBK.Storage.Api.ModelBinders;
 using HBK.Storage.Api.Models.FileService;
 using HBK.Storage.Api.Models.Storage;
 using HBK.Storage.Core.FileSystem.FTP;
+using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,16 +27,19 @@ namespace HBK.Storage.Api.Controllers
     {
         private readonly ILogger<StorageController> _logger;
         private readonly StorageService _storageService;
+        private readonly JsonSerializerSettings _jsonSerializerSettings;
 
         /// <summary>
         /// 建構一個新的執行個體
         /// </summary>
         /// <param name="storageService"></param>
         /// <param name="logger"></param>
-        public StorageController(StorageService storageService, ILogger<StorageController> logger)
+        /// <param name="jsonOptions"></param>
+        public StorageController(StorageService storageService, ILogger<StorageController> logger, IOptions<MvcNewtonsoftJsonOptions> jsonOptions)
         {
             _logger = logger;
             _storageService = storageService;
+            _jsonSerializerSettings = jsonOptions.Value.SerializerSettings;
         }
 
         /// <summary>
@@ -48,9 +54,9 @@ namespace HBK.Storage.Api.Controllers
             [ExampleParameter("00d89a53-107a-4666-ab46-03fc13fc9a93")]
             [ExistInDatabase(typeof(Adapter.Storages.Storage))] Guid storageId)
         {
-            return StorageController.BuildStorageResponse(await _storageService.FindByIdAsync(storageId));
+            return StorageController.BuildStorageResponse(await _storageService.FindByIdAsync(storageId), _jsonSerializerSettings);
         }
-        
+
         /// <summary>
         /// 更新儲存個體
         /// </summary>
@@ -72,7 +78,7 @@ namespace HBK.Storage.Api.Controllers
             storage.Status = request.Status.UnflattenFlags();
             storage.Type = request.Type;
             var result = await _storageService.UpdateAsync(storage);
-            return StorageController.BuildStorageResponse(result);
+            return StorageController.BuildStorageResponse(result, _jsonSerializerSettings);
         }
         /// <summary>
         /// 刪除儲存個體(同時刪除儲存個體內的所有檔案)
@@ -93,13 +99,14 @@ namespace HBK.Storage.Api.Controllers
         /// 產生儲存個體回應內容
         /// </summary>
         /// <param name="storage">儲存個體</param>
+        /// <param name="jsonSerializerSettings"></param>
         /// <returns></returns>
-        internal static StorageResponse BuildStorageResponse(Adapter.Storages.Storage storage)
+        internal static StorageResponse BuildStorageResponse(Adapter.Storages.Storage storage, JsonSerializerSettings jsonSerializerSettings)
         {
             return new StorageResponse()
             {
                 CreateDateTime = storage.CreateDateTime.LocalDateTime,
-                Credentials = storage.Credentials,
+                Credentials = JsonConvert.SerializeObject(storage.Credentials, jsonSerializerSettings),
                 Name = storage.Name,
                 SizeLimit = storage.SizeLimit,
                 Status = storage.Status.FlattenFlags(),
@@ -107,6 +114,28 @@ namespace HBK.Storage.Api.Controllers
                 Type = storage.Type,
                 UpdateDateTime = storage.UpdateDateTime?.LocalDateTime,
                 StorageGroupResponse = StorageGroupController.BuildStorageGroupResponse(storage.StorageGroup)
+            };
+        }
+        /// <summary>
+        /// 產生儲存個體擴充資訊回應內容
+        /// </summary>
+        /// <param name="storageExtendProperty">儲存個體擴充資訊</param>
+        /// <param name="jsonSerializerSettings"></param>
+        /// <returns></returns>
+        internal static StorageExtendPropertyResponse BuildStorageExtendPropertyResponse(StorageExtendProperty storageExtendProperty, JsonSerializerSettings jsonSerializerSettings)
+        {
+            return new StorageExtendPropertyResponse()
+            {
+                CreateDateTime = storageExtendProperty.Storage.CreateDateTime.LocalDateTime,
+                Credentials = JsonConvert.SerializeObject(storageExtendProperty.Storage.Credentials, jsonSerializerSettings),
+                Name = storageExtendProperty.Storage.Name,
+                SizeLimit = storageExtendProperty.Storage.SizeLimit,
+                Status = storageExtendProperty.Storage.Status.FlattenFlags(),
+                StorageId = storageExtendProperty.Storage.StorageId,
+                Type = storageExtendProperty.Storage.Type,
+                UpdateDateTime = storageExtendProperty.Storage.UpdateDateTime?.LocalDateTime,
+                StorageGroupResponse = StorageGroupController.BuildStorageGroupResponse(storageExtendProperty.Storage.StorageGroup),
+                UsedSize = storageExtendProperty.UsedSize
             };
         }
         /// <summary>

@@ -1,0 +1,117 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudGrid @attributes="this.DialogAttributes">
+            <MudItem xs="12" md="12">
+                <MudExpansionPanels MultiExpansion="true">
+                    <MudExpansionPanel Text="基本資訊" IsInitiallyExpanded="true">
+                        <MudGrid>
+                            <MudItem xs="12" sm="8" md="6">
+                                <MudTextField @bind-Value="this.FileEntity.Name" Label="名稱" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                            <MudItem xs="12" sm="8" md="6">
+                                <MudTextField Value="DataUnitFormatHelper.Format(this.FileEntity.Size)" Label="檔案大小" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                            <MudItem xs="12" sm="8" md="6">
+                                <MudTextField Value="this.FileEntity.Mime_type" Label="MimeType" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                            <MudItem xs="12" sm="8" md="6">
+                                <MudTextField Value="@(this.FileEntity.Status.Aggregate("",(s1,s2) => s1 + "," + s2).Trim(','))" Label="狀態" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                            <MudItem xs="12" sm="12" md="12">
+                                <MudTextField Converter="this.TagConverter" @bind-Value="this.FileEntity.Tags" Label="標籤" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                            <MudItem xs="12" sm="12" md="12">
+                                <MudTextField @bind-Value="this.FileEntity.Extend_property" Label="擴充資訊" Lines="5" Variant="Variant.Outlined" ReadOnly="true" />
+                            </MudItem>
+                        </MudGrid>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="儲存群組清單">
+                        <MudGrid>
+                            <MudItem xs="12" md="12">
+                                <MudTable Items="@this.FileEntity.File_entity_storage_responses" Dense="false" Hover="true" Bordered="false" Striped="false">
+                                    <HeaderContent>
+                                        <MudTh>儲存群組名稱</MudTh>
+                                        <MudTh>儲存個體名稱</MudTh>
+                                        <MudTh>建立者識別碼</MudTh>
+                                        <MudTh>建立時間</MudTh>
+                                        <MudTh>最後更新時間</MudTh>
+                                        <MudTh>狀態</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd>@context.Storage_group_response.Name</MudTd>
+                                        <MudTd>@context.Name</MudTd>
+                                        <MudTd>@context.Creator_identity</MudTd>
+                                        <MudTd>@context.File_entity_storage_create_date_time.ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
+                                        <MudTd>@context.File_entity_storage_update_date_time?.ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
+                                        <MudTd>
+                                            @foreach (var status in context.File_entity_storage_status)
+                                            {
+                                                <MudText>
+                                                    @status.ToString()
+                                                </MudText>}
+                                        </MudTd>
+                                    </RowTemplate>
+                                    <PagerContent>
+                                        <MudTablePager />
+                                    </PagerContent>
+                                </MudTable>
+                            </MudItem>
+                        </MudGrid>
+                    </MudExpansionPanel>
+
+                    <MudExpansionPanel Text="子檔案清單">
+                        <MudTable ServerData="@(new Func<TableState, Task<TableData<ChildFileEntityResponse>>>(this.ServerReloadAsync))"
+                                  Dense="true" Hover="true" @ref="_table">
+                            <ToolBarContent>
+                                <MudTextField T="string" ValueChanged="@(async s => await this.OnSearchAsync(s))" Placeholder="Search" Adornment="Adornment.Start"
+                                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                                <MudIconButton Icon="@Icons.Material.Filled.Refresh" aria-label="refresh" OnClick="async () => await _table.ReloadServerData()"></MudIconButton>
+                            </ToolBarContent>
+                            <HeaderContent>
+                                <MudTh>檔案 ID</MudTh>
+                                <MudTh><MudTableSortLabel SortLabel="file_entity/name" T="ChildFileEntityResponse">名稱</MudTableSortLabel></MudTh>
+                                <MudTh><MudTableSortLabel SortLabel="file_entity/size" T="ChildFileEntityResponse">檔案大小</MudTableSortLabel></MudTh>
+                                <MudTh><MudTableSortLabel SortLabel="file_entity/mime_type" T="ChildFileEntityResponse">MimeType</MudTableSortLabel></MudTh>
+                                <MudTh>標籤</MudTh>
+                                <MudTh><MudTableSortLabel SortLabel="file_entity/create_date_time" T="ChildFileEntityResponse">建立時間</MudTableSortLabel></MudTh>
+                                <MudTh>狀態</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd>@context.File_entity_id</MudTd>
+                                <MudTd DataLabel="file_entity/name">@context.Name</MudTd>
+                                <MudTd DataLabel="file_entity/size">@DataUnitFormatHelper.Format(context.Size)</MudTd>
+                                <MudTd DataLabel="file_entity/mime_type">@context.Mime_type</MudTd>
+                                <MudTd>
+                                    @foreach (var tag in context.Tags)
+                                    {
+                                        <MudText>
+                                            @tag
+                                        </MudText>}
+                                </MudTd>
+                                <MudTd DataLabel="file_entity/create_date_time">@context.Create_date_time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
+                                <MudTd DataLabel="status">
+                                    @foreach (var status in context.Status)
+                                    {
+                                        <MudText>
+                                            @status.ToString()
+                                        </MudText>}
+                                </MudTd>
+                            </RowTemplate>
+                            <NoRecordsContent>
+                                <MudText>未找到任何資料</MudText>
+                            </NoRecordsContent>
+                            <LoadingContent>
+                                <MudText>正在載入中...</MudText>
+                            </LoadingContent>
+                            <PagerContent>
+                                <MudTablePager />
+                            </PagerContent>
+                        </MudTable>
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+    </DialogActions>
+</MudDialog>

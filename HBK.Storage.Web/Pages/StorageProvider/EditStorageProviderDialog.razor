@@ -1,0 +1,30 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            @(this.IsEditMode ? "編輯儲存提供者" : "新增儲存提供者")
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" sm="12" md="12">
+                <MudTextField @bind-Value="this.Name" Label="名稱" Variant="Variant.Outlined" Required="true" />
+            </MudItem>
+            
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="this.Cancel">取消</MudButton>
+        @if (this.IsEditMode)
+        {
+            if (this.EditStorageProvider.Status.Contains(StorageProviderStatus.Disable))
+            {
+                <MudButton Color="Color.Primary" OnClick="this.Enable">啟用</MudButton>
+            }
+            else
+            {
+                <MudButton Color="Color.Error" OnClick="this.Disable">停用</MudButton>
+            }
+        }
+        <MudButton Color="Color.Primary" OnClick="this.SaveChangeAsync">@(this.IsEditMode ? "儲存" : "新增")</MudButton>
+    </DialogActions>
+</MudDialog>

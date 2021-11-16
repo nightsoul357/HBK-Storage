@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -8,15 +8,21 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
-    <PackageReference Include="NLog" Version="4.7.9" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.12.0" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HBK.Storage.ImageCompressPlugin\HBK.Storage.ImageCompressPlugin.csproj" />
     <ProjectReference Include="..\HBK.Storage.VideoConvertM3U8Plugin\HBK.Storage.VideoConvertM3U8Plugin.csproj" />
     <ProjectReference Include="..\HBK.Storage.VideoMetadataPlugin\HBK.Storage.VideoMetadataPlugin.csproj" />
+    <ProjectReference Include="..\HBK.Storage.VideoSeekPreviewPlugin\HBK.Storage.VideoSeekPreviewPlugin.csproj" />
     <ProjectReference Include="..\HBK.Storage.VideoSubTitleCombinePlugin\HBK.Storage.VideoSubTitleCombinePlugin.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ffmpeg.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

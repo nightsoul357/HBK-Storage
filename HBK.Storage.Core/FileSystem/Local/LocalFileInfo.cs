@@ -39,7 +39,7 @@ namespace HBK.Storage.Core.FileSystem.Local
 
             return Task<Stream>.Run(() =>
             {
-                return (Stream)File.Open(_fileInfo.FullName, FileMode.Open);
+                return (Stream)File.Open(_fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             });
         }
     }

@@ -9,7 +9,7 @@ namespace HBK.Storage.Sync.Model
     /// <summary>
     /// 同步任務管理者選項
     /// </summary>
-    public class SyncTaskManagerOption
+    public class SyncTaskManagerOption : TaskMangagerOptionBase
     {
         /// <summary>
         /// 建立一個新的執行個體
@@ -18,10 +18,6 @@ namespace HBK.Storage.Sync.Model
         {
             this.StorageProviderIds = new List<Guid>();
         }
-        /// <summary>
-        /// 取得或設定識別名稱
-        /// </summary>
-        public string Identity { get; set; }
         /// <summary>
         /// 取得或設定工作數量上限
         /// </summary>

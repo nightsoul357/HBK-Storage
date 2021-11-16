@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Api.Helpers;
+﻿using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Api.Helpers;
 using HBK.Storage.Api.Models.FileService;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -65,21 +66,33 @@ namespace HBK.Storage.Api.ModelBinders
                             bufferSize: 1024,
                             leaveOpen: true))
                         {
-                            var value = await streamReader.ReadToEndAsync();
+                            string value = await streamReader.ReadToEndAsync();
                             if (String.Equals(value, "undefined", StringComparison.OrdinalIgnoreCase))
                             {
                                 value = String.Empty;
                             }
                             var prop = model.GetType().GetProperty(key, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                            if (prop != null)
+                            if (prop != null && !string.IsNullOrEmpty(value))
                             {
                                 if (prop.PropertyType == typeof(String))
                                 {
                                     prop.SetValue(model, value);
                                 }
-                                else if (prop.PropertyType == typeof(Guid))
+                                else if (prop.PropertyType == typeof(Guid) || prop.PropertyType == typeof(Guid?))
                                 {
                                     prop.SetValue(model, Guid.Parse(value));
+                                }
+                                else if (prop.PropertyType == typeof(CryptoModeEnum))
+                                {
+                                    switch (value) // TODO: 修正為自動判斷
+                                    {
+                                        case "aes":
+                                            prop.SetValue(model, CryptoModeEnum.AES);
+                                            break;
+                                        case "no_crypto":
+                                            prop.SetValue(model, CryptoModeEnum.NoCrypto);
+                                            break;
+                                    }
                                 }
                                 else
                                 {
@@ -107,12 +120,16 @@ namespace HBK.Storage.Api.ModelBinders
             {
                 model.MimeType = section.ContentType;
             }
+            if (String.IsNullOrWhiteSpace(model.MimeType)) // 如果仍然是空值
+            {
+                model.MimeType = "application/octet-stream";
+            }
             if (String.IsNullOrWhiteSpace(model.Filename))
             {
                 model.Filename = section.AsFileSection().FileName;
             }
-            bindingContext.Result = ModelBindingResult.Success(model);
 
+            bindingContext.Result = ModelBindingResult.Success(model);
             return;
         }
 

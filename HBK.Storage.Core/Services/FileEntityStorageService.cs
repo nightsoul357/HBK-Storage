@@ -82,10 +82,23 @@ namespace HBK.Storage.Core.Services
         /// 嘗試取得檔案資訊
         /// </summary>
         /// <param name="fileEntityStorageId">檔案位於儲存個體上的資訊 ID</param>
+        /// <param name="ignoreStorageSoftDelete">是否忽略儲存個體已被刪除</param>
         /// <returns></returns>
-        public async Task<IAsyncFileInfo> TryFetchFileInfoAsync(Guid fileEntityStorageId)
+        public async Task<IAsyncFileInfo> TryFetchFileInfoAsync(Guid fileEntityStorageId, bool ignoreStorageSoftDelete = false)
         {
-            var fileEntityStorage = await this.FindByIdAsync(fileEntityStorageId);
+            FileEntityStorage fileEntityStorage = null;
+            if (ignoreStorageSoftDelete)
+            {
+                fileEntityStorage = await this.ListQuery()
+                   .IgnoreQueryFilters()
+                    .FirstOrDefaultAsync(x => x.FileEntityStorageId == fileEntityStorageId && x.DeleteDateTime == null);
+            }
+            else
+            {
+                fileEntityStorage = await this.ListQuery()
+                .FirstOrDefaultAsync(x => x.FileEntityStorageId == fileEntityStorageId);
+            }
+
             var fileProvider = _fileSystemFactory.GetAsyncFileProvider(fileEntityStorage.Storage);
             try
             {
@@ -270,6 +283,35 @@ namespace HBK.Storage.Core.Services
                 Status = FileEntityStorageOperationStatusEnum.None,
             });
             return _dbContext.SaveChangesAsync();
+        }
+        /// <summary>
+        /// 刪除同步中檔案位於儲存個體上的橋接資訊
+        /// </summary>
+        /// <param name="fileEntityNoDivisor">檔案實體流水號除數</param>
+        /// <param name="fileEntityNoRemainder">檔案實體流水號餘數</param>
+        /// <returns>移除數量</returns>
+        public async Task<int> DeleteSyncingFileEntityStorageAsync(int fileEntityNoDivisor, int fileEntityNoRemainder)
+        {
+            var shouldRemove = await _dbContext.FileEntityStorage
+                .Where(x => x.FileEntity.FileEntityNo % fileEntityNoDivisor == fileEntityNoRemainder && x.Status.HasFlag(FileEntityStorageStatusEnum.Syncing))
+                .ToListAsync();
+
+            shouldRemove.ForEach(x => x.IsMarkDelete = true); // TODO : 修改為批次作業
+
+            await _dbContext.SaveChangesAsync();
+
+            return shouldRemove.Count;
+        }
+        /// <summary>
+        /// 將檔案位於儲存個體上的橋接資訊註記為刪除
+        /// </summary>
+        /// <param name="fileEntityStorageId">檔案位於儲存個體上的資訊 ID</param>
+        /// <returns></returns>
+        public async Task MarkFileEntityStorageDeleteAsync(Guid fileEntityStorageId)
+        {
+            var fileEntityStorage = await this.FindByIdAsync(fileEntityStorageId);
+            fileEntityStorage.IsMarkDelete = true;
+            await _dbContext.SaveChangesAsync();
         }
         #endregion
     }

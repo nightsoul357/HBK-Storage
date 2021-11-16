@@ -9,12 +9,8 @@ namespace HBK.Storage.Sync.Model
     /// <summary>
     /// 過期檔案處理任務管理者選項
     /// </summary>
-    public class ExpireFileEntityTaskManagerOption
+    public class ExpireFileEntityTaskManagerOption : TaskMangagerOptionBase
     {
-        /// <summary>
-        /// 取得或設定識別名稱
-        /// </summary>
-        public string Identity { get; set; }
         /// <summary>
         /// 取得或設定檔案實體流水號除數
         /// </summary>

@@ -5,10 +5,15 @@ using HBK.Storage.Api.Models;
 using HBK.Storage.Api.Models.Storage;
 using HBK.Storage.Api.Models.StorageGroup;
 using HBK.Storage.Api.OData;
+using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
+using HBK.Storage.Core.Strategies;
 using Microsoft.AspNet.OData.Query;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,16 +29,19 @@ namespace HBK.Storage.Api.Controllers
     {
         private readonly StorageGroupService _storageGroupService;
         private readonly StorageService _storageService;
+        private readonly JsonSerializerSettings _jsonSerializerSettings;
 
         /// <summary>
         /// 建立一個新的執行個體
         /// </summary>
         /// <param name="storageGroupService"></param>
         /// <param name="storageService"></param>
-        public StorageGroupController(StorageGroupService storageGroupService, StorageService storageService)
+        /// <param name="jsonOptions"></param>
+        public StorageGroupController(StorageGroupService storageGroupService, StorageService storageService, IOptions<MvcNewtonsoftJsonOptions> jsonOptions)
         {
             _storageGroupService = storageGroupService;
             _storageService = storageService;
+            _jsonSerializerSettings = jsonOptions.Value.SerializerSettings;
         }
 
         /// <summary>
@@ -71,10 +79,20 @@ namespace HBK.Storage.Api.Controllers
             storageGroup.Name = request.Name;
             storageGroup.Status = request.Status.UnflattenFlags();
             storageGroup.SyncMode = request.SyncMode;
-            storageGroup.SyncPolicy = request.SyncPolicy;
+            storageGroup.SyncPolicy = new Adapter.Models.SyncPolicy()
+            {
+                Rule = request.SyncPolicy.Rule
+            };
+            storageGroup.UploadPriority = request.UploadPriority;
+            storageGroup.DownloadPriority = request.DownloadPriority;
+            storageGroup.ClearMode = request.ClearMode;
+            storageGroup.ClearPolicy = new Adapter.Models.ClearPolicy()
+            {
+                Rule = request.ClearPolicy.Rule
+            };
             storageGroup.Type = request.Type;
             var result = await _storageGroupService.UpdateAsync(storageGroup);
-            return StorageGroupController.BuildStorageGroupResponse(storageGroup);
+            return StorageGroupController.BuildStorageGroupResponse(result);
         }
         /// <summary>
         /// 刪除儲存個體集合(同時會刪除所有儲存個體)
@@ -114,10 +132,10 @@ namespace HBK.Storage.Api.Controllers
                 StorageGroupId = storageGroupId,
                 Type = request.Type
             });
-            return StorageController.BuildStorageResponse(result);
+            return StorageController.BuildStorageResponse(result, _jsonSerializerSettings);
         }
         /// <summary>
-        /// 取得儲存個體集合內的儲存個體集合，單次資料上限為 100 筆
+        /// 取得儲存群組內的儲存個體集合，單次資料上限為 100 筆
         /// </summary>
         /// <param name="storageGroupId">儲存個體集合 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
@@ -140,13 +158,85 @@ namespace HBK.Storage.Api.Controllers
                 .Where(x => x.StorageGroupId == storageGroupId);
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
-                data.Select(storage => StorageController.BuildStorageResponse(storage)),
+                data.Select(storage => StorageController.BuildStorageResponse(storage, _jsonSerializerSettings)),
                 100
             );
         }
-
         /// <summary>
-        /// 產生儲存個體集合回應內容
+        /// 取得儲存群組內的儲存個體擴展資訊集合，單次資料上限為 100 筆
+        /// </summary>
+        /// <param name="storageGroupId">儲存群組 ID</param>
+        /// <param name="queryOptions">OData 查詢選項</param>
+        /// <returns></returns>
+        [HttpGet("{storageGroupId}/storageextendProperties")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [EnableODataQuery(AllowedQueryOptions =
+            AllowedQueryOptions.Filter |
+            AllowedQueryOptions.Skip |
+            AllowedQueryOptions.Top |
+            AllowedQueryOptions.OrderBy,
+            MaxTop = 100)]
+        public async Task<PagedResponse<StorageExtendPropertyResponse>> GetStorageExtendPropreties(
+            [ExampleParameter("8acdbf86-cb7b-4d1a-8745-44115f656287")]
+            [ExistInDatabase(typeof(StorageGroup))] Guid storageGroupId,
+            [FromServices] ODataQueryOptions<StorageExtendProperty> queryOptions)
+        {
+            var query = _storageService.GetStorageExtendPropertyQuery()
+                .Where(x => x.Storage.StorageGroupId == storageGroupId);
+
+            return await base.PagedResultAsync(queryOptions, query, (data) =>
+                data.Select(storageExtendProperty => StorageController.BuildStorageExtendPropertyResponse(storageExtendProperty, _jsonSerializerSettings)),
+                100
+            );
+        }
+        /// <summary>
+        /// 測試同步策略
+        /// </summary>
+        /// <param name="request">測試同步策略請求內容</param>
+        /// <returns></returns>
+        [HttpPost("testPolicy")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public TestSyncPolicyResponse TestSyncPolicy(TestSyncPolicyRequest request)
+        {
+            TestSyncPolicyResponse response = new TestSyncPolicyResponse();
+
+            var query = new List<FileEntity>() {
+                new FileEntity()
+                {
+                    ExtendProperty = request.ExtendProperty,
+                    FileEntityTag = request.Tags.Select(x => new FileEntityTag()
+                    {
+                        Value = x
+                    }).ToList(),
+                   MimeType = request.MimeType,
+                   Name = request.Name,
+                   Size = request.Size
+                }
+            }.AsQueryable();
+
+            query = query.ApplyPolicy(new Adapter.Models.SyncPolicy()
+            {
+                Rule = request.SyncPolicy.Rule
+            });
+
+            var result = query.ToList();
+
+            if (result.Count == 1)
+            {
+                response.IsPass = true;
+            }
+            else
+            {
+                response.IsPass = false;
+            }
+
+            return response;
+        }
+        /// <summary>
+        /// 產生儲存群組回應內容
         /// </summary>
         /// <param name="storageGroup"></param>
         /// <returns></returns>
@@ -161,8 +251,39 @@ namespace HBK.Storage.Api.Controllers
                 StorageProviderId = storageGroup.StorageProviderId,
                 SyncMode = storageGroup.SyncMode,
                 SyncPolicy = storageGroup.SyncPolicy,
+                ClearMode = storageGroup.ClearMode,
+                ClearPolicy = storageGroup.ClearPolicy,
+                DownloadPriority = storageGroup.DownloadPriority,
+                UploadPriority = storageGroup.UploadPriority,
                 Type = storageGroup.Type,
                 UpdateDateTime = storageGroup.UpdateDateTime
+            };
+        }
+
+        /// <summary>
+        /// 產生儲存群組擴充資訊回應內容
+        /// </summary>
+        /// <param name="storageGroupExtendProperty"></param>
+        /// <returns></returns>
+        internal static StorageGroupExtendPropertyResponse BuildStorageGroupExtendPropertyResponse(StorageGroupExtendProperty storageGroupExtendProperty)
+        {
+            return new StorageGroupExtendPropertyResponse()
+            {
+                CreateDateTime = storageGroupExtendProperty.StorageGroup.CreateDateTime,
+                Name = storageGroupExtendProperty.StorageGroup.Name,
+                Status = storageGroupExtendProperty.StorageGroup.Status.FlattenFlags(),
+                StorageGroupId = storageGroupExtendProperty.StorageGroup.StorageGroupId,
+                StorageProviderId = storageGroupExtendProperty.StorageGroup.StorageProviderId,
+                SyncMode = storageGroupExtendProperty.StorageGroup.SyncMode,
+                SyncPolicy = storageGroupExtendProperty.StorageGroup.SyncPolicy,
+                ClearPolicy = storageGroupExtendProperty.StorageGroup.ClearPolicy,
+                ClearMode = storageGroupExtendProperty.StorageGroup.ClearMode,
+                DownloadPriority = storageGroupExtendProperty.StorageGroup.DownloadPriority,
+                UploadPriority = storageGroupExtendProperty.StorageGroup.UploadPriority,
+                Type = storageGroupExtendProperty.StorageGroup.Type,
+                UpdateDateTime = storageGroupExtendProperty.StorageGroup.UpdateDateTime,
+                UsedSize = storageGroupExtendProperty.UsedSize,
+                SizeLimit = storageGroupExtendProperty.SizeLimit
             };
         }
     }

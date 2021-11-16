@@ -30,6 +30,21 @@
             允許欄位可被排序
             </summary>
         </member>
+        <member name="T:HBK.Storage.Adapter.Enums.AccessTypeEnum">
+            <summary>
+            存取模式列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AccessTypeEnum.Private">
+            <summary>
+            私人
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.AccessTypeEnum.Public">
+            <summary>
+            公開
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Enums.AuthorizeKeyScopeOperationTypeEnum">
             <summary>
             金鑰使用範圍之操作類型
@@ -83,6 +98,36 @@
         <member name="F:HBK.Storage.Adapter.Enums.AuthorizeKeyTypeEnum.Normal">
             <summary>
             一般的金鑰，根據 Scope 的定義存取服務
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.ClearModeEnum">
+            <summary>
+            清除模式列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.ClearModeEnum.Start">
+            <summary>
+            啟動
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.ClearModeEnum.Stop">
+            <summary>
+            關閉
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Enums.CryptoModeEnum">
+            <summary>
+            加密模式
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.CryptoModeEnum.NoCrypto">
+            <summary>
+            未加密
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.CryptoModeEnum.AES">
+            <summary>
+            AES 加密方式
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.Enums.FileAccessTokenStatusEnum">
@@ -200,11 +245,6 @@
             無
             </summary>
         </member>
-        <member name="F:HBK.Storage.Adapter.Enums.StorageGroupStatusEnum.Main">
-            <summary>
-            是否為主要的儲存區
-            </summary>
-        </member>
         <member name="F:HBK.Storage.Adapter.Enums.StorageGroupStatusEnum.Disable">
             <summary>
             已停用
@@ -293,6 +333,11 @@
         <member name="T:HBK.Storage.Adapter.Enums.TagMatchModeEnum">
             <summary>
             標籤驗證模式列舉
+            </summary>
+        </member>
+        <member name="F:HBK.Storage.Adapter.Enums.TagMatchModeEnum.None">
+            <summary>
+            無
             </summary>
         </member>
         <member name="F:HBK.Storage.Adapter.Enums.TagMatchModeEnum.All">
@@ -441,6 +486,21 @@
             取得或設定儲存服務資料集
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.VwFileEntityRecursive">
+            <summary>
+            取得或設定檔案實體遞迴解析結果資料集
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.VwStorageAnalysis">
+            <summary>
+            取得或設定儲存個體分析結果資料集
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.HBKStorageContext.VwStorageGroupAnalysis">
+            <summary>
+            取得或設定儲存群組分析結果資料集
+            </summary>
+        </member>
         <member name="M:HBK.Storage.Adapter.Storages.HBKStorageContext.OnConfiguring(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder)">
             <summary>
             設定資料庫實體
@@ -491,6 +551,11 @@
         <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.AuthorizeKeyNo">
             <summary>
             取得或設定流水號
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.Name">
+            <summary>
+            取得或設定名稱
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKey.KeyValue">
@@ -565,7 +630,7 @@
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.AllowOperationType">
             <summary>
-            取得允許的操作類型
+            取得或設定允許的操作類型
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.AuthorizeKeyScope.AuthorizeKey">
@@ -703,6 +768,11 @@
             取得或設定檔案的網際網路媒體型式
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.AccessType">
+            <summary>
+            取得或設定存取模式
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.FileEntity.IsMarkDelete">
             <summary>
             取得或設定是否標記刪除
@@ -731,6 +801,21 @@
         <member name="P:HBK.Storage.Adapter.Storages.FileEntity.DeleteDateTime">
             <summary>
             取得刪除時間
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.CryptoKey">
+            <summary>
+            取得或設定加密使用的 Key
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.CryptoIv">
+            <summary>
+            取得或設定加密使用的 Iv
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.FileEntity.CryptoMode">
+            <summary>
+            取得或設定加密模式
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.Storages.FileEntity.Status">
@@ -1058,6 +1143,26 @@
             取得或設定同步策略
             </summary>
         </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.ClearMode">
+            <summary>
+            取得或設定清除模式
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.ClearPolicy">
+            <summary>
+            取得或設定清除策略
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.UploadPriority">
+            <summary>
+            取得或設定上傳優先權
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.DownloadPriority">
+            <summary>
+            取得或設定下載優先權
+            </summary>
+        </member>
         <member name="P:HBK.Storage.Adapter.Storages.StorageGroup.CreateDateTime">
             <summary>
             取得建立時間
@@ -1153,6 +1258,61 @@
             取得或設定檔案存取權杖集合
             </summary>
         </member>
+        <member name="T:HBK.Storage.Adapter.Storages.VwFileEntityRecursive">
+            <summary>
+            檔案實體遞迴解析結果
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwFileEntityRecursive.RootFileEntityId">
+            <summary>
+            取得或設定根檔案 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwFileEntityRecursive.FileEntityId">
+            <summary>
+            取得或設定檔案 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwFileEntityRecursive.ChildLevel">
+            <summary>
+            取得或設定於根檔案相距層數
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.VwStorageAnalysis">
+            <summary>
+            儲存個體分析結果
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwStorageAnalysis.StorageId">
+            <summary>
+            取得或設定儲存個體 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwStorageAnalysis.UsedSize">
+            <summary>
+            取得或設定已使用空間(Bytes)
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Adapter.Storages.VwStorageGroupAnalysis">
+            <summary>
+            儲存群組的分析結果
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwStorageGroupAnalysis.StorageGroupId">
+            <summary>
+            取得或設定儲存群組 ID
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwStorageGroupAnalysis.SizeLimit">
+            <summary>
+            取得或設定大小限制
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Storages.VwStorageGroupAnalysis.UsedSize">
+            <summary>
+            取得或設定已使用大小
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Interfaces.ICreatedDateModel">
             <summary>
             支援建立時間模型介面
@@ -1183,6 +1343,16 @@
             取得或設定更新時間
             </summary>
         </member>
+        <member name="T:HBK.Storage.Adapter.Models.ClearPolicy">
+            <summary>
+            清除策略資料
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Adapter.Models.ClearPolicy.Rule">
+            <summary>
+            取得或設定規則
+            </summary>
+        </member>
         <member name="T:HBK.Storage.Adapter.Models.SyncPolicy">
             <summary>
             同步策略資料
@@ -1191,16 +1361,6 @@
         <member name="P:HBK.Storage.Adapter.Models.SyncPolicy.Rule">
             <summary>
             取得或設定規則
-            </summary>
-        </member>
-        <member name="P:HBK.Storage.Adapter.Models.SyncPolicy.TagRule">
-            <summary>
-            取得或設定標籤驗證規則
-            </summary>
-        </member>
-        <member name="P:HBK.Storage.Adapter.Models.SyncPolicy.TagMatchMode">
-            <summary>
-            取得或設定標籤驗證模式
             </summary>
         </member>
         <member name="T:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials">
@@ -1220,7 +1380,7 @@
         </member>
         <member name="P:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials.BucketName">
             <summary>
-            取得或設定Bucket 名稱
+            取得或設定 Bucket 名稱
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.StorageCredentials.AmazonS3StorageCredentials.Region">
@@ -1261,6 +1421,11 @@
         <member name="T:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials">
             <summary>
             Google Drive 使用的驗證資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials.#ctor">
+            <summary>
+            初始化 Google Drive 使用的驗證資訊
             </summary>
         </member>
         <member name="P:HBK.Storage.Adapter.StorageCredentials.GoogleDriveCredentials.Parent">

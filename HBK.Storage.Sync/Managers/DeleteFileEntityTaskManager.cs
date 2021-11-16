@@ -18,11 +18,8 @@ namespace HBK.Storage.Sync.Managers
     /// <summary>
     /// 刪除檔案實體任務管理者
     /// </summary>
-    public sealed class DeleteFileEntityTaskManager : TaskManagerBase<DeleteFileEntityTaskManager>
+    public sealed class DeleteFileEntityTaskManager : TaskManagerBase<DeleteFileEntityTaskManager, DeleteFileEntityTaskManagerOption>
     {
-        private readonly IServiceScope _serviceScope;
-        private readonly DeleteFileEntityTaskManagerOption _option;
-
         private ConcurrentQueue<FileEntityStorage> _pendingQueue;
 
         /// <summary>
@@ -33,8 +30,6 @@ namespace HBK.Storage.Sync.Managers
         public DeleteFileEntityTaskManager(ILogger<DeleteFileEntityTaskManager> logger, IServiceProvider serviceProvider)
             : base(logger, serviceProvider)
         {
-            _serviceScope = _serviceProvider.CreateScope();
-            _option = _serviceScope.ServiceProvider.GetRequiredService<DeleteFileEntityTaskManagerOption>();
         }
         protected override void StartInternal()
         {
@@ -49,7 +44,7 @@ namespace HBK.Storage.Sync.Managers
 
                 if (_pendingQueue.Count != 0)
                 {
-                    for (int i = 0; i < _option.TaskLimit; i++)
+                    for (int i = 0; i < base.Option.TaskLimit; i++)
                     {
                         tasks.Add(Task.Factory.StartNewSafety(this.ExecuteTask, TaskCreationOptions.LongRunning, base.ExcetpionHandle));
                     }
@@ -58,10 +53,10 @@ namespace HBK.Storage.Sync.Managers
                 }
                 else
                 {
-                    SpinWait.SpinUntil(() => false, 1000);
+                    SpinWait.SpinUntil(() => false, base.Option.Interval);
                 }
 
-                _ = fileEntityService.UpdateFileEntityDeleteInfoAsync(_option.FetchLimit, _option.FileEntityNoDivisor, _option.FileEntityNoRemainder).Result;
+                _ = fileEntityService.UpdateFileEntityDeleteInfoAsync(base.Option.FetchLimit, base.Option.FileEntityNoDivisor, base.Option.FileEntityNoRemainder).Result;
             }
         }
         private void FetchTask()
@@ -70,7 +65,7 @@ namespace HBK.Storage.Sync.Managers
             {
                 var fileEntityService = scope.ServiceProvider.GetRequiredService<FileEntityService>();
                 var fileEntityStroagies = fileEntityService
-                    .GetMarkDeleteFileEntityStoragiesAsync(_option.FetchLimit, _option.FileEntityNoDivisor, _option.FileEntityNoRemainder).Result;
+                    .GetMarkDeleteFileEntityStoragiesAsync(base.Option.FetchLimit, base.Option.FileEntityNoDivisor, base.Option.FileEntityNoRemainder).Result;
                 fileEntityStroagies.ForEach(x => _pendingQueue.Enqueue(x));
             }
         }
@@ -86,19 +81,16 @@ namespace HBK.Storage.Sync.Managers
                     var fileEntityStorageService = scope.ServiceProvider.GetRequiredService<FileEntityStorageService>();
                     try
                     {
-                        base._logger.LogCustomInformation(_option.Identity, "刪除開始", deleteTaskId, "正在將檔案 ID 為 {0} 的 {1} 從 {2} 群組中的 {3} 儲存個體中刪除",
-                        fileEntityStroage.FileEntityId,
-                        fileEntityStroage.FileEntity.Name,
-                        fileEntityStroage.Storage.StorageGroup.Name,
-                        fileEntityStroage.Storage.Name);
-
-                        if (fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStroage.FileEntityStorageId).Result == null)
-                        {
-                            base._logger.LogCustomInformation(_option.Identity, "刪除完成", deleteTaskId, "檔案 ID 為 {0} 的 {1} 在 {2} 群組中的 {3} 儲存個體中無法找到，故直接刪除其相關資訊",
-                            fileEntityStroage.FileEntityId,
-                            fileEntityStroage.FileEntity.Name,
+                        base.LogInformation(deleteTaskId, fileEntityStroage.FileEntity, null, "正在從 {0} 群組中的 {1} 儲存個體中刪除",
                             fileEntityStroage.Storage.StorageGroup.Name,
                             fileEntityStroage.Storage.Name);
+
+                        if (fileEntityStorageService.TryFetchFileInfoAsync(fileEntityStroage.FileEntityStorageId, true).Result == null)
+                        {
+                            base.LogInformation(deleteTaskId, fileEntityStroage.FileEntity, null, "在 {0} 群組中的 {1} 儲存個體中無法 Fetch 相關資訊，故直接刪除其資訊",
+                                fileEntityStroage.Storage.StorageGroup.Name,
+                                fileEntityStroage.Storage.Name);
+
                             fileEntityService.DeleteFileEntityStroageAsync(fileEntityStroage.FileEntityStorageId).Wait();
                             continue;
                         }
@@ -107,22 +99,19 @@ namespace HBK.Storage.Sync.Managers
                         fileProvider.DeleteAsync(fileEntityStroage.Value).Wait();
                         fileEntityService.DeleteFileEntityStroageAsync(fileEntityStroage.FileEntityStorageId).Wait();
 
-                        base._logger.LogCustomInformation(_option.Identity, "刪除完成", deleteTaskId, "檔案 ID 為 {0} 的 {1} 從 {2} 檔案群組中的 {3} 檔案儲存個體中刪除",
-                        fileEntityStroage.FileEntityId,
-                        fileEntityStroage.FileEntity.Name,
-                        fileEntityStroage.Storage.StorageGroup.Name,
-                        fileEntityStroage.Storage.Name);
+                        base.LogInformation(deleteTaskId, fileEntityStroage.FileEntity, null, "從 {0} 檔案群組中的 {1} 檔案儲存個體中 刪除完成",
+                                fileEntityStroage.Storage.StorageGroup.Name,
+                                fileEntityStroage.Storage.Name);
                     }
                     catch (Exception ex)
                     {
-                        base._logger.LogCustomError(_option.Identity, "刪除失敗", deleteTaskId, ex, "發生未預期的例外");
+                        base.LogError(deleteTaskId, fileEntityStroage.FileEntity, null, ex, "發生未預期的例外");
                     }
                 }
             }
         }
         public override void Dispose()
         {
-            _serviceScope.Dispose();
         }
     }
 }

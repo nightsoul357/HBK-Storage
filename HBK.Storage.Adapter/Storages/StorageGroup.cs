@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using HBK.Storage.Adapter.DataAnnotations;
 using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Interfaces;
 using HBK.Storage.Adapter.Models;
@@ -24,6 +25,8 @@ namespace HBK.Storage.Adapter.Storages
         {
             this.Storage = new HashSet<Storage>();
             this.FileAccessToken = new HashSet<FileAccessToken>();
+            this.SyncPolicy = new SyncPolicy();
+            this.ClearPolicy = new ClearPolicy();
         }
         /// <summary>
         /// 取得或設定儲存個體群組 ID
@@ -45,14 +48,20 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         [Required]
         [StringLength(255)]
+        [Sortable]
+        [Filterable]
         public string Name { get; set; }
         /// <summary>
         /// 取得或設定類型
         /// </summary>
+        [Sortable]
+        [Filterable]
         public StorageTypeEnum Type { get; set; }
         /// <summary>
         /// 取得或設定同步模式
         /// </summary>
+        [Sortable]
+        [Filterable]
         public SyncModeEnum SyncMode { get; set; }
         /// <summary>
         /// 取得或設定同步策略
@@ -60,8 +69,30 @@ namespace HBK.Storage.Adapter.Storages
         [StringLength(511)]
         public SyncPolicy SyncPolicy { get; set; }
         /// <summary>
+        /// 取得或設定清除模式
+        /// </summary>
+        public ClearModeEnum ClearMode { get; set; }
+        /// <summary>
+        /// 取得或設定清除策略
+        /// </summary>
+        [StringLength(511)]
+        public ClearPolicy ClearPolicy { get; set; }
+        /// <summary>
+        /// 取得或設定上傳優先權
+        /// </summary>
+        [Sortable]
+        [Filterable]
+        public int UploadPriority { get; set; }
+        /// <summary>
+        /// 取得或設定下載優先權
+        /// </summary>
+        [Sortable]
+        [Filterable]
+        public int DownloadPriority { get; set; }
+        /// <summary>
         /// 取得建立時間
         /// </summary>
+        [Sortable]
         public DateTimeOffset CreateDateTime { get; internal set; }
         /// <summary>
         /// 取得最後更新時間

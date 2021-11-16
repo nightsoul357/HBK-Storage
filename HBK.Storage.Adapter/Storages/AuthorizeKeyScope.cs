@@ -37,7 +37,7 @@ namespace HBK.Storage.Adapter.Storages
         /// </summary>
         public DateTimeOffset? UpdateDateTime { get; set; }
         /// <summary>
-        /// 取得允許的操作類型
+        /// 取得或設定允許的操作類型
         /// </summary>
         public AuthorizeKeyScopeOperationTypeEnum AllowOperationType { get; set; }
 

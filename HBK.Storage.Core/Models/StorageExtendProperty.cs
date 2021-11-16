@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HBK.Storage.Adapter.DataAnnotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,10 +15,24 @@ namespace HBK.Storage.Core.Models
         /// <summary>
         /// 取得過設定儲存個體
         /// </summary>
+        [Sortable]
+        [Filterable]
         public Adapter.Storages.Storage Storage { get; set; }
         /// <summary>
-        /// 取得或設定剩餘大小
+        /// 取得或設定已使用大小(Bytes)
         /// </summary>
-        public long RemainSize { get; set; }
+        [Sortable]
+        [Filterable]
+        public long? UsedSize { get; set; }
+        /// <summary>
+        /// 取得剩餘大小(Bytes)
+        /// </summary>
+        public long RemainSize
+        {
+            get
+            {
+                return this.Storage.SizeLimit - (this.UsedSize ?? 0);
+            }
+        }
     }
 }

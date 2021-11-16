@@ -26,7 +26,7 @@ namespace HBK.Storage.Core.FileSystem.Mega
             _node = node;
             this.Name = node.Id;
             this.Length = node.Size;
-            this.LastModified = node.ModificationDate.Value;
+            this.LastModified = node.ModificationDate ?? DateTimeOffset.MinValue;
             this.Exists = true;
             this.IsDirectory = node.Type == NodeType.Directory;
         }
@@ -38,7 +38,7 @@ namespace HBK.Storage.Core.FileSystem.Mega
             {
                 throw new FileNotFoundException();
             }
-            return _megaApiClient.DownloadAsync(_node);
+            return _megaApiClient.DownloadStreamAsync(_node);
         }
     }
 }

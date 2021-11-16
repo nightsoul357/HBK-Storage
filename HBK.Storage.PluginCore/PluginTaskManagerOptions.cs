@@ -28,6 +28,10 @@ namespace HBK.Storage.PluginCore
         /// </summary>
         public List<Guid> StorageProviderIds { get; set; }
         /// <summary>
+        /// 取得或設定是否作用於 Local Storage
+        /// </summary>
+        public bool IsExecuteOnLocalStorage { get; set; } = false;
+        /// <summary>
         /// 取得或設定檔案實體流水號除數
         /// </summary>
         public int FileEntityNoDivisor { get; set; } = 1;
@@ -63,5 +67,17 @@ namespace HBK.Storage.PluginCore
         /// 取得或設定間隔時間
         /// </summary>
         public int Interval { get; set; } = 1000;
+        /// <summary>
+        /// 取得或設定是否自動重試
+        /// </summary>
+        public bool IsAutoRetry { get; set; } = true;
+        /// <summary>
+        /// 取得或設定自動重試間隔
+        /// </summary>
+        public int AutoRetryInterval { get; set; } = 10000;
+        /// <summary>
+        /// 取得或設定失敗次數判定
+        /// </summary>
+        public int FailTimes { get; set; } = 3;
     }
 }

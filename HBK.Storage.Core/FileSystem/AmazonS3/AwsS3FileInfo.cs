@@ -70,19 +70,14 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
         /// 取得檔案資料
         /// </summary>
         /// <returns></returns>
-        public override async Task<Stream> CreateReadStreamAsync()
+        public override Task<Stream> CreateReadStreamAsync()
         {
             if (!this.Exists)
             {
                 throw new FileNotFoundException();
             }
 
-            var response = await _client.GetObjectAsync(new GetObjectRequest()
-            {
-                BucketName = this.BucketName,
-                Key = this.Name
-            });
-            return response.ResponseStream;
+            return Task.FromResult((Stream)new AWS3FileStream(_client, this.Name, this.BucketName, this.Length));
         }
     }
 }

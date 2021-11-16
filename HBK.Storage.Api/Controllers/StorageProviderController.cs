@@ -10,7 +10,9 @@ using HBK.Storage.Api.Models.FileService;
 using HBK.Storage.Api.Models.StorageGroup;
 using HBK.Storage.Api.Models.StorageProvider;
 using HBK.Storage.Api.OData;
+using HBK.Storage.Core.Cryptography;
 using HBK.Storage.Core.Enums;
+using HBK.Storage.Core.Models;
 using HBK.Storage.Core.Services;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +22,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HBK.Storage.Api.Controllers
@@ -63,7 +66,7 @@ namespace HBK.Storage.Api.Controllers
         [HttpGet("{storageProviderId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<StorageProviderResponse> GET(
+        public async Task<StorageProviderResponse> Get(
             [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
             [ExistInDatabase(typeof(StorageProvider))] Guid storageProviderId)
         {
@@ -85,6 +88,14 @@ namespace HBK.Storage.Api.Controllers
         public async Task<ActionResult<PagedResponse<StorageProviderResponse>>> List([FromServices] ODataQueryOptions<StorageProvider> queryOptions)
         {
             var query = _storageProviderService.ListQuery();
+
+            if (base.AuthorizeKey.Value.Type == AuthorizeKeyTypeEnum.Normal)
+            {
+                var authorizeKeyId = base.AuthorizeKey.Value.AuthorizeKeyId;
+                query = query
+                    .Where(storageProvider => storageProvider.AuthorizeKeyScope
+                        .Any(scope => scope.AuthorizeKeyId == authorizeKeyId && scope.AllowOperationType == AuthorizeKeyScopeOperationTypeEnum.Read));
+            }
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storageProvider => StorageProviderController.BuildStorageProviderResponse(storageProvider)),
@@ -163,13 +174,23 @@ namespace HBK.Storage.Api.Controllers
                 Status = request.Status.UnflattenFlags(),
                 StorageProviderId = storageProviderId,
                 SyncMode = request.SyncMode,
-                SyncPolicy = request.SyncPolicy,
+                SyncPolicy = new Adapter.Models.SyncPolicy()
+                {
+                    Rule = request.SyncPolicy.Rule
+                },
+                ClearMode = request.ClearMode,
+                ClearPolicy = new Adapter.Models.ClearPolicy()
+                {
+                    Rule = request.ClearPolicy.Rule
+                },
+                UploadPriority = request.UploadPriority,
+                DownloadPriority = request.DownloadPriority,
                 Type = request.Type
             });
             return StorageGroupController.BuildStorageGroupResponse(result);
         }
         /// <summary>
-        /// 取得儲存服務內的所有儲存個體集合，單次資料上限為 100 筆
+        /// 取得儲存服務內的所有儲存群組集合，單次資料上限為 100 筆
         /// </summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
@@ -193,6 +214,34 @@ namespace HBK.Storage.Api.Controllers
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storgaeGroup => StorageGroupController.BuildStorageGroupResponse(storgaeGroup)),
+                100
+            );
+        }
+        /// <summary>
+        /// 取得儲存服務內的所有儲存群組擴充資訊集合，單次資料上限為 100 筆
+        /// </summary>
+        /// <param name="storageProviderId">儲存服務 ID</param>
+        /// <param name="queryOptions">OData 查詢選項</param>
+        /// <returns></returns>
+        [HttpGet("{storageProviderId}/storageGroupExtendProperties")]
+        [EnableODataQuery(AllowedQueryOptions =
+            AllowedQueryOptions.Filter |
+            AllowedQueryOptions.Skip |
+            AllowedQueryOptions.Top |
+            AllowedQueryOptions.OrderBy,
+            MaxTop = 100)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<PagedResponse<StorageGroupExtendPropertyResponse>> GetStorageGroupExtendProperties(
+            [ExampleParameter("59b50410-e86a-4341-8973-ae325e354210")]
+            [ExistInDatabase(typeof(StorageProvider))] Guid storageProviderId,
+            [FromServices] ODataQueryOptions<StorageGroupExtendProperty> queryOptions)
+        {
+            var query = _storageGroupService.GetStorageGroupExtendPropertiesQuery()
+               .Where(x => x.StorageGroup.StorageProviderId == storageProviderId);
+
+            return await base.PagedResultAsync(queryOptions, query, (data) =>
+                data.Select(storageGroupExtendProperty => StorageGroupController.BuildStorageGroupExtendPropertyResponse(storageGroupExtendProperty)),
                 100
             );
         }
@@ -250,7 +299,9 @@ namespace HBK.Storage.Api.Controllers
                         Name = request.Filename,
                         Size = base.HttpContext.Request.ContentLength.Value,
                         Status = FileEntityStatusEnum.None,
-                        FileEntityTag = request.Tags.Select(x => new FileEntityTag() { Value = x }).ToList()
+                        FileEntityTag = request.Tags.Select(x => new FileEntityTag() { Value = x }).ToList(),
+                        AccessType = AccessTypeEnum.Private,
+                        CryptoMode = request.CryptoMode
                     },
                     request.FileStream, "Uploda Service");
             return FileEntityController.BuildFileEntityResponse(fileEntity, _fileEntityService);

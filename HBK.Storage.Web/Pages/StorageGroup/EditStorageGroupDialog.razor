@@ -1,0 +1,71 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            @(this.IsEditMode ? "編輯儲存群組" : "新增儲存群組")
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" sm="8" md="6">
+                <MudTextField @bind-Value="this.Name" Label="名稱" Variant="Variant.Outlined" Required="true" />
+            </MudItem>
+            <MudItem xs="12" sm="8" md="6">
+                <MudSelect @bind-Value="this.StorageType" T="StorageType" Label="類型" Variant="Variant.Outlined" ReadOnly="this.IsEditMode">
+                    @foreach (StorageType item in Enum.GetValues(typeof(StorageType)))
+                    {
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" sm="12" md="12">
+                <MudSelect @bind-Value="this.SyncMode" T="SyncMode" Label="同步模式" Variant="Variant.Outlined">
+                    @foreach (SyncMode item in Enum.GetValues(typeof(SyncMode)))
+                    {
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            @if (this.SyncMode == SyncMode.Policy)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" @bind-Value="this.SyncPolicyRule" Label="同步規則" Variant="Variant.Outlined" Lines="3" />
+                </MudItem>
+            }
+            <MudItem xs="12" sm="12" md="12">
+                <MudSelect @bind-Value="this.ClearMode" T="ClearMode" Label="清除模式" Variant="Variant.Outlined">
+                    @foreach (ClearMode item in Enum.GetValues(typeof(ClearMode)))
+                    {
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            @if (this.ClearMode == ClearMode.Start)
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField T="string" @bind-Value="this.ClearPolicyRule" Label="清除規則" Variant="Variant.Outlined" Lines="3" />
+                </MudItem>
+            }
+            <MudItem xs="12" sm="8" md="6">
+                <MudNumericField @bind-Value="this.UploadPriority" Label="上傳優先度" Variant="Variant.Text" Min="0" Max="1000" />
+            </MudItem>
+            <MudItem xs="12" sm="8" md="6">
+                <MudNumericField @bind-Value="this.DownloadPriority" Label="下載優先度" Variant="Variant.Text" Min="0" Max="1000" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="this.Cancel">取消</MudButton>
+        @if (this.IsEditMode)
+        {
+            if (this.EditStorageGroup.Status.Contains(StorageGroupStatus.Disable))
+            {
+                <MudButton Color="Color.Primary" OnClick="this.Enable">啟用</MudButton>
+            }
+            else
+            {
+                <MudButton Color="Color.Error" OnClick="this.Disable">停用</MudButton>
+            }
+        }
+        <MudButton Color="Color.Primary" OnClick="this.SaveChangeAsync">@(this.IsEditMode ? "儲存" : "新增")</MudButton>
+    </DialogActions>
+</MudDialog>

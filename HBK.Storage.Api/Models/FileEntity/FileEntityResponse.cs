@@ -38,24 +38,36 @@ namespace HBK.Storage.Api.Models.FileEntity
         /// </summary>
         public string MimeType { get; set; }
         /// <summary>
+        /// 存取模式
+        /// </summary>
+        public AccessTypeEnum AccessType { get; set; }
+        /// <summary>
         /// 建立時間
         /// </summary>
-        public DateTime CreateDateTime { get; internal set; }
+        public DateTime CreateDateTime { get; set; }
         /// <summary>
         /// 最後更新時間
         /// </summary>
-        public DateTime? UpdateDateTime { get; internal set; }
+        public DateTime? UpdateDateTime { get; set; }
+        /// <summary>
+        ///加密使用的 Key
+        /// </summary>
+        public string CryptoKey { get; set; }
+        /// <summary>
+        /// 加密使用的 Iv
+        /// </summary>
+        public string CryptoIv { get; set; }
+        /// <summary>
+        /// 加密模式
+        /// </summary>
+        public CryptoModeEnum CryptoMode { get; set; }
         /// <summary>
         /// 狀態
         /// </summary>
         public FileEntityStatusEnum[] Status { get; set; }
         /// <summary>
-        /// 標籤列表
-        /// </summary>
-        public List<string> Tages { get; set; }
-        /// <summary>
         /// 取得或設定存在的儲存集合清單
         /// </summary>
-        public List<StorageSummaryResponse> StorageSummaryResponses { get; set; }
+        public List<FileEntityStorageResponse> FileEntityStorageResponses { get; set; }
     }
 }

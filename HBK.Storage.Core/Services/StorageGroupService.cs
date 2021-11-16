@@ -1,6 +1,7 @@
 ﻿using HBK.Storage.Adapter.Enums;
 using HBK.Storage.Adapter.Storages;
 using HBK.Storage.Core.Models;
+using HBK.Storage.Core.Strategies;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,8 @@ namespace HBK.Storage.Core.Services
             original.SyncMode = data.SyncMode;
             original.SyncPolicy = data.SyncPolicy;
             original.Type = data.Type;
+            original.ClearPolicy = data.ClearPolicy;
+            original.ClearMode = data.ClearMode;
             await _dbContext.SaveChangesAsync();
             return await this.FindByIdAsync(original.StorageGroupId);
         }
@@ -99,6 +102,23 @@ namespace HBK.Storage.Core.Services
         #endregion
 
         #region BAL
+
+        /// <summary>
+        /// 取得儲存群組擴充資訊清單
+        /// </summary>
+        /// <returns></returns>
+        public IQueryable<StorageGroupExtendProperty> GetStorageGroupExtendPropertiesQuery()
+        {
+            var query = _dbContext.StorageGroup
+                .Join(_dbContext.VwStorageGroupAnalysis, sg => sg.StorageGroupId, sga => sga.StorageGroupId, (sg, sga) => new StorageGroupExtendProperty()
+                {
+                    StorageGroup = sg,
+                    UsedSize = sga.UsedSize,
+                    SizeLimit = sga.SizeLimit
+                });
+
+            return query;
+        }
         /// <summary>
         /// 停用指定的儲存個體集合
         /// </summary>
@@ -114,12 +134,17 @@ namespace HBK.Storage.Core.Services
         /// 取得儲存個體群組內剩餘容量最多的儲存個體延展資訊
         /// </summary>
         /// <param name="storageGroupId">儲存個體群組 ID</param>
+        /// <param name="storageTypes">僅使用指定類型清單的儲存個體<c>null</c> 表示全部使用</param>
         /// <returns></returns>
-        public async Task<StorageExtendProperty> GetMaxRemainSizeStorageByStorageGroupIdAsync(Guid storageGroupId)
+        public async Task<StorageExtendProperty> GetMaxRemainSizeStorageByStorageGroupIdAsync(Guid storageGroupId, List<StorageTypeEnum> storageTypes = null)
         {
+            if (storageTypes == null)
+            {
+                storageTypes = Enum.GetValues<StorageTypeEnum>().Cast<StorageTypeEnum>().ToList();
+            }
             var storageGroup = await this.FindByIdAsync(storageGroupId);
             return storageGroup.Storage
-                .Where(x => !x.Status.HasFlag(StorageStatusEnum.Disable))
+                .Where(x => !x.Status.HasFlag(StorageStatusEnum.Disable) && storageTypes.Contains(x.Type))
                 .Select(x => _storageService.GetStorageExtendPropertyAsync(x.StorageId).Result)
                 .OrderByDescending(x => x.RemainSize)
                 .FirstOrDefault();

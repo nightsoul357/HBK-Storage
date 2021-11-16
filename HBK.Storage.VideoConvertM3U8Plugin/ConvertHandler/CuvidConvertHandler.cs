@@ -19,13 +19,13 @@ namespace HBK.Storage.VideoConvertM3U8Plugin.ConvertHandler
         {
         }
 
-        protected override ConvertHandlerExecuteResult ExecuteInternal(ConvertHandlerTaskModel taskModel)
+        protected override ConvertHandlerExecuteResult ExecuteInternal(ConvertHandlerTaskModel taskModel, Action<object, ConvertProgressEventArgs> convertProgress, Action<object, ConversionCompleteEventArgs> conversionComplete)
         {
             _currentTaskModel = taskModel;
             using (var engine = new Engine(taskModel.FFmpegLocation))
             {
-                engine.ConversionCompleteEvent += this.Engine_ConversionCompleteEvent;
-                engine.ConvertProgressEvent += this.Engine_ConvertProgressEvent;
+                engine.ConversionCompleteEvent += new EventHandler<ConversionCompleteEventArgs>(conversionComplete);
+                engine.ConvertProgressEvent += new EventHandler<ConvertProgressEventArgs>(convertProgress);
                 engine.CustomCommand($@"-hwaccel cuvid -c:v h264_cuvid -i { taskModel.VideoFileName } -c:v h264_nvenc -c:a aac -strict -2 -f hls -hls_list_size 0  -hls_time { taskModel.TSInterval } { taskModel.OutputFileName }");
                 var fileInfo = new FileInfo(taskModel.OutputFileName);
                 return new ConvertHandlerExecuteResult()
@@ -33,36 +33,6 @@ namespace HBK.Storage.VideoConvertM3U8Plugin.ConvertHandler
                     Success = fileInfo.Exists && fileInfo.Length != 0
                 };
             }
-        }
-
-        private void Engine_ConvertProgressEvent(object sender, ConvertProgressEventArgs e)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"[{ _currentTaskModel.Identity }]");
-            sb.AppendLine("------------Converting------------");
-            sb.AppendLine($"Bitrate: {e.Bitrate}");
-            sb.AppendLine($"Fps: {e.Fps}");
-            sb.AppendLine($"Frame: {e.Frame}");
-            sb.AppendLine($"ProcessedDuration: {e.ProcessedDuration}");
-            sb.AppendLine($"SizeKb: {e.Bitrate}");
-            sb.AppendLine($"TotalDuration: {e.TotalDuration}");
-            sb.AppendLine($"Speed: {e.Speed}");
-
-            base._logger.LogInformation(sb.ToString());
-        }
-
-        private void Engine_ConversionCompleteEvent(object sender, ConversionCompleteEventArgs e)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"[{ _currentTaskModel.Identity }]");
-            sb.AppendLine("------------Convert Complete------------");
-            sb.AppendLine($"Bitrate: {e.Bitrate}");
-            sb.AppendLine($"Fps: {e.Fps}");
-            sb.AppendLine($"Frame: {e.Frame}");
-            sb.AppendLine($"ProcessedDuration: {e.ProcessedDuration}");
-            sb.AppendLine($"SizeKb: {e.Bitrate}");
-            sb.AppendLine($"TotalDuration: {e.TotalDuration}");
-            base._logger.LogInformation(sb.ToString());
         }
     }
 }

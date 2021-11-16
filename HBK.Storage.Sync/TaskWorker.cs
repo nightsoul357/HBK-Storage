@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace HBK.Storage.Sync
 {
     /// <summary>
-    /// ¥ô°È°õ¦æªÌ
+    /// ä»»å‹™åŸ·è¡Œè€…
     /// </summary>
     public class TaskWorker : BackgroundService
     {
@@ -22,7 +22,7 @@ namespace HBK.Storage.Sync
         private readonly IHostEnvironment _hostEnvironment;
 
         /// <summary>
-        /// «Ø¥ß¤@­Ó·sªº°õ¦æ­ÓÅé
+        /// å»ºç«‹ä¸€å€‹æ–°çš„åŸ·è¡Œå€‹é«”
         /// </summary>
         /// <param name="logger"></param>
         /// <param name="serviceProvider"></param>
@@ -35,47 +35,50 @@ namespace HBK.Storage.Sync
             this.SyncTaskManager = _scope.ServiceProvider.GetRequiredService<SyncTaskManager>();
             this.DeleteFileEntityTaskManager = _scope.ServiceProvider.GetRequiredService<DeleteFileEntityTaskManager>();
             this.ExpireFileEntityTaskManager = _scope.ServiceProvider.GetRequiredService<ExpireFileEntityTaskManager>();
+            this.ClearTaskManager = _scope.ServiceProvider.GetRequiredService<ClearTaskManager>();
 
             Directory.SetCurrentDirectory(_hostEnvironment.ContentRootPath);
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("ªA°È°õ¦æ(ExecuteAsync)");
+            _logger.LogInformation("æœå‹™åŸ·è¡Œ(ExecuteAsync)");
 
             try
             {
                 this.SyncTaskManager.Start(stoppingToken);
                 this.DeleteFileEntityTaskManager.Start(stoppingToken);
                 this.ExpireFileEntityTaskManager.Start(stoppingToken);
+                this.ClearTaskManager.Start(stoppingToken);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "ªA°Èµo¥Í¥¼¹w´Áªº¨Ò¥~");
+                _logger.LogError(ex, "æœå‹™ç™¼ç”Ÿæœªé æœŸçš„ä¾‹å¤–");
             }
             return Task.CompletedTask;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("ªA°È±Ò°Ê(StartAsync)");
+            _logger.LogInformation("æœå‹™å•Ÿå‹•(StartAsync)");
             return base.StartAsync(cancellationToken);
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("ªA°È¼È°±(StopAsync)");
+            _logger.LogInformation("æœå‹™æš«åœ(StopAsync)");
             return base.StopAsync(cancellationToken);
         }
 
         public override void Dispose()
         {
-            _logger.LogInformation("ªA°ÈÄÀ©ñ(Dispose)");
+            _logger.LogInformation("æœå‹™é‡‹æ”¾(Dispose)");
             base.Dispose();
         }
 
         public SyncTaskManager SyncTaskManager { get; private set; }
         public DeleteFileEntityTaskManager DeleteFileEntityTaskManager { get; private set; }
         public ExpireFileEntityTaskManager ExpireFileEntityTaskManager { get; private set; }
+        public ClearTaskManager ClearTaskManager { get; private set; }
     }
 }
