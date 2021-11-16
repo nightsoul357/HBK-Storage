@@ -220,7 +220,8 @@ namespace HBK.Storage.Api
 
             // 檔案處理器
             services.AddScoped<FileProcessHandlerBase, M3U8FileProcessHandler>();
-            services.AddScoped<FileProcessHandlerBase, CryptoProcessHandler>();
+            services.AddScoped<FileProcessHandlerBase, DecryptProcessHandler>();
+            services.AddScoped<FileProcessHandlerBase, EncryptProcessHandler>();
             services.AddScoped<FileProcessHandlerBase, WatermarkDefaultProcessHandler>();
             services.AddScoped<FileProcessHandlerProxy>();
 

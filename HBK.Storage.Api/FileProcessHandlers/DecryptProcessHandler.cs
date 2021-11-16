@@ -11,14 +11,14 @@ namespace HBK.Storage.Api.FileProcessHandlers
     /// <summary>
     /// 處理加密後的檔案處理器
     /// </summary>
-    public class CryptoProcessHandler : FileProcessHandlerBase
+    public class DecryptProcessHandler : FileProcessHandlerBase
     {
         private readonly IEnumerable<ICryptoProvider> _cryptoProviders;
         /// <summary>
         /// 初始化處理加密後的檔案處理器
         /// </summary>
         /// <param name="cryptoProviders"></param>
-        public CryptoProcessHandler(IEnumerable<ICryptoProvider> cryptoProviders)
+        public DecryptProcessHandler(IEnumerable<ICryptoProvider> cryptoProviders)
         {
             _cryptoProviders = cryptoProviders;
         }
