@@ -64,6 +64,7 @@ dokcer-compose up -d
 - [Crtpto]()
 - [External Download File Endpoint]()
 - [Load Balance]()
+- [Work on Azure CDN with token authentication]()
 - [Plugin]()
 
 ## Coming Soon
