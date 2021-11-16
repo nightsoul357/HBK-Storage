@@ -39,7 +39,7 @@ dokcer-compose up -d
 
 ### Windows
 
-[More Information](https://)
+[More Information](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Install%20Document(Windows).md)
 
 ## Support Storage Type
 
@@ -56,12 +56,12 @@ dokcer-compose up -d
 ## Documentation
 
 - [Situational Presentation]()
-- [Storage Credential]()
-- [Policy Rule]()
-- [File Access Token]()
-- [Donwload Indicate]()
-- [Crtpto]()
-- [External Download File Endpoint]()
+- [Storage Credential](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Storage%20Credential.md)
+- [Policy Rule](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Policy%20Rule.md)
+- [File Access Token](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/File%20Access%20Token.md)
+- [Donwload Indicate](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Donwload%20Indicate.md)
+- [Crtpto](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Crypto.md)
+- [External Download File Endpoint](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/External%20Download%20File%20Endpoint.md)
 - [Load Balance]()
 - [Work on Azure CDN with token authentication]()
 - [Plugin]()
