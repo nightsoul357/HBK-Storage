@@ -288,6 +288,12 @@ namespace HBK.Storage.Api
             this.GenerateInitializationDataAsync(authorizeKeyService, storageProviderService).Wait();
         }
 
+        /// <summary>
+        /// 產生初始化資料
+        /// </summary>
+        /// <param name="authorizeKeyService"></param>
+        /// <param name="storageProviderService"></param>
+        /// <returns></returns>
         private async Task GenerateInitializationDataAsync(AuthorizeKeyService authorizeKeyService, StorageProviderService storageProviderService)
         {
             if (this.Configuration.GetValue<bool>("RootKey:EnsureCreated") && (await authorizeKeyService.FindByKeyValueAsync(this.Configuration["RootKey:Key"])) == null)

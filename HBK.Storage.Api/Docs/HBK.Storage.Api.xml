@@ -2304,6 +2304,14 @@
             <param name="authorizeKeyService"></param>
             <param name="storageProviderService"></param>
         </member>
+        <member name="M:HBK.Storage.Api.Startup.GenerateInitializationDataAsync(HBK.Storage.Core.Services.AuthorizeKeyService,HBK.Storage.Core.Services.StorageProviderService)">
+            <summary>
+            產生初始化資料
+            </summary>
+            <param name="authorizeKeyService"></param>
+            <param name="storageProviderService"></param>
+            <returns></returns>
+        </member>
         <member name="M:HBK.Storage.Api.Startup.GetEdmModel(System.IServiceProvider)">
             <summary>
             建立 OData 的 EDM 模型

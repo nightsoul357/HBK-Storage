@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using HBK.Storage.Adapter.DataAnnotations;
 using HBK.Storage.Adapter.Enums;
+using HBK.Storage.Api.OData;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNet.OData.Query;
 using Microsoft.AspNetCore.Mvc;
@@ -126,7 +127,8 @@ namespace HBK.Storage.Api.Swagger
                     if (queryAttribute.AllowedQueryOptions.HasFlag(AllowedQueryOptions.Top))
                     {
                         string link = "http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$top_System_1";
-                        int? maxTop = queryAttribute.MaxTop == 0 ? null : (int?)queryAttribute.MaxTop;
+                        int? maxTop = queryAttribute.MaxTop == int.MaxValue ? null : (int?)queryAttribute.MaxTop;
+
                         operation.Parameters.Add(new OpenApiParameter()
                         {
                             Name = "$top",

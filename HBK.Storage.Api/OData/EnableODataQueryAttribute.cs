@@ -20,8 +20,8 @@ namespace HBK.Storage.Api.OData
         public EnableODataQueryAttribute()
         {
             // 預設屬性
-            this.AllowedFunctions = AllowedFunctions.Contains | AllowedFunctions.Cast | AllowedFunctions.Any | AllowedFunctions.All;
-            this.MaxTop = 100;
+            base.AllowedFunctions = AllowedFunctions.Contains | AllowedFunctions.Cast | AllowedFunctions.Any | AllowedFunctions.All;
+            base.MaxTop = 100;
         }
 
         /// <inheritdoc/>
