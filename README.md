@@ -50,6 +50,7 @@ dokcer-compose up -d
 | Google Drive | O | O | X | O |
 | AWS S3 | O | O | X | O |
 | Mega | O | O | X | O |
+| WebDAV | O | O | X | O |
 
 ## How it works
 

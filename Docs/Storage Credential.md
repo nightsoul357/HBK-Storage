@@ -1,6 +1,6 @@
 # Storage Credential
 
-## Local Storage
+## Local
 
 ### 說明
 
@@ -44,7 +44,7 @@
 | 分段下載 | 不支援 |
 | 分段上傳 | 不支援 |
 
-## AWS S3 Storage
+## AWS S3
 
 ### 說明
 
@@ -70,7 +70,7 @@
 | 分段下載 | 支援 |
 | 分段上傳 | 不支援 |
 
-## Google Drive Storage
+## Google Drive
 
 ### 說明
 
@@ -104,7 +104,7 @@ OAuth 中的 Redirect Url 需加入 `{baseurl}/signin-google`。
 | 分段下載 | 支援 |
 | 分段上傳 | 不支援 |
 
-## Mega Storage
+## Mega
 
 使用 HTTP/HTPPS 存取該 Storage 內的資料。
 
@@ -124,3 +124,18 @@ OAuth 中的 Redirect Url 需加入 `{baseurl}/signin-google`。
 | 上傳 | 支援 |
 | 分段下載 | 支援 |
 | 分段上傳 | 不支援 |
+
+## WebDAV
+
+使用 HTTP/HTPPS 存取該 Storage 內的資料。
+
+### 驗證資訊
+
+| 欄位 | 說明 | 範例 |
+| -------- | -------- | -------- |
+| Url | 伺服器位置 | `https://hbkstorage.com/Storage1` |
+| Username | 帳號 |  |
+| Password | 密碼 |  |
+| IsSupportPartialUpload | 是否支援分段上傳 | `true` |
+
+部分 WebDAV Server 並不支援分段上傳，例如 Synology NAS 的 WebDAV Server 套件，此時須將 `IsSupportPartialUpload` 設置為 `false`。
