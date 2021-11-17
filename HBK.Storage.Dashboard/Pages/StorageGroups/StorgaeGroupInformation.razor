@@ -1,0 +1,32 @@
+﻿@inherits HBKPageBase
+@page "/storageGroup"
+
+<MudButton Variant="Variant.Filled" OnClick="@(() => base.InvokeSafetyAsync(this.ShowAddStorageGroupDialogAsync))" Color="Color.Primary">新增儲存群組</MudButton>
+
+@if (this.StorageProviderResponse != null && this.StorageGroupExtendPropertyResponses != null)
+{
+    <MudGrid Spacing="2" Class="mt-2">
+        @foreach (var storageGroup in this.StorageGroupExtendPropertyResponses)
+        {
+            <MudItem xs="4">
+                <MudCard>
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6">@storageGroup.Name</MudText>
+                        <MudText>@DataUnitFormatHelper.Format(storageGroup.Used_size) / @DataUnitFormatHelper.Format(storageGroup.Size_limit)</MudText>
+                        <MudProgressLinear Color="Color.Primary" Value="@this.ConvertToSizeUsedProgress(storageGroup)" />
+                        <MudText>類型 : @storageGroup.Type</MudText>
+                        <MudText>同步模式 : @storageGroup.Sync_mode</MudText>
+                        <MudText>清除模式 : @storageGroup.Clear_mode</MudText>
+                        <MudText>下載優先度 : @storageGroup.Download_priority</MudText>
+                        <MudText>上傳優先度 : @storageGroup.Upload_priority</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => base.InvokeSafetyAsync(() => this.ShowDeleteStorageGroupDialogAsync(storageGroup)))"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => base.InvokeSafetyAsync(() => this.ShowEditStorageGroupDialogAsync(storageGroup)))"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Menu" OnClick="@(() => base.InvokeSafety(() => this.NavigetToStorageMenu(storageGroup)))"></MudIconButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}

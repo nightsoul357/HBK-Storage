@@ -1,0 +1,34 @@
+﻿@inherits HBKPageBase
+@page "/storageGroup/{storageGroupId}/storage"
+
+
+@if (this.StorageGroupResponse != null && this.StorageExtendPropertyResponses != null)
+{
+    <MudGrid Spacing="2" Class="mt-2">
+        <MudItem xs="12" md="12">
+            <MudText Typo="Typo.h3" GutterBottom="true">@this.StorageGroupResponse.Name 內的所有儲存個體</MudText>
+        </MudItem>
+        <MudItem xs="12" md="12">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary">返回</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary">新增儲存個體</MudButton>
+        </MudItem>
+
+        @foreach (var storages in this.StorageExtendPropertyResponses)
+        {
+            <MudItem xs="4">
+                <MudCard>
+                    <MudCardContent>
+                        <MudText Typo="Typo.h6">@storages.Name</MudText>
+                        <MudText>@DataUnitFormatHelper.Format(storages.Used_size) / @DataUnitFormatHelper.Format(storages.Size_limit)</MudText>
+                        <MudProgressLinear Color="Color.Primary" Value="@this.ConvertToSizeUsedProgress(storages)" />
+                        <MudText>類型 : @storages.Type</MudText>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit"></MudIconButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}

@@ -1,0 +1,21 @@
+﻿@inherits HBKDialogBase
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            新增儲存提供者
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" sm="12" md="12">
+                <MudTextField @bind-Value="this.Name" Label="名稱" Variant="Variant.Outlined" Required="true" />
+            </MudItem>
+            
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@(() => base.InvokeSafety(this.Cancel))">取消</MudButton>
+        <MudButton Color="Color.Primary" OnClick="@(() => base.InvokeSafetyAsync(this.SaveChangeAsync))">新增</MudButton>
+    </DialogActions>
+</MudDialog>
