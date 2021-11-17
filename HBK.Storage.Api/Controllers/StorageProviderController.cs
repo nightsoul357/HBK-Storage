@@ -229,7 +229,7 @@ namespace HBK.Storage.Api.Controllers
             AllowedQueryOptions.Skip |
             AllowedQueryOptions.Top |
             AllowedQueryOptions.OrderBy,
-            MaxTop = 100)]
+            MaxTop = int.MaxValue)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<PagedResponse<StorageGroupExtendPropertyResponse>> GetStorageGroupExtendProperties(
@@ -242,7 +242,7 @@ namespace HBK.Storage.Api.Controllers
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storageGroupExtendProperty => StorageGroupController.BuildStorageGroupExtendPropertyResponse(storageGroupExtendProperty)),
-                100
+                int.MaxValue
             );
         }
         /// <summary>
