@@ -19,6 +19,7 @@
                         <MudText>清除模式 : @storageGroup.Clear_mode</MudText>
                         <MudText>下載優先度 : @storageGroup.Download_priority</MudText>
                         <MudText>上傳優先度 : @storageGroup.Upload_priority</MudText>
+                        <MudText>狀態 : @this.ConvertStatusToString(storageGroup.Status)</MudText>
                     </MudCardContent>
                     <MudCardActions>
                         <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@(() => base.InvokeSafetyAsync(() => this.ShowDeleteStorageGroupDialogAsync(storageGroup)))"></MudIconButton>

@@ -10,7 +10,7 @@
         </MudItem>
         <MudItem xs="12" md="12">
             <MudButton Variant="Variant.Filled" Color="Color.Primary">返回</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary">新增儲存個體</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => base.InvokeSafetyAsync(this.ShowAddStorageDialogAsync))">新增儲存個體</MudButton>
         </MudItem>
 
         @foreach (var storages in this.StorageExtendPropertyResponses)
@@ -22,10 +22,11 @@
                         <MudText>@DataUnitFormatHelper.Format(storages.Used_size) / @DataUnitFormatHelper.Format(storages.Size_limit)</MudText>
                         <MudProgressLinear Color="Color.Primary" Value="@this.ConvertToSizeUsedProgress(storages)" />
                         <MudText>類型 : @storages.Type</MudText>
+                        <MudText>狀態 : @this.ConvertStatusToString(storages.Status)</MudText>
                     </MudCardContent>
                     <MudCardActions>
                         <MudIconButton Icon="@Icons.Material.Filled.Delete"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@(() => base.InvokeSafetyAsync(() => this.ShowEditStorageDialogAsync(storages)))"></MudIconButton>
                     </MudCardActions>
                 </MudCard>
             </MudItem>

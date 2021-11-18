@@ -1,0 +1,66 @@
+﻿@inherits HBKDialogBase
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" sm="8" md="6">
+                <MudTextField @bind-Value="this.StorageResponse.Name" Label="名稱" Variant="Variant.Outlined" Required="true" />
+            </MudItem>
+            <MudItem xs="12" sm="8" md="6">
+                <MudSelect @onselect="this.StorageTypeChnage" @bind-Value="this.StorageResponse.Type" T="StorageType" Label="類型" Variant="Variant.Outlined" ReadOnly="this.IsEditMode">
+                    @foreach (StorageType item in Enum.GetValues(typeof(StorageType)))
+                    {
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            @switch (this.StorageResponse.Type)
+            {
+                case StorageType.Amazon_s3:
+                    {
+                        <HBK.Storage.Dashboard.Pages.Storages.Credentials.AmazonS3CredentialComponent Credential="@this.ConvertToCredential(this.StorageResponse.Credentials,this.StorageResponse.Type)" @ref="this.CredentialsComponent" />
+                        break;
+                    }
+                case StorageType.Local:
+                    {
+                        <HBK.Storage.Dashboard.Pages.Storages.Credentials.LocalCredentialComponent Credential="@this.ConvertToCredential(this.StorageResponse.Credentials,this.StorageResponse.Type)" @ref="this.CredentialsComponent" />
+                        break;
+                    }
+                case StorageType.Ftp:
+                    {
+                        <HBK.Storage.Dashboard.Pages.Storages.Credentials.FTPCredentialComponent Credential="@this.ConvertToCredential(this.StorageResponse.Credentials,this.StorageResponse.Type)" @ref="this.CredentialsComponent" />
+                        break;
+                    }
+                case StorageType.Google_drive:
+                    {
+                        <HBK.Storage.Dashboard.Pages.Storages.Credentials.GoogleDriveCredentailComponent Credential="@this.ConvertToCredential(this.StorageResponse.Credentials,this.StorageResponse.Type)" @ref="this.CredentialsComponent" />
+                        break;
+                    }
+                case StorageType.Mega:
+                    {
+                        <HBK.Storage.Dashboard.Pages.Storages.Credentials.MegaCredentialComponent Credential="@this.ConvertToCredential(this.StorageResponse.Credentials,this.StorageResponse.Type)" @ref="this.CredentialsComponent" />
+                        break;
+                    }
+            }
+
+            <MudItem xs="12" sm="8" md="6">
+                <MudNumericField @bind-Value="this.StorageResponse.Size_limit" Label="檔案容量上限" Variant="Variant.Text" Min="0" Max="long.MaxValue" HideSpinButtons="true" Adornment="Adornment.End" AdornmentText="Bytes" />
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="this.Cancel">取消</MudButton>
+        @if (this.IsEditMode)
+        {
+            if (this.StorageResponse.Status.Contains(StorageStatus.Disable))
+            {
+                <MudButton Color="Color.Primary" OnClick="@(() => base.InvokeSafetyAsync(this.EnableAsync))">啟用</MudButton>
+            }
+            else
+            {
+                <MudButton Color="Color.Error" OnClick="@(() => base.InvokeSafetyAsync(this.DisableAsync))">停用</MudButton>
+            }
+        }
+        <MudButton Color="Color.Primary" OnClick="@(() => base.InvokeSafetyAsync(this.SaveChangeAsync))">@(this.IsEditMode ? "儲存" : "新增")</MudButton>
+    </DialogActions>
+</MudDialog>

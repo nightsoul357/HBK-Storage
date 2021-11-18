@@ -2,6 +2,7 @@
 using HBK.Storage.Dashboard.Models;
 using HBK.Storage.Dashboard.Pages.StorageGroups;
 using HBK.Storage.Dashboard.Pages.StorageProviders;
+using HBK.Storage.Dashboard.Pages.Storages;
 using HBK.Storage.Dashboard.Shared;
 using MudBlazor;
 
@@ -109,6 +110,62 @@ namespace HBK.Storage.Dashboard.Services
             if (!dresult.Cancelled)
             {
                 result.Data = (StorageGroupResponse)dresult.Data;
+            }
+
+            return result;
+        }
+
+        public async Task<DialogParsingResult<StorageResponse>> ShowAddStorageDialogAsync(Guid sotrageGroupId)
+        {
+            var parameters = new DialogParameters();
+            parameters.Add("StorageGroupId", sotrageGroupId);
+            var options = new DialogOptions()
+            {
+                FullWidth = true,
+                MaxWidth = MaxWidth.Medium,
+                CloseButton = true,
+                DisableBackdropClick = true,
+                NoHeader = false,
+                Position = DialogPosition.Center
+            };
+            var dialog = _dialogService.Show<AddEditStorageDialog>("新增儲存個體", parameters, options);
+            var dresult = await dialog.Result;
+            var result = new DialogParsingResult<StorageResponse>()
+            {
+                Cancelled = dresult.Cancelled
+            };
+            if (!dresult.Cancelled)
+            {
+                result.Data = (StorageResponse)dresult.Data;
+            }
+
+            return result;
+        }
+
+        public async Task<DialogParsingResult<StorageResponse>> ShowEditStorageDialogAsync(Guid sotrageGroupId, StorageResponse storageResponse)
+        {
+            var parameters = new DialogParameters();
+            parameters.Add("StorageGroupId", sotrageGroupId);
+            parameters.Add("StorageResponse", storageResponse);
+            parameters.Add("IsEditMode", true);
+            var options = new DialogOptions()
+            {
+                FullWidth = true,
+                MaxWidth = MaxWidth.Medium,
+                CloseButton = true,
+                DisableBackdropClick = true,
+                NoHeader = false,
+                Position = DialogPosition.Center
+            };
+            var dialog = _dialogService.Show<AddEditStorageDialog>("編輯儲存個體", parameters, options);
+            var dresult = await dialog.Result;
+            var result = new DialogParsingResult<StorageResponse>()
+            {
+                Cancelled = dresult.Cancelled
+            };
+            if (!dresult.Cancelled)
+            {
+                result.Data = (StorageResponse)dresult.Data;
             }
 
             return result;

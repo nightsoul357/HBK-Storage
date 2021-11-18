@@ -40,6 +40,11 @@ namespace HBK.Storage.Dashboard.Pages.StorageGroups
             }
         }
 
+        private string ConvertStatusToString(ICollection<StorageGroupStatus> status)
+        {
+            return status.Aggregate("", (s1, s2) => s1 + s2 + ", ").Trim().Trim(',');
+        }
+
         private void NavigetToStorageMenu(StorageGroupExtendPropertyResponse storageGroup)
         {
             base.NavigationManager.NavigateTo($"/storageGroup/{storageGroup.Storage_group_id}/storage");
