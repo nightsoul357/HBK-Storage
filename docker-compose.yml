@@ -32,7 +32,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile_Web
+      dockerfile: Dockerfile_Dashboard
     depends_on:
       - api
     ports:

@@ -1,0 +1,22 @@
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore "HBK.Storage.Dashboard/HBK.Storage.Dashboard.csproj"
+WORKDIR "/src/HBK.Dashboard.Web"
+RUN dotnet build "HBK.Storage.Dashboard.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "HBK.Storage.Dashboard.csproj" -c Release -o /app/publish
+
+FROM nginx:alpine AS final
+WORKDIR /usr/share/nginx/html
+COPY --from=publish /app/publish/wwwroot .
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY entrypoint_web.sh /usr/share/nginx/html/entrypoint_web.sh
+RUN ["chmod", "+x", "/usr/share/nginx/html/entrypoint_web.sh"]
+ENTRYPOINT ["sh" ,"/usr/share/nginx/html/entrypoint_web.sh"] 

@@ -1,0 +1,43 @@
+﻿@inherits HBKPageBase
+@page "/storageProvider"
+
+@if (this.StorageProviderResponse != null)
+{
+    <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText>
+                    Storage Provider Detail
+                </MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="@this.StorageProviderResponse.Name" Label="Name" Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField Value="@base.ConvertDateTimeToString(this.StorageProviderResponse?.Create_date_time)" Label="Create Date Time" Variant="Variant.Outlined" ReadOnly="true" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField Value="@base.ConvertDateTimeToString(this.StorageProviderResponse?.Update_date_time)" Label="Update Date Time" Variant="Variant.Outlined" ReadOnly="true" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField Value="@this.ConvertStatusToString(this.StorageProviderResponse?.Status)" Label="Status" Variant="Variant.Outlined" ReadOnly="true" />
+                </MudItem>
+            </MudGrid>
+        </MudCardContent>
+        <MudCardActions>
+            @if (this.StorageProviderResponse != null && this.StorageProviderResponse.Status.Contains(StorageProviderStatus.Disable))
+            {
+                <MudButton Variant="Variant.Text" OnClick="@(() => base.InvokeSafetyAsync(this.EnableAsync))" Color="Color.Primary" Class="ml-auto">啟用</MudButton>
+            }
+            else
+            {
+                <MudButton Variant="Variant.Text" OnClick="@(() => base.InvokeSafetyAsync(this.DisableAsync))" Color="Color.Error" Class="ml-auto">停用</MudButton>
+            }
+            <MudButton Variant="Variant.Text" Color="Color.Error" OnClick="@(() => base.InvokeSafetyAsync(this.ShowDeleteDialogAsync))" Class="ml-2">刪除</MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(() => base.InvokeSafetyAsync(this.SaveChangeAsync))" Class="ml-2">儲存</MudButton>
+        </MudCardActions>
+    </MudCard>
+}
