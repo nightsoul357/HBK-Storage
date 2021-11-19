@@ -5,7 +5,11 @@ namespace HBK.Storage.Dashboard.Pages.Authentication
 {
     public partial class Login : HBKPageBase
     {
+#if DEBUG
         public string Password { get; set; } = "ThisIsKeyForRoot_60990e6c-95f2-412e-8708-1961777e88fc";
+#else
+        public string Password { get; set; }
+#endif
         public bool PasswordVisibility { get; set; }
         public InputType PasswordInput { get; set; } = InputType.Password;
         public string PasswordInputIcon { get; set; } = Icons.Material.Filled.VisibilityOff;
