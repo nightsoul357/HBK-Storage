@@ -114,5 +114,11 @@ namespace HBK.Storage.Dashboard.Pages.StorageProviders
                 base.StateHasChanged();
             }
         }
+
+        public override void Dispose()
+        {
+            base.StateContainer.PropertyChanged -= this.StateContainer_PropertyChanged;
+            base.Dispose();
+        }
     }
 }

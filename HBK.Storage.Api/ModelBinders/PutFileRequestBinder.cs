@@ -96,7 +96,7 @@ namespace HBK.Storage.Api.ModelBinders
                                 }
                                 else
                                 {
-                                    prop.SetValue(model, JsonConvert.DeserializeObject(value, prop.PropertyType));
+                                    prop.SetValue(model, JsonConvert.DeserializeObject(value, prop.PropertyType)); // TODO: 相容 MultipartRequest 標準的 List 輸入方式
                                 }
                             }
 

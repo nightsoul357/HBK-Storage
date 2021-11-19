@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Dashboard.DataSource;
+﻿using BlazorDownloadFile;
+using HBK.Storage.Dashboard.DataSource;
 using HBK.Storage.Dashboard.Models;
 using HBK.Storage.Dashboard.Services;
 using Microsoft.AspNetCore.Components;
@@ -9,7 +10,7 @@ namespace HBK.Storage.Dashboard.Shared
     /// <summary>
     /// HBK Dashboard 使用的 Layout Component 基底型別
     /// </summary>
-    public abstract class HBKLayoutComponentBase : LayoutComponentBase
+    public abstract class HBKLayoutComponentBase : LayoutComponentBase, IDisposable
     {
         /// <summary>
         /// 取得或設定狀態容器
@@ -28,7 +29,13 @@ namespace HBK.Storage.Dashboard.Shared
         [Inject]
         public HBKDialogService DialogService { get; set; }
         [Inject]
+        public NavigationService NavigationService { get; set; }
+        [Inject]
         public HBKLayoutComponentService HBKLayoutComponentService { get; set; }
+        [Inject]
+        public IBlazorDownloadFileService DownloadFileService { get; set; }
+        [Inject]
+        public ClipboardService ClipboardService { get; set; }
 
         /// <summary>
         /// 具有例外攔截方法的啟動方式
@@ -88,6 +95,11 @@ namespace HBK.Storage.Dashboard.Shared
         {
             this.HBKLayoutComponentService.RegisterComponent(this);
             base.OnInitialized();
+        }
+
+        public virtual void Dispose()
+        {
+            this.HBKLayoutComponentService.UnregisterComponent(this);
         }
     }
 }

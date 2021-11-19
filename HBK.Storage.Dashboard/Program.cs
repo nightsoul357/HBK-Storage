@@ -1,3 +1,4 @@
+using BlazorDownloadFile;
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using HBK.Storage.Dashboard;
@@ -33,13 +34,19 @@ builder.Services.AddScoped<StateContainer>();
 
 builder.Services.AddScoped<HBKDialogService>();
 builder.Services.AddScoped<HBKLayoutComponentService>();
+builder.Services.AddScoped<NavigationService>();
+builder.Services.AddScoped<ClipboardService>();
 
 builder.Services.AddScoped<HBKStorageApi>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
     var stateContainer = sp.GetRequiredService<StateContainer>();
-    return new HBKStorageApi(config["HBKStorage:Url"], new HttpClient(), stateContainer);
+    return new HBKStorageApi(config["HBKStorage:Url"], new HttpClient() 
+    {
+        Timeout = Timeout.InfiniteTimeSpan
+    }, stateContainer);
 });
 
+builder.Services.AddBlazorDownloadFile();
 
 await builder.Build().RunAsync();

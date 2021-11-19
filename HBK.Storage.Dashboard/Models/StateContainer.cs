@@ -10,7 +10,7 @@ namespace HBK.Storage.Dashboard.Models
     /// 狀態容易
     /// </summary>
     public class StateContainer : INotifyPropertyChanged
-    {
+    {   
         private readonly ISyncSessionStorageService _sessionStorageService;
         private readonly ISyncLocalStorageService _localStorageService;
         private readonly HBKLayoutComponentService _hbkLayoutComponentService;
@@ -28,8 +28,28 @@ namespace HBK.Storage.Dashboard.Models
             }
             set
             {
-                this.SetData(_storageProviderName, value);
-                this.NotifyPropertyChanged(nameof(this.StorageProviderResponse));
+                var t = this.FetchData<StorageProviderResponse>(_storageProviderName);
+                if (!(t != null && value != null && t.Storage_provider_id == value.Storage_provider_id))
+                {
+                    this.SetData(_storageProviderName, value);
+                    this.NotifyPropertyChanged(nameof(this.StorageProviderResponse));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 取得或設定更新 Google 權杖回應內容
+        /// </summary>
+        public UpdateGoogleTokenResponse? UpdateGoogleTokenResponse
+        {
+            get
+            {
+                return this.FetchData<UpdateGoogleTokenResponse>(nameof(this.UpdateGoogleTokenResponse));
+            }
+            set
+            {
+                this.SetData(nameof(this.UpdateGoogleTokenResponse), value);
+                this.NotifyPropertyChanged(nameof(this.UpdateGoogleTokenResponse));
             }
         }
 

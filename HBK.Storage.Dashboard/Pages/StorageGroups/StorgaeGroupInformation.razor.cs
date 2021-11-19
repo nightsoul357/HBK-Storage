@@ -88,6 +88,12 @@ namespace HBK.Storage.Dashboard.Pages.StorageGroups
             }
         }
 
+        public override void Dispose()
+        {
+            base.StateContainer.PropertyChanged -= this.StateContainer_PropertyChanged;
+            base.Dispose();
+        }
+
         private StorageGroupResponse ConvertToStorageGroup(StorageGroupExtendPropertyResponse storageGroupExtendPropertyResponse)
         {
             return new StorageGroupResponse()

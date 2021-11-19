@@ -36,14 +36,11 @@
         }
     </MudMenu>
 
-    <MudNavLink Href="/storageProvider" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Stoage Prvoider Detail</MudNavLink>
-    <MudNavLink Href="/storageGroup" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Stoage Group Detail</MudNavLink>
-
-    <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">Dashboard</MudText>
-    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Dashboard">Index</MudNavLink>
-    <MudNavLink Href="/Counter" Icon="@Icons.Material.Outlined.Person">Counter</MudNavLink>
-    <MudNavLink Href="/FetchData" Icon="@Icons.Material.Outlined.Person">FetchData</MudNavLink>
-
+    <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">管理</MudText>
+    <MudNavLink Href="/storageProvider" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">儲存服務</MudNavLink>
+    <MudNavLink Href="/storageGroup" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Storage">儲存群組</MudNavLink>
+    <MudNavLink Href="/fileEntity" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Folder">管理檔案</MudNavLink>
+    <MudNavLink Href="/authorizeKey" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.VpnKey">管理驗證金鑰</MudNavLink>
 </MudNavMenu>
 
 @code {
