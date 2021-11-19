@@ -36,11 +36,17 @@
         }
     </MudMenu>
 
-    <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">管理</MudText>
-    <MudNavLink Href="/storageProvider" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">儲存服務</MudNavLink>
-    <MudNavLink Href="/storageGroup" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Storage">儲存群組</MudNavLink>
-    <MudNavLink Href="/fileEntity" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Folder">管理檔案</MudNavLink>
-    <MudNavLink Href="/authorizeKey" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.VpnKey">管理驗證金鑰</MudNavLink>
+    @if (base.StateContainer.StorageProviderResponse != null)
+    {
+        <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">管理</MudText>
+        <MudNavLink Href="/storageProvider" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">儲存服務</MudNavLink>
+        <MudNavLink Href="/storageGroup" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Storage">儲存群組</MudNavLink>
+        <MudNavLink Href="/fileEntity" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Folder">管理檔案</MudNavLink>
+    }
+    @if (base.StateContainer.GetSignInKey().Type == AuthorizeKeyType.Root)
+    {
+        <MudNavLink Href="/authorizeKey" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.VpnKey">管理驗證金鑰</MudNavLink>
+    }
 </MudNavMenu>
 
 @code {
