@@ -146,6 +146,10 @@ namespace HBK.Storage.Core.Cryptography
                 unreadBufferCount = (int)(output.Length - (offset % 16));
                 this.IncrementCounter();
             }
+            else
+            {
+                unreadBufferCount = 0;
+            }
 
             return this.Position;
         }
