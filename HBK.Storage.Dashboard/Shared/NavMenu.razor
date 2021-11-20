@@ -2,7 +2,7 @@
 
 <MudDivider Class="mb-4" />
 <MudNavMenu>
-    <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">Storage Provider</MudText>
+    <MudText Typo="Typo.subtitle2" Color="Color.Inherit" Class="ml-4 my-3">儲存服務</MudText>
 
     <MudMenu FullWidth="true" Label="@(this.ConvertToTitle(base.StateContainer.StorageProviderResponse))" Class="ml-4" StartIcon="@Icons.Filled.Storage" EndIcon="@Icons.Filled.KeyboardArrowDown" Color="Color.Inherit" Dense="true">
         <MudMenuItem OnClick="@(() => base.InvokeSafetyAsync(this.ShowAddStorageProviderDialogAsync))">新增儲存服務</MudMenuItem>
