@@ -70,7 +70,7 @@ namespace HBK.Storage.Dashboard.Pages.FileEntities
         public void RetryAllFailTask()
         {
             this.UploadFileTask.Where(x => x.Status == Enums.UploadFileTaskStatusEnum.Terminate).ToList()
-                .ForEach(x => 
+                .ForEach(x =>
                 {
                     x.Status = Enums.UploadFileTaskStatusEnum.Pending;
                     x.Exception = null;
@@ -217,15 +217,18 @@ namespace HBK.Storage.Dashboard.Pages.FileEntities
                     var fileName = Path.Combine(Directory.GetCurrentDirectory(), Path.GetTempFileName());
                     try
                     {
-                        await using FileStream fs = new FileStream(fileName, FileMode.Create);
-                        await task.File.OpenReadStream(long.MaxValue).CopyToAsync(fs);
-                        fs.Seek(0, SeekOrigin.Begin);
-                        await this.HBKStorageApi.FileentitiesPOSTAsync(this.StateContainer.StorageProviderResponse.Storage_provider_id, task.File.Name, null, null, task.UploadFileConfig.Tags,
-                            task.File.ContentType,
-                            task.UploadFileConfig.CryptoMode,
-                            new FileParameter(fs));
-                        task.Status = Enums.UploadFileTaskStatusEnum.Complete;
-                        task.CompleteDateTime = DateTime.Now;
+                        using (FileStream fs = new FileStream(fileName, FileMode.Create))
+                        using (var stream = task.File.OpenReadStream(long.MaxValue))
+                        {
+                            await stream.CopyToAsync(fs);
+                            fs.Seek(0, SeekOrigin.Begin);
+                            await this.HBKStorageApi.FileentitiesPOSTAsync(this.StateContainer.StorageProviderResponse.Storage_provider_id, task.File.Name, null, null, task.UploadFileConfig.Tags,
+                                task.File.ContentType,
+                                task.UploadFileConfig.CryptoMode,
+                                new FileParameter(fs));
+                            task.Status = Enums.UploadFileTaskStatusEnum.Complete;
+                            task.CompleteDateTime = DateTime.Now;
+                        }
                     }
                     catch (Exception ex)
                     {
