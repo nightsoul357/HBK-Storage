@@ -2,7 +2,8 @@
 
 ## 摘要
 
-發行 File Access Token 時，可以選擇加入 Download Indicate 的選項，其格式為依順序表示處理器名稱並以 `,` 區隔。
+發行 File Access Token 時，可以選擇加入 Download Indicate 的選項，其格式為依順序表示處理器區段並以 `,` 區隔。
+每個處理器表示區段以 `-` 區隔參數，第一個值表示處理器名稱，接續值代表其參數清單。
 
 如下所示:
 ```
@@ -32,9 +33,9 @@ Donwload Indicate 會**忽略**大小寫。
 
 使用此指示器前因先使用 `decrypt` 否則會傳回加密兩次的結果。
 
-### watermark-default
+### watermark
 
-指示器值: `watermark-default`
+指示器值: `watermark`
 
 若該檔案為圖片，則傳回加入預設的浮水印樣式的結果。
 

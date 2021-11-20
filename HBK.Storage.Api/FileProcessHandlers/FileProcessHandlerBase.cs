@@ -15,8 +15,9 @@ namespace HBK.Storage.Api.FileProcessHandlers
         /// 處理檔案
         /// </summary>
         /// <param name="taskModel"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
-        public abstract Task<FileProcessTaskModel> ProcessAsync(FileProcessTaskModel taskModel);
+        public abstract Task<FileProcessTaskModel> ProcessAsync(FileProcessTaskModel taskModel, string[] parameters);
         /// <summary>
         /// 取得處理器名稱
         /// </summary>

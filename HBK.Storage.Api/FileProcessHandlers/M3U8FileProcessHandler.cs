@@ -32,7 +32,7 @@ namespace HBK.Storage.Api.FileProcessHandlers
         }
 
         /// <inheritdoc/>
-        public override async Task<FileProcessTaskModel> ProcessAsync(FileProcessTaskModel taskModel)
+        public override async Task<FileProcessTaskModel> ProcessAsync(FileProcessTaskModel taskModel, string[] parameters)
         {
             if (taskModel.FileEntity.MimeType != "application/x-mpegURL")
             {
