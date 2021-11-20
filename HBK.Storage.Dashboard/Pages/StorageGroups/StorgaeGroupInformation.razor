@@ -1,7 +1,7 @@
 ﻿@inherits HBKPageBase
 @page "/storageGroup"
 
-<MudButton Variant="Variant.Filled" OnClick="@(() => base.InvokeSafetyAsync(this.ShowAddStorageGroupDialogAsync))" Color="Color.Primary">新增儲存群組</MudButton>
+<MudButton StartIcon="@Icons.Filled.Add" Variant="Variant.Filled" OnClick="@(() => base.InvokeSafetyAsync(this.ShowAddStorageGroupDialogAsync))" Color="Color.Primary">新增儲存群組</MudButton>
 
 @if (this.StorageProviderResponse != null && this.StorageGroupExtendPropertyResponses != null)
 {

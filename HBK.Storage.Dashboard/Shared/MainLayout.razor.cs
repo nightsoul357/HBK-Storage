@@ -29,7 +29,6 @@ namespace HBK.Storage.Dashboard.Shared
         public void SignOut()
         {
             base.StateContainer.SetSignKey(null, true);
-            base.StateContainer.StorageProviderResponse = null;
             base.NavigationManager.NavigateTo("/");
         }
         protected override void OnParametersSet()
