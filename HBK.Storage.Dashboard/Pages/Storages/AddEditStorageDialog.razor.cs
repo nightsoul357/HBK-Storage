@@ -36,6 +36,8 @@ namespace HBK.Storage.Dashboard.Pages.Storages
                     return JsonConvertHelper.DeserializeObjectWithDefault(source, new MegaStorageCredentials());
                 case StorageType.Ftp:
                     return JsonConvertHelper.DeserializeObjectWithDefault(source, new FTPStorageCredentials());
+                case StorageType.Web_dav:
+                    return JsonConvertHelper.DeserializeObjectWithDefault(source, new WebDAVStorageCredentials());
             }
 
             throw new NotImplementedException();

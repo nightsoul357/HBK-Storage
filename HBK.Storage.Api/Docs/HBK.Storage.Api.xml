@@ -207,7 +207,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.FileEntityController.GetChildFileEntities(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Core.Models.ChildFileEntity})">
             <summary>
-            取得指定檔案的所有子檔案(遞迴查詢)
+            取得指定檔案的所有子檔案(遞迴查詢)，單次資料上限為 100 筆
             </summary>
             <param name="fileEntityId">檔案 ID</param>
             <param name="queryOptions">查詢參數</param>
@@ -403,7 +403,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.GetStorageExtendPropreties(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Core.Models.StorageExtendProperty})">
             <summary>
-            取得儲存群組內的儲存個體擴展資訊集合，單次資料上限為 100 筆
+            取得儲存群組內的儲存個體擴展資訊集合
             </summary>
             <param name="storageGroupId">儲存群組 ID</param>
             <param name="queryOptions">OData 查詢選項</param>
@@ -500,7 +500,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetStorageGroupExtendProperties(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Core.Models.StorageGroupExtendProperty})">
             <summary>
-            取得儲存服務內的所有儲存群組擴充資訊集合，單次資料上限為 100 筆
+            取得儲存服務內的所有儲存群組擴充資訊集合
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="queryOptions">OData 查詢選項</param>
