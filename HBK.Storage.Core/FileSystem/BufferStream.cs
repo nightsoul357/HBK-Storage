@@ -59,7 +59,7 @@ namespace HBK.Storage.Core.FileSystem
                     break; // Request has been filled.
                 }
 
-                this.ReadToBuffer();
+                this.ReadToBufferAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
                 if (_streamBufferDataCount == 0)
                 {
@@ -88,7 +88,7 @@ namespace HBK.Storage.Core.FileSystem
             _innerStream.Write(buffer, offset, count);
         }
 
-        private void ReadToBuffer()
+        private async Task ReadToBufferAsync()
         {
             _streamBufferDataStartIndex = 0;
             _streamBufferDataCount = 0;
@@ -103,7 +103,7 @@ namespace HBK.Storage.Core.FileSystem
                     break; // Buffer is full.
                 }
 
-                var readCount = _innerStream.Read(_currentBuffer, startOfFreeSpace, availableSpaceInBuffer);
+                var readCount = await _innerStream.ReadAsync(_currentBuffer, startOfFreeSpace, availableSpaceInBuffer);
                 if (readCount == 0)
                 {
                     break; // End of stream.
