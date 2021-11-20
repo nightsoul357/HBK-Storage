@@ -56,6 +56,8 @@ dokcer-compose up -d
 
 ## How it works
 
+![HBKStorage](https://user-images.githubusercontent.com/48483566/142716208-c8c86813-eeda-47d5-a6b8-77a5f8d3eead.png)
+
 ## Documentation
 
 - [Situational Presentation](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Situational%20Presentation.md)
