@@ -16,7 +16,7 @@ namespace HBK.Storage.Api.FileProcessHandlers
     public class WatermarkDefaultProcessHandler : FileProcessHandlerBase
     {
         /// <inheritdoc/>
-        public async override Task<FileProcessTaskModel> ProcessAsync(FileProcessTaskModel taskModel)
+        public async override Task<FileProcessTaskModel> ProcessAsync(FileProcessTaskModel taskModel, string[] parameters)
         {
             if (!taskModel.FileEntity.MimeType.StartsWith("image/"))
             {
@@ -72,6 +72,6 @@ namespace HBK.Storage.Api.FileProcessHandlers
             }
         }
         /// <inheritdoc/>
-        public override string Name => "watermark-default";
+        public override string Name => "watermark";
     }
 }

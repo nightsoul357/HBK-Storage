@@ -21,6 +21,11 @@ namespace HBK.Storage.Dashboard.Pages.Storages
             await this.UpdateAsync();
         }
 
+        private void GoBack()
+        {
+            base.NavigationManager.NavigateTo("/storageGroup");
+        }
+
         private string ConvertStatusToString(ICollection<StorageStatus> statuses)
         {
             return statuses.Aggregate("", (s1, s2) => s1 + s2 + ", ").Trim().Trim(',');

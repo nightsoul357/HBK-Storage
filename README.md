@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://gridea.dev">
+  <a href="https://github.com/nightsoul357/HBKStorage">
     <img src="https://user-images.githubusercontent.com/48483566/142714588-b05aac2a-2b12-40d8-be59-e32a885b56b2.png">
   </a>
   <h3 align="center">
@@ -37,11 +37,15 @@ apt-get install docker-compose
 dokcer-compose up -d
 ```
 
-[More Information](https://)
+Dashboard 會在 `http://localhost:1080`, 可以使用預設的 API Key 進行登入。
 
 ### Windows
 
 [More Information](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Install%20Document(Windows).md)
+
+## Dashboard
+
+![image](https://user-images.githubusercontent.com/48483566/142719301-f0de6c6f-c94a-4341-8e02-59310873dbf8.png)
 
 ## Support Storage Type
 
@@ -56,16 +60,19 @@ dokcer-compose up -d
 
 ## How it works
 
+![HBKStorage](https://user-images.githubusercontent.com/48483566/142716208-c8c86813-eeda-47d5-a6b8-77a5f8d3eead.png)
+
 ## Documentation
 
-- [Situational Presentation](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Situational%20Presentation.md)
 - [API](https://app.swaggerhub.com/apis-docs/nightsoul357/hbk-storage_api/v1)
+- [API Key](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/API%20Key.md)
 - [Storage Credential](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Storage%20Credential.md)
 - [Policy Rule](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Policy%20Rule.md)
 - [File Access Token](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/File%20Access%20Token.md)
 - [Donwload Indicate](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Donwload%20Indicate.md)
 - [Crtpto](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Crypto.md)
 - [External Download File Endpoint](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/External%20Download%20File%20Endpoint.md)
+- [Situational Presentation](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Situational%20Presentation.md)
 - [Load Balance]()
 - [Work on Azure CDN with token authentication]()
 - [Plugin]()

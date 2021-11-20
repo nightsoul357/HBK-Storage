@@ -32,19 +32,26 @@ namespace HBK.Storage.Api.FileProcessHandlers
                 return taskModel;
             }
 
-            List<FileProcessHandlerBase> currentHandlers = new List<FileProcessHandlerBase>();
+            List<Tuple<FileProcessHandlerBase, string[]>> currentHandlers = new List<Tuple<FileProcessHandlerBase, string[]>>();
             handlerIndicate.Split(',').ToList().ForEach(x =>
             {
-                var handler = _fileAccessHandlers.FirstOrDefault(f => String.Compare(f.Name, x.Trim(), true) == 0);
-                if (handler != null)
+                var command = x.Split('-');
+                if (command.Count() != 0)
                 {
-                    currentHandlers.Add(handler);
+                    var handlerName = command[0];
+                    var parmaters = command.Skip(1).ToArray();
+
+                    var handler = _fileAccessHandlers.FirstOrDefault(f => String.Compare(f.Name, x.Trim(), true) == 0);
+                    if (handler != null)
+                    {
+                        currentHandlers.Add(new Tuple<FileProcessHandlerBase, string[]>(handler, parmaters));
+                    }
                 }
             });
 
             foreach (var handler in currentHandlers)
             {
-                taskModel = await handler.ProcessAsync(taskModel);
+                taskModel = await handler.Item1.ProcessAsync(taskModel, handler.Item2);
             }
 
             return taskModel;

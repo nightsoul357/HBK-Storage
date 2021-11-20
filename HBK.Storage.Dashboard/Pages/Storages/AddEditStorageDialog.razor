@@ -3,6 +3,12 @@
 <MudDialog>
     <DialogContent>
         <MudGrid>
+            @if (this.IsEditMode)
+            {
+                <MudItem xs="12" sm="8" md="6">
+                    <MudTextField Value="this.StorageResponse.Storage_id" Label="ID" Variant="Variant.Outlined" ReadOnly="true" />
+                </MudItem>
+            }
             <MudItem xs="12" sm="8" md="6">
                 <MudTextField @bind-Value="this.StorageResponse.Name" Label="名稱" Variant="Variant.Outlined" Required="true" />
             </MudItem>

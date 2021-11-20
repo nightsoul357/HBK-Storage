@@ -1018,7 +1018,7 @@
             </summary>
             <param name="cryptoProviders"></param>
         </member>
-        <member name="M:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel,System.String[])">
             <inheritdoc/>
         </member>
         <member name="P:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler.Name">
@@ -1043,11 +1043,12 @@
             處理檔案處理器基底
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerBase.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerBase.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel,System.String[])">
             <summary>
             處理檔案
             </summary>
             <param name="taskModel"></param>
+            <param name="parameters"></param>
             <returns></returns>
         </member>
         <member name="P:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerBase.Name">
@@ -1112,7 +1113,7 @@
             <param name="fileEntityService"></param>
             <param name="fileAccessTokenService"></param>
         </member>
-        <member name="M:HBK.Storage.Api.FileProcessHandlers.M3U8FileProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.M3U8FileProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel,System.String[])">
             <inheritdoc/>
         </member>
         <member name="P:HBK.Storage.Api.FileProcessHandlers.M3U8FileProcessHandler.Name">
@@ -1123,7 +1124,7 @@
             預設浮水印的檔案處理器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel,System.String[])">
             <inheritdoc/>
         </member>
         <member name="M:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.ChangeOpacity(System.Drawing.Image,System.Single)">

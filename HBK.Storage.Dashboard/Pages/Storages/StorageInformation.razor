@@ -9,8 +9,8 @@
             <MudText Typo="Typo.h3" GutterBottom="true">@this.StorageGroupResponse.Name 內的所有儲存個體</MudText>
         </MudItem>
         <MudItem xs="12" md="12">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary">返回</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => base.InvokeSafetyAsync(this.ShowAddStorageDialogAsync))">新增儲存個體</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => base.InvokeSafety(this.GoBack))">返回</MudButton>
+            <MudButton StartIcon="@Icons.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => base.InvokeSafetyAsync(this.ShowAddStorageDialogAsync))">新增儲存個體</MudButton>
         </MudItem>
 
         @foreach (var storages in this.StorageExtendPropertyResponses)

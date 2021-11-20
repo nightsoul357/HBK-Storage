@@ -23,7 +23,7 @@ namespace HBK.Storage.Api.FileProcessHandlers
             _cryptoProviders = cryptoProviders;
         }
         /// <inheritdoc/>
-        public override Task<FileProcessTaskModel> ProcessAsync(FileProcessTaskModel taskModel)
+        public override Task<FileProcessTaskModel> ProcessAsync(FileProcessTaskModel taskModel, string[] parameters)
         {
             if (taskModel.FileEntity.CryptoMode != Adapter.Enums.CryptoModeEnum.NoCrypto)
             {

@@ -7,23 +7,26 @@
         <MudCardHeader>
             <CardHeaderContent>
                 <MudText>
-                    Storage Provider Detail
+                    儲存服務詳細資訊
                 </MudText>
             </CardHeaderContent>
         </MudCardHeader>
         <MudCardContent>
             <MudGrid>
                 <MudItem xs="12" md="6">
-                    <MudTextField @bind-Value="@this.StorageProviderResponse.Name" Label="Name" Variant="Variant.Outlined" />
+                    <MudTextField Value="@this.StorageProviderResponse.Storage_provider_id" Label="儲存服務 ID" Variant="Variant.Outlined" ReadOnly="true" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField Value="@base.ConvertDateTimeToString(this.StorageProviderResponse?.Create_date_time)" Label="Create Date Time" Variant="Variant.Outlined" ReadOnly="true" />
+                    <MudTextField @bind-Value="@this.StorageProviderResponse.Name" Label="名稱" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField Value="@base.ConvertDateTimeToString(this.StorageProviderResponse?.Update_date_time)" Label="Update Date Time" Variant="Variant.Outlined" ReadOnly="true" />
+                    <MudTextField Value="@base.ConvertDateTimeToString(this.StorageProviderResponse?.Create_date_time)" Label="建立時間" Variant="Variant.Outlined" ReadOnly="true" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudTextField Value="@this.ConvertStatusToString(this.StorageProviderResponse?.Status)" Label="Status" Variant="Variant.Outlined" ReadOnly="true" />
+                    <MudTextField Value="@base.ConvertDateTimeToString(this.StorageProviderResponse?.Update_date_time)" Label="最後更新時間" Variant="Variant.Outlined" ReadOnly="true" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField Value="@this.ConvertStatusToString(this.StorageProviderResponse?.Status)" Label="狀態" Variant="Variant.Outlined" ReadOnly="true" />
                 </MudItem>
             </MudGrid>
         </MudCardContent>
