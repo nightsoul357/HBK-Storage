@@ -18,8 +18,6 @@ HBK Storage 是整合複數儲存個體並提供統一接口的服務。
 -   **下載指示**: 在下載檔案前，能對檔案內容進行最後加工(浮水印、Logo、Encrypt、Decrypt...)
 -   **插件**: 支援豐富且可自定義的插件
 
-## Example
-
 ## Getting Started
 
 ### Linux
