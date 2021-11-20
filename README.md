@@ -1,8 +1,11 @@
-# HBK Storage
-
-## Introduction
-
-HBK Storage 是整合複數儲存個體並提供統一接口的服務。
+<div align="center">
+  <a href="https://gridea.dev">
+    <img src="https://user-images.githubusercontent.com/48483566/142714588-b05aac2a-2b12-40d8-be59-e32a885b56b2.png">
+  </a>
+  <h3 align="center">
+    一個整合複數儲存個體並提供統一介面的服務
+  </h3>
+</div>
 
 ## Feature
 
@@ -17,6 +20,7 @@ HBK Storage 是整合複數儲存個體並提供統一接口的服務。
 -   **負載平衡**: 透過建立多個檔案副本，提高實際存取效率
 -   **下載指示**: 在下載檔案前，能對檔案內容進行最後加工(浮水印、Logo、Encrypt、Decrypt...)
 -   **插件**: 支援豐富且可自定義的插件
+
 
 ## Getting Started
 
@@ -72,3 +76,5 @@ dokcer-compose up -d
 - 掛載為網路硬碟
 
 ## License
+
+[MIT License](https://github.com/nightsoul357/HBKStorage/blob/master/LICENSE) Copyright (c) 2021 nightsoul357
