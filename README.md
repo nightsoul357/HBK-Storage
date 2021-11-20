@@ -45,7 +45,7 @@ Dashboard 會在 `http://localhost:1080`, 可以使用預設的 API Key 進行�
 
 ## Dashboard
 
-![image](https://user-images.githubusercontent.com/48483566/142719196-48e98eef-f111-4739-a8f8-131caaebb4e3.png)
+![image](https://user-images.githubusercontent.com/48483566/142719301-f0de6c6f-c94a-4341-8e02-59310873dbf8.png)
 
 ## Support Storage Type
 
