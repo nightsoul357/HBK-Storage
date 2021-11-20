@@ -12,6 +12,7 @@ namespace HBK.Storage.Dashboard.Pages.FileEntities
         private List<UploadFileTask> UploadFileTask = new List<UploadFileTask>();
         private System.Timers.Timer _timer = new System.Timers.Timer(1000);
         private bool _isUploading = false;
+        private UploadFileConfig _uploadFileConfig = new UploadFileConfig();
 
         private bool _isDisplayChildFileEntity = false;
         public bool IsDisplayChildFileEntity
@@ -24,6 +25,14 @@ namespace HBK.Storage.Dashboard.Pages.FileEntities
             {
                 _isDisplayChildFileEntity = value;
                 _table.ReloadServerData();
+            }
+        }
+        public async Task ShowEditUploadFileConfigDialogAsync()
+        {
+            var result = await base.DialogService.ShowEditUploadFileConfigAsync(_uploadFileConfig);
+            if (!result.Cancelled)
+            {
+                _uploadFileConfig = result.Data;
             }
         }
         public Task ShowPublishAccessTokenDialogAsync(FileEntityResponse fileEntity)
@@ -61,7 +70,12 @@ namespace HBK.Storage.Dashboard.Pages.FileEntities
                     File = file,
                     Progress = 0,
                     CreateDateTime = DateTime.Now,
-                    Status = Enums.UploadFileTaskStatusEnum.Pending
+                    Status = Enums.UploadFileTaskStatusEnum.Pending,
+                    UploadFileConfig = new UploadFileConfig()
+                    {
+                        CryptoMode = _uploadFileConfig.CryptoMode,
+                        Tags = _uploadFileConfig.Tags.Select(x => x).ToList()
+                    }
                 });
             }
 
@@ -173,10 +187,9 @@ namespace HBK.Storage.Dashboard.Pages.FileEntities
                 {
                     task.Status = Enums.UploadFileTaskStatusEnum.Uploading;
 
-                    List<string> tags = new List<string>();
                     if (task.File.ContentType.StartsWith("image"))
                     {
-                        tags.Add("Require-Compress-Image");
+                        task.UploadFileConfig.Tags.Add("Require-Compress-Image");
                     }
                     var fileName = Path.Combine(Directory.GetCurrentDirectory(), Path.GetTempFileName());
                     try
@@ -184,9 +197,9 @@ namespace HBK.Storage.Dashboard.Pages.FileEntities
                         await using FileStream fs = new FileStream(fileName, FileMode.Create);
                         await task.File.OpenReadStream(long.MaxValue).CopyToAsync(fs);
                         fs.Seek(0, SeekOrigin.Begin);
-                        await this.HBKStorageApi.FileentitiesPOSTAsync(this.StateContainer.StorageProviderResponse.Storage_provider_id, task.File.Name, null, null, tags,
+                        await this.HBKStorageApi.FileentitiesPOSTAsync(this.StateContainer.StorageProviderResponse.Storage_provider_id, task.File.Name, null, null, task.UploadFileConfig.Tags,
                             task.File.ContentType,
-                            CryptoMode.No_crypto,
+                            task.UploadFileConfig.CryptoMode,
                             new FileParameter(fs));
                         task.Status = Enums.UploadFileTaskStatusEnum.Complete;
                         task.CompleteDateTime = DateTime.Now;

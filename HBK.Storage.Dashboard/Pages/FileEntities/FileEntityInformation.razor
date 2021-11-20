@@ -16,6 +16,8 @@
                    for="fileInput112">
             Upload Files
         </MudButton>
+
+        <MudButton StartIcon="@Icons.Filled.Edit" Variant="Variant.Filled" OnClick="@(() => base.InvokeSafetyAsync(this.ShowEditUploadFileConfigDialogAsync))" Color="Color.Primary">修改上傳參數</MudButton>
     </MudItem>
 
     <MudItem xs="12" md="12">
@@ -47,12 +49,7 @@
                 <MudTd DataLabel="mime_type">@context.Mime_type</MudTd>
                 <MudTd>@context.Crypto_mode</MudTd>
                 <MudTd>
-                    @foreach (var tag in context.Tags)
-                    {
-                        <MudText>
-                            @tag
-                        </MudText>
-                    }
+                    @context.Tags.Aggregate("",(s1,s2) => s1 + s2 + ", ").Trim().Trim(',')
                 </MudTd>
                 <MudTd DataLabel="create_date_time">@context.Create_date_time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</MudTd>
                 <MudTd DataLabel="status">
@@ -94,6 +91,8 @@
                     <HeaderContent>
                         <MudTh><MudTableSortLabel SortBy="new Func<UploadFileTask, object>(x=>x.File.Name)">名稱</MudTableSortLabel></MudTh>
                         <MudTh><MudTableSortLabel SortBy="new Func<UploadFileTask, object>(x=>x.File.Size)">大小</MudTableSortLabel></MudTh>
+                        <MudTh>加密方式</MudTh>
+                        <MudTh>標籤</MudTh>
                         <MudTh><MudTableSortLabel SortBy="new Func<UploadFileTask, object>(x=>x.Status)">狀態</MudTableSortLabel></MudTh>
                         <MudTh><MudTableSortLabel SortBy="new Func<UploadFileTask, object>(x=>x.CompleteDateTime)">完成時間</MudTableSortLabel></MudTh>
                         <MudTh>錯誤訊息</MudTh>
@@ -102,6 +101,8 @@
                     <RowTemplate>
                         <MudTd>@context.File.Name</MudTd>
                         <MudTd>@DataUnitFormatHelper.Format(context.File.Size)</MudTd>
+                        <MudTd>@context.UploadFileConfig.CryptoMode</MudTd>
+                        <MudTd>@context.UploadFileConfig.Tags.Aggregate("",(s1,s2) => s1 + s2 + ", ").Trim().Trim(',')</MudTd>
                         <MudTd>@context.Status.ToString()</MudTd>
                         <MudTd>
                             @context.CompleteDateTime?.ToString("yyyy/MM/dd HH:mm:ss")

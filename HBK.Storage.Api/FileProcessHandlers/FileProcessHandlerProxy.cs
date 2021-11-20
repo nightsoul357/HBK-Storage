@@ -35,7 +35,7 @@ namespace HBK.Storage.Api.FileProcessHandlers
             List<Tuple<FileProcessHandlerBase, string[]>> currentHandlers = new List<Tuple<FileProcessHandlerBase, string[]>>();
             handlerIndicate.Split(',').ToList().ForEach(x =>
             {
-                var command = x.Split('-');
+                var command = x.Trim().Split('-');
                 if (command.Count() != 0)
                 {
                     var handlerName = command[0];

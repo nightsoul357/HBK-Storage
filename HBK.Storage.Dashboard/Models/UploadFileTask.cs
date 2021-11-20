@@ -1,4 +1,5 @@
-﻿using HBK.Storage.Dashboard.Enums;
+﻿using HBK.Storage.Dashboard.DataSource;
+using HBK.Storage.Dashboard.Enums;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace HBK.Storage.Dashboard.Models
@@ -14,5 +15,6 @@ namespace HBK.Storage.Dashboard.Models
         public double Progress { get; set; }
         public UploadFileTaskStatusEnum Status { get; set; }
         public Exception? Exception { get; set; }
+        public UploadFileConfig UploadFileConfig { get; set; } = new UploadFileConfig();
     }
 }
