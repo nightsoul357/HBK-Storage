@@ -61,6 +61,29 @@ namespace HBK.Storage.Dashboard.Pages.FileEntities
             base.StateHasChanged();
         }
 
+        public void ClearAllTask()
+        {
+            this.UploadFileTask.RemoveAll(x => x.Status != Enums.UploadFileTaskStatusEnum.Uploading);
+            base.StateHasChanged();
+        }
+
+        public void RetryAllFailTask()
+        {
+            this.UploadFileTask.Where(x => x.Status == Enums.UploadFileTaskStatusEnum.Terminate).ToList()
+                .ForEach(x => 
+                {
+                    x.Status = Enums.UploadFileTaskStatusEnum.Pending;
+                    x.Exception = null;
+                    x.CompleteDateTime = null;
+                });
+
+            base.StateHasChanged();
+            if (!_isUploading && !_timer.Enabled)
+            {
+                _timer.Start();
+            }
+        }
+
         public void UploadFiles(InputFileChangeEventArgs e)
         {
             foreach (IBrowserFile file in e.GetMultipleFiles(int.MaxValue))
