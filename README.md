@@ -70,7 +70,7 @@ Dashboard 會在 `http://localhost:1080`, 可以使用預設的 API Key 進行�
 - [API Key](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/API%20Key.md)
 - [Storage Credential](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Storage%20Credential.md)
 - [Policy Rule](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Policy%20Rule.md)
-- [File Access Token](https://github.com/nightsoul357/HB-KStorage/blob/develop/Docs/File%20Access%20Token.md)
+- [File Access Token](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/File%20Access%20Token.md)
 - [Donwload Indicate](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Donwload%20Indicate.md)
 - [Crtpto](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Crypto.md)
 - [External Download File Endpoint](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/External%20Download%20File%20Endpoint.md)
