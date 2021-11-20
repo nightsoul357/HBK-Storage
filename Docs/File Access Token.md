@@ -13,7 +13,7 @@ File Access Token 為 JWT 型式。
 ### Normal
 
 | 欄位 | 說明 | 類型 | 是否為必填 | 範例 |
-| -------- | -------- | -------- | -------- |
+| -------- | -------- | -------- | -------- | -------- |
 | storage_group_id | 強制指定來源 Storage Group | Guid | 否 | `59b50410-e86a-4341-8973-ae325e354210` |
 | file_entity_id | 檔案 ID | Guid | 是 | `59b50410-e86a-4341-8973-ae325e354210` |
 | expire_after_minutes | 權杖過期時間(分鐘後) | int | 是 | 60 |
@@ -25,7 +25,7 @@ File Access Token 為 JWT 型式。
 ### NormalNoLimit
 
 | 欄位 | 說明 | 類型 | 是否為必填 | 範例 |
-| -------- | -------- | -------- | -------- |
+| -------- | -------- | -------- | -------- | -------- |
 | storage_group_id | 強制指定來源 Storage Group | Guid | 否 | `59b50410-e86a-4341-8973-ae325e354210` |
 | file_entity_id | 檔案 ID | Guid | 是 | `59b50410-e86a-4341-8973-ae325e354210` |
 | expire_after_minutes | 權杖過期時間(分鐘後) | int | 是 | 60 |
@@ -36,7 +36,7 @@ File Access Token 為 JWT 型式。
 ### AllowTag
 
 | 欄位 | 說明 | 類型 | 是否為必填 | 範例 |
-| -------- | -------- | -------- | -------- |
+| -------- | -------- | -------- | -------- | -------- |
 | storage_group_id | 強制指定來源 Storage Group | Guid | 否 | `59b50410-e86a-4341-8973-ae325e354210` |
 | allow_tag_pattern | 允許的 Tag 範本(使用正規表達式) | string | 是 | `special-file` |
 | expire_after_minutes | 權杖過期時間(分鐘後) | int | 是 | 60 |
@@ -48,7 +48,7 @@ File Access Token 為 JWT 型式。
 ### AllowTagNoLimit
 
 | 欄位 | 說明 | 類型 | 是否為必填 | 範例 |
-| -------- | -------- | -------- | -------- |
+| -------- | -------- | -------- | -------- | -------- |
 | storage_group_id | 強制指定來源 Storage Group | Guid | 否 | `59b50410-e86a-4341-8973-ae325e354210` |
 | allow_tag_pattern | 允許的 Tag 範本(使用正規表達式) | string | 是 | `special-file` |
 | expire_after_minutes | 權杖過期時間(分鐘後) | int | 是 | 60 |
