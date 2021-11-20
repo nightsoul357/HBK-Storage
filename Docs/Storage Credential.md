@@ -114,7 +114,7 @@ OAuth 中的 Redirect Url 需加入 `{baseurl}/signin-google`。
 | -------- | -------- | -------- |
 | Username | 帳號 |  |
 | Password | 密碼 |  |
-| ParentId | 使用者名稱 | `zQ3W5QLY` |
+| ParentId | 父資料夾 ID | `zQ3W5QLY` |
 
 ### 功能支援
 
