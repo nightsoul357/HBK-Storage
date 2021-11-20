@@ -11,6 +11,10 @@ namespace HBK.Storage.Dashboard.DataSource.Models
     /// </summary>
     public class GoogleDriveCredentials : StorageCredentialsBase
     {
+        public GoogleDriveCredentials()
+        {
+            base.Storage_type = StorageType.Google_drive;
+        }
         /// <summary>
         /// 取得或設定父資料夾 ID
         /// </summary>

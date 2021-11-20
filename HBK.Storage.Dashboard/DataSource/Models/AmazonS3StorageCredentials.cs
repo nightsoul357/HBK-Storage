@@ -11,6 +11,10 @@ namespace HBK.Storage.Dashboard.DataSource.Models
     /// </summary>
     public class AmazonS3StorageCredentials : StorageCredentialsBase
     {
+        public AmazonS3StorageCredentials()
+        {
+            base.Storage_type = StorageType.Amazon_s3;
+        }
         /// <summary>
         /// 取得或設定存取金鑰
         /// </summary>

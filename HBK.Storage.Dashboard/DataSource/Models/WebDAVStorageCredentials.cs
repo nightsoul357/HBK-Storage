@@ -5,6 +5,10 @@
     /// </summary>
     public class WebDAVStorageCredentials : StorageCredentialsBase
     {
+        public WebDAVStorageCredentials()
+        {
+            base.Storage_type = StorageType.Web_dav;
+        }
         /// <summary>
         /// 取得或設定 URL
         /// </summary>

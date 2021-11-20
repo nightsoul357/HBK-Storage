@@ -11,6 +11,10 @@ namespace HBK.Storage.Dashboard.DataSource.Models
     /// </summary>
     public class MegaStorageCredentials : StorageCredentialsBase
     {
+        public MegaStorageCredentials()
+        {
+            base.Storage_type = StorageType.Mega;
+        }
         /// <summary>
         /// 取得或設定使用者名稱
         /// </summary>
