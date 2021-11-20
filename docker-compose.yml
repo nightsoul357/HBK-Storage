@@ -20,7 +20,7 @@ services:
     volumes:
       - ./storage_external:/app/default_storage
     environment:
-      "Database:ConnectionString": "Data Source=localhost;Initial Catalog=db;Persist Security Info=True;User ID=sa;Password=MGG2hZPxtW22@"
+      "Database:ConnectionString": "Data Source=db;Initial Catalog=db;Persist Security Info=True;User ID=sa;Password=MGG2hZPxtW22@"
       "DefaultStorageProvider:EnsureCreated": "true"
       "DefaultStorageProvider:Location": "/app/default_storage"
       "DefaultStorageProvider:SizeLimit": "5368709120"
