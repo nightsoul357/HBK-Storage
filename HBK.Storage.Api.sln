@@ -58,6 +58,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{02BFC0E9-C
 		Docs\Donwload Indicate.md = Docs\Donwload Indicate.md
 		Docs\External Download File Endpoint.md = Docs\External Download File Endpoint.md
 		Docs\File Access Token.md = Docs\File Access Token.md
+		Docs\Install Document(Linux).md = Docs\Install Document(Linux).md
 		Docs\Install Document(Windows).md = Docs\Install Document(Windows).md
 		Docs\Policy Rule.md = Docs\Policy Rule.md
 		README.md = README.md

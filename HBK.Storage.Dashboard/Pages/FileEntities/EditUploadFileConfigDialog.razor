@@ -1,0 +1,26 @@
+﻿@inherits HBKDialogBase
+
+@if (this.UploadFileConfig != null)
+{
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudSelect @bind-Value="this.UploadFileConfig.CryptoMode" T="CryptoMode" Label="加密方式" Variant="Variant.Outlined">
+                        @foreach (CryptoMode item in Enum.GetValues(typeof(CryptoMode)))
+                        {
+                            <MudSelectItem Value="@item">@item</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField HelperText="使用 , 區分" T="List<string>" Converter="this.TagConverter" @bind-Value="this.UploadFileConfig.Tags" Label="標籤" Variant="Variant.Outlined" Lines="3" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="this.Cancel">取消</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@(() => base.InvokeSafety(this.Save))">儲存</MudButton>
+        </DialogActions>
+    </MudDialog>
+}

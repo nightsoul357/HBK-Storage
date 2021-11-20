@@ -238,5 +238,32 @@ namespace HBK.Storage.Dashboard.Services
             var dialog = _dialogService.Show<AddEditAuthorizeKeyDialog>("新增驗證金鑰", options);
             return dialog.Result;
         }
+
+        public async Task<DialogParsingResult<UploadFileConfig>> ShowEditUploadFileConfigAsync(UploadFileConfig uploadFileConfig)
+        {
+            var parameters = new DialogParameters();
+            parameters.Add("UploadFileConfig", uploadFileConfig);
+            var options = new DialogOptions()
+            {
+                FullWidth = true,
+                MaxWidth = MaxWidth.Medium,
+                CloseButton = true,
+                DisableBackdropClick = true,
+                NoHeader = false,
+                Position = DialogPosition.Center
+            };
+            var dialog = _dialogService.Show<EditUploadFileConfigDialog>("修改上傳設定", parameters, options);
+            var dresult = await dialog.Result;
+            var result = new DialogParsingResult<UploadFileConfig>()
+            {
+                Cancelled = dresult.Cancelled
+            };
+            if (!dresult.Cancelled)
+            {
+                result.Data = (UploadFileConfig)dresult.Data;
+            }
+
+            return result;
+        }
     }
 }
