@@ -76,3 +76,5 @@ dokcer-compose up -d
 - 掛載為網路硬碟
 
 ## License
+
+[MIT License](https://github.com/nightsoul357/HBKStorage/blob/master/LICENSE) Copyright (c) 2021 nightsoul357
