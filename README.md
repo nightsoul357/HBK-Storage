@@ -3,7 +3,7 @@
     <img src="https://user-images.githubusercontent.com/48483566/142714588-b05aac2a-2b12-40d8-be59-e32a885b56b2.png">
   </a>
   <h3 align="center">
-    一個整合複數儲存個體並提供統一接口的服務
+    一個整合複數儲存個體並提供統一介面的服務
   </h3>
 </div>
 
