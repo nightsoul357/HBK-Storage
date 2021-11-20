@@ -37,9 +37,15 @@ apt-get install docker-compose
 dokcer-compose up -d
 ```
 
+Dashboard 會在 `http://localhost:1080`, 可以使用預設的 API Key 進行登入。
+
 ### Windows
 
 [More Information](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Install%20Document(Windows).md)
+
+## Dashboard
+
+![image](https://user-images.githubusercontent.com/48483566/142719196-48e98eef-f111-4739-a8f8-131caaebb4e3.png)
 
 ## Support Storage Type
 
