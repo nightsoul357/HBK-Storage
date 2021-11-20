@@ -41,6 +41,11 @@
                         <HBK.Storage.Dashboard.Pages.Storages.Credentials.MegaCredentialComponent Credential="@this.ConvertToCredential(this.StorageResponse.Credentials,this.StorageResponse.Type)" @ref="this.CredentialsComponent" />
                         break;
                     }
+                case StorageType.Web_dav:
+                    {
+                        <HBK.Storage.Dashboard.Pages.Storages.Credentials.WebDAVCredentialComponent Credential="@this.ConvertToCredential(this.StorageResponse.Credentials,this.StorageResponse.Type)" @ref="this.CredentialsComponent" />
+                        break;
+                    }
             }
 
             <MudItem xs="12" sm="8" md="6">

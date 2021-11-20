@@ -39,6 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F9B2CA6C
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 		Dockerfile_Api = Dockerfile_Api
+		Dockerfile_Dashboard = Dockerfile_Dashboard
 		Dockerfile_DB = Dockerfile_DB
 		Dockerfile_ImageCompressPlugin = Dockerfile_ImageCompressPlugin
 		Dockerfile_Sync = Dockerfile_Sync
@@ -62,6 +63,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{02BFC0E9-C
 		Docs\Introduction.md = Docs\Introduction.md
 		Docs\Policy Rule.md = Docs\Policy Rule.md
 		README.md = README.md
+		Docs\Situational Presentation.md = Docs\Situational Presentation.md
 		Docs\Storage Credential.md = Docs\Storage Credential.md
 	EndProjectSection
 EndProject
