@@ -18,13 +18,11 @@ HBK Storage 是整合複數儲存個體並提供統一接口的服務。
 -   **下載指示**: 在下載檔案前，能對檔案內容進行最後加工(浮水印、Logo、Encrypt、Decrypt...)
 -   **插件**: 支援豐富且可自定義的插件
 
-## Example
-
 ## Getting Started
 
 ### Linux
 
-下載 Release 並執行下列指令:
+Clone project and execute
 
 ```bash
 # Install dokcer and docker-compose
@@ -50,12 +48,14 @@ dokcer-compose up -d
 | Google Drive | O | O | X | O |
 | AWS S3 | O | O | X | O |
 | Mega | O | O | X | O |
+| WebDAV | O | O | X | O |
 
 ## How it works
 
 ## Documentation
 
-- [Situational Presentation]()
+- [Situational Presentation](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Situational%20Presentation.md)
+- [API](https://app.swaggerhub.com/apis-docs/nightsoul357/hbk-storage_api/v1)
 - [Storage Credential](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Storage%20Credential.md)
 - [Policy Rule](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Policy%20Rule.md)
 - [File Access Token](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/File%20Access%20Token.md)

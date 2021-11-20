@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,7 +21,6 @@ using Newtonsoft.Json.Converters;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Http.Features;
-using HBK.Storage.Core.FileSystem;
 using HBK.Storage.Core.Models;
 using HBK.Storage.Core;
 using HBK.Storage.Api.Middlewares;
@@ -40,7 +38,6 @@ using HBK.Storage.Api.OData;
 using HBK.Storage.Api.Factories;
 using HBK.Storage.Api.FileProcessHandlers;
 using System.IO;
-using Microsoft.AspNetCore.HttpOverrides;
 using HBK.Storage.Api.FileAccessHandlers;
 using Microsoft.IdentityModel.Logging;
 using HBK.Storage.Core.Cryptography;
@@ -220,7 +217,9 @@ namespace HBK.Storage.Api
 
             // 檔案處理器
             services.AddScoped<FileProcessHandlerBase, M3U8FileProcessHandler>();
-            services.AddScoped<FileProcessHandlerBase, CryptoProcessHandler>();
+            services.AddScoped<FileProcessHandlerBase, DecryptProcessHandler>();
+            services.AddScoped<FileProcessHandlerBase, EncryptProcessHandler>();
+            services.AddScoped<FileProcessHandlerBase, WatermarkDefaultProcessHandler>();
             services.AddScoped<FileProcessHandlerProxy>();
 
             // 加密提供者
@@ -286,6 +285,12 @@ namespace HBK.Storage.Api
             this.GenerateInitializationDataAsync(authorizeKeyService, storageProviderService).Wait();
         }
 
+        /// <summary>
+        /// 產生初始化資料
+        /// </summary>
+        /// <param name="authorizeKeyService"></param>
+        /// <param name="storageProviderService"></param>
+        /// <returns></returns>
         private async Task GenerateInitializationDataAsync(AuthorizeKeyService authorizeKeyService, StorageProviderService storageProviderService)
         {
             if (this.Configuration.GetValue<bool>("RootKey:EnsureCreated") && (await authorizeKeyService.FindByKeyValueAsync(this.Configuration["RootKey:Key"])) == null)

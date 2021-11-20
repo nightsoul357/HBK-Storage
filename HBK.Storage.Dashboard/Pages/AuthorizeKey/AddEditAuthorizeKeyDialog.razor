@@ -1,0 +1,77 @@
+﻿@inherits HBKDialogBase
+
+<MudDialog>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" sm="8" md="6">
+                <MudTextField @bind-Value="this.Name" Label="名稱" Variant="Variant.Outlined" ReadOnly="this.IsEditMode" />
+            </MudItem>
+            <MudItem xs="12" sm="8" md="6">
+                <MudSelect @bind-Value="this.AuthorizeKeyType" T="AuthorizeKeyType" Label="類型" Variant="Variant.Outlined" ReadOnly="this.IsEditMode">
+                    @foreach (AuthorizeKeyType item in Enum.GetValues(typeof(AuthorizeKeyType)))
+                    {
+                        <MudSelectItem Value="@item">@item</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            @if (this.AuthorizeKeyType == AuthorizeKeyType.Normal)
+            {
+                @if (!this.IsEditMode)
+                {
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudText> 允許於 @base.StateContainer.StorageProviderResponse.Name 中使用的範圍</MudText>
+                    </MudItem>
+                    <MudItem xs="12" sm="12" md="12">
+                        <MudCheckBox @bind-Checked="@this.IsRead" Label="Read" Color="Color.Primary"></MudCheckBox>
+                        <MudCheckBox @bind-Checked="@this.IsUpdate" Label="Update" Color="Color.Primary"></MudCheckBox>
+                        <MudCheckBox @bind-Checked="@this.IsInsert" Label="Insert" Color="Color.Primary"></MudCheckBox>
+                        <MudCheckBox @bind-Checked="@this.IsDelete" Label="Delete" Color="Color.Primary"></MudCheckBox>
+                    </MudItem>
+                }
+                else
+                {
+                    foreach (var item in this.EditAuthorizeKey.Authorize_key_scope_responses.GroupBy(x => x.Storage_provider_id))
+                    {
+                        <MudItem xs="12" sm="12" md="12">
+                            <MudText> 允許於 @item.Key 中使用的範圍</MudText>
+                        </MudItem>
+                        <MudItem xs="12" sm="12" md="12">
+                            <MudCheckBox Checked="item.Any(t => t.Allow_operation_type == AuthorizeKeyScopeOperationType.Read)" Label="Read" Color="Color.Primary" ReadOnly="true"></MudCheckBox>
+                            <MudCheckBox Checked="item.Any(t => t.Allow_operation_type == AuthorizeKeyScopeOperationType.Update)" Label="Update" Color="Color.Primary" ReadOnly="true"></MudCheckBox>
+                            <MudCheckBox Checked="item.Any(t => t.Allow_operation_type == AuthorizeKeyScopeOperationType.Insert)" Label="Insert" Color="Color.Primary" ReadOnly="true"></MudCheckBox>
+                            <MudCheckBox Checked="item.Any(t => t.Allow_operation_type == AuthorizeKeyScopeOperationType.Delete)" Label="Delete" Color="Color.Primary" ReadOnly="true"></MudCheckBox>
+                        </MudItem>
+                    }
+                }
+            }
+            @if (!String.IsNullOrEmpty(this.KeyValue))
+            {
+                <MudItem xs="12" sm="12" md="12">
+                    <MudTextField @bind-Value="this.KeyValue" Label="密鑰(僅顯示一次)" Lines="5" Variant="Variant.Outlined" ReadOnly="true" />
+                </MudItem>
+            }
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="this.Cancel">取消</MudButton>
+        @if (this.IsEditMode)
+        {
+            if (this.EditAuthorizeKey.Status.Contains(AuthorizeKeyStatus.Disable))
+            {
+                <MudButton Color="Color.Primary" OnClick="@(() => base.InvokeSafetyAsync(this.EnableAsync))">啟用</MudButton>
+            }
+            else
+            {
+                <MudButton Color="Color.Error" OnClick="@(() => base.InvokeSafetyAsync(this.DisableAsync))">停用</MudButton>
+            }
+        }
+        @if (!this.IsEditMode && String.IsNullOrEmpty(this.KeyValue))
+        {
+            <MudButton Color="Color.Primary" OnClick="@(() => base.InvokeSafetyAsync(this.SaveChangeAsync))">新增</MudButton>
+        }
+        else if (!this.IsEditMode)
+        {
+            <MudButton Color="Color.Primary" OnClick="this.Cancel">關閉</MudButton>
+        }
+    </DialogActions>
+</MudDialog>

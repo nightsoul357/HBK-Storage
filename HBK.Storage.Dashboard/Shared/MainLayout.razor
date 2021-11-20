@@ -1,0 +1,42 @@
+﻿@inherits HBKLayoutComponentBase
+
+<MudThemeProvider Theme="_theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" Size="Size.Large" />
+        </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.MdAndUp">
+            <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => base.InvokeSafety(this.DrawerToggle))" />
+        </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.Xs">
+            <MudText Typo="Typo.h6" Class="ml-4">HBK Storage Dashboard</MudText>
+        </MudHidden>
+        <MudHidden Breakpoint="Breakpoint.Xs" Invert="true">
+            <MudText Typo="Typo.subtitle2">HBK Storage Dashboard</MudText>
+        </MudHidden>
+        <MudSpacer />
+        <MudText Typo="Typo.subtitle2">@this.SignInKey?.Type.ToString() / @this.SignInKey?.Name.ToString()</MudText>
+        <MudIconButton Icon="@Icons.Material.Outlined.Logout" Color="Color.Inherit" OnClick="() => base.InvokeSafety(this.SignOut)" />
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Always">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudHidden Breakpoint="Breakpoint.SmAndDown">
+            <MudToolBar DisableGutters="true">
+                <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Inherit" OnClick="@((e) => base.InvokeSafety(this.DrawerToggle))" Class="ml-3" />
+                @*<MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+                    <MudSpacer />
+                    <MudButton Variant="Variant.Text" Link="https://mudblazor.com/" Style="color:#594AE2;">MudBlazor</MudButton>
+                    <MudButton Variant="Variant.Text" Link="https://github.com/Garderoben/MudBlazorTemplates1s" Style="color:#424242;" Class="mr-3">Source Code</MudButton>*@
+            </MudToolBar>
+        </MudHidden>
+        <MudContainer MaxWidth="MaxWidth.False" Class="mt-4">
+            @base.Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>

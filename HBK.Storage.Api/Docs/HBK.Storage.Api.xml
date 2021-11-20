@@ -207,7 +207,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.FileEntityController.GetChildFileEntities(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Core.Models.ChildFileEntity})">
             <summary>
-            取得指定檔案的所有子檔案(遞迴查詢)
+            取得指定檔案的所有子檔案(遞迴查詢)，單次資料上限為 100 筆
             </summary>
             <param name="fileEntityId">檔案 ID</param>
             <param name="queryOptions">查詢參數</param>
@@ -395,7 +395,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.GetStorages(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.Storage})">
             <summary>
-            取得儲存群組內的儲存個體集合，單次資料上限為 100 筆
+            取得儲存群組內的儲存個體集合
             </summary>
             <param name="storageGroupId">儲存個體集合 ID</param>
             <param name="queryOptions">OData 查詢選項</param>
@@ -403,7 +403,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageGroupController.GetStorageExtendPropreties(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Core.Models.StorageExtendProperty})">
             <summary>
-            取得儲存群組內的儲存個體擴展資訊集合，單次資料上限為 100 筆
+            取得儲存群組內的儲存個體擴展資訊集合
             </summary>
             <param name="storageGroupId">儲存群組 ID</param>
             <param name="queryOptions">OData 查詢選項</param>
@@ -455,7 +455,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.List(Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.StorageProvider})">
             <summary>
-            取得所有儲存服務資訊，單次資料上限為 100 筆
+            取得所有儲存服務資訊
             </summary>
             <param name="queryOptions">OData 查詢參數</param>
             <returns>儲存服務資訊集合</returns>
@@ -492,7 +492,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetStorageGroups(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Adapter.Storages.StorageGroup})">
             <summary>
-            取得儲存服務內的所有儲存群組集合，單次資料上限為 100 筆
+            取得儲存服務內的所有儲存群組集合
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="queryOptions">OData 查詢選項</param>
@@ -500,7 +500,7 @@
         </member>
         <member name="M:HBK.Storage.Api.Controllers.StorageProviderController.GetStorageGroupExtendProperties(System.Guid,Microsoft.AspNet.OData.Query.ODataQueryOptions{HBK.Storage.Core.Models.StorageGroupExtendProperty})">
             <summary>
-            取得儲存服務內的所有儲存群組擴充資訊集合，單次資料上限為 100 筆
+            取得儲存服務內的所有儲存群組擴充資訊集合
             </summary>
             <param name="storageProviderId">儲存服務 ID</param>
             <param name="queryOptions">OData 查詢選項</param>
@@ -1007,21 +1007,35 @@
         <member name="M:HBK.Storage.Api.FileAccessHandlers.ValidateTagPatternAccessHandler.ProcessAsync(HBK.Storage.Api.FileAccessHandlers.Models.FileAccessTaskModel)">
             <inheritdoc/>
         </member>
-        <member name="T:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler">
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler">
             <summary>
             處理加密後的檔案處理器
             </summary>
         </member>
-        <member name="M:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Core.Cryptography.ICryptoProvider})">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Core.Cryptography.ICryptoProvider})">
             <summary>
             初始化處理加密後的檔案處理器
             </summary>
             <param name="cryptoProviders"></param>
         </member>
-        <member name="M:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
             <inheritdoc/>
         </member>
-        <member name="P:HBK.Storage.Api.FileProcessHandlers.CryptoProcessHandler.Name">
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.DecryptProcessHandler.Name">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.EncryptProcessHandler">
+            <summary>
+            加密檔案處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.EncryptProcessHandler.#ctor(System.Collections.Generic.IEnumerable{HBK.Storage.Core.Cryptography.ICryptoProvider})">
+            <summary>
+            初始化加密檔案處理器
+            </summary>
+            <param name="cryptoProviders"></param>
+        </member>
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.EncryptProcessHandler.Name">
             <inheritdoc/>
         </member>
         <member name="T:HBK.Storage.Api.FileProcessHandlers.FileProcessHandlerBase">
@@ -1102,6 +1116,25 @@
             <inheritdoc/>
         </member>
         <member name="P:HBK.Storage.Api.FileProcessHandlers.M3U8FileProcessHandler.Name">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler">
+            <summary>
+            預設浮水印的檔案處理器
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.ProcessAsync(HBK.Storage.Api.FileProcessHandlers.FileProcessTaskModel)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.ChangeOpacity(System.Drawing.Image,System.Single)">
+            <summary>
+            變更圖片透明度
+            </summary>
+            <param name="image">圖片</param>
+            <param name="opacity">透明度(0~1)</param>
+            <returns></returns>
+        </member>
+        <member name="P:HBK.Storage.Api.FileProcessHandlers.WatermarkDefaultProcessHandler.Name">
             <inheritdoc/>
         </member>
         <member name="T:HBK.Storage.Api.Filters.DisableFormValueModelBindingFilter">
@@ -2270,6 +2303,14 @@
             <param name="env"></param>
             <param name="authorizeKeyService"></param>
             <param name="storageProviderService"></param>
+        </member>
+        <member name="M:HBK.Storage.Api.Startup.GenerateInitializationDataAsync(HBK.Storage.Core.Services.AuthorizeKeyService,HBK.Storage.Core.Services.StorageProviderService)">
+            <summary>
+            產生初始化資料
+            </summary>
+            <param name="authorizeKeyService"></param>
+            <param name="storageProviderService"></param>
+            <returns></returns>
         </member>
         <member name="M:HBK.Storage.Api.Startup.GetEdmModel(System.IServiceProvider)">
             <summary>

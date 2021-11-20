@@ -18,7 +18,7 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
     /// <summary>
     /// AWS S3 儲存服務提供者
     /// </summary>
-    public class AwsS3FileProvider : AsyncFileProvider
+    public class AwsS3FileProvider : AsyncFileProvider, IDisposable
     {
         private readonly AmazonS3Client _client;
 
@@ -274,6 +274,12 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
         public override IChangeToken Watch(string filter)
         {
             throw new NotSupportedException();
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            _client.Dispose();
         }
     }
 }

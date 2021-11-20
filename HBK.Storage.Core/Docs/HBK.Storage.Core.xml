@@ -206,6 +206,9 @@
         <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.Write(System.Byte[],System.Int32,System.Int32)">
             <inheritdoc/>
         </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
         <member name="P:HBK.Storage.Core.FileSystem.AmazonS3.AWS3FileStream.CanRead">
             <inheritdoc/>
         </member>
@@ -374,6 +377,9 @@
             </summary>
             <param name="filter">篩選器</param>
             <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.AmazonS3.AwsS3FileProvider.Dispose">
+            <inheritdoc/>
         </member>
         <member name="T:HBK.Storage.Core.FileSystem.AsyncFileInfo">
             <summary>
@@ -801,6 +807,9 @@
         <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.Watch(System.String)">
             <inheritdoc/>
         </member>
+        <member name="M:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileProvider.Dispose">
+            <inheritdoc/>
+        </member>
         <member name="T:HBK.Storage.Core.FileSystem.GoogleDrive.GoogleDriveFileStream">
             <summary>
             Google Drive 檔案使用的流
@@ -1145,6 +1154,198 @@
             <param name="length"></param>
         </member>
         <member name="M:HBK.Storage.Core.FileSystem.StreamFileInfo.CreateReadStreamAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileInfo">
+            <summary>
+            WebDAV 的檔案資訊
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileInfo.#ctor(HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce,System.String,System.Int64,System.DateTimeOffset,System.String)">
+            <summary>
+            建立一個新的執行個體
+            </summary>
+            <param name="webDAVSerivce">WebDAV 存取邏輯</param>
+            <param name="key">檔案主鍵</param>
+            <param name="length">檔案大小</param>
+            <param name="lastModified">最後修訂時間</param>
+            <param name="physicalPath">檔案實際路徑</param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileInfo.CreateReadStreamAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileProvider">
+            <summary>
+            Web DAV 的檔案提供者
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileProvider.#ctor(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            建構一個新的執行個體
+            </summary>
+            <param name="name"></param>
+            <param name="url"></param>
+            <param name="username"></param>
+            <param name="password"></param>
+            <param name="isSupportPartialUpload"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileProvider.DeleteAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileProvider.GetDirectoryContentsAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileProvider.GetFileInfoAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileProvider.IsFileExistAsync(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileProvider.PutAsync(System.String,System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileProvider.Watch(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileProvider.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream">
+            <summary>
+            WebDAV 檔案使用的流
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.#ctor(HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce,System.String,System.Int64)">
+            <summary>
+            初始化 WebDAV 檔案使用的流
+            <paramref name="webDAVSerivce"></paramref>
+            <paramref name="key"></paramref>
+            <paramref name="length"></paramref>
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.Flush">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.Read(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.Seek(System.Int64,System.IO.SeekOrigin)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.SetLength(System.Int64)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.Write(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.Dispose(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.CanSeek">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.Length">
+            <inheritdoc/>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.WebDAV.WebDAVFileStream.Position">
+            <inheritdoc/>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.WebDAV.WebDAVOption">
+            <summary>
+            WebDAV 連接選項
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVOption.#ctor">
+            <summary>
+            初始化 WebDAV 連接選項
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.WebDAV.WebDAVOption.Url">
+            <summary>
+            取得或設定 URL
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.WebDAV.WebDAVOption.Username">
+            <summary>
+            取得或設定使用者名稱
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.WebDAV.WebDAVOption.Password">
+            <summary>
+            取得或設定密碼
+            </summary>
+        </member>
+        <member name="P:HBK.Storage.Core.FileSystem.WebDAV.WebDAVOption.HttpClientFunc">
+            <summary>
+            取得 Http Client 產生方法
+            </summary>
+        </member>
+        <member name="T:HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce">
+            <summary>
+            WebDAV 存取邏輯
+            </summary>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce.#ctor(HBK.Storage.Core.FileSystem.WebDAV.WebDAVOption)">
+            <summary>
+            初始化 WebDAV 存取邏輯
+            </summary>
+            <param name="webDAVOption"></param>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce.GetFileInfoAsync(System.String)">
+            <summary>
+            取得檔案資訊
+            </summary>
+            <param name="subpath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce.PutAsync(System.String,System.IO.Stream)">
+            <summary>
+            上傳檔案
+            </summary>
+            <param name="subpath"></param>
+            <param name="fileStream"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce.PutPartialAsync(System.String,System.IO.Stream,System.Int64,System.Int64)">
+            <summary>
+            分段上傳
+            </summary>
+            <param name="subpath"></param>
+            <param name="fileStream"></param>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce.IsFileExistAsync(System.String)">
+            <summary>
+            檔案是否存在
+            </summary>
+            <param name="subpath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce.DeleteAsync(System.String)">
+            <summary>
+            刪除檔案
+            </summary>
+            <param name="subpath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce.DownloadPartialAsync(System.String,System.Nullable{System.Int64},System.Nullable{System.Int64})">
+            <summary>
+            分段下載
+            </summary>
+            <param name="subpath"></param>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HBK.Storage.Core.FileSystem.WebDAV.WebDAVSerivce.Dispose">
             <inheritdoc/>
         </member>
         <member name="T:HBK.Storage.Core.HBKStorageCoreDependencyInjectionExtensions">

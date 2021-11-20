@@ -60,7 +60,11 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
         /// <inheritdoc/>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            _getObjectResponse = null;
+            if (_getObjectResponse != null)
+            {
+                _getObjectResponse.Dispose();
+                _getObjectResponse = null;
+            }
             switch (origin)
             {
                 case SeekOrigin.Begin:
@@ -85,6 +89,18 @@ namespace HBK.Storage.Core.FileSystem.AmazonS3
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        protected override void Dispose(bool disposing)
+        {
+            if (_getObjectResponse != null)
+            {
+                _getObjectResponse.Dispose();
+            }
+            _amazonS3Client.Dispose();
+            base.Dispose(disposing);
+        }
+
         /// <inheritdoc/>
         public override bool CanRead => true;
         /// <inheritdoc/>

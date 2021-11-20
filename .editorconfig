@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# IDE0002: 簡化成員存取
+dotnet_diagnostic.IDE0002.severity = none
+
+# IDE0003: 移除限定性條件
+dotnet_style_qualification_for_event = true

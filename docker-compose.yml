@@ -29,10 +29,10 @@ services:
       "NLog:LogstashUrl": "http://192.168.222.102:5046/dev-hbk-storage-api"
       "NLog:LogstashMinLevel": "Trace"
 
-  web:
+  dashboard:
     build:
       context: .
-      dockerfile: Dockerfile_Web
+      dockerfile: Dockerfile_Dashboard
     depends_on:
       - api
     ports:

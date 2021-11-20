@@ -135,7 +135,7 @@ namespace HBK.Storage.Api.Controllers
             return StorageController.BuildStorageResponse(result, _jsonSerializerSettings);
         }
         /// <summary>
-        /// 取得儲存群組內的儲存個體集合，單次資料上限為 100 筆
+        /// 取得儲存群組內的儲存個體集合
         /// </summary>
         /// <param name="storageGroupId">儲存個體集合 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
@@ -148,7 +148,7 @@ namespace HBK.Storage.Api.Controllers
             AllowedQueryOptions.Skip |
             AllowedQueryOptions.Top |
             AllowedQueryOptions.OrderBy,
-            MaxTop = 100)]
+            MaxTop = int.MaxValue)]
         public async Task<PagedResponse<StorageResponse>> GetStorages(
             [ExampleParameter("8acdbf86-cb7b-4d1a-8745-44115f656287")]
             [ExistInDatabase(typeof(StorageGroup))] Guid storageGroupId,
@@ -159,11 +159,11 @@ namespace HBK.Storage.Api.Controllers
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storage => StorageController.BuildStorageResponse(storage, _jsonSerializerSettings)),
-                100
+                null
             );
         }
         /// <summary>
-        /// 取得儲存群組內的儲存個體擴展資訊集合，單次資料上限為 100 筆
+        /// 取得儲存群組內的儲存個體擴展資訊集合
         /// </summary>
         /// <param name="storageGroupId">儲存群組 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
@@ -176,7 +176,7 @@ namespace HBK.Storage.Api.Controllers
             AllowedQueryOptions.Skip |
             AllowedQueryOptions.Top |
             AllowedQueryOptions.OrderBy,
-            MaxTop = 100)]
+            MaxTop = int.MaxValue)]
         public async Task<PagedResponse<StorageExtendPropertyResponse>> GetStorageExtendPropreties(
             [ExampleParameter("8acdbf86-cb7b-4d1a-8745-44115f656287")]
             [ExistInDatabase(typeof(StorageGroup))] Guid storageGroupId,
@@ -187,7 +187,7 @@ namespace HBK.Storage.Api.Controllers
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storageExtendProperty => StorageController.BuildStorageExtendPropertyResponse(storageExtendProperty, _jsonSerializerSettings)),
-                100
+                null
             );
         }
         /// <summary>

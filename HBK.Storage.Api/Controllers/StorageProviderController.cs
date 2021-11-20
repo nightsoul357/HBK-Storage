@@ -73,7 +73,7 @@ namespace HBK.Storage.Api.Controllers
             return StorageProviderController.BuildStorageProviderResponse(await _storageProviderService.FindByIdAsync(storageProviderId));
         }
         /// <summary>
-        /// 取得所有儲存服務資訊，單次資料上限為 100 筆
+        /// 取得所有儲存服務資訊
         /// </summary>
         /// <param name="queryOptions">OData 查詢參數</param>
         /// <returns>儲存服務資訊集合</returns>
@@ -84,7 +84,7 @@ namespace HBK.Storage.Api.Controllers
             AllowedQueryOptions.Skip |
             AllowedQueryOptions.Top |
             AllowedQueryOptions.OrderBy,
-            MaxTop = 100)]
+            MaxTop = int.MaxValue)]
         public async Task<ActionResult<PagedResponse<StorageProviderResponse>>> List([FromServices] ODataQueryOptions<StorageProvider> queryOptions)
         {
             var query = _storageProviderService.ListQuery();
@@ -99,7 +99,7 @@ namespace HBK.Storage.Api.Controllers
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storageProvider => StorageProviderController.BuildStorageProviderResponse(storageProvider)),
-                100
+                null
             );
         }
         /// <summary>
@@ -190,7 +190,7 @@ namespace HBK.Storage.Api.Controllers
             return StorageGroupController.BuildStorageGroupResponse(result);
         }
         /// <summary>
-        /// 取得儲存服務內的所有儲存群組集合，單次資料上限為 100 筆
+        /// 取得儲存服務內的所有儲存群組集合
         /// </summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
@@ -201,7 +201,7 @@ namespace HBK.Storage.Api.Controllers
             AllowedQueryOptions.Skip |
             AllowedQueryOptions.Top |
             AllowedQueryOptions.OrderBy,
-            MaxTop = 100)]
+            MaxTop = int.MaxValue)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<PagedResponse<StorageGroupResponse>> GetStorageGroups(
@@ -214,11 +214,11 @@ namespace HBK.Storage.Api.Controllers
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storgaeGroup => StorageGroupController.BuildStorageGroupResponse(storgaeGroup)),
-                100
+                null
             );
         }
         /// <summary>
-        /// 取得儲存服務內的所有儲存群組擴充資訊集合，單次資料上限為 100 筆
+        /// 取得儲存服務內的所有儲存群組擴充資訊集合
         /// </summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
@@ -229,7 +229,7 @@ namespace HBK.Storage.Api.Controllers
             AllowedQueryOptions.Skip |
             AllowedQueryOptions.Top |
             AllowedQueryOptions.OrderBy,
-            MaxTop = 100)]
+            MaxTop = int.MaxValue)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<PagedResponse<StorageGroupExtendPropertyResponse>> GetStorageGroupExtendProperties(
@@ -242,7 +242,7 @@ namespace HBK.Storage.Api.Controllers
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storageGroupExtendProperty => StorageGroupController.BuildStorageGroupExtendPropertyResponse(storageGroupExtendProperty)),
-                100
+                null
             );
         }
         /// <summary>

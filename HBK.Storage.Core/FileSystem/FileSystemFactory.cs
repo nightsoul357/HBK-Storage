@@ -6,6 +6,7 @@ using HBK.Storage.Core.FileSystem.FTP;
 using HBK.Storage.Core.FileSystem.GoogleDrive;
 using HBK.Storage.Core.FileSystem.Local;
 using HBK.Storage.Core.FileSystem.Mega;
+using HBK.Storage.Core.FileSystem.WebDAV;
 using HBK.Storage.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -71,6 +72,11 @@ namespace HBK.Storage.Core.FileSystem
                     {
                         MegaStorageCredentials credentials = (MegaStorageCredentials)storage.Credentials;
                         return new MegaFileProvider(storage.Name, credentials.Username, credentials.Password, credentials.ParentId);
+                    }
+                case Adapter.Enums.StorageTypeEnum.WebDAV:
+                    {
+                        WebDAVStorageCredentials credentials = (WebDAVStorageCredentials)storage.Credentials;
+                        return new WebDAVFileProvider(storage.Name, credentials.Url, credentials.Username, credentials.Password, credentials.IsSupportPartialUpload);
                     }
                 default:
                     throw new NotImplementedException($"尚未實作取得 { storage.Type } 儲存服務提供者的方式");

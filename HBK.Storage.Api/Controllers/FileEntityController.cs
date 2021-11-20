@@ -125,7 +125,7 @@ namespace HBK.Storage.Api.Controllers
             );
         }
         /// <summary>
-        /// 取得指定檔案的所有子檔案(遞迴查詢)
+        /// 取得指定檔案的所有子檔案(遞迴查詢)，單次資料上限為 100 筆
         /// </summary>
         /// <param name="fileEntityId">檔案 ID</param>
         /// <param name="queryOptions">查詢參數</param>
