@@ -41,7 +41,7 @@ Dashboard 會在 `http://localhost:1080`, 可以使用預設的 API Key 進行�
 
 ### Windows
 
-[More Information](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Install%20Document(Windows).md)
+[More Information](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Install%20Document(Windows).md)
 
 ## Dashboard
 
@@ -65,14 +65,14 @@ Dashboard 會在 `http://localhost:1080`, 可以使用預設的 API Key 進行�
 ## Documentation
 
 - [API](https://app.swaggerhub.com/apis-docs/nightsoul357/hbk-storage_api/v1)
-- [API Key](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/API%20Key.md)
-- [Storage Credential](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Storage%20Credential.md)
-- [Policy Rule](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Policy%20Rule.md)
-- [File Access Token](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/File%20Access%20Token.md)
-- [Donwload Indicate](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Donwload%20Indicate.md)
-- [Crtpto](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Crypto.md)
-- [External Download File Endpoint](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/External%20Download%20File%20Endpoint.md)
-- [Situational Presentation](https://github.com/nightsoul357/HBKStorage/blob/develop/Docs/Situational%20Presentation.md)
+- [API Key](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/API%20Key.md)
+- [Storage Credential](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Storage%20Credential.md)
+- [Policy Rule](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Policy%20Rule.md)
+- [File Access Token](https://github.com/nightsoul357/HB-KStorage/blob/develop/Docs/File%20Access%20Token.md)
+- [Donwload Indicate](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Donwload%20Indicate.md)
+- [Crtpto](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Crypto.md)
+- [External Download File Endpoint](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/External%20Download%20File%20Endpoint.md)
+- [Situational Presentation](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Situational%20Presentation.md)
 - [Load Balance]()
 - [Work on Azure CDN with token authentication]()
 - [Plugin]()
@@ -84,4 +84,4 @@ Dashboard 會在 `http://localhost:1080`, 可以使用預設的 API Key 進行�
 
 ## License
 
-[MIT License](https://github.com/nightsoul357/HBKStorage/blob/master/LICENSE) Copyright (c) 2021 nightsoul357
+[MIT License](https://github.com/nightsoul357/HBK-Storage/blob/master/LICENSE) Copyright (c) 2021 nightsoul357
