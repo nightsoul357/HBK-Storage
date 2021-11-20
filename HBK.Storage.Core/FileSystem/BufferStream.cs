@@ -117,6 +117,7 @@ namespace HBK.Storage.Core.FileSystem
         protected override void Dispose(bool disposing)
         {
             _innerStream.Dispose();
+            _currentBuffer = null;
             base.Dispose(disposing);
         }
 
