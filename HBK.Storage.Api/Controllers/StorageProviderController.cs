@@ -218,7 +218,7 @@ namespace HBK.Storage.Api.Controllers
             );
         }
         /// <summary>
-        /// 取得儲存服務內的所有儲存群組擴充資訊集合，單次資料上限為 100 筆
+        /// 取得儲存服務內的所有儲存群組擴充資訊集合
         /// </summary>
         /// <param name="storageProviderId">儲存服務 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
@@ -242,7 +242,7 @@ namespace HBK.Storage.Api.Controllers
 
             return await base.PagedResultAsync(queryOptions, query, (data) =>
                 data.Select(storageGroupExtendProperty => StorageGroupController.BuildStorageGroupExtendPropertyResponse(storageGroupExtendProperty)),
-                int.MaxValue
+                null
             );
         }
         /// <summary>

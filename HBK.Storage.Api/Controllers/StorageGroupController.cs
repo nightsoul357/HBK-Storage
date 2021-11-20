@@ -163,7 +163,7 @@ namespace HBK.Storage.Api.Controllers
             );
         }
         /// <summary>
-        /// 取得儲存群組內的儲存個體擴展資訊集合，單次資料上限為 100 筆
+        /// 取得儲存群組內的儲存個體擴展資訊集合
         /// </summary>
         /// <param name="storageGroupId">儲存群組 ID</param>
         /// <param name="queryOptions">OData 查詢選項</param>
