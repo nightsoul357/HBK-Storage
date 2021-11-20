@@ -11,6 +11,10 @@ namespace HBK.Storage.Dashboard.DataSource.Models
     /// </summary>
     public class FTPStorageCredentials : StorageCredentialsBase
     {
+        public FTPStorageCredentials()
+        {
+            base.Storage_type = StorageType.Ftp;
+        }
         /// <summary>
         /// 取得或設定 Url
         /// </summary>

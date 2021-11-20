@@ -11,6 +11,10 @@ namespace HBK.Storage.Dashboard.DataSource.Models
     /// </summary>
     public class LocalStorageCredentials : StorageCredentialsBase
     {
+        public LocalStorageCredentials()
+        {
+            base.Storage_type = StorageType.Local;
+        }
         /// <summary>
         /// 取得或設定目錄
         /// </summary>
