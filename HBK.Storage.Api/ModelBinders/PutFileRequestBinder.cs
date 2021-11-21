@@ -94,9 +94,16 @@ namespace HBK.Storage.Api.ModelBinders
                                             break;
                                     }
                                 }
-                                else
+                                else if (String.Compare(key, nameof(model.Tags), true) == 0)
                                 {
-                                    prop.SetValue(model, JsonConvert.DeserializeObject(value, prop.PropertyType)); // TODO: 相容 MultipartRequest 標準的 List 輸入方式
+                                    try
+                                    {
+                                        model.Tags.AddRange(JsonConvert.DeserializeObject<List<string>>(value));
+                                    }
+                                    catch (JsonException)
+                                    {
+                                        model.Tags.Add(value);
+                                    }
                                 }
                             }
 
