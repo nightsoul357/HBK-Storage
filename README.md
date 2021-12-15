@@ -86,6 +86,7 @@ Dashboard 會在 `http://localhost:1080`, 可以使用預設的 API Key 進行�
 - 分段上傳
 - 掛載為網路硬碟
 - Lock File
+- Folder
 
 ## License
 
