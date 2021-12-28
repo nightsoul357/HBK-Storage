@@ -12,15 +12,15 @@ English | [中文版](https://github.com/nightsoul357/HBK-Storage/blob/master/Do
 ## Feature
 
 -   **Manage multiple storage entities**: Create and use multiple types of storage entities in the same system
--   **Combined storage unit**: Combine multiple storage entities into a larger storage group for use
+-   **Combined storage unit**: Combine multiple storage entities into a larger storage group
 -   **Automatic backup**: By setting synchronization rules, automatically create copies in different storage groups
--   **Automatically clear**: By setting clear rules, unnecessary files are automatically cleared
+-   **Automatic clear**: By setting clear rules, unnecessary files are automatically cleared
 -   **Issue access token**: Issuing a variety of tokens with restrictions on access rules
 -   **One upload/download interface**: Upload and download through one API interface
--   **Optimize memory usage**: Only the minimum required memory will be used during upload and download
--   **Encrypted storage**: Store the files on the actual storage entity in the form of file encryption without adding additional storage costs
+-   **Optimize memory**: Only the minimum required memory will be used during upload and download
+-   **Encrypted storage**: Store encrypted file without additional storage costs
 -   **Load balancing**: Improve actual access efficiency by creating multiple file copies
--   **Download indicate**: Before downloading the file, the file content can be finalized (watermark, Logo, Encrypt, Decrypt...)
+-   **Download indicate**: Before downloading the file, the file content can be finalized (watermark, logo, encrypt)
 -   **Plugin**: Support rich and customizable plugin
 
 
