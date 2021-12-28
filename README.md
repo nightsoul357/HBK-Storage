@@ -39,7 +39,7 @@ apt-get install docker-compose
 dokcer-compose up -d
 ```
 
-Dashboard will listen at `http://localhost:1080`, Can use default API Key for login.
+Dashboard will listen at `http://localhost:1080`, login by default API Key.
 
 [Parameter](https://github.com/nightsoul357/HBK-Storage/blob/master/Docs/Install%20Document(Linux).md)
 
