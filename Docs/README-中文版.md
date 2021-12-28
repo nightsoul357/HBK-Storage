@@ -43,7 +43,7 @@ Dashboard 會在 `http://localhost:1080`, 可以使用預設的 API Key 進行�
 
 ### Windows
 
-[More Information](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Install%20Document(Windows).md)
+[More Information](https://github.com/nightsoul357/HBK-Storage/blob/master/Docs/Install%20Document(Windows).md)
 
 ## Dashboard
 

@@ -45,7 +45,7 @@ Dashboard will listen at `http://localhost:1080`, login by default API Key.
 
 ### Windows
 
-[More Information](https://github.com/nightsoul357/HBK-Storage/blob/develop/Docs/Install%20Document(Windows).md)
+[More Information](https://github.com/nightsoul357/HBK-Storage/blob/master/Docs/Install%20Document(Windows).md)
 
 ## Dashboard
 
