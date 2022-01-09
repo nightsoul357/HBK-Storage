@@ -21,7 +21,44 @@ namespace HBK.Storage.SDK
             : base(baseUrl, httpClientFunc, apiKey)
         {
         }
+        /// <summary>
+        /// 建置直接下載連結
+        /// </summary>
+        /// <param name="fileEntityId">檔案實體 ID</param>
+        /// <param name="filename">檔案名稱</param>
+        /// <param name="token">存取權杖</param>
+        /// <returns>直接下載連結</returns>
+        public string BuildDirectDownloadLink(Guid? fileEntityId, string? filename, string? token)
+        {
+            var urlBuilder_ = new StringBuilder();
+            if (fileEntityId != null && !string.IsNullOrWhiteSpace(filename))
+            {
+                urlBuilder_.Append(base.BaseUrl != null ? base.BaseUrl.TrimEnd('/') : "").Append("/docs/{fileEntityId}/filename/{filename}");
+                urlBuilder_.Replace("{fileEntityId}", System.Uri.EscapeDataString(base.ConvertToString(fileEntityId, System.Globalization.CultureInfo.InvariantCulture)));
+                urlBuilder_.Replace("{filename}", filename);
+            }
+            else if (fileEntityId == null && !string.IsNullOrWhiteSpace(filename))
+            {
+                urlBuilder_.Append(base.BaseUrl != null ? base.BaseUrl.TrimEnd('/') : "").Append("/docs/filename/{filename}");
+                urlBuilder_.Replace("{filename}", filename);
+            }
+            else if (fileEntityId != null && string.IsNullOrWhiteSpace(filename))
+            {
+                urlBuilder_.Append(base.BaseUrl != null ? base.BaseUrl.TrimEnd('/') : "").Append("/docs/{fileEntityId}");
+                urlBuilder_.Replace("{fileEntityId}", System.Uri.EscapeDataString(base.ConvertToString(fileEntityId, System.Globalization.CultureInfo.InvariantCulture)));
+            }
+            else if (fileEntityId == null && string.IsNullOrWhiteSpace(filename))
+            {
+                urlBuilder_.Append(base.BaseUrl != null ? base.BaseUrl.TrimEnd('/') : "").Append("/docs");
+            }
 
+            if (!string.IsNullOrEmpty(token))
+            {
+                urlBuilder_.Append("?").Append(System.Uri.EscapeDataString("esic") + "=").Append(System.Uri.EscapeDataString(token));
+            }
+
+            return urlBuilder_.ToString();
+        }
         /// <summary>
         /// 取得儲存服務
         /// </summary>

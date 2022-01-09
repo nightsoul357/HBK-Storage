@@ -16,7 +16,7 @@ namespace HBK.Storage.SDK.Models.StorageProvider
         /// 儲存服務 ID
         /// </summary>
         [Newtonsoft.Json.JsonProperty("storage_provider_id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.Guid Storage_provider_id { get; set; }
+        public System.Guid StorageProviderId { get; set; }
 
         /// <summary>
         /// 名稱
@@ -28,13 +28,13 @@ namespace HBK.Storage.SDK.Models.StorageProvider
         /// 建立時間
         /// </summary>
         [Newtonsoft.Json.JsonProperty("create_date_time", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset Create_date_time { get; set; }
+        public System.DateTimeOffset CreateDateTime { get; set; }
 
         /// <summary>
         /// 最後更新時間
         /// </summary>
         [Newtonsoft.Json.JsonProperty("update_date_time", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTimeOffset? Update_date_time { get; set; }
+        public System.DateTimeOffset? UpdateDateTime { get; set; }
 
         /// <summary>
         /// 狀態

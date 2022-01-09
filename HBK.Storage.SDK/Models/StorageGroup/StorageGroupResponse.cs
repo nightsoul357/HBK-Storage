@@ -16,13 +16,13 @@ namespace HBK.Storage.SDK.Models.StorageGroup
         /// 儲存個體群組 ID
         /// </summary>
         [Newtonsoft.Json.JsonProperty("storage_group_id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Guid Storage_group_id { get; set; }
+        public Guid StorageGroupId { get; set; }
 
         /// <summary>
         /// 所屬儲存服務 ID
         /// </summary>
         [Newtonsoft.Json.JsonProperty("storage_provider_id", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public Guid? Storage_provider_id { get; set; }
+        public Guid? StorageProviderId { get; set; }
 
         /// <summary>
         /// 名稱
