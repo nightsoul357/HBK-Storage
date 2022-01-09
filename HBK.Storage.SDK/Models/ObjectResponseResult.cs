@@ -11,14 +11,15 @@ namespace HBK.Storage.SDK.Models
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public struct ObjectResponseResult<T>
+        where T : class
     {
-        public ObjectResponseResult(T responseObject, string responseText)
+        public ObjectResponseResult(T? responseObject, string responseText)
         {
             this.Object = responseObject;
             this.Text = responseText;
         }
 
-        public T Object { get; }
+        public T? Object { get; }
 
         public string Text { get; }
     }

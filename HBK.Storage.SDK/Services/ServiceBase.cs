@@ -53,6 +53,7 @@ namespace HBK.Storage.SDK.Services
         }
 
         protected virtual async Task<ObjectResponseResult<T>> ReadObjectResponseAsync<T>(HttpResponseMessage response, IReadOnlyDictionary<string, IEnumerable<string>> headers, CancellationToken cancellationToken)
+         where T : class
         {
             if (response == null || response.Content == null)
             {
