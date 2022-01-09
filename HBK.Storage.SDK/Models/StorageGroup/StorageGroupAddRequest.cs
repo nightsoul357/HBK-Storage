@@ -48,7 +48,5 @@ namespace HBK.Storage.SDK.Models.StorageGroup
         /// <summary>狀態</summary>
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public System.Collections.Generic.ICollection<StorageGroupStatus> Status { get; set; }
-
-
     }
 }
